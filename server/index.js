@@ -115,6 +115,7 @@ openSocket = (gameSocket, namespace) => {
             if (started) {
                 gameSocket.emit('g-addLog', `${name} has rejoined`);
                 gameSocket.to(socket.id).emit("startGame");
+                namespaces[namespace.substring(1)].updatePlayers(); // need to push out all state
             }
         })
         socket.on('setReady', (isReady) => { //when client is ready, they will update this
