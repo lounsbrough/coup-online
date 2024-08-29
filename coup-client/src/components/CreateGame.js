@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import io from "socket.io-client";
 import { ReactSortable } from "react-sortablejs";
 import Coup from './game/Coup';
+import { getPlayerId } from '../utilities/playerInfo';
 
 const axios = require('axios');
 const baseUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000"
@@ -10,7 +11,7 @@ export default class CreateGame extends Component {
 
     constructor(props) {
         super(props)
-    
+
         this.state = {
             name: '',
             roomCode: '',
@@ -36,11 +37,11 @@ export default class CreateGame extends Component {
         const socket = io(`${baseUrl}/${this.state.roomCode}`);
         this.setState({ socket });
         console.log("socket created")
-        socket.emit('setName', this.state.name);
-        
+        socket.emit('setPlayerInfo', getPlayerId(), this.state.name);
+
         socket.on("joinSuccess", function() {
             console.log("join successful")
-            bind.setState({ 
+            bind.setState({
                 isLoading: false,
                 isInRoom: true
             });
@@ -147,6 +148,11 @@ export default class CreateGame extends Component {
                 <p>Please enter your name</p>
                 <input
                     type="text" value={this.state.name} disabled={this.state.isLoading || this.state.isInRoom}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            this.createParty();
+                        }
+                    }}
                     onChange={e => {
                         if(e.target.value.length <= 10){
                             this.setState({
@@ -160,7 +166,7 @@ export default class CreateGame extends Component {
                                 isError: true
                             })
                         }
-                        
+
                     }}
                 />
                 <br></br>
@@ -189,10 +195,10 @@ export default class CreateGame extends Component {
                         }
                     </ReactSortable>
                 </div>
-                
+
                 {startGame}
             </div>
-                
+
         )
     }
 }

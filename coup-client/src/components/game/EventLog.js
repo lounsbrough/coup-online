@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 export default class EventLog extends Component {
-    
+
     render() {
         return (
             <div className="EventLogContainer">
@@ -11,11 +11,11 @@ export default class EventLog extends Component {
                         if(index === this.props.logs.length-1){
                             return <p className="new">{x}</p>
                         }
-                    return <p>{x}</p>
+                    return <p key={index}>{x}</p>
                     })}
                     <div style={{ float:"left", clear: "both" }}
                         ref={(el) => { this.messagesEnd = el; }}>
-                    </div> 
+                    </div>
                 </div>
             </div>
         )
@@ -24,11 +24,11 @@ export default class EventLog extends Component {
     scrollToBottom = () => {
         this.messagesEnd.scrollIntoView({ behavior: "smooth" });
       }
-      
+
       componentDidMount() {
         this.scrollToBottom();
       }
-      
+
       componentDidUpdate() {
         this.scrollToBottom();
       }

@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 import io from "socket.io-client";
 import Coup from './game/Coup';
+import { getPlayerId } from '../utilities/playerInfo';
 
 const axios = require('axios');
-const baseUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000' 
+const baseUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'
 
 export default class JoinGame extends Component {
 
     constructor(props) {
         super(props)
-    
+
         this.state = {
             name: '',
             roomCode: '',
@@ -37,8 +38,8 @@ export default class JoinGame extends Component {
         const socket = io(`${baseUrl}/${this.state.roomCode}`);
         this.setState({ socket });
         console.log("socket created")
-        socket.emit('setName', this.state.name);
-        
+        socket.emit('setPlayerInfo', getPlayerId(), this.state.name);
+
         socket.on("joinSuccess", function() {
             console.log("join successful")
             // bind.setState({ isLoading: false });
@@ -47,7 +48,7 @@ export default class JoinGame extends Component {
 
         socket.on("joinFailed", function(err) {
             console.log("join failed, cause: " + err);
-            bind.setState({ 
+            bind.setState({
                 errorMsg: err,
                 isError: true,
                 isLoading: false
@@ -80,16 +81,16 @@ export default class JoinGame extends Component {
         if(this.state.name === '') {
             //TODO  handle error
             console.log('Please enter a name');
-            this.setState({ 
+            this.setState({
                 errorMsg: 'Please enter a name',
-                isError: true 
+                isError: true
             });
             return
         }
         if(this.state.roomCode === '') {
             //TODO  handle error
             console.log('Please enter a room code');
-            this.setState({ 
+            this.setState({
                 errorMsg: 'Please enter a room code',
                 isError: true
             });
@@ -102,14 +103,14 @@ export default class JoinGame extends Component {
             .then(function (res) {
                 console.log(res)
                 if(res.data.exists) {
-                    //join 
+                    //join
                     console.log("joining")
                     bind.setState({errorMsg: ''})
                     bind.joinParty();
                 } else {
                     //TODO  handle error
                     console.log('Invalid Party Code')
-                    bind.setState({ 
+                    bind.setState({
                         isLoading: false,
                         errorMsg: 'Invalid Party Code',
                         isError: true
@@ -119,14 +120,14 @@ export default class JoinGame extends Component {
             .catch(function (err) {
                 //TODO  handle error
                 console.log("error in getting exists", err);
-                bind.setState({ 
+                bind.setState({
                     isLoading: false,
                     errorMsg: 'Server error',
                     isError: true
                 });
             })
     }
-    
+
     reportReady = () => {
         this.state.socket.emit('setReady', true);
         this.state.socket.on('readyConfirm', () => {
@@ -154,6 +155,12 @@ export default class JoinGame extends Component {
             joinReady = null
         }
 
+        const keyDownHandler = (e) => {
+            if (e.key === 'Enter') {
+                this.attemptJoinParty();
+            }
+        }
+
         return (
             <div className="joinGameContainer">
                 <p>Your Name</p>
@@ -173,11 +180,13 @@ export default class JoinGame extends Component {
                             })
                         }
                     }}
+                    onKeyDown={keyDownHandler}
                 />
                 <p>Room Code</p>
                 <input
                     type="text" value={this.state.roomCode} disabled={this.state.isLoading}
                     onChange={e => this.onCodeChange(e.target.value)}
+                    onKeyDown={keyDownHandler}
                 />
                 <br></br>
                 {joinReady}
