@@ -46,7 +46,7 @@ class CoupGame{
                     bind.isPlayAgainOpen = false;
                     this.resetGame(Math.floor(Math.random() * (this.players.length)));
                     this.updatePlayers();
-                    this.playTurn() 
+                    this.playTurn()
                 }
             })
             socket.on('g-deductCoins', (res) => {
@@ -177,7 +177,7 @@ class CoupGame{
                                 }
                             }
 
-                            if (res.revealedCard == 'assassin' && res.prevAction.target == res.challenger 
+                            if (res.revealedCard == 'assassin' && res.prevAction.target == res.challenger
                                 && bind.players[challengerIndex].influences.length == 2) {
                                 bind.deck.push(bind.players[challengeeIndex].influences[0]);
                                 bind.deck = gameUtils.shuffleArray(bind.deck);
@@ -190,7 +190,7 @@ class CoupGame{
                         } else { // challenge succeeded
                             bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee} succeeded`)
                             bind.gameSocket.emit("g-addLog", `${res.challengee} lost their ${res.revealedCard}`)
-                            for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { // 
+                            for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
                                     bind.deck = gameUtils.shuffleArray(bind.deck);
@@ -238,7 +238,7 @@ class CoupGame{
     }
 
     updatePlayers() {// when players die
-        this.gameSocket.emit('g-updatePlayers', gameUtils.exportPlayers(JSON.parse(JSON.stringify(this.players))));
+        this.gameSocket.emit('g-updatePlayers', gameUtils.exportPlayers(this.players));
     }
 
     reveal(action, counterAction, challengee, challenger, isBlock) {
@@ -378,7 +378,7 @@ class CoupGame{
         }else {
             console.log('ERROR ACTION NOT FOUND');
         }
-        
+
     }
 
     nextTurn() {
@@ -398,7 +398,7 @@ class CoupGame{
             let winner = null
             for(let i = 0; i < this.players.length; i++) {
                 if(this.players[i].influences.length > 0) {
-                    winner = this.players[i].name; 
+                    winner = this.players[i].name;
                 }
             }
             this.isPlayAgainOpen = true;
@@ -432,7 +432,7 @@ class CoupGame{
         this.playTurn()
         //deal cards to each player
     }
-    
+
 }
 
 module.exports = CoupGame;

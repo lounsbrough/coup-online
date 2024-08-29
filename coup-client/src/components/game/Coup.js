@@ -9,7 +9,6 @@ import ChooseInfluence from './ChooseInfluence';
 import ExchangeInfluences from './ExchangeInfluences';
 import './CoupStyles.css';
 import EventLog from './EventLog';
-import ReactModal from 'react-modal';
 import CheatSheetModal from '../CheatSheetModal';
 import RulesModal from '../RulesModal';
 
@@ -17,7 +16,7 @@ export default class Coup extends Component {
 
     constructor(props) {
         super(props)
-    
+
         this.state = {
              action: null,
              blockChallengeRes: null,
@@ -58,22 +57,16 @@ export default class Coup extends Component {
             bind.setState({playAgain: null})
             bind.setState({winner: null})
             players = players.filter(x => !x.isDead);
-            let playerIndex = null;
-            for(let i = 0; i < players.length; i++) {
-                console.log(players[i].name, this.props.name)
-                if(players[i].name === this.props.name) {
-                    playerIndex = i;
-                    break;
-                }
-            }
-            if(playerIndex == null) {
+            let playerIndex = players.findIndex((x) => x.name === this.props.name);
+            if(playerIndex === -1) {
+                playerIndex = null;
                 this.setState({ isDead: true })
             }else {
                 this.setState({ isDead: false})
             }
-            console.log(playerIndex)
+            console.log({playerIndex})
             bind.setState({playerIndex, players});
-            
+
         });
         this.props.socket.on('g-updateCurrentPlayer', (currentPlayer) => {
             console.log('currentPlayer: ', currentPlayer)
@@ -97,7 +90,7 @@ export default class Coup extends Component {
             bind.state.logs = [...bind.state.logs, coloredLog]
             bind.setState({logs :bind.state.logs})
         })
-        this.props.socket.on('g-chooseAction', () => {        
+        this.props.socket.on('g-chooseAction', () => {
             bind.setState({ isChooseAction: true})
         });
         this.props.socket.on('g-openExchange', (drawTwo) => {
@@ -109,9 +102,9 @@ export default class Coup extends Component {
                 return
             }
             if(action.source !== bind.props.name) {
-               bind.setState({ action }) 
+               bind.setState({ action })
             } else {
-                bind.setState({ action: null }) 
+                bind.setState({ action: null })
             }
         });
         this.props.socket.on('g-openBlockChallenge', (blockChallengeRes) => {
@@ -119,9 +112,9 @@ export default class Coup extends Component {
                 return
             }
             if(blockChallengeRes.counterAction.source !== bind.props.name) {
-               bind.setState({ blockChallengeRes }) 
+               bind.setState({ blockChallengeRes })
             } else {
-                bind.setState({ blockChallengeRes: null }) 
+                bind.setState({ blockChallengeRes: null })
             }
         });
         this.props.socket.on('g-openBlock', (action) => {
@@ -131,7 +124,7 @@ export default class Coup extends Component {
             if(action.source !== bind.props.name) {
                 bind.setState({ blockingAction: action })
              } else {
-                 bind.setState({ blockingAction: null }) 
+                 bind.setState({ blockingAction: null })
              }
         });
         this.props.socket.on('g-chooseReveal', (res) => {
@@ -161,7 +154,7 @@ export default class Coup extends Component {
     }
 
     doneAction = () => {
-        this.setState({ 
+        this.setState({
             isChooseAction: false
         })
     }
@@ -223,7 +216,7 @@ export default class Coup extends Component {
         contessa: '#E35646',
         ambassador: '#B4CA1F'
     }
-    
+
     render() {
         let actionDecision = null
         let currentPlayer = null
@@ -285,7 +278,7 @@ export default class Coup extends Component {
                     })
                 }
             </>
-            
+
             coins = <p>Coins: {this.state.players[this.state.playerIndex].money}</p>
         }
         if(isWaiting && !this.state.isDead) {
@@ -303,8 +296,7 @@ export default class Coup extends Component {
                         <CheatSheetModal/>
                     </div>
                     <p>You have been disconnected :c</p>
-                    <p>Please recreate the game.</p>
-                    <p>Sorry for the inconvenience (シ_ _)シ</p>
+                    <p>Please rejoin the game.</p>
                 </div>
             )
         }

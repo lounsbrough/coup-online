@@ -72,12 +72,13 @@ buildPlayers = (players) => {
     return players;
 }
 
-exportPlayers = (players) => {
-    players.forEach(x => {
-        delete x.socketID;
+exportPlayers = (players) =>
+    players.map(x => {
+        const exported = {...x};
+        delete exported.socketID;
+        delete exported.id;
+        return exported;
     });
-    return players;
-}
 
 module.exports = {
     buildDeck: buildDeck,
