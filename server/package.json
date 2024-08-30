@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "scripts": {
     "build": "rm -rf dist && tsc",
     "dev": "ts-node index.ts",
@@ -22,6 +27,7 @@
     "@types/node": "^22.5.1",
     "eslint": "^9.9.1",
     "globals": "^15.9.0",
+    "pre-commit": "^1.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.3.0"
