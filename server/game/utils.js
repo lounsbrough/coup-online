@@ -42,7 +42,7 @@ shuffleArray = (arr) => {
 
 buildNameSocketMap = (players) => {
     let map = {}
-    players.map((x) => {
+    players.forEach((x) => {
         map[x.name] = x.socketID;
     })
     return map
@@ -50,7 +50,7 @@ buildNameSocketMap = (players) => {
 
 buildNameIndexMap = (players) => {
     let map = {}
-    players.map((x, index) => {
+    players.forEach((x, index) => {
         map[x.name] = index;
     })
     return map
