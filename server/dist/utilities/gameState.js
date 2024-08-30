@@ -10,7 +10,10 @@ export const getGameState = async (roomId) => {
     return gameStates[roomId];
 };
 export const setGameState = async (roomId, newState) => {
-    await (await redisClientPromise).set(roomId, JSON.stringify(newState));
+    const fifteenMinutes = 900;
+    await (await redisClientPromise).set(roomId, JSON.stringify(newState), {
+        EX: fifteenMinutes
+    });
     gameStates[roomId] = newState;
 };
 //# sourceMappingURL=gameState.js.map
