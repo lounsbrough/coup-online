@@ -37,8 +37,12 @@ class CoupGame {
     }
 
     listen() {
-        this.players.map(x => {
+        this.players.forEach(x => {
             const socket = this.gameSocket.sockets[x.socketID];
+
+            if (!socket) {
+                return;
+            }
 
             let bind = this
             socket.removeAllListeners([
