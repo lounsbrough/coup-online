@@ -153,12 +153,16 @@ openSocket = (gameSocket, namespace) => {
     });
     let checkEmptyInterval = setInterval(() => {
         if (Object.keys(gameSocket['sockets']).length == 0) {
-            delete io.nsps[namespace];
-            delete namespaces[namespace.substring(1)];
-            clearInterval(checkEmptyInterval)
-            console.log(`${namespace} deleted`)
+            setTimeout(() => {
+                if (Object.keys(gameSocket['sockets']).length == 0) {
+                    delete io.nsps[namespace];
+                    delete namespaces[namespace.substring(1)];
+                    clearInterval(checkEmptyInterval)
+                    console.log(`${namespace} deleted`)
+                }
+            }, 300000)
         }
-    }, 60000)
+    }, 10000)
 }
 
 startGame = (players, gameSocket, namespace) => {
