@@ -16,3 +16,4 @@ app.get('/publicGameState', function (req, res) {
 server.listen(process.env.PORT || port, function () {
     console.log(`listening on ${process.env.PORT || port}`);
 });
+//# sourceMappingURL=index.js.map
