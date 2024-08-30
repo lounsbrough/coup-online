@@ -151,16 +151,19 @@ openSocket = (gameSocket, namespace) => {
             updatePartyList();
         })
     });
+    let gracePeriodActive = false;
     let checkEmptyInterval = setInterval(() => {
-        if (Object.keys(gameSocket['sockets']).length == 0) {
+        if (!gracePeriodActive && Object.keys(gameSocket['sockets']).length == 0) {
+            gracePeriodActive = true;
             setTimeout(() => {
                 if (Object.keys(gameSocket['sockets']).length == 0) {
                     delete io.nsps[namespace];
                     delete namespaces[namespace.substring(1)];
-                    clearInterval(checkEmptyInterval)
+                    clearInterval(checkEmptyInterval);
                     console.log(`${namespace} deleted`)
                 }
-            }, 300000)
+                gracePeriodActive = false;
+            }, 300000);
         }
     }, 10000)
 }
