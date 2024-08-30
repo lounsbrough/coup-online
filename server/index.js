@@ -156,7 +156,6 @@ openSocket = (gameSocket, namespace) => {
     });
     let gracePeriodTimeout = null;
     let checkEmptyInterval = setInterval(() => {
-        console.log('interval');
         if (!gracePeriodTimeout && Object.keys(gameSocket['sockets']).length == 0) {
             gracePeriodTimeout = setTimeout(() => {
                 console.log(`grace period ended for ${namespace}`);
