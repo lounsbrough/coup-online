@@ -23,7 +23,6 @@ const utilities = require('./utilities/utilities');
 
 // Constants
 const port = 8000;
-
 let namespaces = {}; //AKA party rooms
 
 
@@ -111,11 +110,15 @@ openSocket = (gameSocket, namespace) => {
             }
 
             updatePartyList();
-            gameSocket.to(socket.id).emit("joinSuccess", socket.id);
+            gameSocket.to(socket.id).emit("joinSuccess");
+
             if (started) {
                 gameSocket.emit('g-addLog', `${name} has rejoined`);
                 gameSocket.to(socket.id).emit("startGame");
-                namespaces[namespace.substring(1)].updatePlayers(); // need to push out all state
+                const game = namespaces[namespace.substring(1)];
+                game.players.find((player) => player.name === name).socketID = socket.id;
+                game.updatePlayers();
+                game.listen();
             }
         })
         socket.on('setReady', (isReady) => { //when client is ready, they will update this
@@ -151,13 +154,11 @@ openSocket = (gameSocket, namespace) => {
     let checkEmptyInterval = setInterval(() => {
         if (Object.keys(gameSocket['sockets']).length == 0) {
             delete io.nsps[namespace];
-            if (namespaces[namespace] != null) {
-                delete namespaces[namespace.substring(1)]
-            }
+            delete namespaces[namespace.substring(1)];
             clearInterval(checkEmptyInterval)
             console.log(`${namespace} deleted`)
         }
-    }, 10000)
+    }, 60000)
 }
 
 startGame = (players, gameSocket, namespace) => {
