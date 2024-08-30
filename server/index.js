@@ -56,6 +56,9 @@ openSocket = (gameSocket, namespace) => {
         socket.join(socket.id);
         console.log('socket joined ' + socket.id);
 
+        clearTimeout(gracePeriodTimeout);
+        gracePeriodTimeout = null;
+
         const updatePartyList = () => {
             console.log(partyMembers);
             gameSocket.emit('partyUpdate', partyMembers.map((member) => {
@@ -151,18 +154,16 @@ openSocket = (gameSocket, namespace) => {
             updatePartyList();
         })
     });
-    let gracePeriodActive = false;
+    let gracePeriodTimeout = null;
     let checkEmptyInterval = setInterval(() => {
-        if (!gracePeriodActive && Object.keys(gameSocket['sockets']).length == 0) {
-            gracePeriodActive = true;
-            setTimeout(() => {
-                if (Object.keys(gameSocket['sockets']).length == 0) {
-                    delete io.nsps[namespace];
-                    delete namespaces[namespace.substring(1)];
-                    clearInterval(checkEmptyInterval);
-                    console.log(`${namespace} deleted`)
-                }
-                gracePeriodActive = false;
+        console.log('interval');
+        if (!gracePeriodTimeout && Object.keys(gameSocket['sockets']).length == 0) {
+            gracePeriodTimeout = setTimeout(() => {
+                console.log(`grace period ended for ${namespace}`);
+                delete io.nsps[namespace];
+                delete namespaces[namespace.substring(1)];
+                clearInterval(checkEmptyInterval);
+                console.log(`${namespace} deleted`)
             }, 300000);
         }
     }, 10000)
