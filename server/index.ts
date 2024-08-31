@@ -1,7 +1,7 @@
 import http from 'http';
 import express from 'express';
 import cors from 'cors';
-import { getGameState } from './utilities/gameState';
+import { createNewGame, getGameState, mutateGameState } from './utilities/gameState';
 
 const app = express();
 app.use(cors());
@@ -13,9 +13,68 @@ app.get('/gameState', function (req, res) {
     res.json({});
 });
 
+app.post('/createGame', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+    const playerName = req.body?.playerName;
+
+    if (!roomId || !playerId || !playerName) {
+        res.status(400).send('room id, player id, and player name are required');
+        return;
+    }
+
+    if (await getGameState(roomId)) {
+        res.status(409).send(`room ${roomId} already exists`);
+        return;
+    }
+
+    await createNewGame(roomId);
+
+    res.status(200).send();
+})
+
+app.post('/joinGame', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+    const playerName = req.body?.playerName;
+
+    if (!roomId || !playerId || !playerName) {
+        res.status(400).send('room id, player id, and player name are required');
+        return;
+    }
+
+    const gameState = await getGameState(roomId);
+    if (!gameState) {
+        res.status(404).send(`room ${roomId} does not exist`);
+        return;
+    }
+
+    if (gameState.players.length >= 6) {
+        res.status(400).send(`room ${roomId} is full`);
+        return;
+    }
+
+    if (gameState.isStarted) {
+        res.status(400).send(`room ${roomId} is already playing`);
+        return;
+    }
+
+    await mutateGameState(roomId, (state) => {
+        state.players.push({
+            id: playerId,
+            name: playerName,
+            coins: 2,
+            influences: Array.from({ length: 2 }, () => gameState.deck.getNextCard())
+        })
+        return state;
+    });
+
+    res.status(200).send();
+})
+
 app.post('/action', async (req, res) => {
-    const roomId = req.body.roomId;
-    const playerId = req.body.playerId;
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
 
     if (!roomId || !playerId) {
         res.status(400).send('room id and player id are required');
