@@ -11,10 +11,11 @@ function CreateGame() {
   const [playerNameError, setPlayerNameError] = useState('');
 
 
-  const { trigger, isMutating, error } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8080'}/createGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string; playerName: string; }; }) => {
+  const { trigger, isMutating, error } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string; playerName: string; }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
+        'accept': 'application/json',
         'content-type': 'application/json'
       },
       body: JSON.stringify(arg)
