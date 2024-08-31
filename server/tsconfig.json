@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "es2022",
+    "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2022",
@@ -17,6 +17,7 @@
     }
   },
   "include": [
-    "./**/*"
+    "./**/*",
+    "../shared/types/game.ts"
   ]
 }
