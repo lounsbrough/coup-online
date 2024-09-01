@@ -1,24 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Grid2, TextField, Typography } from "@mui/material";
-import { AccountCircle, Group } from "@mui/icons-material";
+import { AccountCircle } from "@mui/icons-material";
 import useSWRMutation from "swr/mutation";
+import { useNavigate } from "react-router-dom";
 import { getPlayerId } from "../../helpers/playerId";
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('');
-  const [playerNameError, setPlayerNameError] = useState('');
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
-  const { trigger, isMutating, error } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { playerId: string; playerName: string; }; }) => {
+  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { playerId: string; playerName: string; }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
       },
       body: JSON.stringify(arg)
-    }).then(async res => {
-      console.log(await res.json());
+    }).then(async (res) => {
+      if (res.ok) {
+        const roomId = (await res.json()).roomId;
+        navigate(`/?roomId=${roomId}`);
+      } else {
+        setError(true);
+      }
     })
   }))
+
+  useEffect(() => {
+    if (swrError) {
+      setError(true);
+    }
+  }, [swrError]);
 
   return (
     <>
@@ -27,6 +40,7 @@ function CreateGame() {
       </Typography>
       <form
         onSubmit={(event) => {
+          setError(false);
           event.preventDefault();
           trigger({
             playerId: getPlayerId(),
@@ -48,8 +62,13 @@ function CreateGame() {
           </Grid2>
         </Grid2>
         <Grid2>
-          <Button type="submit" sx={{ mt: 5 }} variant="contained">Create Game</Button>
+          <Button
+            type="submit" sx={{ mt: 5 }}
+            variant="contained"
+            disabled={isMutating}
+          >Create Game</Button>
         </Grid2>
+        {error && <Typography sx={{ mt: 3, fontWeight: 700, color: 'red' }}>Error creating game</Typography>}
       </form>
     </>
   )
