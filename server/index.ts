@@ -50,7 +50,7 @@ app.post('/createGame', async (req, res) => {
 app.post('/joinGame', async (req, res) => {
     const roomId = req.body?.roomId;
     const playerId = req.body?.playerId;
-    const playerName = req.body?.playerName;
+    const playerName = req.body?.playerName?.trim();
 
     if (!roomId || !playerId || !playerName) {
         res.status(400).send('roomId, playerId, and playerName are required');
@@ -70,6 +70,11 @@ app.post('/joinGame', async (req, res) => {
 
     if (gameState.isStarted) {
         res.status(400).send(`room ${roomId} is already playing`);
+        return;
+    }
+
+    if (gameState.players.some(({name}) => name.toUpperCase() === playerName.toUpperCase())) {
+        res.status(400).send(`room ${roomId} already has player named ${playerName}`);
         return;
     }
 
