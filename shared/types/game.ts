@@ -118,6 +118,13 @@ export type GameState = {
   isStarted: boolean
 }
 
-export type PublicGameState = Omit<GameState, 'players'> & {
+export type PublicGameState = Pick<GameState,
+  'turnPlayer' |
+  'pendingAction' |
+  'pendingActionChallenge' |
+  'pendingBlock' |
+  'pendingBlockChallenge' |
+  'isStarted'
+> & {
   players: PublicPlayer[]
 }

@@ -5,21 +5,19 @@ import useSWRMutation from "swr/mutation";
 import { getPlayerId } from "../../helpers/playerId";
 
 function CreateGame() {
-  const [roomId, setRoomId] = useState('');
-  const [roomIdError, setRoomIdError] = useState('');
   const [playerName, setPlayerName] = useState('');
   const [playerNameError, setPlayerNameError] = useState('');
 
-
-  const { trigger, isMutating, error } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string; playerName: string; }; }) => {
+  const { trigger, isMutating, error } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { playerId: string; playerName: string; }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
-        'accept': 'application/json',
         'content-type': 'application/json'
       },
       body: JSON.stringify(arg)
-    }).then(res => res.json());
+    }).then(async res => {
+      console.log(await res.json());
+    })
   }))
 
   return (
@@ -31,7 +29,6 @@ function CreateGame() {
         onSubmit={(event) => {
           event.preventDefault();
           trigger({
-            roomId: roomId.trim(),
             playerId: getPlayerId(),
             playerName: playerName.trim()
           });
