@@ -14,13 +14,14 @@ const port = 8000;
 
 app.get('/gameState', async (req, res) => {
     const roomId = req.query?.roomId;
+    const playerId = req.query?.playerId;
 
-    if (typeof roomId !== 'string') {
-        res.status(400).send('roomId is required');
+    if (typeof roomId !== 'string' || typeof playerId !== 'string') {
+        res.status(400).send('roomId and playerId are required');
         return;
     }
 
-    const gameState = await getPublicGameState(roomId);
+    const gameState = await getPublicGameState(roomId, playerId);
 
     if (!gameState) {
         res.status(404).send();

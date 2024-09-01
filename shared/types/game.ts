@@ -55,29 +55,35 @@ export enum Influences {
   Duke = 'Duke'
 }
 
-export const InfluencesRules: {
+export const InfluenceAttributes: {
   [influence in Influences]: {
     legalAction?: Actions
     legalBlock?: Actions
+    color: string
   }
 } = {
   [Influences.Assassin]: {
-    legalAction: Actions.Assassinate
+    legalAction: Actions.Assassinate,
+    color: '#2B2B2B'
   },
   [Influences.Contessa]: {
-    legalBlock: Actions.Assassinate
+    legalBlock: Actions.Assassinate,
+    color: '#E35646'
   },
   [Influences.Captain]: {
     legalAction: Actions.Steal,
-    legalBlock: Actions.Steal
+    legalBlock: Actions.Steal,
+    color: '#80C6E5'
   },
   [Influences.Ambassador]: {
     legalAction: Actions.Exchange,
-    legalBlock: Actions.Steal
+    legalBlock: Actions.Steal,
+    color: '#B4CA1F'
   },
   [Influences.Duke]: {
     legalAction: Actions.Tax,
-    legalBlock: Actions.ForeignAid
+    legalBlock: Actions.ForeignAid,
+    color: '#D55DC7'
   }
 }
 
@@ -86,6 +92,7 @@ export type Player = {
   coins: number
   name: string
   id: string
+  color: string
 }
 
 export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
@@ -127,4 +134,5 @@ export type PublicGameState = Pick<GameState,
   'isStarted'
 > & {
   players: PublicPlayer[]
+  selfPlayer: Player
 }
