@@ -1,4 +1,4 @@
-import { GameState, Influences, PublicGameState } from '../../shared/types/game';
+import { GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../shared/types/game';
 import { getValue, setValue } from './storage';
 
 const gameStates: {
@@ -15,13 +15,28 @@ export const getGameState = async (
 }
 
 export const getPublicGameState = async (
-  roomId: string
+  roomId: string,
+  playerId: string
 ): Promise<PublicGameState | null> => {
   const gameState = await getGameState(roomId);
 
   if (gameState === null) {
     return null;
   }
+
+  let selfPlayer: Player;
+  const publicPlayers: PublicPlayer[] = []
+  gameState.players.forEach((player) => {
+    publicPlayers.push({
+      name: player.name,
+      coins: player.coins,
+      influenceCount: player.influences.length,
+      color: player.color
+    })
+    if (player.id === playerId) {
+      selfPlayer = player
+    }
+  })
 
   return {
     turnPlayer: gameState.turnPlayer,
@@ -30,11 +45,8 @@ export const getPublicGameState = async (
     pendingActionChallenge: gameState.pendingActionChallenge,
     pendingBlock: gameState.pendingBlock,
     pendingBlockChallenge: gameState.pendingBlockChallenge,
-    players: gameState.players.map((player) => ({
-      name: player.name,
-      coins: player.coins,
-      influenceCount: player.influences.length
-    }))
+    players: publicPlayers,
+    selfPlayer
   };
 }
 
@@ -89,7 +101,8 @@ export const addPlayerToGame = async (roomId: string, playerId: string, playerNa
       id: playerId,
       name: playerName,
       coins: 2,
-      influences: Array.from({ length: 2 }, () => state.deck.getNextCard())
+      influences: Array.from({ length: 2 }, () => state.deck.getNextCard()),
+      color: ['#73C373', '#7AB8D3', '#DD6C75', '#8C6CE6', '#EA9158', '#CB8F8F', '#FFC303'][state.players.length]
     })
     return state;
   });

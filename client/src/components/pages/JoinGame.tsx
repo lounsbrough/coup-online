@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Box, Button, Grid2, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material";
 import { AccountCircle, Group } from "@mui/icons-material";
 import useSWRMutation from "swr/mutation";
+import { Link } from "react-router-dom";
 
 function JoinGame() {
   const [roomId, setRoomId] = useState('');
@@ -19,6 +20,10 @@ function JoinGame() {
 
   return (
     <>
+      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
+        <Link to='/'>Home</Link>
+        <Typography>Join Game</Typography>
+      </Breadcrumbs>
       <Typography variant="h5" sx={{ m: 5 }}>
         Join an Existing Game
       </Typography>
