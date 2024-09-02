@@ -10,11 +10,12 @@ function Players({ players } : { players: PublicPlayer[] }) {
             <Box sx={{
               background: color,
               p: 2,
+              m: 1,
               borderRadius: 3
             }}>
               <Typography sx={{
                 fontWeight: 'bold',
-                fontSize: '1.2rem'
+                fontSize: '1.5rem'
               }}
               >{name}
               </Typography>
