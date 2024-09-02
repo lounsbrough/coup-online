@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
-import { Typography } from '@mui/material';
+import { Breadcrumbs, Typography } from '@mui/material';
 import JoinGame from './pages/JoinGame';
 import CreateGame from './pages/CreateGame';
 import Home from './pages/Home';
@@ -17,6 +17,10 @@ function App() {
       <header className="App-header">
         <Typography variant='h4'>Coup Online</Typography>
       </header>
+      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
+        <Link to='/'>Home</Link>
+        <Typography>??????</Typography>
+      </Breadcrumbs>
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />

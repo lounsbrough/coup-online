@@ -3,6 +3,7 @@ import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/mat
 import { AccountCircle, Group } from "@mui/icons-material";
 import useSWRMutation from "swr/mutation";
 import { Link } from "react-router-dom";
+import { getPlayerId } from "../../helpers/playerId";
 
 function JoinGame() {
   const [roomId, setRoomId] = useState('');
@@ -11,9 +12,12 @@ function JoinGame() {
   const [playerNameError, setPlayerNameError] = useState('');
 
 
-  const { trigger, isMutating, error } = useSWRMutation(`${process.env.REACT_API_BASE_URL}/joinGame`, (async (url: string, { arg }: { arg: { roomId: string; playerName: string; }; }) => {
+  const { trigger, isMutating, error } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/joinGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string, playerName: string; }; }) => {
     return fetch(url, {
       method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
       body: JSON.stringify(arg)
     }).then(res => res.json());
   }))
@@ -32,6 +36,7 @@ function JoinGame() {
           event.preventDefault();
           trigger({
             roomId: roomId.trim(),
+            playerId: getPlayerId(),
             playerName: playerName.trim()
           });
         }}>
