@@ -4,19 +4,18 @@ import ChooseAction from "./ChooseAction";
 import ChooseActionResponse from "./ChooseActionResponse";
 import ChooseChallengeResponse from "./ChooseChallengeResponse";
 import ChooseInfluenceToLose from "./ChooseInfluenceToLose";
+import ChooseBlockResponse from "./ChooseBlockResponse";
 
 function PlayerDecision({ roomId, gameState }: {
   roomId: string, gameState: PublicGameState
 }) {
-  const turnPlayer = gameState.players.find((player) =>
-    player.name === gameState.turnPlayer
-  );
+  const isMyTurn = gameState.turnPlayer === gameState.selfPlayer.name;
 
   if (gameState.pendingInfluenceLossCount[gameState.selfPlayer.name]) {
     return <ChooseInfluenceToLose roomId={roomId} gameState={gameState} />
   }
 
-  if (turnPlayer?.name === gameState.selfPlayer.name &&
+  if (isMyTurn &&
     !gameState.pendingAction &&
     !gameState.pendingActionChallenge &&
     !gameState.pendingBlock &&
@@ -25,20 +24,25 @@ function PlayerDecision({ roomId, gameState }: {
     return <ChooseAction roomId={roomId} gameState={gameState} />;
   }
 
-  if (turnPlayer?.name !== gameState.selfPlayer.name &&
+  if (!isMyTurn &&
     gameState.pendingAction &&
     !gameState.pendingActionChallenge &&
     gameState.pendingAction.pendingPlayers.includes(gameState.selfPlayer.name)) {
     return <ChooseActionResponse roomId={roomId} gameState={gameState} />;
   }
 
-  if (turnPlayer?.name === gameState.selfPlayer.name &&
+  if (isMyTurn &&
     gameState.pendingActionChallenge) {
     return <ChooseChallengeResponse roomId={roomId} gameState={gameState} />;
   }
 
-  if (turnPlayer?.name === gameState.selfPlayer.name &&
-    gameState.pendingBlockChallenge) {
+  if (isMyTurn && gameState.pendingBlock) {
+    return <ChooseBlockResponse roomId={roomId} gameState={gameState} />;
+  }
+
+  if (gameState.pendingBlockChallenge &&
+    gameState.pendingBlockChallenge.sourcePlayer === gameState.selfPlayer.name
+  ) {
     return <ChooseChallengeResponse roomId={roomId} gameState={gameState} />;
   }
 
