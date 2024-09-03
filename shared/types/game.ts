@@ -150,8 +150,10 @@ export type GameState = {
   pendingBlockChallenge?: {
     sourcePlayer: string
   }
-  pendingInfluenceLossCount: {
-    [player: string]: number
+  pendingInfluenceLoss: {
+    [player: string]: {
+      putBackInDeck: boolean
+    }[]
   }
   isStarted: boolean
   eventLogs: string[]
@@ -163,7 +165,7 @@ export type PublicGameState = Pick<GameState,
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
-  'pendingInfluenceLossCount' |
+  'pendingInfluenceLoss' |
   'isStarted' |
   'eventLogs'
 > & {

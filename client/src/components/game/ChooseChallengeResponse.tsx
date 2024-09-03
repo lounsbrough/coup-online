@@ -1,5 +1,5 @@
-import { Button, Grid2, Tooltip, Typography } from "@mui/material";
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, ResponseAttributes, Responses } from "../../shared/types/game";
+import { Button, Grid2, Typography } from "@mui/material";
+import { InfluenceAttributes, Influences, PublicGameState } from "../../shared/types/game";
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
@@ -7,7 +7,7 @@ import { getPlayerId } from "../../helpers/playerId";
 function ChooseChallengeResponse({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
   const [error, setError] = useState<string>();
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/challengeResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
+  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/${gameState.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {

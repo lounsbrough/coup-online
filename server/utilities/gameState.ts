@@ -47,7 +47,7 @@ export const getPublicGameState = async (
     pendingActionChallenge: gameState.pendingActionChallenge,
     pendingBlock: gameState.pendingBlock,
     pendingBlockChallenge: gameState.pendingBlockChallenge,
-    pendingInfluenceLossCount: gameState.pendingInfluenceLossCount,
+    pendingInfluenceLoss: gameState.pendingInfluenceLoss,
     eventLogs: gameState.eventLogs,
     players: publicPlayers,
     selfPlayer
@@ -76,6 +76,13 @@ export const mutateGameState = async (
   await setGameState(roomId, gameState);
 }
 
+export const killPlayerInfluence = (state: GameState, playerName: string, putBackInDeck: boolean = false) => {
+  state.pendingInfluenceLoss[playerName] = [
+    ...(state.pendingInfluenceLoss[playerName] ?? []),
+    { putBackInDeck }
+];
+}
+
 export const shuffleDeck = (deck: Influences[]) => {
   const unShuffled = [...deck];
   const shuffled: Influences[] = [];
@@ -93,7 +100,7 @@ const buildShuffledDeck = () => {
 }
 
 export const drawCardFromDeck = (state: GameState) => {
-  return state.deck.splice(0, 1)[0]
+  return state.deck.pop();
 }
 
 export const logEvent = (state: GameState, log: string) => {
@@ -107,7 +114,7 @@ export const createNewGame = async (roomId: string) => {
   await setGameState(roomId, {
     players: [],
     deck: buildShuffledDeck(),
-    pendingInfluenceLossCount: {},
+    pendingInfluenceLoss: {},
     isStarted: false,
     eventLogs: []
   });
