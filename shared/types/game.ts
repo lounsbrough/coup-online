@@ -138,7 +138,7 @@ export type GameState = {
   pendingAction?: {
     targetPlayer?: string
     action: Actions
-    passedPlayers: string[]
+    pendingPlayers: string[]
   }
   pendingActionChallenge?: {
     sourcePlayer: string
