@@ -281,7 +281,7 @@ app.post('/actionResponse', async (req, res) => {
                         actionPlayer.coins += 3;
                     }
                     state.turnPlayer = getNextPlayerTurn(state);
-                    logEvent(state, `${player.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
+                    logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
                     delete state.pendingAction;
                 });
             } else {
