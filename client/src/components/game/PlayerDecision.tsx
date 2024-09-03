@@ -12,7 +12,7 @@ function PlayerDecision({ roomId, gameState }: {
   const isMyTurn = gameState.turnPlayer === gameState.selfPlayer.name;
 
   if (!gameState.selfPlayer.influences.length) {
-    return <Typography>You did the best you could</Typography>;
+    return null;
   }
 
   if (gameState.pendingInfluenceLoss[gameState.selfPlayer.name]) {
