@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, shuffleDeck } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction, shuffleDeck } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
@@ -275,28 +275,8 @@ app.post('/actionResponse', async (req, res) => {
     if (response === Responses.Pass) {
         if (gameState.pendingAction.pendingPlayers.length === 1) {
             await mutateGameState(roomId, (state) => {
-                const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
-                const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
-                if (state.pendingAction.action === Actions.Assassinate) {
-                    actionPlayer.coins -= 3;
-                    killPlayerInfluence(state, targetPlayer.name);
-                } else if (state.pendingAction.action === Actions.Exchange) {
-                    actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
-                    state.deck = shuffleDeck(state.deck);
-                    killPlayerInfluence(state, actionPlayer.name, true);
-                    killPlayerInfluence(state, actionPlayer.name, true);
-                } else if (state.pendingAction.action === Actions.ForeignAid) {
-                    actionPlayer.coins += 2;
-                } else if (state.pendingAction.action === Actions.Steal) {
-                    const coinsAvailable = Math.min(2, targetPlayer.coins);
-                    actionPlayer.coins += coinsAvailable;
-                    targetPlayer.coins -= coinsAvailable;
-                } else if (state.pendingAction.action === Actions.Tax) {
-                    actionPlayer.coins += 3;
-                }
+                processPendingAction(state);
                 state.turnPlayer = getNextPlayerTurn(state);
-                logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
-                delete state.pendingAction;
             });
         } else {
             await mutateGameState(roomId, (state) => {
@@ -385,25 +365,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
     if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
         await mutateGameState(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
-            const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
-            if (state.pendingAction.action === Actions.Assassinate) {
-                actionPlayer.coins -= 3;
-                killPlayerInfluence(state, targetPlayer.name);
-            } else if (state.pendingAction.action === Actions.Exchange) {
-                actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
-                state.deck = shuffleDeck(state.deck);
-                killPlayerInfluence(state, actionPlayer.name, true);
-                killPlayerInfluence(state, actionPlayer.name, true);
-            } else if (state.pendingAction.action === Actions.ForeignAid) {
-                actionPlayer.coins += 2;
-            } else if (state.pendingAction.action === Actions.Steal) {
-                const coinsAvailable = Math.min(2, targetPlayer.coins);
-                actionPlayer.coins += coinsAvailable;
-                targetPlayer.coins -= coinsAvailable;
-            } else if (state.pendingAction.action === Actions.Tax) {
-                actionPlayer.coins += 3;
-            }
             killPlayerInfluence(state, challengePlayer.name);
             logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`)
             actionPlayer.influences.splice(
@@ -411,10 +373,9 @@ app.post('/actionChallengeResponse', async (req, res) => {
                 1
             );
             actionPlayer.influences.push(drawCardFromDeck(state));
-            state.turnPlayer = getNextPlayerTurn(state);
-            logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
             delete state.pendingActionChallenge;
-            delete state.pendingAction;
+            processPendingAction(state);
+            state.turnPlayer = getNextPlayerTurn(state);
         });
     } else {
         await mutateGameState(roomId, (state) => {
