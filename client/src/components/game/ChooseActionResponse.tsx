@@ -28,7 +28,13 @@ function ChooseActionResponse({ roomId, gameState }: { roomId: string, gameState
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.entries(ResponseAttributes).map(([response, responseAttributes], index) => {
-          if (response === Responses.Block && gameState.selfPlayer.name !== gameState.pendingAction?.targetPlayer) {
+          if (response === Responses.Challenge &&
+            !ActionAttributes[gameState.pendingAction?.action as Actions].challengeable) {
+            return null;
+          }
+
+          if (response === Responses.Block &&
+            !ActionAttributes[gameState.pendingAction?.action as Actions].blockable) {
             return null;
           }
 
