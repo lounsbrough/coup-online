@@ -157,7 +157,7 @@ app.post('/action', async (req, res) => {
         return;
     }
 
-    if (!player.influences) {
+    if (!player.influences.length) {
         res.status(400).send('You had your chance');
         return;
     }
@@ -216,7 +216,7 @@ app.post('/action', async (req, res) => {
             state.pendingAction = {
                 action: action,
                 pendingPlayers: state.players.reduce((agg: string[], cur) => {
-                    if (cur.influences && cur.name !== player.name) {
+                    if (cur.influences.length && cur.name !== player.name) {
                         agg.push(cur.name)
                     }
                     return agg;
@@ -255,7 +255,7 @@ app.post('/actionResponse', async (req, res) => {
         return;
     }
 
-    if (!player.influences) {
+    if (!player.influences.length) {
         res.status(400).send('You had your chance');
         return;
     }
@@ -362,7 +362,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
         return;
     }
 
-    if (!player.influences) {
+    if (!player.influences.length) {
         res.status(400).send('You had your chance');
         return;
     }
@@ -455,7 +455,7 @@ app.post('/blockResponse', async (req, res) => {
         return;
     }
 
-    if (!player.influences) {
+    if (!player.influences.length) {
         res.status(400).send('You had your chance');
         return;
     }
@@ -519,7 +519,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
         return;
     }
 
-    if (!player.influences) {
+    if (!player.influences.length) {
         res.status(400).send('You had your chance');
         return;
     }
@@ -582,7 +582,7 @@ app.post('/loseInfluence', async (req, res) => {
         return;
     }
 
-    if (!player.influences) {
+    if (!player.influences.length) {
         res.status(400).send('You had your chance');
         return;
     }
