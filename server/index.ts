@@ -56,7 +56,20 @@ app.post('/startGame', async (req, res) => {
         return;
     }
 
-    await mutateGameState(roomId, (state) => { state.isStarted = true });
+    const gameState = await getGameState(roomId);
+
+    if (!gameState) {
+        res.status(404).send(`Room ${roomId} does not exist`);
+        return;
+    }
+
+    if (!gameState.isStarted) {
+        await mutateGameState(roomId, (state) => {
+            state.eventLog.logEvent('Game has started');
+            state.isStarted = true;
+            state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name
+        });
+    }
 
     res.status(200).json({ roomId })
 })

@@ -104,6 +104,11 @@ type CardDeck = {
   getNextCard: () => Influences
 }
 
+type EventLog = {
+  logs: string[],
+  logEvent: (log: string) => void
+}
+
 export type GameState = {
   players: Player[]
   deck: CardDeck
@@ -123,6 +128,7 @@ export type GameState = {
     sourcePlayer: string
   }
   isStarted: boolean
+  eventLog: EventLog
 }
 
 export type PublicGameState = Pick<GameState,
@@ -131,7 +137,8 @@ export type PublicGameState = Pick<GameState,
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
-  'isStarted'
+  'isStarted' |
+  'eventLog'
 > & {
   players: PublicPlayer[]
   selfPlayer: Player
