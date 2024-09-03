@@ -278,8 +278,8 @@ app.post('/actionResponse', async (req, res) => {
                 } else if (state.pendingAction.action === Actions.Exchange) {
                     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
                     state.deck = shuffleDeck(state.deck);
-                    killPlayerInfluence(state, targetPlayer.name, true);
-                    killPlayerInfluence(state, targetPlayer.name, true);
+                    killPlayerInfluence(state, actionPlayer.name, true);
+                    killPlayerInfluence(state, actionPlayer.name, true);
                 } else if (state.pendingAction.action === Actions.ForeignAid) {
                     actionPlayer.coins += 2;
                 } else if (state.pendingAction.action === Actions.Steal) {
