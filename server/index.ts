@@ -371,6 +371,11 @@ app.post('/challengeResponse', async (req, res) => {
         return;
     }
 
+    if (!player.influences.includes(influence)) {
+        res.status(400).send('You don\'t have that influence');
+        return;
+    }
+
     if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
         await mutateGameState(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
@@ -411,6 +416,70 @@ app.post('/challengeResponse', async (req, res) => {
             state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 1;
             logEvent(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`)
             state.turnPlayer = getNextPlayerTurn(state);
+            delete state.pendingActionChallenge;
+            delete state.pendingAction;
+        });
+    }
+
+    res.status(200).send();
+});
+
+app.post('/blockResponse', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+    const response = req.body?.response;
+
+    if (!roomId || !playerId || !response) {
+        res.status(400).send('roomId, playerId, and response are required');
+        return;
+    }
+
+    const gameState = await getGameState(roomId);
+
+    if (!gameState) {
+        res.status(400).send(`Room ${roomId} does not exist`);
+        return;
+    }
+
+    const player = gameState.players.find(({ id }) => id === playerId);
+
+    if (!player) {
+        res.status(400).send('Player not in room');
+        return;
+    }
+
+    if (!player.influences) {
+        res.status(400).send('You had your chance');
+        return;
+    }
+
+    if (!gameState.pendingBlock) {
+        res.status(400).send('You can\'t choose a block response right now');
+        return;
+    }
+
+    if (!Object.values(Responses).includes(response)) {
+        res.status(400).send('Unknown response');
+        return;
+    }
+
+    if (response === Responses.Block) {
+        res.status(400).send('You can\t block a block');
+        return;
+    }
+
+    if (response === Responses.Challenge) {
+        await mutateGameState(roomId, (state) => {
+            const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
+            logEvent(state, `${player.name} is challenging ${blockPlayer.name}`)
+            state.turnPlayer = getNextPlayerTurn(state);
+        });
+    } else if (response === Responses.Pass) {
+        await mutateGameState(roomId, (state) => {
+            const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
+            logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
+            state.turnPlayer = getNextPlayerTurn(state);
+            delete state.pendingBlock;
             delete state.pendingActionChallenge;
             delete state.pendingAction;
         });
