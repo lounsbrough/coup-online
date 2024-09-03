@@ -365,7 +365,7 @@ app.post('/challengeResponse', async (req, res) => {
         return;
     }
 
-    if (!Object.values(influence).includes(Influences)) {
+    if (!Object.values(Influences).includes(influence)) {
         res.status(400).send('Unknown influence');
         return;
     }
@@ -451,7 +451,7 @@ app.post('/loseInfluence', async (req, res) => {
         return;
     }
 
-    if (!Object.values(influence).includes(Influences)) {
+    if (!Object.values(Influences).includes(influence)) {
         res.status(400).send('Unknown influence');
         return;
     }
