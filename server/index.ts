@@ -138,7 +138,7 @@ app.post('/action', async (req, res) => {
         return;
     }
 
-    if (!(action in Actions)) {
+    if (!Object.values(Actions).includes(action)) {
         res.status(400).send('Unknown action');
         return;
     }
@@ -262,7 +262,7 @@ app.post('/actionResponse', async (req, res) => {
         return;
     }
 
-    if (!(response in Responses)) {
+    if (!Object.values(Responses).includes(response)) {
         res.status(400).send('Unknown response');
         return;
     }
@@ -313,7 +313,7 @@ app.post('/actionResponse', async (req, res) => {
             return;
         }
 
-        if (!(claimedInfluence in Influences)) {
+        if (!Object.values(Influences).includes(claimedInfluence)) {
             res.status(400).send('Unknown claimedInfluence');
             return;
         }
@@ -364,7 +364,7 @@ app.post('/challengeResponse', async (req, res) => {
         return;
     }
 
-    if (!(influence in Influences)) {
+    if (!Object.values(influence).includes(Influences)) {
         res.status(400).send('Unknown influence');
         return;
     }
@@ -450,7 +450,7 @@ app.post('/loseInfluence', async (req, res) => {
         return;
     }
 
-    if (!(influence in Influences)) {
+    if (!Object.values(influence).includes(Influences)) {
         res.status(400).send('Unknown influence');
         return;
     }
