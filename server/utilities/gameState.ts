@@ -47,6 +47,7 @@ export const getPublicGameState = async (
     pendingActionChallenge: gameState.pendingActionChallenge,
     pendingBlock: gameState.pendingBlock,
     pendingBlockChallenge: gameState.pendingBlockChallenge,
+    eventLog: gameState.eventLog,
     players: publicPlayers,
     selfPlayer
   };
@@ -89,11 +90,26 @@ const buildDeck = () => {
   }
 }
 
+const buildEventLog = () => {
+  const logs: string[] = [];
+
+  return {
+    logs,
+    logEvent: (log: string) => {
+      logs.push(log);
+      if (logs.length > 100) {
+        logs.splice(0, 1);
+      }
+    }
+  }
+}
+
 export const createNewGame = async (roomId: string) => {
   await setGameState(roomId, {
     players: [],
     deck: buildDeck(),
-    isStarted: false
+    isStarted: false,
+    eventLog: buildEventLog()
   });
 }
 
