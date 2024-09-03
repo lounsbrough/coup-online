@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('');
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | undefined>();
   const navigate = useNavigate();
 
   const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { playerId: string; playerName: string; }; }) => {
@@ -23,14 +23,15 @@ function CreateGame() {
         const roomId = (await res.json()).roomId;
         navigate(`/game?roomId=${roomId}`);
       } else {
-        setError(true);
+        setError('Error creating game');
       }
     })
   }))
 
   useEffect(() => {
     if (swrError) {
-      setError(true);
+      console.log(swrError);
+      setError('Error updating game');
     }
   }, [swrError]);
 
@@ -43,8 +44,14 @@ function CreateGame() {
       <Typography variant="h5" sx={{ m: 5 }}>Create a New Game</Typography>
       <form
         onSubmit={(event) => {
-          setError(false);
           event.preventDefault();
+          setPlayerName(playerName.trim());
+
+          if (!playerName.trim()) {
+            return false;
+          }
+
+          setError(undefined);
           trigger({
             playerId: getPlayerId(),
             playerName: playerName.trim()
@@ -71,7 +78,7 @@ function CreateGame() {
             disabled={isMutating}
           >Create Game</Button>
         </Grid2>
-        {error && <Typography sx={{ mt: 3, fontWeight: 700, color: 'red' }}>Error creating game</Typography>}
+        {error && <Typography sx={{ mt: 3, fontWeight: 700, color: 'red' }}>{error}</Typography>}
       </form>
     </>
   )
