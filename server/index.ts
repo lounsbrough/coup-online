@@ -281,8 +281,8 @@ app.post('/actionResponse', async (req, res) => {
                         actionPlayer.coins += 3;
                     }
                     state.turnPlayer = getNextPlayerTurn(state);
-                    delete state.pendingAction;
                     logEvent(state, `${player.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
+                    delete state.pendingAction;
                 });
             } else {
                 await mutateGameState(roomId, (state) => {
