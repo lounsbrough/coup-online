@@ -4,7 +4,7 @@ import { json } from 'body-parser';
 import cors from 'cors';
 import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, logEvent, mutateGameState } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
-import { ActionAttributes, Actions, Responses } from '../shared/types/game';
+import { ActionAttributes, Actions, Influences, Responses } from '../shared/types/game';
 
 const app = express();
 app.use(cors());
@@ -224,6 +224,7 @@ app.post('/actionResponse', async (req, res) => {
     const roomId = req.body?.roomId;
     const playerId = req.body?.playerId;
     const response = req.body?.response;
+    const claimedInfluence = req.body?.claimedInfluence;
 
     if (!roomId || !playerId || !response) {
         res.status(400).send('roomId, playerId, and response are required');
@@ -249,7 +250,9 @@ app.post('/actionResponse', async (req, res) => {
         return;
     }
 
-    if (!gameState.pendingAction) {
+    if (!gameState.pendingAction
+        || gameState.pendingActionChallenge
+        || !gameState.pendingAction.pendingPlayers.includes(player.name)) {
         res.status(400).send('You can\'t choose an action response right now');
         return;
     }
@@ -260,40 +263,61 @@ app.post('/actionResponse', async (req, res) => {
     }
 
     if (response === Responses.Pass) {
-        if (gameState.pendingAction.pendingPlayers.includes(player.name)) {
-            if (gameState.pendingAction.pendingPlayers.length === 1) {
-                await mutateGameState(roomId, (state) => {
-                    const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
-                    const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
-                    if (state.pendingAction.action === Actions.Assassinate) {
-                        actionPlayer.coins -= 3;
-                        state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
-                    } else if (state.pendingAction.action === Actions.Exchange) {
-                        actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
-                        state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 1;
-                    } else if (state.pendingAction.action === Actions.ForeignAid) {
-                        actionPlayer.coins += 2;
-                    } else if (state.pendingAction.action === Actions.Steal) {
-                        const coinsAvailable = Math.min(2, targetPlayer.coins);
-                        actionPlayer.coins += coinsAvailable;
-                        targetPlayer.coins -= coinsAvailable;
-                    } else if (state.pendingAction.action === Actions.Tax) {
-                        actionPlayer.coins += 3;
-                    }
-                    state.turnPlayer = getNextPlayerTurn(state);
-                    logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
-                    delete state.pendingAction;
-                });
-            } else {
-                await mutateGameState(roomId, (state) => {
-                    state.turnPlayer = getNextPlayerTurn(state);
-                    state.pendingAction.pendingPlayers.splice(
-                        state.pendingAction.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name),
-                        1
-                    );
-                });
-            }
+        if (gameState.pendingAction.pendingPlayers.length === 1) {
+            await mutateGameState(roomId, (state) => {
+                const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
+                const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
+                if (state.pendingAction.action === Actions.Assassinate) {
+                    actionPlayer.coins -= 3;
+                    state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
+                } else if (state.pendingAction.action === Actions.Exchange) {
+                    actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
+                    state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 1;
+                } else if (state.pendingAction.action === Actions.ForeignAid) {
+                    actionPlayer.coins += 2;
+                } else if (state.pendingAction.action === Actions.Steal) {
+                    const coinsAvailable = Math.min(2, targetPlayer.coins);
+                    actionPlayer.coins += coinsAvailable;
+                    targetPlayer.coins -= coinsAvailable;
+                } else if (state.pendingAction.action === Actions.Tax) {
+                    actionPlayer.coins += 3;
+                }
+                state.turnPlayer = getNextPlayerTurn(state);
+                logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
+                delete state.pendingAction;
+            });
+        } else {
+            await mutateGameState(roomId, (state) => {
+                state.pendingAction.pendingPlayers.splice(
+                    state.pendingAction.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name),
+                    1
+                );
+            });
         }
+    } else if (response === Responses.Challenge) {
+        await mutateGameState(roomId, (state) => {
+            state.pendingAction.pendingPlayers = [];
+            state.pendingActionChallenge = {
+                sourcePlayer: player.name
+            }
+        });
+    } else if (response === Responses.Block) {
+        if (!claimedInfluence) {
+            res.status(400).send('claimedInfluence is required when blocking');
+            return;
+        }
+
+        if (!(claimedInfluence in Influences)) {
+            res.status(400).send('Unknown claimedInfluence');
+            return;
+        }
+
+        await mutateGameState(roomId, (state) => {
+            state.pendingBlock = {
+                sourcePlayer: player.name,
+                claimedInfluence: claimedInfluence
+            }
+        });
     }
 
     res.status(200).send();
