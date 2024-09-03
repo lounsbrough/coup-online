@@ -3,6 +3,7 @@ import { PublicGameState } from "../../shared/types/game";
 import ChooseAction from "./ChooseAction";
 import ChooseActionResponse from "./ChooseActionResponse";
 import ChooseChallengeResponse from "./ChooseChallengeResponse";
+import ChooseInfluenceToLose from "./ChooseInfluenceToLose";
 
 function PlayerDecision({ roomId, gameState }: {
   roomId: string, gameState: PublicGameState
@@ -10,6 +11,10 @@ function PlayerDecision({ roomId, gameState }: {
   const turnPlayer = gameState.players.find((player) =>
     player.name === gameState.turnPlayer
   );
+
+  if (gameState.pendingInfluenceLossCount[gameState.selfPlayer.name]) {
+    return <ChooseInfluenceToLose roomId={roomId} gameState={gameState} />
+  }
 
   if (turnPlayer?.name === gameState.selfPlayer.name &&
     !gameState.pendingAction &&
