@@ -1,6 +1,8 @@
 import { GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../shared/types/game';
 import { getValue, setValue } from './storage';
 
+// In-memory cache does not expire
+// It is always refreshed if persistent storage is refreshed
 const gameStates: {
   [roomId: string]: GameState
 } = {};
