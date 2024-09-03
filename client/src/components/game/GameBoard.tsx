@@ -4,6 +4,7 @@ import { PublicGameState } from "../../../../shared/types/game";
 import Players from "../game/Players";
 import EventLog from "./EventLog";
 import PlayerDecision from "./PlayerDecision";
+import SnarkyDeadComment from "./SnarkyDeadComment";
 
 function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
   const turnPlayer = gameState.players.find((player) =>
@@ -30,6 +31,11 @@ function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGam
           <EventLog gameState={gameState} />
         </Grid2>
       </Grid2>
+      {!gameState.selfPlayer.influences.length && (
+        <Grid2>
+          <SnarkyDeadComment />
+        </Grid2>
+      )}
       <Grid2 container justifyContent="center">
         <Grid2>
           <PlayerInfluences player={gameState.selfPlayer} />
