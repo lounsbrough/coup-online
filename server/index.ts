@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, logEvent, mutateGameState } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, logEvent, mutateGameState, shuffleDeck } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
@@ -277,6 +277,7 @@ app.post('/actionResponse', async (req, res) => {
                     state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
                 } else if (state.pendingAction.action === Actions.Exchange) {
                     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
+                    state.deck = shuffleDeck(state.deck);
                     state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 2;
                 } else if (state.pendingAction.action === Actions.ForeignAid) {
                     actionPlayer.coins += 2;
@@ -380,6 +381,7 @@ app.post('/challengeResponse', async (req, res) => {
                 state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
             } else if (state.pendingAction.action === Actions.Exchange) {
                 actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
+                state.deck = shuffleDeck(state.deck);
                 state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 2;
             } else if (state.pendingAction.action === Actions.ForeignAid) {
                 actionPlayer.coins += 2;
