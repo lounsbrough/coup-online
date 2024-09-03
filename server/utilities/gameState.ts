@@ -1,4 +1,4 @@
-import { GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../shared/types/game';
+import { Actions, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../shared/types/game';
 import { getValue, setValue } from './storage';
 
 // In-memory cache does not expire
@@ -80,7 +80,31 @@ export const killPlayerInfluence = (state: GameState, playerName: string, putBac
   state.pendingInfluenceLoss[playerName] = [
     ...(state.pendingInfluenceLoss[playerName] ?? []),
     { putBackInDeck }
-];
+  ];
+}
+
+export const processPendingAction = async (state: GameState) => {
+  const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
+  const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
+  if (state.pendingAction.action === Actions.Assassinate) {
+    actionPlayer.coins -= 3;
+    killPlayerInfluence(state, targetPlayer.name);
+  } else if (state.pendingAction.action === Actions.Exchange) {
+    actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
+    state.deck = shuffleDeck(state.deck);
+    killPlayerInfluence(state, actionPlayer.name, true);
+    killPlayerInfluence(state, actionPlayer.name, true);
+  } else if (state.pendingAction.action === Actions.ForeignAid) {
+    actionPlayer.coins += 2;
+  } else if (state.pendingAction.action === Actions.Steal) {
+    const coinsAvailable = Math.min(2, targetPlayer.coins);
+    actionPlayer.coins += coinsAvailable;
+    targetPlayer.coins -= coinsAvailable;
+  } else if (state.pendingAction.action === Actions.Tax) {
+    actionPlayer.coins += 3;
+  }
+  logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
+  delete state.pendingAction;
 }
 
 export const shuffleDeck = (deck: Influences[]) => {
