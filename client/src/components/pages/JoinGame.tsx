@@ -2,24 +2,30 @@ import { useState } from "react";
 import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material";
 import { AccountCircle, Group } from "@mui/icons-material";
 import useSWRMutation from "swr/mutation";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getPlayerId } from "../../helpers/playerId";
 
 function JoinGame() {
   const [roomId, setRoomId] = useState('');
-  const [roomIdError, setRoomIdError] = useState('');
   const [playerName, setPlayerName] = useState('');
-  const [playerNameError, setPlayerNameError] = useState('');
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
 
-  const { trigger, isMutating, error } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/joinGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string, playerName: string; }; }) => {
+  const { trigger } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/joinGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string, playerName: string; }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
       },
       body: JSON.stringify(arg)
-    }).then(res => res.json());
+    }).then(async (res) => {
+      if (res.ok) {
+        navigate(`/game?roomId=${roomId}`);
+      } else {
+        setError(true);
+      }
+    });
   }))
 
   return (
@@ -69,6 +75,7 @@ function JoinGame() {
         <Grid2>
           <Button type="submit" sx={{ mt: 5 }} variant="contained">Join Game</Button>
         </Grid2>
+        {error && <Typography sx={{ mt: 3, fontWeight: 700, color: 'red' }}>Error joining game</Typography>}
       </form>
     </>
   )
