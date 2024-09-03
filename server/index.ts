@@ -4,6 +4,7 @@ import { json } from 'body-parser';
 import cors from 'cors';
 import { addPlayerToGame, createNewGame, getGameState, getPublicGameState, mutateGameState } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
+import { ActionAttributes, Actions } from '../shared/types/game';
 
 const app = express();
 app.use(cors());
@@ -65,9 +66,9 @@ app.post('/startGame', async (req, res) => {
 
     if (!gameState.isStarted) {
         await mutateGameState(roomId, (state) => {
-            state.eventLog.logEvent('Game has started');
             state.isStarted = true;
             state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name
+            state.eventLog.logEvent('Game has started');
         });
     }
 
@@ -124,11 +125,16 @@ app.post('/joinGame', async (req, res) => {
 app.post('/action', async (req, res) => {
     const roomId = req.body?.roomId;
     const playerId = req.body?.playerId;
-    const action = req.body?.action;
+    const action = req.body?.action as Actions;
     const targetPlayer = req.body?.targetPlayer;
 
     if (!roomId || !playerId || !action) {
         res.status(400).send('roomId, playerId, and action are required');
+        return;
+    }
+
+    if (!(action in Actions)) {
+        res.status(400).send('Unknown action');
         return;
     }
 
@@ -151,11 +157,24 @@ app.post('/action', async (req, res) => {
         || gameState.pendingActionChallenge
         || gameState.pendingBlock
         || gameState.pendingBlockChallenge) {
-        res.status(400).send('You can\'t do that right now');
+        res.status(400).send('You can\'t choose an action right now');
         return;
     }
 
-    // validate target player
+    if ((ActionAttributes[action].coinsRequired ?? 0) > player.coins) {
+        res.status(400).send('You don\'t have enough coins');
+        return;
+    }
+
+    if (targetPlayer && !gameState.players.some((player) => player.name === targetPlayer)) {
+        res.status(400).send('Unknown target player');
+        return;
+    }
+
+    if (ActionAttributes[action].requiresTarget && !targetPlayer) {
+        res.status(400).send('Target player is required for this action');
+        return;
+    }
 
     await mutateGameState(roomId, (state) => {
         state.pendingAction = {
@@ -163,6 +182,7 @@ app.post('/action', async (req, res) => {
             passedPlayers: [],
             targetPlayer: targetPlayer
         }
+        state.eventLog.logEvent(`${player.name} is trying to use ${action}`)
     })
 
     res.status(200).send();
@@ -171,46 +191,14 @@ app.post('/action', async (req, res) => {
 app.post('/actionResponse', async (req, res) => {
     const roomId = req.body?.roomId;
     const playerId = req.body?.playerId;
-    const action = req.body?.action;
-    const targetPlayer = req.body?.targetPlayer;
+    const response = req.body?.response;
 
-    if (!roomId || !playerId || !action) {
+    if (!roomId || !playerId || !response) {
         res.status(400).send('roomId, playerId, and response are required');
         return;
     }
 
-    const gameState = await getGameState(roomId);
-
-    if (!gameState) {
-        res.status(400).send(`Room ${roomId} does not exist`);
-        return;
-    }
-
-    const player = gameState.players.find(({ id }) => id === playerId)
-
-    if (!player) {
-        res.status(400).send('Player not in room');
-        return;
-    }
-
-    if (gameState.turnPlayer !== player.name
-        || gameState.pendingAction
-        || gameState.pendingActionChallenge
-        || gameState.pendingBlock
-        || gameState.pendingBlockChallenge) {
-        res.status(400).send('You can\'t do that right now');
-        return;
-    }
-
-    // validate target player
-
-    await mutateGameState(roomId, (state) => {
-        state.pendingAction = {
-            action: action,
-            passedPlayers: [],
-            targetPlayer: targetPlayer
-        }
-    })
+    // TODO
 
     res.status(200).send();
 });
