@@ -277,7 +277,7 @@ app.post('/actionResponse', async (req, res) => {
                     state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
                 } else if (state.pendingAction.action === Actions.Exchange) {
                     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
-                    state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 1;
+                    state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 2;
                 } else if (state.pendingAction.action === Actions.ForeignAid) {
                     actionPlayer.coins += 2;
                 } else if (state.pendingAction.action === Actions.Steal) {
@@ -380,7 +380,7 @@ app.post('/challengeResponse', async (req, res) => {
                 state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
             } else if (state.pendingAction.action === Actions.Exchange) {
                 actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
-                state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 1;
+                state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 2;
             } else if (state.pendingAction.action === Actions.ForeignAid) {
                 actionPlayer.coins += 2;
             } else if (state.pendingAction.action === Actions.Steal) {
