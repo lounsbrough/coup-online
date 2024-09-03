@@ -3,13 +3,16 @@ import { InfluenceAttributes, Player } from '../../shared/types/game'
 import { Circle } from "@mui/icons-material";
 
 function PlayerInfluences({ player } : { player: Player }) {
+  if (!player.influences.length) {
+    return null;
+  }
+
   return (
     <>
-      <Typography sx={{ mb: 1 }}>Your Influences</Typography>
-      <Grid2 container justifyContent="center">
+      <Grid2 container justifyContent="center" spacing={2}>
         {player.influences.map((influence, index) =>
           <Grid2 key={index}>
-            <Box sx={{ px: 3 }}>
+            <Box sx={{ width: '12rem', py: 3, background: 'lightgray', borderRadius: 3 }}>
               <Circle sx={{
                 fontSize: '2rem',
                 color: InfluenceAttributes[influence].color

@@ -31,7 +31,7 @@ function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGam
         </Grid2>
       </Grid2>
       <Grid2 container justifyContent="center">
-        <Grid2 sx={{ background: 'lightGray', p: 2, borderRadius: 3 }}>
+        <Grid2>
           <PlayerInfluences player={gameState.selfPlayer} />
         </Grid2>
       </Grid2>

@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, logEvent, mutateGameState, shuffleDeck } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, shuffleDeck } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
@@ -195,7 +195,7 @@ app.post('/action', async (req, res) => {
         if (action === Actions.Coup) {
             await mutateGameState(roomId, (state) => {
                 state.players.find(({ id }) => id === playerId).coins -= 7;
-                state.pendingInfluenceLossCount[targetPlayer] = (state.pendingInfluenceLossCount[targetPlayer] ?? 0) + 1;
+                killPlayerInfluence(state, targetPlayer);
                 state.turnPlayer = getNextPlayerTurn(state);
                 logEvent(state, `${player.name} used ${action} on ${targetPlayer}`)
             });
@@ -274,11 +274,12 @@ app.post('/actionResponse', async (req, res) => {
                 const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
                 if (state.pendingAction.action === Actions.Assassinate) {
                     actionPlayer.coins -= 3;
-                    state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
+                    killPlayerInfluence(state, targetPlayer.name);
                 } else if (state.pendingAction.action === Actions.Exchange) {
                     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
                     state.deck = shuffleDeck(state.deck);
-                    state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 2;
+                    killPlayerInfluence(state, targetPlayer.name, true);
+                    killPlayerInfluence(state, targetPlayer.name, true);
                 } else if (state.pendingAction.action === Actions.ForeignAid) {
                     actionPlayer.coins += 2;
                 } else if (state.pendingAction.action === Actions.Steal) {
@@ -332,7 +333,7 @@ app.post('/actionResponse', async (req, res) => {
     res.status(200).send();
 });
 
-app.post('/challengeResponse', async (req, res) => {
+app.post('/actionChallengeResponse', async (req, res) => {
     const roomId = req.body?.roomId;
     const playerId = req.body?.playerId;
     const influence = req.body?.influence;
@@ -383,11 +384,12 @@ app.post('/challengeResponse', async (req, res) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
             if (state.pendingAction.action === Actions.Assassinate) {
                 actionPlayer.coins -= 3;
-                state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
+                killPlayerInfluence(state, targetPlayer.name);
             } else if (state.pendingAction.action === Actions.Exchange) {
                 actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
                 state.deck = shuffleDeck(state.deck);
-                state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 2;
+                killPlayerInfluence(state, actionPlayer.name, true);
+                killPlayerInfluence(state, actionPlayer.name, true);
             } else if (state.pendingAction.action === Actions.ForeignAid) {
                 actionPlayer.coins += 2;
             } else if (state.pendingAction.action === Actions.Steal) {
@@ -397,7 +399,7 @@ app.post('/challengeResponse', async (req, res) => {
             } else if (state.pendingAction.action === Actions.Tax) {
                 actionPlayer.coins += 3;
             }
-            state.pendingInfluenceLossCount[challengePlayer.name] = (state.pendingInfluenceLossCount[challengePlayer.name] ?? 0) + 1;
+            killPlayerInfluence(state, challengePlayer.name);
             logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`)
             actionPlayer.influences.splice(
                 actionPlayer.influences.findIndex((i) => i === influence),
@@ -413,7 +415,7 @@ app.post('/challengeResponse', async (req, res) => {
         await mutateGameState(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
-            state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 1;
+            killPlayerInfluence(state, actionPlayer.name);
             logEvent(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`)
             state.turnPlayer = getNextPlayerTurn(state);
             delete state.pendingActionChallenge;
@@ -488,6 +490,69 @@ app.post('/blockResponse', async (req, res) => {
     res.status(200).send();
 });
 
+app.post('/blockChallengeResponse', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+    const influence = req.body?.influence;
+
+    if (!roomId || !playerId || !influence) {
+        res.status(400).send('roomId, playerId, and influence are required');
+        return;
+    }
+
+    const gameState = await getGameState(roomId);
+
+    if (!gameState) {
+        res.status(400).send(`Room ${roomId} does not exist`);
+        return;
+    }
+
+    const player = gameState.players.find(({ id }) => id === playerId);
+
+    if (!player) {
+        res.status(400).send('Player not in room');
+        return;
+    }
+
+    if (!player.influences) {
+        res.status(400).send('You had your chance');
+        return;
+    }
+
+    if (!gameState.pendingBlockChallenge) {
+        res.status(400).send('You can\'t choose a challenge response right now');
+        return;
+    }
+
+    if (!Object.values(Influences).includes(influence)) {
+        res.status(400).send('Unknown influence');
+        return;
+    }
+
+    if (!player.influences.includes(influence)) {
+        res.status(400).send('You don\'t have that influence');
+        return;
+    }
+
+    if (InfluenceAttributes[influence as Influences].legalBlock === gameState.pendingAction.action) {
+        await mutateGameState(roomId, (state) => {
+            const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
+            const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
+            killPlayerInfluence(state, actionPlayer.name);
+            logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
+            state.turnPlayer = getNextPlayerTurn(state);
+            delete state.pendingActionChallenge;
+            delete state.pendingAction;
+        });
+    } else {
+        // block is illegal
+        // process action
+        // kill 1 blocker influence
+    }
+
+    res.status(200).send();
+});
+
 app.post('/loseInfluence', async (req, res) => {
     const roomId = req.body?.roomId;
     const playerId = req.body?.playerId;
@@ -517,7 +582,7 @@ app.post('/loseInfluence', async (req, res) => {
         return;
     }
 
-    if (!gameState.pendingInfluenceLossCount[player.name]) {
+    if (!gameState.pendingInfluenceLoss[player.name]) {
         res.status(400).send('You can\'t lose influence right now');
         return;
     }
@@ -529,16 +594,22 @@ app.post('/loseInfluence', async (req, res) => {
 
     await mutateGameState(roomId, (state) => {
         const sadPlayer = state.players.find(({ id }) => id === player.id);
-        const currentCount = state.pendingInfluenceLossCount[sadPlayer.name];
-        if (currentCount === 1) {
-            delete state.pendingInfluenceLossCount[sadPlayer.name];
-        } else {
-            state.pendingInfluenceLossCount[sadPlayer.name] = currentCount - 1;
-        }
-        sadPlayer.influences.splice(
+
+        const removedInfluence = sadPlayer.influences.splice(
             sadPlayer.influences.findIndex((i) => i === influence),
             1
-        );
+        )[0];
+
+        if (state.pendingInfluenceLoss[sadPlayer.name][0].putBackInDeck) {
+            state.deck.unshift(removedInfluence);
+        }
+
+        if (state.pendingInfluenceLoss[sadPlayer.name].length > 1) {
+            state.pendingInfluenceLoss[sadPlayer.name].splice(0, 1);
+        } else {
+            delete state.pendingInfluenceLoss[sadPlayer.name];
+        }
+
         logEvent(state, `${player.name} lost their ${influence}`)
     });
 

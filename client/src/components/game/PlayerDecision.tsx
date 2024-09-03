@@ -11,7 +11,11 @@ function PlayerDecision({ roomId, gameState }: {
 }) {
   const isMyTurn = gameState.turnPlayer === gameState.selfPlayer.name;
 
-  if (gameState.pendingInfluenceLossCount[gameState.selfPlayer.name]) {
+  if (!gameState.selfPlayer.influences.length) {
+    return <Typography>You did the best you could</Typography>;
+  }
+
+  if (gameState.pendingInfluenceLoss[gameState.selfPlayer.name]) {
     return <ChooseInfluenceToLose roomId={roomId} gameState={gameState} />
   }
 
@@ -20,7 +24,7 @@ function PlayerDecision({ roomId, gameState }: {
     !gameState.pendingActionChallenge &&
     !gameState.pendingBlock &&
     !gameState.pendingBlockChallenge &&
-    !Object.keys(gameState.pendingInfluenceLossCount).length) {
+    !Object.keys(gameState.pendingInfluenceLoss).length) {
     return <ChooseAction roomId={roomId} gameState={gameState} />;
   }
 
