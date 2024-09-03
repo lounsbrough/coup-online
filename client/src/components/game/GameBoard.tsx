@@ -54,7 +54,7 @@ function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGam
         )}
       {turnPlayer?.name !== gameState.selfPlayer.name &&
         gameState.pendingAction &&
-        !gameState.pendingAction.passedPlayers.includes(gameState.selfPlayer.name) && (
+        gameState.pendingAction.pendingPlayers.includes(gameState.selfPlayer.name) && (
           <Grid2 container justifyContent="center">
             <Grid2>
               <ChooseActionResponse roomId={roomId} gameState={gameState} />
