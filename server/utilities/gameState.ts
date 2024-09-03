@@ -76,16 +76,20 @@ export const mutateGameState = async (
   await setGameState(roomId, gameState);
 }
 
-const buildShuffledDeck = () => {
-  const unShuffled = Object.values(Influences)
-    .flatMap((influence) => Array.from({ length: 3 }, () => influence))
-
+export const shuffleDeck = (deck: Influences[]) => {
+  const unShuffled = [...deck];
   const shuffled: Influences[] = [];
+
   while (unShuffled.length) {
     shuffled.push(unShuffled.splice(Math.floor(Math.random() * unShuffled.length), 1)[0])
   }
 
   return shuffled;
+}
+
+const buildShuffledDeck = () => {
+  return shuffleDeck(Object.values(Influences)
+    .flatMap((influence) => Array.from({ length: 3 }, () => influence)));
 }
 
 export const drawCardFromDeck = (state: GameState) => {
