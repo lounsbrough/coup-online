@@ -47,14 +47,17 @@ function ChooseAction({ roomId, gameState }: { roomId: string, gameState: Public
               ) {
                 return null;
               }
-              return <Button onClick={() => {
-                trigger({
-                  roomId,
-                  playerId: getPlayerId(),
-                  action: selectedAction,
-                  targetPlayer: player.name
-                })
-              }} color="inherit" sx={{ background: player.color }} key={player.name}>{player.name}</Button>
+              return <Button
+                key={player.name}
+                onClick={() => {
+                  trigger({
+                    roomId,
+                    playerId: getPlayerId(),
+                    action: selectedAction,
+                    targetPlayer: player.name
+                  })
+                }} color="inherit" sx={{ background: player.color }}
+              >{player.name}</Button>
             })}
           </Grid2>
         </>
@@ -85,14 +88,14 @@ function ChooseAction({ roomId, gameState }: { roomId: string, gameState: Public
                     ) : (
                       <Button
                         onClick={() => {
-                          if (!actionAttributes.requiresTarget) {
+                          if (actionAttributes.requiresTarget) {
+                            setSelectedAction(action as Actions);
+                          } else {
                             trigger({
                               roomId,
                               playerId: getPlayerId(),
                               action: action as Actions
                             })
-                          } else {
-                            setSelectedAction(action as Actions);
                           }
                         }}
                         sx={{
