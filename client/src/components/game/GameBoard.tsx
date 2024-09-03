@@ -36,7 +36,7 @@ function GameBoard({ gameState }: { gameState: PublicGameState }) {
       </Grid2>
       <Grid2 container justifyContent="center">
         <Grid2 sx={{ p: 2 }}>
-          <Players players={gameState.players} />
+          <Players gameState={gameState} />
         </Grid2>
       </Grid2>
     </>

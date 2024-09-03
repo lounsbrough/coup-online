@@ -1,28 +1,34 @@
 import { Box, Grid2, Typography } from "@mui/material";
-import { PublicPlayer } from '../../shared/types/game'
+import { PublicGameState } from '../../shared/types/game'
+import { AccountCircle } from "@mui/icons-material";
 
-function Players({ players } : { players: PublicPlayer[] }) {
+function Players({ gameState }: { gameState: PublicGameState }) {
   return (
     <>
       <Grid2 container justifyContent="center">
-        {players.map(({ name, color, coins, influenceCount }, index) =>
-          <Grid2 key={index}>
+        {gameState.players.map(({ name, color, coins, influenceCount }, index) => {
+          const isSelf = gameState.selfPlayer.name === name;
+
+          return <Grid2 key={index}>
             <Box sx={{
               background: color,
               p: 2,
+              border: isSelf ? '1px solid gray' : undefined,
               m: 1,
               borderRadius: 3
             }}>
               <Typography sx={{
                 fontWeight: 'bold',
-                fontSize: '1.5rem'
+                fontSize: isSelf ? '1.8rem' : '1.5rem'
               }}
-              >{name}
+              >
+                {name}
               </Typography>
-              <Typography>{`Coins: ${coins}`}</Typography>
-              <Typography>{`Influences: ${influenceCount}`}</Typography>
+              <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Coins: ${coins}`}</Typography>
+              <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Influences: ${influenceCount}`}</Typography>
             </Box>
-          </Grid2>
+          </Grid2>;
+        }
         )}
       </Grid2>
     </>
