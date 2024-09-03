@@ -4,7 +4,7 @@ import { json } from 'body-parser';
 import cors from 'cors';
 import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, logEvent, mutateGameState } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
-import { ActionAttributes, Actions, Influences, Responses } from '../shared/types/game';
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
 const app = express();
 app.use(cors());
@@ -317,6 +317,92 @@ app.post('/actionResponse', async (req, res) => {
                 sourcePlayer: player.name,
                 claimedInfluence: claimedInfluence
             }
+        });
+    }
+
+    res.status(200).send();
+});
+
+app.post('/challengeResponse', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+    const influence = req.body?.influence;
+
+    if (!roomId || !playerId || !influence) {
+        res.status(400).send('roomId, playerId, and influence are required');
+        return;
+    }
+
+    const gameState = await getGameState(roomId);
+
+    if (!gameState) {
+        res.status(400).send(`Room ${roomId} does not exist`);
+        return;
+    }
+
+    const player = gameState.players.find(({ id }) => id === playerId);
+
+    if (!player) {
+        res.status(400).send('Player not in room');
+        return;
+    }
+
+    if (!player.influences) {
+        res.status(400).send('You had your chance');
+        return;
+    }
+
+    if (!gameState.pendingActionChallenge) {
+        res.status(400).send('You can\'t choose a challenge response right now');
+        return;
+    }
+
+    if (!(influence in Influences)) {
+        res.status(400).send('Unknown influence');
+        return;
+    }
+
+    if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
+        await mutateGameState(roomId, (state) => {
+            const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
+            const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
+            const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
+            if (state.pendingAction.action === Actions.Assassinate) {
+                actionPlayer.coins -= 3;
+                state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
+            } else if (state.pendingAction.action === Actions.Exchange) {
+                actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
+                state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 1;
+            } else if (state.pendingAction.action === Actions.ForeignAid) {
+                actionPlayer.coins += 2;
+            } else if (state.pendingAction.action === Actions.Steal) {
+                const coinsAvailable = Math.min(2, targetPlayer.coins);
+                actionPlayer.coins += coinsAvailable;
+                targetPlayer.coins -= coinsAvailable;
+            } else if (state.pendingAction.action === Actions.Tax) {
+                actionPlayer.coins += 3;
+            }
+            state.pendingInfluenceLossCount[challengePlayer.name] = (state.pendingInfluenceLossCount[challengePlayer.name] ?? 0) + 1;
+            logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`)
+            actionPlayer.influences.splice(
+                actionPlayer.influences.findIndex((i) => i === influence),
+                1
+            );
+            actionPlayer.influences.push(drawCardFromDeck(state));
+            state.turnPlayer = getNextPlayerTurn(state);
+            logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
+            delete state.pendingActionChallenge;
+            delete state.pendingAction;
+        });
+    } else {
+        await mutateGameState(roomId, (state) => {
+            const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
+            const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
+            state.pendingInfluenceLossCount[actionPlayer.name] = (state.pendingInfluenceLossCount[actionPlayer.name] ?? 0) + 1;
+            logEvent(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`)
+            state.turnPlayer = getNextPlayerTurn(state);
+            delete state.pendingActionChallenge;
+            delete state.pendingAction;
         });
     }
 
