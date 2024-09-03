@@ -54,44 +54,52 @@ export const ActionAttributes: {
     challengeable: boolean
     coinsRequired?: number
     color: string
+    requiresTarget: boolean
   }
 } = {
   [Actions.Assassinate]: {
     blockable: true,
     challengeable: true,
     coinsRequired: 3,
-    color: InfluenceAttributes.Assassin.color
+    color: InfluenceAttributes.Assassin.color,
+    requiresTarget: true
   },
   [Actions.Steal]: {
     blockable: true,
     challengeable: true,
-    color: InfluenceAttributes.Captain.color
+    color: InfluenceAttributes.Captain.color,
+    requiresTarget: true
   },
   [Actions.Coup]: {
     blockable: false,
     challengeable: false,
     coinsRequired: 7,
-    color: '#770077'
+    color: '#770077',
+    requiresTarget: true
   },
   [Actions.Tax]: {
     blockable: false,
     challengeable: true,
-    color: InfluenceAttributes.Duke.color
+    color: InfluenceAttributes.Duke.color,
+    requiresTarget: false
   },
   [Actions.ForeignAid]: {
     blockable: true,
     challengeable: false,
-    color: '#555555'
+    color: '#555555',
+    requiresTarget: false
   },
   [Actions.Income]: {
     blockable: false,
     challengeable: false,
-    color: '#555555'
+    color: '#555555',
+    requiresTarget: false
   },
   [Actions.Exchange]: {
     blockable: false,
     challengeable: true,
-    color: InfluenceAttributes.Ambassador.color
+    color: InfluenceAttributes.Ambassador.color,
+    requiresTarget: false
   }
 }
 

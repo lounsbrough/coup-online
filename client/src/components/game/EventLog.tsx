@@ -12,6 +12,8 @@ function EventLog({ gameState }: { gameState: PublicGameState }) {
     });
   }, [gameState.eventLog.logs])
 
+  const playerColors = Object.fromEntries(gameState.players.map((player) => [player.name, player.color]));
+
   return (
     <Grid2 justifyContent="flex-start" sx={{ textAlign: 'left' }}>
       <Typography sx={{ fontWeight: 700 }}>Event Log</Typography>
@@ -24,8 +26,11 @@ function EventLog({ gameState }: { gameState: PublicGameState }) {
                 <Typography
                   component="span"
                   key={wordIndex}
-                  sx={{ fontSize: '12px' }}
-                  color={gameState.players.find((player) => player.name === word)?.color}
+                  sx={{
+                    fontSize: playerColors[word] ? '14px' : '12px',
+                    fontWeight: playerColors[word] ? '700' : undefined
+                  }}
+                  color={playerColors[word]}
                 >{word} </Typography>)}
             </Typography>
           );

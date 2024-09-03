@@ -43,7 +43,8 @@ function ChooseActionResponse({ roomId, gameState }: { roomId: string, gameState
             }}
             sx={{
               background: responseAttributes.color
-            }} variant="contained" >
+            }} variant="contained"
+          >
             {response}
           </Button>
         })}
