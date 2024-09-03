@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('');
-  const [error, setError] = useState<string | undefined>();
+  const [error, setError] = useState<string>();
   const navigate = useNavigate();
 
   const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { playerId: string; playerName: string; }; }) => {

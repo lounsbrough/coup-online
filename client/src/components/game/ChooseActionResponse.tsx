@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 
 function ChooseActionResponse({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
-  const [error, setError] = useState<string | undefined>();
+  const [error, setError] = useState<string>();
 
   const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/actionResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
     return fetch(url, {

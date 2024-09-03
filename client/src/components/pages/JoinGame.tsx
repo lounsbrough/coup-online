@@ -9,7 +9,7 @@ function JoinGame() {
   const [searchParams] = useSearchParams();
   const [roomId, setRoomId] = useState(searchParams.get('roomId') ?? '');
   const [playerName, setPlayerName] = useState('');
-  const [error, setError] = useState<string | undefined>();
+  const [error, setError] = useState<string>();
   const navigate = useNavigate();
 
   const { trigger } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/joinGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string, playerName: string; }; }) => {

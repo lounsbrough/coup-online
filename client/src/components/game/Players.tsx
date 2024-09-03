@@ -12,7 +12,6 @@ function Players({ gameState }: { gameState: PublicGameState }) {
             <Box sx={{
               background: color,
               p: 2,
-              border: isSelf ? '1px solid gray' : undefined,
               m: 1,
               borderRadius: 3
             }}>
