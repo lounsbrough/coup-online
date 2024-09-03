@@ -116,7 +116,7 @@ export const ResponseAttributes: {
 } = {
   [Responses.Pass]: { color: '#007700' },
   [Responses.Challenge]: { color: '#ff7700' },
-  [Responses.Block]: {color: '#770000'}
+  [Responses.Block]: { color: '#770000' }
 }
 
 export type Player = {
@@ -131,19 +131,9 @@ export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
   influenceCount: number
 };
 
-type CardDeck = {
-  cards: Influences[],
-  getNextCard: () => Influences
-}
-
-type EventLog = {
-  logs: string[],
-  logEvent: (log: string) => void
-}
-
 export type GameState = {
   players: Player[]
-  deck: CardDeck
+  deck: Influences[]
   turnPlayer?: string
   pendingAction?: {
     targetPlayer?: string
@@ -160,8 +150,11 @@ export type GameState = {
   pendingBlockChallenge?: {
     sourcePlayer: string
   }
+  pendingInfluenceLossCount: {
+    [player: string]: number
+  }
   isStarted: boolean
-  eventLog: EventLog
+  eventLogs: string[]
 }
 
 export type PublicGameState = Pick<GameState,
@@ -170,8 +163,9 @@ export type PublicGameState = Pick<GameState,
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
+  'pendingInfluenceLossCount' |
   'isStarted' |
-  'eventLog'
+  'eventLogs'
 > & {
   players: PublicPlayer[]
   selfPlayer: Player
