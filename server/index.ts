@@ -109,6 +109,11 @@ app.post('/joinGame', async (req, res) => {
             return;
         }
 
+        if (Object.values(Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
+            res.status(400).send(`You may not choose the name of an influence`);
+            return;
+        }
+
         if (gameState.players.some((existingPlayer) =>
             existingPlayer.name.toUpperCase() === playerName.toUpperCase()
         )) {
@@ -211,7 +216,7 @@ app.post('/action', async (req, res) => {
                     }
                     return agg;
                 }, []),
-                targetPlayer: targetPlayer
+                targetPlayer
             }
             logEvent(state, `${player.name} is trying to use ${action}${targetPlayer ? ` on ${targetPlayer}` : ''}`)
         });
@@ -283,7 +288,7 @@ app.post('/actionResponse', async (req, res) => {
                     actionPlayer.coins += 3;
                 }
                 state.turnPlayer = getNextPlayerTurn(state);
-                logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
+                logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
                 delete state.pendingAction;
             });
         } else {
@@ -300,6 +305,7 @@ app.post('/actionResponse', async (req, res) => {
             state.pendingActionChallenge = {
                 sourcePlayer: player.name
             }
+            logEvent(state, `${player.name} is challenging ${state.turnPlayer}`)
         });
     } else if (response === Responses.Block) {
         if (!claimedInfluence) {
@@ -315,8 +321,9 @@ app.post('/actionResponse', async (req, res) => {
         await mutateGameState(roomId, (state) => {
             state.pendingBlock = {
                 sourcePlayer: player.name,
-                claimedInfluence: claimedInfluence
+                claimedInfluence
             }
+            logEvent(state, `${player.name} is blocking ${state.turnPlayer} as ${claimedInfluence}`)
         });
     }
 
@@ -390,7 +397,7 @@ app.post('/challengeResponse', async (req, res) => {
             );
             actionPlayer.influences.push(drawCardFromDeck(state));
             state.turnPlayer = getNextPlayerTurn(state);
-            logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
+            logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
             delete state.pendingActionChallenge;
             delete state.pendingAction;
         });
@@ -405,6 +412,63 @@ app.post('/challengeResponse', async (req, res) => {
             delete state.pendingAction;
         });
     }
+
+    res.status(200).send();
+});
+
+app.post('/loseInfluence', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+    const influence = req.body?.influence;
+
+    if (!roomId || !playerId || !influence) {
+        res.status(400).send('roomId, playerId, and influence are required');
+        return;
+    }
+
+    const gameState = await getGameState(roomId);
+
+    if (!gameState) {
+        res.status(400).send(`Room ${roomId} does not exist`);
+        return;
+    }
+
+    const player = gameState.players.find(({ id }) => id === playerId);
+
+    if (!player) {
+        res.status(400).send('Player not in room');
+        return;
+    }
+
+    if (!player.influences) {
+        res.status(400).send('You had your chance');
+        return;
+    }
+
+    if (!gameState.pendingInfluenceLossCount[player.name]) {
+        res.status(400).send('You can\'t lose influence right now');
+        return;
+    }
+
+    if (!(influence in Influences)) {
+        res.status(400).send('Unknown influence');
+        return;
+    }
+
+    await mutateGameState(roomId, (state) => {
+        const sadPlayer = state.players.find(({ id }) => id === player.id);
+        const currentCount = state.pendingInfluenceLossCount[sadPlayer.name];
+        if (currentCount === 1) {
+            delete state.pendingInfluenceLossCount[sadPlayer.name];
+        } else {
+            state.pendingInfluenceLossCount[sadPlayer.name] = currentCount - 1;
+        }
+        sadPlayer.influences.splice(
+            sadPlayer.influences.findIndex((i) => i === influence),
+            1
+        );
+        logEvent(state, `${player.name} lost their ${influence}`)
+    });
 
     res.status(200).send();
 });

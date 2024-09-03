@@ -1,5 +1,5 @@
 import { Box, Grid2, Typography } from "@mui/material";
-import { PublicGameState } from "../../shared/types/game";
+import { InfluenceAttributes, Influences, PublicGameState } from "../../shared/types/game";
 import { useEffect, useRef } from "react";
 
 function EventLog({ gameState }: { gameState: PublicGameState }) {
@@ -27,10 +27,10 @@ function EventLog({ gameState }: { gameState: PublicGameState }) {
                   component="span"
                   key={wordIndex}
                   sx={{
-                    fontSize: playerColors[word] ? '14px' : '12px',
-                    fontWeight: playerColors[word] ? '700' : undefined
+                    fontSize: playerColors[word] || InfluenceAttributes[word as Influences] ? '14px' : '12px',
+                    fontWeight: playerColors[word] || InfluenceAttributes[word as Influences] ? '700' : undefined
                   }}
-                  color={playerColors[word]}
+                  color={playerColors[word] || InfluenceAttributes[word as Influences]?.color}
                 >{word} </Typography>)}
             </Typography>
           );
