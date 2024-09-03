@@ -274,7 +274,7 @@ app.post('/actionResponse', async (req, res) => {
                     } else if (state.pendingAction.action === Actions.ForeignAid) {
                         actionPlayer.coins += 2;
                     } else if (state.pendingAction.action === Actions.Steal) {
-                        const coinsAvailable = targetPlayer.coins;
+                        const coinsAvailable = Math.min(2, targetPlayer.coins);
                         actionPlayer.coins += coinsAvailable;
                         targetPlayer.coins -= coinsAvailable;
                     } else if (state.pendingAction.action === Actions.Tax) {
