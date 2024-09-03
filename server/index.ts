@@ -263,7 +263,7 @@ app.post('/actionResponse', async (req, res) => {
         if (gameState.pendingAction.pendingPlayers.includes(player.name)) {
             if (gameState.pendingAction.pendingPlayers.length === 1) {
                 await mutateGameState(roomId, (state) => {
-                    const actionPlayer = state.players.find(({ id }) => id === playerId);
+                    const actionPlayer = state.players.find(({ id }) => id === state.turnPlayer);
                     const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
                     if (state.pendingAction.action === Actions.Assassinate) {
                         actionPlayer.coins -= 3;
