@@ -124,9 +124,11 @@ app.post('/joinGame', async (req, res) => {
 app.post('/action', async (req, res) => {
     const roomId = req.body?.roomId;
     const playerId = req.body?.playerId;
+    const action = req.body?.action;
+    const targetPlayer = req.body?.targetPlayer;
 
-    if (!roomId || !playerId) {
-        res.status(400).send('roomId and playerId are required');
+    if (!roomId || !playerId || !action) {
+        res.status(400).send('roomId, playerId, and action are required');
         return;
     }
 
@@ -140,13 +142,77 @@ app.post('/action', async (req, res) => {
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('player not in room');
+        res.status(400).send('Player not in room');
         return;
     }
 
-    // try to process action
+    if (gameState.turnPlayer !== player.name
+        || gameState.pendingAction
+        || gameState.pendingActionChallenge
+        || gameState.pendingBlock
+        || gameState.pendingBlockChallenge) {
+        res.status(400).send('You can\'t do that right now');
+        return;
+    }
 
-    res.json({});
+    // validate target player
+
+    await mutateGameState(roomId, (state) => {
+        state.pendingAction = {
+            action: action,
+            passedPlayers: [],
+            targetPlayer: targetPlayer
+        }
+    })
+
+    res.status(200).send();
+});
+
+app.post('/actionResponse', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+    const action = req.body?.action;
+    const targetPlayer = req.body?.targetPlayer;
+
+    if (!roomId || !playerId || !action) {
+        res.status(400).send('roomId, playerId, and response are required');
+        return;
+    }
+
+    const gameState = await getGameState(roomId);
+
+    if (!gameState) {
+        res.status(400).send(`Room ${roomId} does not exist`);
+        return;
+    }
+
+    const player = gameState.players.find(({ id }) => id === playerId)
+
+    if (!player) {
+        res.status(400).send('Player not in room');
+        return;
+    }
+
+    if (gameState.turnPlayer !== player.name
+        || gameState.pendingAction
+        || gameState.pendingActionChallenge
+        || gameState.pendingBlock
+        || gameState.pendingBlockChallenge) {
+        res.status(400).send('You can\'t do that right now');
+        return;
+    }
+
+    // validate target player
+
+    await mutateGameState(roomId, (state) => {
+        state.pendingAction = {
+            action: action,
+            passedPlayers: [],
+            targetPlayer: targetPlayer
+        }
+    })
+
+    res.status(200).send();
 });
 
 server.listen(process.env.PORT || port, function () {

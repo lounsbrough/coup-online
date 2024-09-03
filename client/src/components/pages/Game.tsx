@@ -53,7 +53,7 @@ function Game() {
         <Typography>You are not in this game</Typography>
       )}
       {gameState && gameState.isStarted && gameState.selfPlayer && (
-        <GameBoard gameState={gameState} />
+        <GameBoard roomId={roomId} gameState={gameState} />
       )}
       {gameState && !gameState.isStarted && gameState.selfPlayer && (
         <WaitingRoom roomId={roomId} gameState={gameState} />

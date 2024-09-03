@@ -1,6 +1,5 @@
 import { Box, Grid2, Typography } from "@mui/material";
 import { PublicGameState } from '../../shared/types/game'
-import { AccountCircle } from "@mui/icons-material";
 
 function Players({ gameState }: { gameState: PublicGameState }) {
   return (
