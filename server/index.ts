@@ -265,7 +265,6 @@ app.post('/actionResponse', async (req, res) => {
                 await mutateGameState(roomId, (state) => {
                     const actionPlayer = state.players.find(({ id }) => id === playerId);
                     const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
-                    state.turnPlayer = getNextPlayerTurn(state);
                     if (state.pendingAction.action === Actions.Assassinate) {
                         actionPlayer.coins -= 3;
                         state.pendingInfluenceLossCount[targetPlayer.name] = (state.pendingInfluenceLossCount[targetPlayer.name] ?? 0) + 1;
@@ -281,6 +280,8 @@ app.post('/actionResponse', async (req, res) => {
                     } else if (state.pendingAction.action === Actions.Tax) {
                         actionPlayer.coins += 3;
                     }
+                    state.turnPlayer = getNextPlayerTurn(state);
+                    delete state.pendingAction;
                     logEvent(state, `${player.name} used ${state.pendingAction.action} on ${state.pendingAction.targetPlayer}`)
                 });
             } else {
