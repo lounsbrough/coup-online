@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, getGameState, getPublicGameState, mutateGameState } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, getGameState, getNextPlayerTurn, getPublicGameState, logEvent, mutateGameState } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions } from '../shared/types/game';
 
@@ -68,7 +68,7 @@ app.post('/startGame', async (req, res) => {
         await mutateGameState(roomId, (state) => {
             state.isStarted = true;
             state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name
-            state.eventLog.logEvent('Game has started');
+            logEvent(state, 'Game has started');
         });
     }
 
@@ -176,14 +176,36 @@ app.post('/action', async (req, res) => {
         return;
     }
 
-    await mutateGameState(roomId, (state) => {
-        state.pendingAction = {
-            action: action,
-            passedPlayers: [],
-            targetPlayer: targetPlayer
+    if (!ActionAttributes[action].requiresTarget && targetPlayer) {
+        res.status(400).send('Target player is not allowed for this action');
+        return;
+    }
+
+    if (!ActionAttributes[action].blockable && !ActionAttributes[action].challengeable) {
+        if (action === Actions.Coup) {
+            await mutateGameState(roomId, (state) => {
+                state.players.find((player) => player.id === playerId).coins -= 7;
+                state.pendingInfluenceLossCount[targetPlayer] = (state.pendingInfluenceLossCount[targetPlayer] ?? 0) + 1;
+                state.turnPlayer = getNextPlayerTurn(state);
+                logEvent(state, `${player.name} used ${action} on ${targetPlayer}`)
+            });
+        } else if (action === Actions.Income) {
+            await mutateGameState(roomId, (state) => {
+                state.players.find((player) => player.id === playerId).coins += 1;
+                state.turnPlayer = getNextPlayerTurn(state);
+                logEvent(state, `${player.name} used ${action}`)
+            });
         }
-        state.eventLog.logEvent(`${player.name} is trying to use ${action}`)
-    })
+    } else {
+        await mutateGameState(roomId, (state) => {
+            state.pendingAction = {
+                action: action,
+                passedPlayers: [],
+                targetPlayer: targetPlayer
+            }
+            logEvent(state, `${player.name} is trying to use ${action}${targetPlayer ? ` on ${targetPlayer}` : ''}`)
+        });
+    }
 
     res.status(200).send();
 });

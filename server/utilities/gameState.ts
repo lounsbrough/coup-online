@@ -47,7 +47,8 @@ export const getPublicGameState = async (
     pendingActionChallenge: gameState.pendingActionChallenge,
     pendingBlock: gameState.pendingBlock,
     pendingBlockChallenge: gameState.pendingBlockChallenge,
-    eventLog: gameState.eventLog,
+    pendingInfluenceLossCount: gameState.pendingInfluenceLossCount,
+    eventLogs: gameState.eventLogs,
     players: publicPlayers,
     selfPlayer
   };
@@ -75,41 +76,36 @@ export const mutateGameState = async (
   await setGameState(roomId, gameState);
 }
 
-const buildDeck = () => {
-  const cards: Influences[] = [];
-  for (const influence of Object.values(Influences)) {
-    cards.push(influence, influence, influence);
+const buildShuffledDeck = () => {
+  const unShuffled = Object.values(Influences)
+    .flatMap((influence) => Array.from({ length: 3 }, () => influence))
+
+  const shuffled: Influences[] = [];
+  while (unShuffled.length) {
+    shuffled.push(unShuffled.splice(Math.floor(Math.random() * unShuffled.length), 1)[0])
   }
 
-  return {
-    cards,
-    getNextCard: () => cards.splice(
-      Math.floor(Math.random() * cards.length),
-      1
-    )[0]
-  }
+  return shuffled;
 }
 
-const buildEventLog = () => {
-  const logs: string[] = [];
+export const drawCardFromDeck = (state: GameState) => {
+  return state.deck.splice(0, 1)[0]
+}
 
-  return {
-    logs,
-    logEvent: (log: string) => {
-      logs.push(log);
-      if (logs.length > 100) {
-        logs.splice(0, 1);
-      }
-    }
+export const logEvent = (state: GameState, log: string) => {
+  state.eventLogs.push(log);
+  if (state.eventLogs.length > 100) {
+    state.eventLogs.splice(0, 1);
   }
 }
 
 export const createNewGame = async (roomId: string) => {
   await setGameState(roomId, {
     players: [],
-    deck: buildDeck(),
+    deck: buildShuffledDeck(),
+    pendingInfluenceLossCount: {},
     isStarted: false,
-    eventLog: buildEventLog()
+    eventLogs: []
   });
 }
 
@@ -119,9 +115,24 @@ export const addPlayerToGame = async (roomId: string, playerId: string, playerNa
       id: playerId,
       name: playerName,
       coins: 2,
-      influences: Array.from({ length: 2 }, () => state.deck.getNextCard()),
+      influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
       color: ['#73C373', '#7AB8D3', '#DD6C75', '#8C6CE6', '#EA9158', '#CB8F8F', '#FFC303'][state.players.length]
     })
     return state;
   });
+}
+
+export const getNextPlayerTurn = (state: GameState) => {
+  const currentIndex = state.players.findIndex((player) => player.name === state.turnPlayer);
+
+  let nextIndex = currentIndex + 1;
+  while (!state.players[nextIndex % state.players.length].influences) {
+    if (nextIndex % state.players.length === currentIndex) {
+      throw new Error('Unable to determine next player turn');
+    }
+
+    nextIndex++;
+  }
+
+  return state.players[nextIndex % state.players.length].name;
 }
