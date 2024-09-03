@@ -74,7 +74,10 @@ app.post('/joinGame', async (req, res) => {
         return;
     }
 
-    if (gameState.players.some(({name}) => name.toUpperCase() === playerName.toUpperCase())) {
+    if (gameState.players.some((existingPlayer) =>
+        existingPlayer.name.toUpperCase() === playerName.toUpperCase() &&
+        existingPlayer.id !== playerId
+    )) {
         res.status(400).send(`room ${roomId} already has player named ${playerName}`);
         return;
     }
