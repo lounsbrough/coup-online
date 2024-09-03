@@ -66,11 +66,15 @@ function ChooseAction({ roomId, gameState }: { roomId: string, gameState: Public
           <Typography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
             Choose an Action:
           </Typography>
-          <Grid2 container spacing={2}>
+          <Grid2 container spacing={2} justifyContent="center">
             {Object.entries(ActionAttributes)
               .sort((a, b) => a[0].localeCompare(b[0]))
               .map(([action, actionAttributes], index) => {
                 const isDisabled = !!actionAttributes.coinsRequired && gameState.selfPlayer.coins < actionAttributes.coinsRequired;
+
+                if (gameState.selfPlayer.coins >= 10 && action !== Actions.Coup) {
+                  return null;
+                }
 
                 return (
                   <Grid2 key={index}>

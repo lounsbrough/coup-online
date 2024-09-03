@@ -176,6 +176,11 @@ app.post('/action', async (req, res) => {
         return;
     }
 
+    if (player.coins >= 10 && action !== Actions.Coup) {
+        res.status(400).send('You must coup when you have 10 or more coins');
+        return;
+    }
+
     if (targetPlayer && !gameState.players.some((player) => player.name === targetPlayer)) {
         res.status(400).send('Unknown target player');
         return;
