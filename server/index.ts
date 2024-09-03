@@ -319,6 +319,7 @@ app.post('/actionResponse', async (req, res) => {
         }
 
         await mutateGameState(roomId, (state) => {
+            state.pendingAction.pendingPlayers = [];
             state.pendingBlock = {
                 sourcePlayer: player.name,
                 claimedInfluence

@@ -25,7 +25,7 @@ export const InfluenceAttributes: {
 } = {
   [Influences.Assassin]: {
     legalAction: Actions.Assassinate,
-    color: '#2B2B2B'
+    color: '#555555'
   },
   [Influences.Contessa]: {
     legalBlock: Actions.Assassinate,
