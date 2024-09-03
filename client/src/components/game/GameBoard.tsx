@@ -3,8 +3,10 @@ import PlayerInfluences from "../game/PlayerInfluences";
 import { PublicGameState } from "../../../../shared/types/game";
 import Players from "../game/Players";
 import EventLog from "./EventLog";
+import ChooseAction from "./ChooseAction";
+import ChooseActionResponse from "./ChooseActionResponse";
 
-function GameBoard({ gameState }: { gameState: PublicGameState }) {
+function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
   const turnPlayer = gameState.players.find((player) =>
     player.name === gameState.turnPlayer
   );
@@ -39,6 +41,26 @@ function GameBoard({ gameState }: { gameState: PublicGameState }) {
           <Players gameState={gameState} />
         </Grid2>
       </Grid2>
+      {turnPlayer?.name === gameState.selfPlayer.name &&
+        !gameState.pendingAction &&
+        !gameState.pendingActionChallenge &&
+        !gameState.pendingBlock &&
+        !gameState.pendingBlockChallenge && (
+          <Grid2 container justifyContent="center">
+            <Grid2>
+              <ChooseAction roomId={roomId} gameState={gameState} />
+            </Grid2>
+          </Grid2>
+        )}
+      {turnPlayer?.name !== gameState.selfPlayer.name &&
+        gameState.pendingAction &&
+        !gameState.pendingAction.passedPlayers.includes(gameState.selfPlayer.name) && (
+          <Grid2 container justifyContent="center">
+            <Grid2>
+              <ChooseActionResponse roomId={roomId} gameState={gameState} />
+            </Grid2>
+          </Grid2>
+        )}
     </>
   )
 }

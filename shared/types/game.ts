@@ -1,58 +1,19 @@
-export enum Actions {
-  Assassinate = 'Assassinate',
-  Steal = 'Steal',
-  Coup = 'Coup',
-  Tax = 'Tax',
-  ForeignAid = 'ForeignAid',
-  Income = 'Income',
-  Exchange = 'Exchange'
-}
-
-export const ActionRules: {
-  [action in Actions]: {
-    blockable: boolean
-    challengeable: boolean
-    coinsRequired?: number
-  }
-} = {
-  [Actions.Assassinate]: {
-    blockable: true,
-    challengeable: true,
-    coinsRequired: 3
-  },
-  [Actions.Steal]: {
-    blockable: true,
-    challengeable: true
-  },
-  [Actions.Coup]: {
-    blockable: false,
-    challengeable: false,
-    coinsRequired: 7
-  },
-  [Actions.Tax]: {
-    blockable: false,
-    challengeable: true
-  },
-  [Actions.ForeignAid]: {
-    blockable: true,
-    challengeable: false
-  },
-  [Actions.Income]: {
-    blockable: false,
-    challengeable: false
-  },
-  [Actions.Exchange]: {
-    blockable: false,
-    challengeable: true
-  }
-}
-
 export enum Influences {
   Assassin = 'Assassin',
   Contessa = 'Contessa',
   Captain = 'Captain',
   Ambassador = 'Ambassador',
   Duke = 'Duke'
+}
+
+export enum Actions {
+  Assassinate = 'Assassinate',
+  Steal = 'Steal',
+  Coup = 'Coup',
+  Tax = 'Tax',
+  ForeignAid = 'Foreign Aid',
+  Income = 'Income',
+  Exchange = 'Exchange'
 }
 
 export const InfluenceAttributes: {
@@ -87,6 +48,69 @@ export const InfluenceAttributes: {
   }
 }
 
+export const ActionAttributes: {
+  [action in Actions]: {
+    blockable: boolean
+    challengeable: boolean
+    coinsRequired?: number
+    color: string
+  }
+} = {
+  [Actions.Assassinate]: {
+    blockable: true,
+    challengeable: true,
+    coinsRequired: 3,
+    color: InfluenceAttributes.Assassin.color
+  },
+  [Actions.Steal]: {
+    blockable: true,
+    challengeable: true,
+    color: InfluenceAttributes.Captain.color
+  },
+  [Actions.Coup]: {
+    blockable: false,
+    challengeable: false,
+    coinsRequired: 7,
+    color: '#770077'
+  },
+  [Actions.Tax]: {
+    blockable: false,
+    challengeable: true,
+    color: InfluenceAttributes.Duke.color
+  },
+  [Actions.ForeignAid]: {
+    blockable: true,
+    challengeable: false,
+    color: '#555555'
+  },
+  [Actions.Income]: {
+    blockable: false,
+    challengeable: false,
+    color: '#555555'
+  },
+  [Actions.Exchange]: {
+    blockable: false,
+    challengeable: true,
+    color: InfluenceAttributes.Ambassador.color
+  }
+}
+
+export enum Responses {
+  Pass = 'Pass',
+  Challenge = 'Challenge',
+  Block = 'Block'
+}
+
+export const ResponseAttributes: {
+  [response in Responses]: {
+    color: string
+  }
+} = {
+  [Responses.Pass]: { color: '#007700' },
+  [Responses.Challenge]: { color: '#ff7700' },
+  [Responses.Block]: {color: '#770000'}
+}
+
 export type Player = {
   influences: Influences[],
   coins: number
@@ -116,6 +140,7 @@ export type GameState = {
   pendingAction?: {
     targetPlayer?: string
     action: Actions
+    passedPlayers: string[]
   }
   pendingActionChallenge?: {
     sourcePlayer: string
