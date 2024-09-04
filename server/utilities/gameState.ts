@@ -1,20 +1,11 @@
 import { Actions, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../shared/types/game';
 import { getValue, setValue } from './storage';
 
-// In-memory cache does not expire
-// It is always refreshed if persistent storage is refreshed
-const gameStates: {
-  [roomId: string]: GameState
-} = {};
-
 export const getGameState = async (
   roomId: string
 ): Promise<GameState | null> => {
-  if (!gameStates[roomId]) {
-    console.log('getting game state from redis');
-    gameStates[roomId] = JSON.parse(await getValue(roomId));
-  }
-  return gameStates[roomId] ? { ...gameStates[roomId] } : null;
+  const state = JSON.parse(await getValue(roomId));
+  return state ? { ...state } : null;
 }
 
 export const getPublicGameState = async (
@@ -58,14 +49,7 @@ export const getPublicGameState = async (
 
 const setGameState = async (roomId: string, newState: GameState) => {
   const fifteenMinutes = 900;
-  const logId = Math.floor(Math.random() * 1000000);
-  console.log(JSON.stringify(newState));
-  console.log(`saving to redis ${logId}`, Buffer.from(JSON.stringify(newState)).toString('base64'));
   await setValue(roomId, JSON.stringify(newState), fifteenMinutes);
-  console.log(`saved to redis ${logId}`);
-  console.log(`updating memory cache ${logId}`);
-  gameStates[roomId] = newState;
-  console.log(`updated memory cache ${logId}`);
 }
 
 const validateGameState = (state: GameState) => {
@@ -79,11 +63,8 @@ export const mutateGameState = async (
   mutation: (state: GameState) => void
 ) => {
   const gameState = await getGameState(roomId);
-  console.log('inside mutateGameState');
-  console.log('original state', gameState);
   mutation(gameState);
   validateGameState(gameState);
-  console.log('mutated game state', gameState);
   await setGameState(roomId, gameState);
 }
 
