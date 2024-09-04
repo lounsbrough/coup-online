@@ -7,7 +7,7 @@ import { getPlayerId } from "../../helpers/playerId";
 function ChooseBlockResponse({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
   const [error, setError] = useState<string>();
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
+  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {

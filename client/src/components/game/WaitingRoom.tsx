@@ -8,7 +8,7 @@ function WaitingRoom({ roomId, gameState }: {
   roomId: string,
   gameState: PublicGameState
 }) {
-  const { trigger } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string }; }) => {
+  const { trigger } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {

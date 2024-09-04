@@ -31,7 +31,7 @@ function Game() {
   const roomId = searchParams.get('roomId');
 
   const { data: gameState, error } = useSWR<PublicGameState, Error>(
-    `${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/gameState?roomId=${roomId}&playerId=${getPlayerId()}`,
+    `${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/gameState?roomId=${roomId}&playerId=${getPlayerId()}`,
     fetcher,
     { refreshInterval: 1000 }
   );

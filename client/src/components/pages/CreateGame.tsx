@@ -11,7 +11,7 @@ function CreateGame() {
   const [error, setError] = useState<string>();
   const navigate = useNavigate();
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { playerId: string; playerName: string; }; }) => {
+  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/createGame`, (async (url: string, { arg }: { arg: { playerId: string; playerName: string; }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -31,7 +31,7 @@ function CreateGame() {
   useEffect(() => {
     if (swrError) {
       console.log(swrError);
-      setError('Error updating game');
+      setError('Error creating game');
     }
   }, [swrError]);
 
