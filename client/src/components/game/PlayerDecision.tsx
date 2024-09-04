@@ -6,8 +6,8 @@ import ChooseChallengeResponse from "./ChooseChallengeResponse";
 import ChooseInfluenceToLose from "./ChooseInfluenceToLose";
 import ChooseBlockResponse from "./ChooseBlockResponse";
 
-function PlayerDecision({ roomId, gameState }: {
-  roomId: string, gameState: PublicGameState
+function PlayerDecision({ gameState }: {
+  gameState: PublicGameState
 }) {
   const isMyTurn = gameState.turnPlayer === gameState.selfPlayer.name;
 
@@ -16,7 +16,7 @@ function PlayerDecision({ roomId, gameState }: {
   }
 
   if (gameState.pendingInfluenceLoss[gameState.selfPlayer.name]) {
-    return <ChooseInfluenceToLose roomId={roomId} gameState={gameState} />
+    return <ChooseInfluenceToLose gameState={gameState} />
   }
 
   if (isMyTurn &&
@@ -25,26 +25,26 @@ function PlayerDecision({ roomId, gameState }: {
     !gameState.pendingBlock &&
     !gameState.pendingBlockChallenge &&
     !Object.keys(gameState.pendingInfluenceLoss).length) {
-    return <ChooseAction roomId={roomId} gameState={gameState} />;
+    return <ChooseAction gameState={gameState} />;
   }
 
   if (!isMyTurn &&
     gameState.pendingAction &&
     !gameState.pendingActionChallenge &&
     gameState.pendingAction.pendingPlayers.includes(gameState.selfPlayer.name)) {
-    return <ChooseActionResponse roomId={roomId} gameState={gameState} />;
+    return <ChooseActionResponse gameState={gameState} />;
   }
 
   if (isMyTurn &&
     gameState.pendingActionChallenge) {
-    return <ChooseChallengeResponse roomId={roomId} gameState={gameState} />;
+    return <ChooseChallengeResponse gameState={gameState} />;
   }
 
   if (isMyTurn &&
     gameState.pendingBlock &&
     !gameState.pendingBlockChallenge
   ) {
-    return <ChooseBlockResponse roomId={roomId} gameState={gameState} />;
+    return <ChooseBlockResponse gameState={gameState} />;
   }
 
   if (
@@ -52,7 +52,7 @@ function PlayerDecision({ roomId, gameState }: {
     gameState.pendingBlockChallenge &&
     gameState.pendingBlock.sourcePlayer === gameState.selfPlayer.name
   ) {
-    return <ChooseChallengeResponse roomId={roomId} gameState={gameState} />;
+    return <ChooseChallengeResponse gameState={gameState} />;
   }
 
   return <Typography>Waiting for other players</Typography>;
