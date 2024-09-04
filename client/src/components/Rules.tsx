@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import { Gavel } from "@mui/icons-material";
 import './Rules.css';
 import { InfluenceAttributes } from "../shared/types/game";
+import { useColorModeContext } from "../context/MaterialThemeContext";
 
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const { colorMode } = useColorModeContext();
 
   return (
     <>
@@ -51,31 +53,31 @@ function Rules() {
                   <td>Pay 7 coins and make any player lose influence</td>
                   <td></td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Duke.color }}>
+                <tr style={{ background: InfluenceAttributes.Duke.color[colorMode] }}>
                   <td>Duke</td>
                   <td>Tax</td>
                   <td>Collect 3 coins</td>
                   <td>Block Foreign Aid</td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Assassin.color }}>
+                <tr style={{ background: InfluenceAttributes.Assassin.color[colorMode] }}>
                   <td>Assassin</td>
                   <td>Assassinate</td>
                   <td>Pay 3 coins and make any player lose influence</td>
                   <td></td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Ambassador.color }}>
+                <tr style={{ background: InfluenceAttributes.Ambassador.color[colorMode] }}>
                   <td>Ambassador</td>
                   <td>Exchange</td>
                   <td>Draw 2 influences and put 2 back</td>
                   <td>Block Stealing</td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Captain.color }}>
+                <tr style={{ background: InfluenceAttributes.Captain.color[colorMode] }}>
                   <td>Captain</td>
                   <td>Steal</td>
                   <td>Steal 2 coins from another player</td>
                   <td>Block Stealing</td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Contessa.color }}>
+                <tr style={{ background: InfluenceAttributes.Contessa.color[colorMode] }}>
                   <td>Contessa</td>
                   <td></td>
                   <td></td>
