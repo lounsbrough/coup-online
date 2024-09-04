@@ -22,26 +22,41 @@ var Actions;
 exports.InfluenceAttributes = {
     [Influences.Assassin]: {
         legalAction: Actions.Assassinate,
-        color: '#555555'
+        color: {
+            light: '#555555',
+            dark: '#777777'
+        }
     },
     [Influences.Contessa]: {
         legalBlock: Actions.Assassinate,
-        color: '#E35646'
+        color: {
+            light: '#E35646',
+            dark: '#e87e72'
+        }
     },
     [Influences.Captain]: {
         legalAction: Actions.Steal,
         legalBlock: Actions.Steal,
-        color: '#80C6E5'
+        color: {
+            light: '#80C6E5',
+            dark: '#afe2f8'
+        }
     },
     [Influences.Ambassador]: {
         legalAction: Actions.Exchange,
         legalBlock: Actions.Steal,
-        color: '#B4CA1F'
+        color: {
+            light: '#B4CA1F',
+            dark: '#d4e65a'
+        }
     },
     [Influences.Duke]: {
         legalAction: Actions.Tax,
         legalBlock: Actions.ForeignAid,
-        color: '#D55DC7'
+        color: {
+            light: '#D55DC7',
+            dark: '#ec98e2'
+        }
     }
 };
 exports.ActionAttributes = {
@@ -62,7 +77,10 @@ exports.ActionAttributes = {
         blockable: false,
         challengeable: false,
         coinsRequired: 7,
-        color: '#770077',
+        color: {
+            light: '#770077',
+            dark: '#770077'
+        },
         requiresTarget: true
     },
     [Actions.Tax]: {
@@ -74,13 +92,19 @@ exports.ActionAttributes = {
     [Actions.ForeignAid]: {
         blockable: true,
         challengeable: false,
-        color: '#555555',
+        color: {
+            light: '#555555',
+            dark: '#555555'
+        },
         requiresTarget: false
     },
     [Actions.Income]: {
         blockable: false,
         challengeable: false,
-        color: '#555555',
+        color: {
+            light: '#555555',
+            dark: '#555555'
+        },
         requiresTarget: false
     },
     [Actions.Exchange]: {
@@ -97,8 +121,23 @@ var Responses;
     Responses["Block"] = "Block";
 })(Responses || (exports.Responses = Responses = {}));
 exports.ResponseAttributes = {
-    [Responses.Pass]: { color: '#007700' },
-    [Responses.Challenge]: { color: '#ff7700' },
-    [Responses.Block]: { color: '#770000' }
+    [Responses.Pass]: {
+        color: {
+            light: '#007700',
+            dark: '#77ee77'
+        }
+    },
+    [Responses.Challenge]: {
+        color: {
+            light: '#ff7700',
+            dark: '#ffaa55'
+        }
+    },
+    [Responses.Block]: {
+        color: {
+            light: '#770000',
+            dark: '#ff6666'
+        }
+    }
 };
 //# sourceMappingURL=game.js.map
