@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction, resetGame } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction, resetGame, startGame } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
@@ -83,6 +83,7 @@ app.post('/resetGame', async (req, res) => {
     }
 
     await resetGame(roomId);
+    await startGame(roomId);
 
     res.status(200).json(await getPublicGameState(roomId, playerId));
 });
@@ -111,11 +112,7 @@ app.post('/startGame', async (req, res) => {
     }
 
     if (!gameState.isStarted) {
-        await mutateGameState(roomId, (state) => {
-            state.isStarted = true;
-            state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name
-            logEvent(state, 'Game has started');
-        });
+        await startGame(roomId);
     }
 
     res.status(200).json(await getPublicGameState(roomId, playerId));
@@ -640,7 +637,7 @@ app.post('/loseInfluence', async (req, res) => {
 
         logEvent(state, `${player.name} lost their ${influence}`)
     });
-    
+
     res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 

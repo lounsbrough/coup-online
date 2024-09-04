@@ -1,7 +1,13 @@
 import { Box, Grid2, Typography } from "@mui/material";
-import { PublicGameState } from '../../shared/types/game'
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function Players({ gameState }: { gameState: PublicGameState }) {
+function Players() {
+  const { gameState } = useGameStateContext();
+
+  if (!gameState) {
+    return null;
+  }
+
   return (
     <>
       <Grid2 container justifyContent="center" spacing={2}>

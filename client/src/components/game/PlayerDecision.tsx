@@ -1,14 +1,18 @@
 import { Typography } from "@mui/material";
-import { PublicGameState } from "../../shared/types/game";
 import ChooseAction from "./ChooseAction";
 import ChooseActionResponse from "./ChooseActionResponse";
 import ChooseChallengeResponse from "./ChooseChallengeResponse";
 import ChooseInfluenceToLose from "./ChooseInfluenceToLose";
 import ChooseBlockResponse from "./ChooseBlockResponse";
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function PlayerDecision({ gameState }: {
-  gameState: PublicGameState
-}) {
+function PlayerDecision() {
+  const { gameState } = useGameStateContext();
+
+  if (!gameState) {
+    return null;
+  }
+
   const isMyTurn = gameState.turnPlayer === gameState.selfPlayer.name;
 
   if (!gameState.selfPlayer.influences.length) {
@@ -32,19 +36,19 @@ function PlayerDecision({ gameState }: {
     gameState.pendingAction &&
     !gameState.pendingActionChallenge &&
     gameState.pendingAction.pendingPlayers.includes(gameState.selfPlayer.name)) {
-    return <ChooseActionResponse gameState={gameState} />;
+    return <ChooseActionResponse />;
   }
 
   if (isMyTurn &&
     gameState.pendingActionChallenge) {
-    return <ChooseChallengeResponse gameState={gameState} />;
+    return <ChooseChallengeResponse />;
   }
 
   if (isMyTurn &&
     gameState.pendingBlock &&
     !gameState.pendingBlockChallenge
   ) {
-    return <ChooseBlockResponse gameState={gameState} />;
+    return <ChooseBlockResponse />;
   }
 
   if (
@@ -52,7 +56,7 @@ function PlayerDecision({ gameState }: {
     gameState.pendingBlockChallenge &&
     gameState.pendingBlock.sourcePlayer === gameState.selfPlayer.name
   ) {
-    return <ChooseChallengeResponse gameState={gameState} />;
+    return <ChooseChallengeResponse />;
   }
 
   return <Typography>Waiting for other players</Typography>;

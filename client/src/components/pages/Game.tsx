@@ -18,10 +18,10 @@ function Game() {
         <Typography>You are not in this game</Typography>
       )}
       {gameState && gameState.isStarted && gameState.selfPlayer && (
-        <GameBoard gameState={gameState} />
+        <GameBoard />
       )}
       {gameState && !gameState.isStarted && gameState.selfPlayer && (
-        <WaitingRoom gameState={gameState} />
+        <WaitingRoom />
       )}
     </>
   )

@@ -4,11 +4,17 @@ import Players from "../game/Players";
 import EventLog from "./EventLog";
 import PlayerDecision from "./PlayerDecision";
 import SnarkyDeadComment from "./SnarkyDeadComment";
-import { PublicGameState } from "../../shared/types/game";
 import Victory from "./Victory";
 import PlayAgain from "./PlayAgain";
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function GameBoard({ gameState }: { gameState: PublicGameState }) {
+function GameBoard() {
+  const { gameState } = useGameStateContext();
+
+  if (!gameState) {
+    return null;
+  }
+
   const turnPlayer = gameState.players.find((player) =>
     player.name === gameState.turnPlayer
   );
@@ -36,7 +42,7 @@ function GameBoard({ gameState }: { gameState: PublicGameState }) {
           </Grid2>
         )}
         <Grid2>
-          <EventLog gameState={gameState} />
+          <EventLog />
         </Grid2>
       </Grid2>
       {gameIsOver && (
@@ -46,7 +52,7 @@ function GameBoard({ gameState }: { gameState: PublicGameState }) {
       )}
       {gameIsOver && (
         <Grid2 sx={{ m: 5 }}>
-          <PlayAgain roomId={gameState.roomId} />
+          <PlayAgain />
         </Grid2>
       )}
       {!gameState.selfPlayer.influences.length && (
@@ -56,18 +62,18 @@ function GameBoard({ gameState }: { gameState: PublicGameState }) {
       )}
       <Grid2 container justifyContent="center">
         <Grid2>
-          <PlayerInfluences player={gameState.selfPlayer} />
+          <PlayerInfluences />
         </Grid2>
       </Grid2>
       <Grid2 container justifyContent="center" sx={{ my: 2 }}>
         <Grid2>
-          <Players gameState={gameState} />
+          <Players />
         </Grid2>
       </Grid2>
       {!gameIsOver && (
         <Grid2 container justifyContent="center">
           <Grid2 sx={{ p: 2 }}>
-            <PlayerDecision gameState={gameState} />
+            <PlayerDecision />
           </Grid2>
         </Grid2>
       )}

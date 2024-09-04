@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNextPlayerTurn = exports.addPlayerToGame = exports.resetGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.killPlayerInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
+exports.getNextPlayerTurn = exports.addPlayerToGame = exports.resetGame = exports.startGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.killPlayerInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
 const game_1 = require("../../shared/types/game");
 const storage_1 = require("./storage");
 // In-memory cache does not expire
@@ -61,7 +61,6 @@ const mutateGameState = async (roomId, mutation) => {
     mutation(gameState);
     validateGameState(gameState);
     await setGameState(roomId, gameState);
-    return gameState;
 };
 exports.mutateGameState = mutateGameState;
 const killPlayerInfluence = (state, playerName, putBackInDeck = false) => {
@@ -133,22 +132,29 @@ const createNewGame = async (roomId) => {
     });
 };
 exports.createNewGame = createNewGame;
+const startGame = async (roomId) => {
+    await (0, exports.mutateGameState)(roomId, (state) => {
+        state.isStarted = true;
+        state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name;
+        (0, exports.logEvent)(state, 'Game has started');
+    });
+};
+exports.startGame = startGame;
 const resetGame = async (roomId) => {
-    const newGameState = await (0, exports.getGameState)(roomId);
+    const oldGameState = await (0, exports.getGameState)(roomId);
     await (0, exports.createNewGame)(roomId);
-    return (0, exports.mutateGameState)(roomId, (state) => {
-        const newPlayers = shuffle(newGameState.players.map((player) => ({
+    await (0, exports.mutateGameState)(roomId, (state) => {
+        const newPlayers = shuffle(oldGameState.players.map((player) => ({
             ...player,
             coins: 2,
             influences: Array.from({ length: 2 }, () => (0, exports.drawCardFromDeck)(state))
         })));
-        state.isStarted = true;
         state.players = newPlayers;
     });
 };
 exports.resetGame = resetGame;
-const addPlayerToGame = (roomId, playerId, playerName) => {
-    return (0, exports.mutateGameState)(roomId, (state) => {
+const addPlayerToGame = async (roomId, playerId, playerName) => {
+    await (0, exports.mutateGameState)(roomId, (state) => {
         state.players.push({
             id: playerId,
             name: playerName,

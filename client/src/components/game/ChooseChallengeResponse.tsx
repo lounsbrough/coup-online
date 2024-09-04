@@ -1,13 +1,15 @@
 import { Button, Grid2, Typography } from "@mui/material";
-import { InfluenceAttributes, Influences, PublicGameState } from "../../shared/types/game";
+import { InfluenceAttributes, Influences } from "../../shared/types/game";
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function ChooseChallengeResponse({ gameState }: { gameState: PublicGameState }) {
+function ChooseChallengeResponse() {
   const [error, setError] = useState<string>();
+  const { gameState } = useGameStateContext();
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/${gameState.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/${gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -19,7 +21,11 @@ function ChooseChallengeResponse({ gameState }: { gameState: PublicGameState }) 
         setError('Error responding to challenge');
       }
     })
-  }))
+  }));
+
+  if (!gameState) {
+    return null;
+  }
 
   return (
     <>
@@ -37,6 +43,7 @@ function ChooseChallengeResponse({ gameState }: { gameState: PublicGameState }) 
                 influence: influence as Influences
               })
             }}
+            disabled={isMutating}
             sx={{
               background: InfluenceAttributes[influence].color
             }} variant="contained"

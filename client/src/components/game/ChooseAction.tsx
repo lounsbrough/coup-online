@@ -10,7 +10,7 @@ function ChooseAction() {
   const [error, setError] = useState<string>();
   const { gameState, setGameState } = useGameStateContext()
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/action`, (async (
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/action`, (async (
     url: string, { arg }: {
       arg: {
         roomId: string,
@@ -65,6 +65,7 @@ function ChooseAction() {
                     targetPlayer: player.name
                   })
                 }} color="inherit" sx={{ background: player.color }}
+                disabled={isMutating}
               >{player.name}</Button>
             })}
           </Grid2>
@@ -78,7 +79,7 @@ function ChooseAction() {
             {Object.entries(ActionAttributes)
               .sort((a, b) => a[0].localeCompare(b[0]))
               .map(([action, actionAttributes], index) => {
-                const isDisabled = !!actionAttributes.coinsRequired && gameState.selfPlayer.coins < actionAttributes.coinsRequired;
+                const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer.coins < actionAttributes.coinsRequired;
 
                 if (gameState.selfPlayer.coins >= 10 && action !== Actions.Coup) {
                   return null;
@@ -86,7 +87,7 @@ function ChooseAction() {
 
                 return (
                   <Grid2 key={index}>
-                    {isDisabled ? (
+                    {lackingCoins ? (
                       <Tooltip title="Not enough coins">
                         <span>
                           <Button
@@ -112,7 +113,9 @@ function ChooseAction() {
                         }}
                         sx={{
                           background: actionAttributes.color
-                        }} variant="contained" >
+                        }} variant="contained"
+                        disabled={isMutating}
+                      >
                         {action}
                       </Button>
                     )}
