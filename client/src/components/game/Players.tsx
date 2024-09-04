@@ -4,17 +4,20 @@ import { PublicGameState } from '../../shared/types/game'
 function Players({ gameState }: { gameState: PublicGameState }) {
   return (
     <>
-      <Grid2 container justifyContent="center">
+      <Grid2 container justifyContent="center" spacing={2}>
         {gameState.players.map(({ name, color, coins, influenceCount }, index) => {
           const isSelf = gameState.selfPlayer.name === name;
 
-          return <Grid2 key={index}>
-            <Box sx={{
-              background: color,
-              p: 2,
-              m: 1,
-              borderRadius: 3
-            }}>
+          return (
+            <Box
+              key={index}
+              sx={{
+                alignContent: 'center',
+                background: color,
+                borderRadius: 3,
+                p: 2,
+                width: '8rem'
+              }}>
               <Typography sx={{
                 fontWeight: 'bold',
                 fontSize: isSelf ? '1.8rem' : '1.5rem'
@@ -25,7 +28,7 @@ function Players({ gameState }: { gameState: PublicGameState }) {
               <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Coins: ${coins}`}</Typography>
               <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Influences: ${influenceCount}`}</Typography>
             </Box>
-          </Grid2>;
+          )
         }
         )}
       </Grid2>

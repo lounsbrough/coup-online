@@ -1,12 +1,14 @@
-import { Box, Button, Grid2, Tooltip, Typography } from "@mui/material";
-import { ActionAttributes, Actions, PublicGameState } from "../../shared/types/game";
+import { Button, Grid2, Tooltip, Typography } from "@mui/material";
+import { ActionAttributes, Actions } from "../../shared/types/game";
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function ChooseAction({ gameState }: { gameState: PublicGameState }) {
+function ChooseAction() {
   const [selectedAction, setSelectedAction] = useState<Actions>();
   const [error, setError] = useState<string>();
+  const { gameState, setGameState } = useGameStateContext()
 
   const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/action`, (async (
     url: string, { arg }: {
@@ -24,7 +26,9 @@ function ChooseAction({ gameState }: { gameState: PublicGameState }) {
       },
       body: JSON.stringify(arg)
     }).then(async (res) => {
-      if (!res.ok) {
+      if (res.ok) {
+        setGameState(await res.json());
+      } else {
         if (res.status === 400) {
           setError(await res.text());
         } else {
@@ -32,7 +36,11 @@ function ChooseAction({ gameState }: { gameState: PublicGameState }) {
         }
       }
     })
-  }))
+  }));
+
+  if (!gameState) {
+    return null;
+  }
 
   return (
     <>

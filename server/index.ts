@@ -49,9 +49,9 @@ app.post('/createGame', async (req, res) => {
     const roomId = generateRoomId();
 
     await createNewGame(roomId);
-    const newGameState = await addPlayerToGame(roomId, playerId, playerName);
+    await addPlayerToGame(roomId, playerId, playerName);
 
-    res.status(200).json(newGameState)
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 
 app.post('/resetGame', async (req, res) => {
@@ -63,7 +63,7 @@ app.post('/resetGame', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
 
     if (!gameState) {
         res.status(404).send(`Room ${roomId} does not exist`);
@@ -82,9 +82,9 @@ app.post('/resetGame', async (req, res) => {
         return;
     }
 
-    gameState = await resetGame(roomId);
+    await resetGame(roomId);
 
-    res.status(200).json(gameState);
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 
 app.post('/startGame', async (req, res) => {
@@ -96,7 +96,7 @@ app.post('/startGame', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
 
     if (!gameState) {
         res.status(404).send(`Room ${roomId} does not exist`);
@@ -111,14 +111,14 @@ app.post('/startGame', async (req, res) => {
     }
 
     if (!gameState.isStarted) {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             state.isStarted = true;
             state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name
             logEvent(state, 'Game has started');
         });
     }
 
-    res.status(200).json(gameState)
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 })
 
 app.post('/joinGame', async (req, res) => {
@@ -136,7 +136,8 @@ app.post('/joinGame', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
+
     if (!gameState) {
         res.status(404).send(`Room ${roomId} does not exist`);
         return;
@@ -172,10 +173,10 @@ app.post('/joinGame', async (req, res) => {
             return;
         }
 
-        gameState = await addPlayerToGame(roomId, playerId, playerName);
+        await addPlayerToGame(roomId, playerId, playerName);
     }
 
-    res.status(200).json(gameState);
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 })
 
 app.post('/action', async (req, res) => {
@@ -194,7 +195,7 @@ app.post('/action', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
 
     if (!gameState) {
         res.status(400).send(`Room ${roomId} does not exist`);
@@ -249,21 +250,21 @@ app.post('/action', async (req, res) => {
 
     if (!ActionAttributes[action].blockable && !ActionAttributes[action].challengeable) {
         if (action === Actions.Coup) {
-            gameState = await mutateGameState(roomId, (state) => {
+            await mutateGameState(roomId, (state) => {
                 state.players.find(({ id }) => id === playerId).coins -= 7;
                 killPlayerInfluence(state, targetPlayer);
                 state.turnPlayer = getNextPlayerTurn(state);
                 logEvent(state, `${player.name} used ${action} on ${targetPlayer}`)
             });
         } else if (action === Actions.Income) {
-            gameState = await mutateGameState(roomId, (state) => {
+            await mutateGameState(roomId, (state) => {
                 state.players.find(({ id }) => id === playerId).coins += 1;
                 state.turnPlayer = getNextPlayerTurn(state);
                 logEvent(state, `${player.name} used ${action}`)
             });
         }
     } else {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             state.pendingAction = {
                 action: action,
                 pendingPlayers: state.players.reduce((agg: string[], cur) => {
@@ -278,7 +279,7 @@ app.post('/action', async (req, res) => {
         });
     }
 
-    res.status(200).json(gameState);
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 
 app.post('/actionResponse', async (req, res) => {
@@ -292,7 +293,7 @@ app.post('/actionResponse', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
 
     if (!gameState) {
         res.status(400).send(`Room ${roomId} does not exist`);
@@ -325,12 +326,12 @@ app.post('/actionResponse', async (req, res) => {
 
     if (response === Responses.Pass) {
         if (gameState.pendingAction.pendingPlayers.length === 1) {
-            gameState = await mutateGameState(roomId, (state) => {
+            await mutateGameState(roomId, (state) => {
                 processPendingAction(state);
                 state.turnPlayer = getNextPlayerTurn(state);
             });
         } else {
-            gameState = await mutateGameState(roomId, (state) => {
+            await mutateGameState(roomId, (state) => {
                 state.pendingAction.pendingPlayers.splice(
                     state.pendingAction.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name),
                     1
@@ -338,7 +339,7 @@ app.post('/actionResponse', async (req, res) => {
             });
         }
     } else if (response === Responses.Challenge) {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             state.pendingAction.pendingPlayers = [];
             state.pendingActionChallenge = {
                 sourcePlayer: player.name
@@ -356,7 +357,7 @@ app.post('/actionResponse', async (req, res) => {
             return;
         }
 
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             state.pendingAction.pendingPlayers = [];
             state.pendingBlock = {
                 sourcePlayer: player.name,
@@ -366,7 +367,7 @@ app.post('/actionResponse', async (req, res) => {
         });
     }
 
-    res.status(200).json(gameState);
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 
 app.post('/actionChallengeResponse', async (req, res) => {
@@ -379,7 +380,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
 
     if (!gameState) {
         res.status(400).send(`Room ${roomId} does not exist`);
@@ -414,7 +415,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
     }
 
     if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
             killPlayerInfluence(state, challengePlayer.name);
@@ -429,7 +430,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
             state.turnPlayer = getNextPlayerTurn(state);
         });
     } else {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
             killPlayerInfluence(state, actionPlayer.name);
@@ -440,7 +441,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
         });
     }
 
-    res.status(200).json(gameState);
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 
 app.post('/blockResponse', async (req, res) => {
@@ -453,7 +454,7 @@ app.post('/blockResponse', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
 
     if (!gameState) {
         res.status(400).send(`Room ${roomId} does not exist`);
@@ -488,13 +489,13 @@ app.post('/blockResponse', async (req, res) => {
     }
 
     if (response === Responses.Challenge) {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             logEvent(state, `${player.name} is challenging ${blockPlayer.name}`)
             state.pendingBlockChallenge = { sourcePlayer: player.name }
         });
     } else if (response === Responses.Pass) {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
             state.turnPlayer = getNextPlayerTurn(state);
@@ -504,7 +505,7 @@ app.post('/blockResponse', async (req, res) => {
         });
     }
 
-    res.status(200).json(gameState);
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 
 app.post('/blockChallengeResponse', async (req, res) => {
@@ -517,7 +518,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
 
     if (!gameState) {
         res.status(400).send(`Room ${roomId} does not exist`);
@@ -552,7 +553,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
     }
 
     if (InfluenceAttributes[influence as Influences].legalBlock === gameState.pendingAction.action) {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             killPlayerInfluence(state, challengePlayer.name);
@@ -564,7 +565,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
             delete state.pendingAction;
         });
     } else {
-        gameState = await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             killPlayerInfluence(state, blockPlayer.name);
             logEvent(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`)
@@ -577,7 +578,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
         });
     }
 
-    res.status(200).json(gameState);
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 
 app.post('/loseInfluence', async (req, res) => {
@@ -590,7 +591,7 @@ app.post('/loseInfluence', async (req, res) => {
         return;
     }
 
-    let gameState = await getGameState(roomId);
+    const gameState = await getGameState(roomId);
 
     if (!gameState) {
         res.status(400).send(`Room ${roomId} does not exist`);
@@ -619,7 +620,7 @@ app.post('/loseInfluence', async (req, res) => {
         return;
     }
 
-    gameState = await mutateGameState(roomId, (state) => {
+    await mutateGameState(roomId, (state) => {
         const sadPlayer = state.players.find(({ id }) => id === player.id);
 
         const removedInfluence = sadPlayer.influences.splice(
@@ -639,8 +640,8 @@ app.post('/loseInfluence', async (req, res) => {
 
         logEvent(state, `${player.name} lost their ${influence}`)
     });
-
-    res.status(200).json(gameState);
+    
+    res.status(200).json(await getPublicGameState(roomId, playerId));
 });
 
 server.listen(port, function () {

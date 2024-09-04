@@ -10,6 +10,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './App.css';
+import { GameStateContextProvider } from '../context/GameStateContext';
 
 function App() {
   return (
@@ -20,7 +21,11 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />
-          <Route path="game" element={<Game />} />
+          <Route path="game" element={
+            <GameStateContextProvider>
+              <Game />
+            </GameStateContextProvider>
+          } />
           <Route path="join-game" element={<JoinGame />} />
           <Route path="create-game" element={<CreateGame />} />
           <Route path="*" element={<div>Page not found 😱 - Go <Link to={'/'}>Home</Link></div>} />
