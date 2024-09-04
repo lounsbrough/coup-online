@@ -32,6 +32,7 @@ const getPublicGameState = async (roomId, playerId) => {
         }
     });
     return {
+        roomId: gameState.roomId,
         turnPlayer: gameState.turnPlayer,
         isStarted: gameState.isStarted,
         pendingAction: gameState.pendingAction,
@@ -60,6 +61,7 @@ const mutateGameState = async (roomId, mutation) => {
     mutation(gameState);
     validateGameState(gameState);
     await setGameState(roomId, gameState);
+    return gameState;
 };
 exports.mutateGameState = mutateGameState;
 const killPlayerInfluence = (state, playerName, putBackInDeck = false) => {
@@ -122,6 +124,7 @@ const logEvent = (state, log) => {
 exports.logEvent = logEvent;
 const createNewGame = async (roomId) => {
     await setGameState(roomId, {
+        roomId,
         players: [],
         deck: buildShuffledDeck(),
         pendingInfluenceLoss: {},
@@ -133,7 +136,7 @@ exports.createNewGame = createNewGame;
 const resetGame = async (roomId) => {
     const newGameState = await (0, exports.getGameState)(roomId);
     await (0, exports.createNewGame)(roomId);
-    await (0, exports.mutateGameState)(roomId, (state) => {
+    return (0, exports.mutateGameState)(roomId, (state) => {
         const newPlayers = shuffle(newGameState.players.map((player) => ({
             ...player,
             coins: 2,
@@ -144,8 +147,8 @@ const resetGame = async (roomId) => {
     });
 };
 exports.resetGame = resetGame;
-const addPlayerToGame = async (roomId, playerId, playerName) => {
-    await (0, exports.mutateGameState)(roomId, (state) => {
+const addPlayerToGame = (roomId, playerId, playerName) => {
+    return (0, exports.mutateGameState)(roomId, (state) => {
         state.players.push({
             id: playerId,
             name: playerName,

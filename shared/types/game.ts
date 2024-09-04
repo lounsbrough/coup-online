@@ -132,6 +132,7 @@ export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
 };
 
 export type GameState = {
+  roomId: string
   players: Player[]
   deck: Influences[]
   turnPlayer?: string
@@ -160,6 +161,7 @@ export type GameState = {
 }
 
 export type PublicGameState = Pick<GameState,
+  'roomId' |
   'turnPlayer' |
   'pendingAction' |
   'pendingActionChallenge' |

@@ -45,13 +45,17 @@ function CreateGame() {
       <form
         onSubmit={(event) => {
           event.preventDefault();
+          setError(undefined);
           setPlayerName(playerName.trim());
 
           if (!playerName.trim()) {
-            return false;
+            setError('Player Name is required');
           }
 
-          setError(undefined);
+          if (playerName.trim().length > 10) {
+            setError('Player Name must be 10 characters or less');
+          }
+
           trigger({
             playerId: getPlayerId(),
             playerName: playerName.trim()
@@ -63,7 +67,9 @@ function CreateGame() {
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
                 value={playerName}
-                onChange={(event) => setPlayerName(event.target.value)}
+                onChange={(event) => {
+                  setPlayerName(event.target.value.slice(0, 10));
+                }}
                 label="What is your name?"
                 variant="standard"
                 required
