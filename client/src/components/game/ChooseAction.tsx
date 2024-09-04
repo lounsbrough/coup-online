@@ -4,11 +4,13 @@ import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 import { useGameStateContext } from "../../context/GameStateContext";
+import { useColorModeContext } from "../../context/MaterialThemeContext";
 
 function ChooseAction() {
   const [selectedAction, setSelectedAction] = useState<Actions>();
   const [error, setError] = useState<string>();
-  const { gameState, setGameState } = useGameStateContext()
+  const { gameState, setGameState } = useGameStateContext();
+  const { colorMode } = useColorModeContext();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/action`, (async (
     url: string, { arg }: {
@@ -64,7 +66,7 @@ function ChooseAction() {
                     action: selectedAction,
                     targetPlayer: player.name
                   })
-                }} color="inherit" sx={{ background: player.color }}
+                }} sx={{ background: player.color }}
                 disabled={isMutating}
               >{player.name}</Button>
             })}
@@ -112,7 +114,7 @@ function ChooseAction() {
                           }
                         }}
                         sx={{
-                          background: actionAttributes.color
+                          background: actionAttributes.color[colorMode]
                         }} variant="contained"
                         disabled={isMutating}
                       >

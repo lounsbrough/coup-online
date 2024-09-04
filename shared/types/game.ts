@@ -137,12 +137,27 @@ export enum Responses {
 
 export const ResponseAttributes: {
   [response in Responses]: {
-    color: string
+    color: { [mode in ColorMode]: string }
   }
 } = {
-  [Responses.Pass]: { color: '#007700' },
-  [Responses.Challenge]: { color: '#ff7700' },
-  [Responses.Block]: { color: '#770000' }
+  [Responses.Pass]: {
+    color: {
+      light: '#007700',
+      dark: '#77ee77'
+    }
+  },
+  [Responses.Challenge]: {
+    color: {
+      light: '#ff7700',
+      dark: '#ffaa55'
+    }
+  },
+  [Responses.Block]: {
+    color: {
+      light: '#770000',
+      dark: '#ff6666'
+    }
+  }
 }
 
 export type Player = {

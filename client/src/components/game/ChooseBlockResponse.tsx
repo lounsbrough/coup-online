@@ -4,10 +4,12 @@ import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 import { useGameStateContext } from "../../context/GameStateContext";
+import { useColorModeContext } from "../../context/MaterialThemeContext";
 
 function ChooseBlockResponse() {
   const [error, setError] = useState<string>();
   const { gameState, setGameState } = useGameStateContext();
+  const { colorMode } = useColorModeContext();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
     return fetch(url, {
@@ -50,7 +52,7 @@ function ChooseBlockResponse() {
               })
             }}
             sx={{
-              background: responseAttributes.color
+              background: responseAttributes.color[colorMode]
             }} variant="contained"
             disabled={isMutating}
           >

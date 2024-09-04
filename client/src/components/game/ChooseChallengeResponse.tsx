@@ -4,10 +4,12 @@ import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 import { useGameStateContext } from "../../context/GameStateContext";
+import { useColorModeContext } from "../../context/MaterialThemeContext";
 
 function ChooseChallengeResponse() {
   const [error, setError] = useState<string>();
   const { gameState, setGameState } = useGameStateContext();
+  const { colorMode } = useColorModeContext();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/${gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
     return fetch(url, {
@@ -47,7 +49,7 @@ function ChooseChallengeResponse() {
             }}
             disabled={isMutating}
             sx={{
-              background: InfluenceAttributes[influence].color
+              background: InfluenceAttributes[influence].color[colorMode]
             }} variant="contained"
           >
             {influence}
