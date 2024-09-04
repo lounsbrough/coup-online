@@ -47,8 +47,10 @@ function PlayerDecision({ roomId, gameState }: {
     return <ChooseBlockResponse roomId={roomId} gameState={gameState} />;
   }
 
-  if (gameState.pendingBlockChallenge &&
-    gameState.pendingBlockChallenge.sourcePlayer === gameState.selfPlayer.name
+  if (
+    gameState.pendingBlock &&
+    gameState.pendingBlockChallenge &&
+    gameState.pendingBlock.sourcePlayer === gameState.selfPlayer.name
   ) {
     return <ChooseChallengeResponse roomId={roomId} gameState={gameState} />;
   }

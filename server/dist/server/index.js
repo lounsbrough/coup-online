@@ -364,7 +364,7 @@ app.post('/blockResponse', async (req, res) => {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             (0, gameState_1.logEvent)(state, `${player.name} is challenging ${blockPlayer.name}`);
-            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
+            state.pendingBlockChallenge = { sourcePlayer: player.name };
         });
     }
     else if (response === game_1.Responses.Pass) {
@@ -415,19 +415,29 @@ app.post('/blockChallengeResponse', async (req, res) => {
     }
     if (game_1.InfluenceAttributes[influence].legalBlock === gameState.pendingAction.action) {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
-            const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
+            const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
-            (0, gameState_1.killPlayerInfluence)(state, actionPlayer.name);
+            (0, gameState_1.killPlayerInfluence)(state, challengePlayer.name);
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
             state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
+            delete state.pendingBlockChallenge;
+            delete state.pendingBlock;
             delete state.pendingActionChallenge;
             delete state.pendingAction;
         });
     }
     else {
-        // block is illegal
-        // process action
-        // kill 1 blocker influence
+        await (0, gameState_1.mutateGameState)(roomId, (state) => {
+            const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
+            (0, gameState_1.killPlayerInfluence)(state, blockPlayer.name);
+            (0, gameState_1.logEvent)(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`);
+            (0, gameState_1.processPendingAction)(state);
+            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
+            delete state.pendingBlockChallenge;
+            delete state.pendingBlock;
+            delete state.pendingActionChallenge;
+            delete state.pendingAction;
+        });
     }
     res.status(200).send();
 });
