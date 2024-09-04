@@ -8,11 +8,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 2rem;
   border-bottom-style: solid;
   border-bottom-width: 1px;
-}
-
-.App-link {
-  color: #61dafb;
 }

@@ -13,13 +13,15 @@ import './App.css';
 import { GameStateContextProvider } from '../context/GameStateContext';
 import { MaterialThemeContextProvider } from '../context/MaterialThemeContext';
 import ColorModeToggle from './ColorModeToggle';
+import Rules from './Rules';
 
 function App() {
   return (
     <div className="App">
       <MaterialThemeContextProvider>
         <header className="App-header">
-          <Typography component="span" sx={{
+          <Rules />
+          <Typography color='primary' component="span" sx={{
             fontSize: '36px',
             fontWeight: 500
           }}>Coup</Typography>
