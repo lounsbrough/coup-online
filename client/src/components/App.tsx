@@ -11,26 +11,34 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './App.css';
 import { GameStateContextProvider } from '../context/GameStateContext';
+import { MaterialThemeContextProvider } from '../context/MaterialThemeContext';
+import ColorModeToggle from './ColorModeToggle';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Typography variant='h4'>Coup Online</Typography>
-      </header>
-      <Routes>
-        <Route path="/">
-          <Route index element={<Home />} />
-          <Route path="game" element={
-            <GameStateContextProvider>
-              <Game />
-            </GameStateContextProvider>
-          } />
-          <Route path="join-game" element={<JoinGame />} />
-          <Route path="create-game" element={<CreateGame />} />
-          <Route path="*" element={<div>Page not found 😱 - Go <Link to={'/'}>Home</Link></div>} />
-        </Route>
-      </Routes>
+      <MaterialThemeContextProvider>
+        <header className="App-header">
+          <Typography component="span" sx={{
+            fontSize: '36px',
+            fontWeight: 500
+          }}>Coup</Typography>
+          <ColorModeToggle />
+        </header>
+        <Routes>
+          <Route path="/">
+            <Route index element={<Home />} />
+            <Route path="game" element={
+              <GameStateContextProvider>
+                <Game />
+              </GameStateContextProvider>
+            } />
+            <Route path="join-game" element={<JoinGame />} />
+            <Route path="create-game" element={<CreateGame />} />
+            <Route path="*" element={<div>Page not found 😱 - Go <Link to={'/'}>Home</Link></div>} />
+          </Route>
+        </Routes>
+      </MaterialThemeContextProvider>
     </div>
   );
 }
