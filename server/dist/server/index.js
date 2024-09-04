@@ -487,7 +487,6 @@ app.post('/loseInfluence', async (req, res) => {
     });
     res.status(200).send();
 });
-console.log(`going to bind on ${port}`);
 server.listen(port, function () {
     console.log(`listening on ${port}`);
 });
