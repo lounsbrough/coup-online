@@ -7,7 +7,7 @@ import { useGameStateContext } from "../../context/GameStateContext";
 
 function ChooseChallengeResponse() {
   const [error, setError] = useState<string>();
-  const { gameState } = useGameStateContext();
+  const { gameState, setGameState } = useGameStateContext();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/${gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
     return fetch(url, {
@@ -17,7 +17,9 @@ function ChooseChallengeResponse() {
       },
       body: JSON.stringify(arg)
     }).then(async (res) => {
-      if (!res.ok) {
+      if (res.ok) {
+        setGameState(await res.json());
+      } else {
         setError('Error responding to challenge');
       }
     })
