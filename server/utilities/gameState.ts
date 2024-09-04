@@ -13,8 +13,6 @@ export const getGameState = async (
   if (!gameStates[roomId]) {
     console.log('getting game state from redis');
     gameStates[roomId] = JSON.parse(await getValue(roomId));
-  } else {
-    console.log('getting game state from memory cache');
   }
   return gameStates[roomId] ? { ...gameStates[roomId] } : null;
 }
@@ -60,13 +58,14 @@ export const getPublicGameState = async (
 
 const setGameState = async (roomId: string, newState: GameState) => {
   const fifteenMinutes = 900;
-  console.log('inside setGameState');
-  console.log('saving to redis', newState);
+  const logId = Math.floor(Math.random() * 1000000);
+  console.log(JSON.stringify(newState));
+  console.log(`saving to redis ${logId}`, Buffer.from(JSON.stringify(newState)).toString('base64'));
   await setValue(roomId, JSON.stringify(newState), fifteenMinutes);
-  console.log('saved to redis', newState);
-  console.log('updating memory cache', newState);
+  console.log(`saved to redis ${logId}`);
+  console.log(`updating memory cache ${logId}`);
   gameStates[roomId] = newState;
-  console.log('updated memory cache', newState);
+  console.log(`updated memory cache ${logId}`);
 }
 
 const validateGameState = (state: GameState) => {
@@ -162,7 +161,7 @@ export const startGame = async (roomId: string) => {
     state.isStarted = true;
     state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name
     logEvent(state, 'Game has started');
-});
+  });
 }
 
 export const resetGame = async (roomId: string) => {
