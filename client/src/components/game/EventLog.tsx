@@ -1,16 +1,22 @@
 import { Box, Grid2, Typography } from "@mui/material";
-import { InfluenceAttributes, Influences, PublicGameState } from "../../shared/types/game";
+import { InfluenceAttributes, Influences } from "../../shared/types/game";
 import { useEffect, useRef } from "react";
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function EventLog({ gameState }: { gameState: PublicGameState }) {
+function EventLog() {
   const logBox = useRef<HTMLElement>(null);
+  const { gameState } = useGameStateContext();
 
   useEffect(() => {
     logBox.current?.scrollTo({
       top: logBox.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [gameState.eventLogs])
+  }, [gameState?.eventLogs])
+
+  if (!gameState) {
+    return null;
+  }
 
   const playerColors = Object.fromEntries(gameState.players.map((player) => [player.name, player.color]));
 

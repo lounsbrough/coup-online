@@ -67,6 +67,7 @@ app.post('/resetGame', async (req, res) => {
         return;
     }
     await (0, gameState_1.resetGame)(roomId);
+    await (0, gameState_1.startGame)(roomId);
     res.status(200).json(await (0, gameState_1.getPublicGameState)(roomId, playerId));
 });
 app.post('/startGame', async (req, res) => {
@@ -87,11 +88,7 @@ app.post('/startGame', async (req, res) => {
         return;
     }
     if (!gameState.isStarted) {
-        await (0, gameState_1.mutateGameState)(roomId, (state) => {
-            state.isStarted = true;
-            state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name;
-            (0, gameState_1.logEvent)(state, 'Game has started');
-        });
+        await (0, gameState_1.startGame)(roomId);
     }
     res.status(200).json(await (0, gameState_1.getPublicGameState)(roomId, playerId));
 });

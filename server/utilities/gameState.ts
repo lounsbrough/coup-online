@@ -146,23 +146,29 @@ export const createNewGame = async (roomId: string) => {
   });
 }
 
-export const resetGame = async (roomId: string) => {
-  const newGameState = await getGameState(roomId);
+export const startGame = async (roomId: string) => {
+  await mutateGameState(roomId, (state) => {
+    state.isStarted = true;
+    state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name
+    logEvent(state, 'Game has started');
+});
+}
 
+export const resetGame = async (roomId: string) => {
+  const oldGameState = await getGameState(roomId);
   await createNewGame(roomId);
-  mutateGameState(roomId, (state) => {
-    const newPlayers = shuffle(newGameState.players.map((player) => ({
+  await mutateGameState(roomId, (state) => {
+    const newPlayers = shuffle(oldGameState.players.map((player) => ({
       ...player,
       coins: 2,
       influences: Array.from({ length: 2 }, () => drawCardFromDeck(state))
     })));
-    state.isStarted = true;
     state.players = newPlayers;
   });
 }
 
-export const addPlayerToGame = (roomId: string, playerId: string, playerName: string) => {
-  mutateGameState(roomId, (state) => {
+export const addPlayerToGame = async (roomId: string, playerId: string, playerName: string) => {
+  await mutateGameState(roomId, (state) => {
     state.players.push({
       id: playerId,
       name: playerName,

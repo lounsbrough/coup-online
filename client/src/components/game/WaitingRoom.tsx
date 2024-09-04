@@ -2,25 +2,39 @@ import { Button, Grid2, Typography } from "@mui/material";
 import Players from "../game/Players";
 import useSWRMutation from "swr/mutation";
 import { ContentCopy } from "@mui/icons-material";
-import { PublicGameState } from "../../shared/types/game";
 import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
+import { useState } from "react";
 
-function WaitingRoom({ gameState }: { gameState: PublicGameState }) {
-  const { trigger } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
+function WaitingRoom() {
+  const [error, setError] = useState<string>();
+  const { gameState, setGameState } = useGameStateContext();
+
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
       },
       body: JSON.stringify(arg)
+    }).then(async (res) => {
+      if (res.ok) {
+        setGameState(await res.json());
+      } else {
+        setError('Error starting new game');
+      }
     })
-  }))
+  }));
+
+  if (!gameState) {
+    return null;
+  }
 
   return (
     <>
       <Grid2 container justifyContent="center">
         <Grid2 sx={{ p: 2 }}>
-          <Players gameState={gameState} />
+          <Players />
         </Grid2>
       </Grid2>
       <Grid2 container direction='column' spacing={2}>
@@ -50,9 +64,11 @@ function WaitingRoom({ gameState }: { gameState: PublicGameState }) {
                   playerId: getPlayerId()
                 })
               }}
+              disabled={isMutating}
             >
               Start Game
             </Button>
+            {error && <Typography sx={{ mt: 3, fontWeight: 700, color: 'red' }}>{error}</Typography>}
           </Grid2>
         )}
       </Grid2>

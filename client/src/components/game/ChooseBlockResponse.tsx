@@ -1,13 +1,15 @@
 import { Button, Grid2, Typography } from "@mui/material";
-import { PublicGameState, ResponseAttributes, Responses } from "../../shared/types/game";
+import { ResponseAttributes, Responses } from "../../shared/types/game";
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function ChooseBlockResponse({ gameState }: { gameState: PublicGameState }) {
+function ChooseBlockResponse() {
   const [error, setError] = useState<string>();
+  const { gameState } = useGameStateContext();
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -19,7 +21,11 @@ function ChooseBlockResponse({ gameState }: { gameState: PublicGameState }) {
         setError('Error responding to block');
       }
     })
-  }))
+  }));
+
+  if (!gameState) {
+    return null;
+  }
 
   return (
     <>
@@ -44,6 +50,7 @@ function ChooseBlockResponse({ gameState }: { gameState: PublicGameState }) {
             sx={{
               background: responseAttributes.color
             }} variant="contained"
+            disabled={isMutating}
           >
             {response}
           </Button>

@@ -3,12 +3,14 @@ import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameS
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function ChooseActionResponse({ gameState }: { gameState: PublicGameState }) {
+function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>();
   const [error, setError] = useState<string>();
+  const { gameState, setGameState } = useGameStateContext();
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/actionResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses, claimedInfluence?: Influences }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/actionResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses, claimedInfluence?: Influences }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -16,11 +18,17 @@ function ChooseActionResponse({ gameState }: { gameState: PublicGameState }) {
       },
       body: JSON.stringify(arg)
     }).then(async (res) => {
-      if (!res.ok) {
+      if (res.ok) {
+        setGameState(await res.json());
+      } else {
         setError('Error responding to action');
       }
     })
   }))
+
+  if (!gameState) {
+    return null;
+  }
 
   return (
     <>
@@ -45,6 +53,7 @@ function ChooseActionResponse({ gameState }: { gameState: PublicGameState }) {
                     claimedInfluence: influence as Influences
                   })
                 }} color="inherit" sx={{ background: influenceAttributes.color }}
+                disabled={isMutating}
                 variant="contained"
               >{influence}</Button>
             })}
@@ -83,6 +92,7 @@ function ChooseActionResponse({ gameState }: { gameState: PublicGameState }) {
                 sx={{
                   background: responseAttributes.color
                 }} variant="contained"
+                disabled={isMutating}
               >
                 {response}
               </Button>
