@@ -4,7 +4,7 @@ import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 
-function ChooseActionResponse({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
+function ChooseActionResponse({ gameState }: { gameState: PublicGameState }) {
   const [selectedResponse, setSelectedResponse] = useState<Responses>();
   const [error, setError] = useState<string>();
 
@@ -39,7 +39,7 @@ function ChooseActionResponse({ roomId, gameState }: { roomId: string, gameState
                 key={influence}
                 onClick={() => {
                   trigger({
-                    roomId,
+                    roomId: gameState.roomId,
                     playerId: getPlayerId(),
                     response: selectedResponse,
                     claimedInfluence: influence as Influences
@@ -74,7 +74,7 @@ function ChooseActionResponse({ roomId, gameState }: { roomId: string, gameState
                     setSelectedResponse(response);
                   } else {
                     trigger({
-                      roomId,
+                      roomId: gameState.roomId,
                       playerId: getPlayerId(),
                       response: response as Responses
                     })

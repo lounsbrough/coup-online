@@ -1,4 +1,4 @@
-import { Button, Grid2, Typography } from "@mui/material";
+import { Grid2, Typography } from "@mui/material";
 import PlayerInfluences from "../game/PlayerInfluences";
 import Players from "../game/Players";
 import EventLog from "./EventLog";
@@ -8,7 +8,7 @@ import { PublicGameState } from "../../shared/types/game";
 import Victory from "./Victory";
 import PlayAgain from "./PlayAgain";
 
-function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
+function GameBoard({ gameState }: { gameState: PublicGameState }) {
   const turnPlayer = gameState.players.find((player) =>
     player.name === gameState.turnPlayer
   );
@@ -46,7 +46,7 @@ function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGam
       )}
       {gameIsOver && (
         <Grid2 sx={{ m: 5 }}>
-          <PlayAgain roomId={roomId} />
+          <PlayAgain roomId={gameState.roomId} />
         </Grid2>
       )}
       {!gameState.selfPlayer.influences.length && (
@@ -67,7 +67,7 @@ function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGam
       {!gameIsOver && (
         <Grid2 container justifyContent="center">
           <Grid2 sx={{ p: 2 }}>
-            <PlayerDecision roomId={roomId} gameState={gameState} />
+            <PlayerDecision gameState={gameState} />
           </Grid2>
         </Grid2>
       )}

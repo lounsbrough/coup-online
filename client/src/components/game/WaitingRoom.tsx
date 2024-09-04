@@ -5,10 +5,7 @@ import { ContentCopy } from "@mui/icons-material";
 import { PublicGameState } from "../../shared/types/game";
 import { getPlayerId } from "../../helpers/playerId";
 
-function WaitingRoom({ roomId, gameState }: {
-  roomId: string,
-  gameState: PublicGameState
-}) {
+function WaitingRoom({ gameState }: { gameState: PublicGameState }) {
   const { trigger } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
     return fetch(url, {
       method: 'POST',
@@ -32,7 +29,7 @@ function WaitingRoom({ roomId, gameState }: {
             variant="outlined"
             startIcon={<ContentCopy />}
             onClick={() => {
-              navigator.clipboard.writeText(`${window.location.origin}/join-game?roomId=${roomId}`)
+              navigator.clipboard.writeText(`${window.location.origin}/join-game?roomId=${gameState.roomId}`)
             }}
           >
             Copy Invite Link
@@ -48,7 +45,10 @@ function WaitingRoom({ roomId, gameState }: {
             <Button
               variant='contained'
               onClick={() => {
-                trigger({ roomId, playerId: getPlayerId() })
+                trigger({
+                  roomId: gameState.roomId,
+                  playerId: getPlayerId()
+                })
               }}
             >
               Start Game

@@ -1,10 +1,10 @@
 import { Button, Grid2, Typography } from "@mui/material";
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, ResponseAttributes, Responses } from "../../shared/types/game";
+import { PublicGameState, ResponseAttributes, Responses } from "../../shared/types/game";
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 
-function ChooseBlockResponse({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
+function ChooseBlockResponse({ gameState }: { gameState: PublicGameState }) {
   const [error, setError] = useState<string>();
 
   const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
@@ -36,7 +36,7 @@ function ChooseBlockResponse({ roomId, gameState }: { roomId: string, gameState:
             key={index}
             onClick={() => {
               trigger({
-                roomId,
+                roomId: gameState.roomId,
                 playerId: getPlayerId(),
                 response: response as Responses
               })
