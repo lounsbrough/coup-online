@@ -5,11 +5,13 @@ import EventLog from "./EventLog";
 import PlayerDecision from "./PlayerDecision";
 import SnarkyDeadComment from "./SnarkyDeadComment";
 import { PublicGameState } from "../../shared/types/game";
+import Victory from "./Victory";
 
 function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
   const turnPlayer = gameState.players.find((player) =>
     player.name === gameState.turnPlayer
   );
+  const playersLeft = gameState.players.filter(({ influenceCount }) => influenceCount);
 
   return (
     <>
@@ -31,6 +33,11 @@ function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGam
           <EventLog gameState={gameState} />
         </Grid2>
       </Grid2>
+      {playersLeft.length === 1 && (
+        <Grid2>
+          <Victory player={playersLeft[0]} />
+        </Grid2>
+      )}
       {!gameState.selfPlayer.influences.length && (
         <Grid2>
           <SnarkyDeadComment />
