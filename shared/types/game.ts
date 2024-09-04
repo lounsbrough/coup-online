@@ -16,35 +16,52 @@ export enum Actions {
   Exchange = 'Exchange'
 }
 
+type ColorMode = 'light' | 'dark';
+
 export const InfluenceAttributes: {
   [influence in Influences]: {
     legalAction?: Actions
     legalBlock?: Actions
-    color: string
+    color: { [mode in ColorMode]: string }
   }
 } = {
   [Influences.Assassin]: {
     legalAction: Actions.Assassinate,
-    color: '#555555'
+    color: {
+      light: '#555555',
+      dark: '#555555'
+    }
   },
   [Influences.Contessa]: {
     legalBlock: Actions.Assassinate,
-    color: '#E35646'
+    color: {
+      light: '#E35646',
+      dark: '#E35646'
+    }
   },
   [Influences.Captain]: {
     legalAction: Actions.Steal,
     legalBlock: Actions.Steal,
-    color: '#80C6E5'
+    color: {
+      light: '#80C6E5',
+      dark: '#80C6E5'
+    }
   },
   [Influences.Ambassador]: {
     legalAction: Actions.Exchange,
     legalBlock: Actions.Steal,
-    color: '#B4CA1F'
+    color: {
+      light: '#B4CA1F',
+      dark: '#B4CA1F'
+    }
   },
   [Influences.Duke]: {
     legalAction: Actions.Tax,
     legalBlock: Actions.ForeignAid,
-    color: '#D55DC7'
+    color: {
+      light: '#D55DC7',
+      dark: '#D55DC7'
+    }
   }
 }
 
@@ -53,7 +70,7 @@ export const ActionAttributes: {
     blockable: boolean
     challengeable: boolean
     coinsRequired?: number
-    color: string
+    color: { [mode in ColorMode]: string }
     requiresTarget: boolean
   }
 } = {
@@ -74,7 +91,10 @@ export const ActionAttributes: {
     blockable: false,
     challengeable: false,
     coinsRequired: 7,
-    color: '#770077',
+    color: {
+      light: '#770077',
+      dark: '#770077'
+    },
     requiresTarget: true
   },
   [Actions.Tax]: {
@@ -86,13 +106,19 @@ export const ActionAttributes: {
   [Actions.ForeignAid]: {
     blockable: true,
     challengeable: false,
-    color: '#555555',
+    color: {
+      light: '#555555',
+      dark: '#555555'
+    },
     requiresTarget: false
   },
   [Actions.Income]: {
     blockable: false,
     challengeable: false,
-    color: '#555555',
+    color: {
+      light: '#555555',
+      dark: '#555555'
+    },
     requiresTarget: false
   },
   [Actions.Exchange]: {

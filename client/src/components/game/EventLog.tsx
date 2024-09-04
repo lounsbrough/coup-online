@@ -2,10 +2,12 @@ import { Box, Grid2, Typography } from "@mui/material";
 import { InfluenceAttributes, Influences } from "../../shared/types/game";
 import { useEffect, useRef } from "react";
 import { useGameStateContext } from "../../context/GameStateContext";
+import { useColorModeContext } from "../../context/MaterialThemeContext";
 
 function EventLog() {
   const logBox = useRef<HTMLElement>(null);
   const { gameState } = useGameStateContext();
+  const { colorMode } = useColorModeContext();
 
   useEffect(() => {
     logBox.current?.scrollTo({
@@ -36,7 +38,7 @@ function EventLog() {
                     fontSize: playerColors[word] || InfluenceAttributes[word as Influences] ? '14px' : '12px',
                     fontWeight: playerColors[word] || InfluenceAttributes[word as Influences] ? '700' : undefined
                   }}
-                  color={playerColors[word] || InfluenceAttributes[word as Influences]?.color}
+                  color={playerColors[word] || InfluenceAttributes[word as Influences]?.color[colorMode]}
                 >{word} </Typography>)}
             </Typography>
           );
