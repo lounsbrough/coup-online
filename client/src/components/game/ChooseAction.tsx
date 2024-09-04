@@ -68,6 +68,7 @@ function ChooseAction() {
                   })
                 }} sx={{ background: player.color }}
                 disabled={isMutating}
+                variant="contained"
               >{player.name}</Button>
             })}
           </Grid2>

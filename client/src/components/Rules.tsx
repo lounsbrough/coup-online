@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import { Gavel } from "@mui/icons-material";
-import './Rules.css';
+import { colord } from "colord";
 import { InfluenceAttributes } from "../shared/types/game";
 import { useColorModeContext } from "../context/MaterialThemeContext";
+import './Rules.css';
 
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { colorMode } = useColorModeContext();
+
+  const influenceBackgroundOpacity = 0.5;
 
   return (
     <>
@@ -53,31 +56,41 @@ function Rules() {
                   <td>Pay 7 coins and make a player lose an influence</td>
                   <td></td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Duke.color[colorMode] }}>
+                <tr style={{
+                  background: colord(InfluenceAttributes.Duke.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
+                }}>
                   <td>Duke</td>
                   <td>Tax</td>
                   <td>Collect 3 coins</td>
                   <td>Block Foreign Aid</td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Assassin.color[colorMode] }}>
+                <tr style={{
+                  background: colord(InfluenceAttributes.Assassin.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
+                }}>
                   <td>Assassin</td>
                   <td>Assassinate</td>
                   <td>Pay 3 coins and make a player lose an influence</td>
                   <td></td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Ambassador.color[colorMode] }}>
+                <tr style={{
+                  background: colord(InfluenceAttributes.Ambassador.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
+                }}>
                   <td>Ambassador</td>
                   <td>Exchange</td>
                   <td>Draw 2 influences and put 2 back</td>
                   <td>Block Stealing</td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Captain.color[colorMode] }}>
+                <tr style={{
+                  background: colord(InfluenceAttributes.Captain.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
+                }}>
                   <td>Captain</td>
                   <td>Steal</td>
                   <td>Steal 2 coins from another player</td>
                   <td>Block Stealing</td>
                 </tr>
-                <tr style={{ background: InfluenceAttributes.Contessa.color[colorMode] }}>
+                <tr style={{
+                  background: colord(InfluenceAttributes.Contessa.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
+                }}>
                   <td>Contessa</td>
                   <td></td>
                   <td></td>
@@ -115,7 +128,7 @@ function Rules() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => { setModalOpen(false); }}>Close</Button>
+          <Button variant='contained' onClick={() => { setModalOpen(false); }}>Close</Button>
         </DialogActions>
       </Dialog >
     </>
