@@ -8,7 +8,11 @@ const storage_1 = require("./storage");
 const gameStates = {};
 const getGameState = async (roomId) => {
     if (!gameStates[roomId]) {
+        console.log('getting game state from redis');
         gameStates[roomId] = JSON.parse(await (0, storage_1.getValue)(roomId));
+    }
+    else {
+        console.log('getting game state from memory cache');
     }
     return gameStates[roomId] ? { ...gameStates[roomId] } : null;
 };
@@ -48,8 +52,13 @@ const getPublicGameState = async (roomId, playerId) => {
 exports.getPublicGameState = getPublicGameState;
 const setGameState = async (roomId, newState) => {
     const fifteenMinutes = 900;
+    console.log('inside setGameState');
+    console.log('saving to redis', newState);
     await (0, storage_1.setValue)(roomId, JSON.stringify(newState), fifteenMinutes);
+    console.log('saved to redis', newState);
+    console.log('updating memory cache', newState);
     gameStates[roomId] = newState;
+    console.log('updated memory cache', newState);
 };
 const validateGameState = (state) => {
     if (state.players.length < 1 || state.players.length > 6) {
@@ -58,8 +67,11 @@ const validateGameState = (state) => {
 };
 const mutateGameState = async (roomId, mutation) => {
     const gameState = await (0, exports.getGameState)(roomId);
+    console.log('inside mutateGameState');
+    console.log('original state', gameState);
     mutation(gameState);
     validateGameState(gameState);
+    console.log('mutated game state', gameState);
     await setGameState(roomId, gameState);
 };
 exports.mutateGameState = mutateGameState;

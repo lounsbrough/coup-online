@@ -11,7 +11,10 @@ export const getGameState = async (
   roomId: string
 ): Promise<GameState | null> => {
   if (!gameStates[roomId]) {
+    console.log('getting game state from redis');
     gameStates[roomId] = JSON.parse(await getValue(roomId));
+  } else {
+    console.log('getting game state from memory cache');
   }
   return gameStates[roomId] ? { ...gameStates[roomId] } : null;
 }
@@ -57,8 +60,13 @@ export const getPublicGameState = async (
 
 const setGameState = async (roomId: string, newState: GameState) => {
   const fifteenMinutes = 900;
+  console.log('inside setGameState');
+  console.log('saving to redis', newState);
   await setValue(roomId, JSON.stringify(newState), fifteenMinutes);
+  console.log('saved to redis', newState);
+  console.log('updating memory cache', newState);
   gameStates[roomId] = newState;
+  console.log('updated memory cache', newState);
 }
 
 const validateGameState = (state: GameState) => {
@@ -72,8 +80,11 @@ export const mutateGameState = async (
   mutation: (state: GameState) => void
 ) => {
   const gameState = await getGameState(roomId);
+  console.log('inside mutateGameState');
+  console.log('original state', gameState);
   mutation(gameState);
   validateGameState(gameState);
+  console.log('mutated game state', gameState);
   await setGameState(roomId, gameState);
 }
 
