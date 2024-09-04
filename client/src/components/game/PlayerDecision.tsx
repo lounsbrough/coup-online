@@ -40,7 +40,10 @@ function PlayerDecision({ roomId, gameState }: {
     return <ChooseChallengeResponse roomId={roomId} gameState={gameState} />;
   }
 
-  if (isMyTurn && gameState.pendingBlock) {
+  if (isMyTurn &&
+    gameState.pendingBlock &&
+    !gameState.pendingBlockChallenge
+  ) {
     return <ChooseBlockResponse roomId={roomId} gameState={gameState} />;
   }
 

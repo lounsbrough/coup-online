@@ -440,7 +440,7 @@ app.post('/blockResponse', async (req, res) => {
         await mutateGameState(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             logEvent(state, `${player.name} is challenging ${blockPlayer.name}`)
-            state.turnPlayer = getNextPlayerTurn(state);
+            state.pendingBlockChallenge = { sourcePlayer: player.name }
         });
     } else if (response === Responses.Pass) {
         await mutateGameState(roomId, (state) => {
@@ -502,18 +502,28 @@ app.post('/blockChallengeResponse', async (req, res) => {
 
     if (InfluenceAttributes[influence as Influences].legalBlock === gameState.pendingAction.action) {
         await mutateGameState(roomId, (state) => {
-            const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
+            const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
-            killPlayerInfluence(state, actionPlayer.name);
+            killPlayerInfluence(state, challengePlayer.name);
             logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
             state.turnPlayer = getNextPlayerTurn(state);
+            delete state.pendingBlockChallenge;
+            delete state.pendingBlock;
             delete state.pendingActionChallenge;
             delete state.pendingAction;
         });
     } else {
-        // block is illegal
-        // process action
-        // kill 1 blocker influence
+        await mutateGameState(roomId, (state) => {
+            const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
+            killPlayerInfluence(state, blockPlayer.name);
+            logEvent(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`)
+            processPendingAction(state);
+            state.turnPlayer = getNextPlayerTurn(state);
+            delete state.pendingBlockChallenge;
+            delete state.pendingBlock;
+            delete state.pendingActionChallenge;
+            delete state.pendingAction;
+        });
     }
 
     res.status(200).send();
