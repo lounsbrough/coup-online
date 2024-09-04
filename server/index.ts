@@ -2,16 +2,16 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction, shuffleDeck } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
+
+const port = process.env.EXPRESS_PORT || 8000;
 
 const app = express();
 app.use(cors());
 app.use(json());
 const server = http.createServer(app);
-
-const port = 8000;
 
 app.get('/gameState', async (req, res) => {
     const roomId = req.query?.roomId;
@@ -582,6 +582,8 @@ app.post('/loseInfluence', async (req, res) => {
     res.status(200).send();
 });
 
-server.listen(process.env.PORT || port, function () {
-    console.log(`listening on ${process.env.PORT || port}`);
+console.log(`going to bind on ${port}`);
+
+server.listen(port, function () {
+    console.log(`listening on ${port}`);
 });
