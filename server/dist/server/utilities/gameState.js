@@ -3,15 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getNextPlayerTurn = exports.addPlayerToGame = exports.resetGame = exports.startGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.killPlayerInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
 const game_1 = require("../../shared/types/game");
 const storage_1 = require("./storage");
-// In-memory cache does not expire
-// It is always refreshed if persistent storage is refreshed
-const gameStates = {};
 const getGameState = async (roomId) => {
-    if (!gameStates[roomId]) {
-        console.log('getting game state from redis');
-        gameStates[roomId] = JSON.parse(await (0, storage_1.getValue)(roomId));
-    }
-    return gameStates[roomId] ? { ...gameStates[roomId] } : null;
+    const state = JSON.parse(await (0, storage_1.getValue)(roomId));
+    return state ? { ...state } : null;
 };
 exports.getGameState = getGameState;
 const getPublicGameState = async (roomId, playerId) => {
@@ -49,14 +43,7 @@ const getPublicGameState = async (roomId, playerId) => {
 exports.getPublicGameState = getPublicGameState;
 const setGameState = async (roomId, newState) => {
     const fifteenMinutes = 900;
-    const logId = Math.floor(Math.random() * 1000000);
-    console.log(JSON.stringify(newState));
-    console.log(`saving to redis ${logId}`, Buffer.from(JSON.stringify(newState)).toString('base64'));
     await (0, storage_1.setValue)(roomId, JSON.stringify(newState), fifteenMinutes);
-    console.log(`saved to redis ${logId}`);
-    console.log(`updating memory cache ${logId}`);
-    gameStates[roomId] = newState;
-    console.log(`updated memory cache ${logId}`);
 };
 const validateGameState = (state) => {
     if (state.players.length < 1 || state.players.length > 6) {
