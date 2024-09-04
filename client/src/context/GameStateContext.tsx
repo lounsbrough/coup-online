@@ -49,7 +49,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
   return (
     <GameStateContext.Provider value={contextValue}>
-      {!!error && <Typography>{error.message}</Typography>}
+      {!!error && <Typography color='error' sx={{ m: 5 }}>{error.message}</Typography>}
       {children}
     </GameStateContext.Provider>
   );

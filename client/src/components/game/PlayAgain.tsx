@@ -40,7 +40,7 @@ function PlayAgain() {
         variant="contained"
         disabled={isMutating}
       >Play Again</Button>
-      {error && <Typography sx={{ mt: 3, fontWeight: 700, color: 'red' }}>{error}</Typography>}
+      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
   );
 }

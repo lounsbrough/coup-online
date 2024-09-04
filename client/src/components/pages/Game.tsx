@@ -13,7 +13,6 @@ function Game() {
         <Link to='/'>Home</Link>
         <Typography>Room {gameState?.roomId}</Typography>
       </Breadcrumbs>
-      {!gameState && <Typography>Game state unavailable</Typography>}
       {gameState && !gameState.selfPlayer && (
         <Typography>You are not in this game</Typography>
       )}
