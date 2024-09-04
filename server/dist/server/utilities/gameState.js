@@ -52,11 +52,8 @@ const validateGameState = (state) => {
 };
 const mutateGameState = async (roomId, mutation) => {
     const gameState = await (0, exports.getGameState)(roomId);
-    console.log('inside mutateGameState');
-    console.log('original state', gameState);
     mutation(gameState);
     validateGameState(gameState);
-    console.log('mutated game state', gameState);
     await setGameState(roomId, gameState);
 };
 exports.mutateGameState = mutateGameState;
