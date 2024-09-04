@@ -50,7 +50,7 @@ function Rules() {
                 <tr>
                   <td></td>
                   <td>Coup</td>
-                  <td>Pay 7 coins and make any player lose influence</td>
+                  <td>Pay 7 coins and make a player lose an influence</td>
                   <td></td>
                 </tr>
                 <tr style={{ background: InfluenceAttributes.Duke.color[colorMode] }}>
@@ -62,7 +62,7 @@ function Rules() {
                 <tr style={{ background: InfluenceAttributes.Assassin.color[colorMode] }}>
                   <td>Assassin</td>
                   <td>Assassinate</td>
-                  <td>Pay 3 coins and make any player lose influence</td>
+                  <td>Pay 3 coins and make a player lose an influence</td>
                   <td></td>
                 </tr>
                 <tr style={{ background: InfluenceAttributes.Ambassador.color[colorMode] }}>
