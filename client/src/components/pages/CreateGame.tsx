@@ -84,7 +84,7 @@ function CreateGame() {
             disabled={isMutating}
           >Create Game</Button>
         </Grid2>
-        {error && <Typography sx={{ mt: 3, fontWeight: 700, color: 'red' }}>{error}</Typography>}
+        {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>
     </>
   )
