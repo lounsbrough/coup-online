@@ -6,8 +6,11 @@ function Home() {
 
   return (
     <>
-      <Typography variant="h5" sx={{ m: 5 }}>
+      <Typography variant="h4" sx={{ m: 5 }}>
         Welcome to Coup!
+      </Typography>
+      <Typography variant="h5" sx={{ m: 5 }}>
+        The game of deception, deduction, and luck.
       </Typography>
       <Grid2>
         <Button

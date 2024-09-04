@@ -1,7 +1,5 @@
-import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined.js';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined.js';
-import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightnessOutlined.js';
-import { Tooltip } from '@mui/material';
+import { LightMode, DarkMode, SettingsBrightness } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { toTitleCase } from '../helpers/grammar';
 import { AppColorMode, DARK_COLOR_MODE, LIGHT_COLOR_MODE, SYSTEM_COLOR_MODE, useColorModeContext } from '../context/MaterialThemeContext';
 
@@ -18,21 +16,19 @@ function ColorModeToggle() {
 
   const setNewMode = () => setColorMode(nextMode);
 
-  const iconProps = {
-    onClick: setNewMode,
-    sx: { cursor: 'pointer', fontSize: '36px' }
-  };
-
   const iconMap: { [colorMode in AppColorMode]: JSX.Element } = {
-    [SYSTEM_COLOR_MODE]: <SettingsBrightnessOutlinedIcon {...iconProps} />,
-    [LIGHT_COLOR_MODE]: <LightModeOutlinedIcon {...iconProps} />,
-    [DARK_COLOR_MODE]: <DarkModeOutlinedIcon {...iconProps} />
+    [SYSTEM_COLOR_MODE]: <SettingsBrightness />,
+    [LIGHT_COLOR_MODE]: <LightMode />,
+    [DARK_COLOR_MODE]: <DarkMode />
   };
 
   return (
-    <Tooltip key={internalColorMode} title={toTitleCase(internalColorMode)} color="primary">
-      {iconMap[internalColorMode]}
-    </Tooltip>
+    <Button
+      onClick={setNewMode}
+      startIcon={iconMap[internalColorMode]}
+    >
+      {toTitleCase(internalColorMode)}
+    </Button>
   );
 }
 
