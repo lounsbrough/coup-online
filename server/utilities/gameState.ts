@@ -41,6 +41,7 @@ export const getPublicGameState = async (
   })
 
   return {
+    roomId: gameState.roomId,
     turnPlayer: gameState.turnPlayer,
     isStarted: gameState.isStarted,
     pendingAction: gameState.pendingAction,
@@ -74,6 +75,7 @@ export const mutateGameState = async (
   mutation(gameState);
   validateGameState(gameState);
   await setGameState(roomId, gameState);
+  return gameState;
 }
 
 export const killPlayerInfluence = (state: GameState, playerName: string, putBackInDeck: boolean = false) => {
@@ -136,6 +138,7 @@ export const logEvent = (state: GameState, log: string) => {
 
 export const createNewGame = async (roomId: string) => {
   await setGameState(roomId, {
+    roomId,
     players: [],
     deck: buildShuffledDeck(),
     pendingInfluenceLoss: {},
@@ -148,7 +151,7 @@ export const resetGame = async (roomId: string) => {
   const newGameState = await getGameState(roomId);
 
   await createNewGame(roomId);
-  await mutateGameState(roomId, (state) => {
+  return mutateGameState(roomId, (state) => {
     const newPlayers = shuffle(newGameState.players.map((player) => ({
       ...player,
       coins: 2,
@@ -159,8 +162,8 @@ export const resetGame = async (roomId: string) => {
   });
 }
 
-export const addPlayerToGame = async (roomId: string, playerId: string, playerName: string) => {
-  await mutateGameState(roomId, (state) => {
+export const addPlayerToGame = (roomId: string, playerId: string, playerName: string) => {
+  return mutateGameState(roomId, (state) => {
     state.players.push({
       id: playerId,
       name: playerName,

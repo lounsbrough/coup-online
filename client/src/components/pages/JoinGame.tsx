@@ -59,7 +59,9 @@ function JoinGame() {
               <Group sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
                 value={roomId}
-                onChange={(event) => setRoomId(event.target.value)}
+                onChange={(event) => {
+                  setRoomId(event.target.value.slice(0, 6));
+                }}
                 label="Room Id"
                 variant="standard"
                 required
@@ -71,7 +73,9 @@ function JoinGame() {
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
                 value={playerName}
-                onChange={(event) => setPlayerName(event.target.value)}
+                onChange={(event) => {
+                  setPlayerName(event.target.value.slice(0, 10));
+                }}
                 label="What is your name?"
                 variant="standard"
                 required
