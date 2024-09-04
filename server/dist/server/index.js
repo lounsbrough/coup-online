@@ -10,11 +10,11 @@ const cors_1 = __importDefault(require("cors"));
 const gameState_1 = require("./utilities/gameState");
 const identifiers_1 = require("./utilities/identifiers");
 const game_1 = require("../shared/types/game");
+const port = process.env.EXPRESS_PORT || 8000;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use((0, body_parser_1.json)());
 const server = http_1.default.createServer(app);
-const port = 8000;
 app.get('/gameState', async (req, res) => {
     const roomId = req.query?.roomId;
     const playerId = req.query?.playerId;
@@ -477,7 +477,8 @@ app.post('/loseInfluence', async (req, res) => {
     });
     res.status(200).send();
 });
-server.listen(process.env.PORT || port, function () {
-    console.log(`listening on ${process.env.PORT || port}`);
+console.log(`going to bind on ${port}`);
+server.listen(port, function () {
+    console.log(`listening on ${port}`);
 });
 //# sourceMappingURL=index.js.map
