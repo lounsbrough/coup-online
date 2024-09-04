@@ -1,10 +1,12 @@
 import { Button, Grid2, Typography } from "@mui/material";
-import { InfluenceAttributes, Influences, PublicGameState } from "../../shared/types/game";
+import { InfluenceAttributes, Influences } from "../../shared/types/game";
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
 
-function ChooseInfluenceToLose({ gameState }: { gameState: PublicGameState }) {
+function ChooseInfluenceToLose() {
+  const { gameState, setGameState } = useGameStateContext();
   const [error, setError] = useState<string>();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/loseInfluence`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
@@ -15,11 +17,17 @@ function ChooseInfluenceToLose({ gameState }: { gameState: PublicGameState }) {
       },
       body: JSON.stringify(arg)
     }).then(async (res) => {
-      if (!res.ok) {
+      if (res.ok) {
+        setGameState(await res.json());
+      } else {
         setError('Error losing influence');
       }
     })
   }))
+
+  if (!gameState) {
+    return null;
+  }
 
   return (
     <>

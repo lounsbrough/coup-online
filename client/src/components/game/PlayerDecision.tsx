@@ -20,7 +20,7 @@ function PlayerDecision() {
   }
 
   if (gameState.pendingInfluenceLoss[gameState.selfPlayer.name]) {
-    return <ChooseInfluenceToLose gameState={gameState} />
+    return <ChooseInfluenceToLose />
   }
 
   if (isMyTurn &&
