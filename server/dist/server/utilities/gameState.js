@@ -11,9 +11,6 @@ const getGameState = async (roomId) => {
         console.log('getting game state from redis');
         gameStates[roomId] = JSON.parse(await (0, storage_1.getValue)(roomId));
     }
-    else {
-        console.log('getting game state from memory cache');
-    }
     return gameStates[roomId] ? { ...gameStates[roomId] } : null;
 };
 exports.getGameState = getGameState;
@@ -52,13 +49,14 @@ const getPublicGameState = async (roomId, playerId) => {
 exports.getPublicGameState = getPublicGameState;
 const setGameState = async (roomId, newState) => {
     const fifteenMinutes = 900;
-    console.log('inside setGameState');
-    console.log('saving to redis', newState);
+    const logId = Math.floor(Math.random() * 1000000);
+    console.log(JSON.stringify(newState));
+    console.log(`saving to redis ${logId}`, Buffer.from(JSON.stringify(newState)).toString('base64'));
     await (0, storage_1.setValue)(roomId, JSON.stringify(newState), fifteenMinutes);
-    console.log('saved to redis', newState);
-    console.log('updating memory cache', newState);
+    console.log(`saved to redis ${logId}`);
+    console.log(`updating memory cache ${logId}`);
     gameStates[roomId] = newState;
-    console.log('updated memory cache', newState);
+    console.log(`updated memory cache ${logId}`);
 };
 const validateGameState = (state) => {
     if (state.players.length < 1 || state.players.length > 6) {
