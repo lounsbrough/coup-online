@@ -41,15 +41,45 @@ app.post('/createGame', async (req, res) => {
     await (0, gameState_1.addPlayerToGame)(roomId, playerId, playerName);
     res.status(200).json({ roomId });
 });
-app.post('/startGame', async (req, res) => {
+app.post('/resetGame', async (req, res) => {
     const roomId = req.body?.roomId;
-    if (!roomId) {
-        res.status(400).send('roomId is required');
+    const playerId = req.body?.playerId;
+    if (!roomId || !playerId) {
+        res.status(400).send('roomId and playerId are required');
         return;
     }
     const gameState = await (0, gameState_1.getGameState)(roomId);
     if (!gameState) {
         res.status(404).send(`Room ${roomId} does not exist`);
+        return;
+    }
+    const player = gameState.players.find(({ id }) => id === playerId);
+    if (!player) {
+        res.status(400).send('Player not in game');
+        return;
+    }
+    if (gameState.players.filter(({ influences }) => influences.length).length > 1) {
+        res.status(400).send('Current game is not over');
+        return;
+    }
+    await (0, gameState_1.resetGame)(roomId);
+    res.status(200).send();
+});
+app.post('/startGame', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+    if (!roomId || !playerId) {
+        res.status(400).send('roomId and playerId are required');
+        return;
+    }
+    const gameState = await (0, gameState_1.getGameState)(roomId);
+    if (!gameState) {
+        res.status(404).send(`Room ${roomId} does not exist`);
+        return;
+    }
+    const player = gameState.players.find(({ id }) => id === playerId);
+    if (!player) {
+        res.status(400).send('Player not in game');
         return;
     }
     if (!gameState.isStarted) {
