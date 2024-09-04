@@ -1,8 +1,8 @@
 import { Button, Grid2, Typography } from "@mui/material";
-import { PublicGameState } from "../../../../shared/types/game";
 import Players from "../game/Players";
 import useSWRMutation from "swr/mutation";
 import { ContentCopy } from "@mui/icons-material";
+import { PublicGameState } from "../../shared/types/game";
 
 function WaitingRoom({ roomId, gameState }: {
   roomId: string,

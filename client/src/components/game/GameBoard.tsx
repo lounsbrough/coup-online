@@ -1,10 +1,10 @@
 import { Grid2, Typography } from "@mui/material";
 import PlayerInfluences from "../game/PlayerInfluences";
-import { PublicGameState } from "../../../../shared/types/game";
 import Players from "../game/Players";
 import EventLog from "./EventLog";
 import PlayerDecision from "./PlayerDecision";
 import SnarkyDeadComment from "./SnarkyDeadComment";
+import { PublicGameState } from "../../shared/types/game";
 
 function GameBoard({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
   const turnPlayer = gameState.players.find((player) =>
