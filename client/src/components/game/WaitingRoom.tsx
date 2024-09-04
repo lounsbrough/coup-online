@@ -3,12 +3,13 @@ import Players from "../game/Players";
 import useSWRMutation from "swr/mutation";
 import { ContentCopy } from "@mui/icons-material";
 import { PublicGameState } from "../../shared/types/game";
+import { getPlayerId } from "../../helpers/playerId";
 
 function WaitingRoom({ roomId, gameState }: {
   roomId: string,
   gameState: PublicGameState
 }) {
-  const { trigger } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string }; }) => {
+  const { trigger } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -47,7 +48,7 @@ function WaitingRoom({ roomId, gameState }: {
             <Button
               variant='contained'
               onClick={() => {
-                trigger({ roomId })
+                trigger({ roomId, playerId: getPlayerId() })
               }}
             >
               Start Game

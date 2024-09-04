@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction, resetGame } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
@@ -47,13 +47,14 @@ app.post('/createGame', async (req, res) => {
     await addPlayerToGame(roomId, playerId, playerName);
 
     res.status(200).json({ roomId })
-})
+});
 
-app.post('/startGame', async (req, res) => {
+app.post('/resetGame', async (req, res) => {
     const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
 
-    if (!roomId) {
-        res.status(400).send('roomId is required');
+    if (!roomId || !playerId) {
+        res.status(400).send('roomId and playerId are required');
         return;
     }
 
@@ -61,6 +62,46 @@ app.post('/startGame', async (req, res) => {
 
     if (!gameState) {
         res.status(404).send(`Room ${roomId} does not exist`);
+        return;
+    }
+
+    const player = gameState.players.find(({ id }) => id === playerId)
+
+    if (!player) {
+        res.status(400).send('Player not in game');
+        return;
+    }
+
+    if (gameState.players.filter(({ influences }) => influences.length).length > 1) {
+        res.status(400).send('Current game is not over');
+        return;
+    }
+
+    await resetGame(roomId);
+
+    res.status(200).send();
+});
+
+app.post('/startGame', async (req, res) => {
+    const roomId = req.body?.roomId;
+    const playerId = req.body?.playerId;
+
+    if (!roomId || !playerId) {
+        res.status(400).send('roomId and playerId are required');
+        return;
+    }
+
+    const gameState = await getGameState(roomId);
+
+    if (!gameState) {
+        res.status(404).send(`Room ${roomId} does not exist`);
+        return;
+    }
+
+    const player = gameState.players.find(({ id }) => id === playerId)
+
+    if (!player) {
+        res.status(400).send('Player not in game');
         return;
     }
 

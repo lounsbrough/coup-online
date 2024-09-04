@@ -83,6 +83,17 @@ export const killPlayerInfluence = (state: GameState, playerName: string, putBac
   ];
 }
 
+const shuffle = <T>(array: T[]): T[] => {
+  const unShuffled = [...array];
+  const shuffled: T[] = [];
+
+  while (unShuffled.length) {
+    shuffled.push(unShuffled.splice(Math.floor(Math.random() * unShuffled.length), 1)[0])
+  }
+
+  return shuffled;
+}
+
 export const processPendingAction = async (state: GameState) => {
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
@@ -91,7 +102,7 @@ export const processPendingAction = async (state: GameState) => {
     killPlayerInfluence(state, targetPlayer.name);
   } else if (state.pendingAction.action === Actions.Exchange) {
     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
-    state.deck = shuffleDeck(state.deck);
+    state.deck = shuffle(state.deck);
     killPlayerInfluence(state, actionPlayer.name, true);
     killPlayerInfluence(state, actionPlayer.name, true);
   } else if (state.pendingAction.action === Actions.ForeignAid) {
@@ -107,19 +118,8 @@ export const processPendingAction = async (state: GameState) => {
   delete state.pendingAction;
 }
 
-export const shuffleDeck = (deck: Influences[]) => {
-  const unShuffled = [...deck];
-  const shuffled: Influences[] = [];
-
-  while (unShuffled.length) {
-    shuffled.push(unShuffled.splice(Math.floor(Math.random() * unShuffled.length), 1)[0])
-  }
-
-  return shuffled;
-}
-
 const buildShuffledDeck = () => {
-  return shuffleDeck(Object.values(Influences)
+  return shuffle(Object.values(Influences)
     .flatMap((influence) => Array.from({ length: 3 }, () => influence)));
 }
 
@@ -141,6 +141,21 @@ export const createNewGame = async (roomId: string) => {
     pendingInfluenceLoss: {},
     isStarted: false,
     eventLogs: []
+  });
+}
+
+export const resetGame = async (roomId: string) => {
+  const newGameState = await getGameState(roomId);
+
+  await createNewGame(roomId);
+  await mutateGameState(roomId, (state) => {
+    const newPlayers = shuffle(newGameState.players.map((player) => ({
+      ...player,
+      coins: 2,
+      influences: Array.from({ length: 2 }, () => drawCardFromDeck(state))
+    })));
+    state.isStarted = true;
+    state.players = newPlayers;
   });
 }
 
