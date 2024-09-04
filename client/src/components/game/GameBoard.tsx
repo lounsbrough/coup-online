@@ -59,8 +59,8 @@ function GameBoard({ gameState }: { gameState: PublicGameState }) {
           <PlayerInfluences player={gameState.selfPlayer} />
         </Grid2>
       </Grid2>
-      <Grid2 container justifyContent="center">
-        <Grid2 sx={{ p: 2 }}>
+      <Grid2 container justifyContent="center" sx={{ my: 2 }}>
+        <Grid2>
           <Players gameState={gameState} />
         </Grid2>
       </Grid2>

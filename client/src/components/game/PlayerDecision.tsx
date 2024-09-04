@@ -25,7 +25,7 @@ function PlayerDecision({ gameState }: {
     !gameState.pendingBlock &&
     !gameState.pendingBlockChallenge &&
     !Object.keys(gameState.pendingInfluenceLoss).length) {
-    return <ChooseAction gameState={gameState} />;
+    return <ChooseAction />;
   }
 
   if (!isMyTurn &&
