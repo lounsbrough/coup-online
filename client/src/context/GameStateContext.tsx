@@ -1,4 +1,4 @@
-import { useState, createContext, useContext, ReactNode, useMemo } from 'react';
+import { useState, createContext, useContext, ReactNode } from 'react';
 import useSWR from 'swr';
 import { PublicGameState } from '../shared/types/game';
 import { getPlayerId } from '../helpers/playerId';
