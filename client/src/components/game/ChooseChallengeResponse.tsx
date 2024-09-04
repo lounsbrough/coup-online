@@ -7,7 +7,7 @@ import { getPlayerId } from "../../helpers/playerId";
 function ChooseChallengeResponse({ roomId, gameState }: { roomId: string, gameState: PublicGameState }) {
   const [error, setError] = useState<string>();
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_API_BASE_URL ?? 'http://localhost:8000'}/${gameState.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
+  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/${gameState.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
