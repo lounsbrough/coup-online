@@ -1,5 +1,5 @@
 import { Button, Grid2, Typography } from "@mui/material";
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, ResponseAttributes, Responses } from "../../shared/types/game";
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, ResponseAttributes, Responses } from "../../shared/types/game";
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
