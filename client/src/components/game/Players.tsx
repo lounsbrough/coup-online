@@ -16,6 +16,12 @@ function Players() {
           .map(({ name, color, coins, influenceCount }, index) => {
             const isSelf = gameState.selfPlayer.name === name;
 
+            let effectiveInfluenceCount = influenceCount;
+            if (gameState.pendingInfluenceLoss[name]) {
+              effectiveInfluenceCount -= gameState.pendingInfluenceLoss[name]
+                .filter(({ putBackInDeck }) => putBackInDeck).length;
+            }
+
             return (
               <Box
                 key={index}
@@ -36,7 +42,7 @@ function Players() {
                   {name}
                 </Typography>
                 <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Coins: ${coins}`}</Typography>
-                <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Influences: ${influenceCount}`}</Typography>
+                <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Influences: ${effectiveInfluenceCount}`}</Typography>
               </Box>
             )
           }
