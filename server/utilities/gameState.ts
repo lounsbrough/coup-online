@@ -175,7 +175,7 @@ export const getNextPlayerTurn = (state: GameState) => {
   const currentIndex = state.players.findIndex((player) => player.name === state.turnPlayer);
 
   let nextIndex = currentIndex + 1;
-  while (!state.players[nextIndex % state.players.length].influences) {
+  while (!state.players[nextIndex % state.players.length].influences.length) {
     if (nextIndex % state.players.length === currentIndex) {
       throw new Error('Unable to determine next player turn');
     }
