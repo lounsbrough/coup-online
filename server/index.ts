@@ -46,6 +46,16 @@ app.post('/createGame', async (req, res) => {
         return;
     }
 
+    if (Object.values(Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
+        res.status(400).send(`You may not choose the name of an influence`);
+        return;
+    }
+
+    if (Object.values(Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
+        res.status(400).send(`You may not choose the name of an action`);
+        return;
+    }
+
     const roomId = generateRoomId();
 
     await createNewGame(roomId);
@@ -160,6 +170,11 @@ app.post('/joinGame', async (req, res) => {
 
         if (Object.values(Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
             res.status(400).send(`You may not choose the name of an influence`);
+            return;
+        }
+
+        if (Object.values(Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
+            res.status(400).send(`You may not choose the name of an action`);
             return;
         }
 

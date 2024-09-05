@@ -40,6 +40,14 @@ app.post('/createGame', async (req, res) => {
         res.status(400).send('playerName must be 10 characters or less');
         return;
     }
+    if (Object.values(game_1.Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
+        res.status(400).send(`You may not choose the name of an influence`);
+        return;
+    }
+    if (Object.values(game_1.Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
+        res.status(400).send(`You may not choose the name of an action`);
+        return;
+    }
     const roomId = (0, identifiers_1.generateRoomId)();
     await (0, gameState_1.createNewGame)(roomId);
     await (0, gameState_1.addPlayerToGame)(roomId, playerId, playerName);
@@ -127,6 +135,10 @@ app.post('/joinGame', async (req, res) => {
         }
         if (Object.values(game_1.Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
             res.status(400).send(`You may not choose the name of an influence`);
+            return;
+        }
+        if (Object.values(game_1.Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
+            res.status(400).send(`You may not choose the name of an action`);
             return;
         }
         if (gameState.players.some((existingPlayer) => existingPlayer.name.toUpperCase() === playerName.toUpperCase())) {
