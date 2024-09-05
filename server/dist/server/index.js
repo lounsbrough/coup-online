@@ -534,6 +534,7 @@ app.post('/loseInfluence', async (req, res) => {
         }
         if (!sadPlayer.influences.length) {
             (0, gameState_1.logEvent)(state, `${sadPlayer.name} is out!`);
+            delete state.pendingInfluenceLoss[sadPlayer.name];
         }
     });
     res.status(200).json(await (0, gameState_1.getPublicGameState)(roomId, playerId));
