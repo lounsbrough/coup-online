@@ -1,5 +1,6 @@
 import { Box, Grid2, Typography } from "@mui/material";
 import { useGameStateContext } from "../../context/GameStateContext";
+import { Group, MonetizationOn } from "@mui/icons-material";
 
 function Players() {
   const { gameState } = useGameStateContext();
@@ -31,18 +32,17 @@ function Players() {
                   borderRadius: 3,
                   borderStyle: isSelf ? 'solid' : undefined,
                   borderWidth: isSelf ? '3px' : undefined,
-                  p: 2,
+                  // p: 2,
                   width: '8rem'
                 }}>
-                <Typography sx={{
-                  fontWeight: 'bold',
-                  fontSize: isSelf ? '1.8rem' : '1.5rem'
+                <Typography variant="h6" sx={{
+                  fontWeight: 'bold'
                 }}
                 >
                   {name}
                 </Typography>
-                <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Coins: ${coins}`}</Typography>
-                <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Influences: ${effectiveInfluenceCount}`}</Typography>
+                <Typography variant="h6" component="span"><MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}</Typography>
+                <Typography variant="h6" ml={4} component="span"><Group sx={{ verticalAlign: 'text-bottom' }} />{` ${effectiveInfluenceCount}`}</Typography>
               </Box>
             )
           }

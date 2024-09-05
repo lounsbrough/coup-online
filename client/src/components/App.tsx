@@ -1,6 +1,5 @@
-import React from 'react';
-import { Route, Routes, Link } from 'react-router-dom';
-import { Typography } from '@mui/material';
+import { Route, Routes } from 'react-router-dom';
+import { Link, Typography } from '@mui/material';
 import JoinGame from './pages/JoinGame';
 import CreateGame from './pages/CreateGame';
 import Home from './pages/Home';
@@ -21,10 +20,11 @@ function App() {
       <MaterialThemeContextProvider>
         <header className="App-header">
           <Rules />
-          <Typography color='primary' component="span" sx={{
-            fontSize: '36px',
+          <Link color='primary'
+            href={'/'}
+          ><Typography variant="h4" style={{
             fontWeight: 500
-          }}>Coup</Typography>
+          }}>Coup</Typography></Link>
           <ColorModeToggle />
         </header>
         <Routes>
@@ -37,7 +37,7 @@ function App() {
             } />
             <Route path="join-game" element={<JoinGame />} />
             <Route path="create-game" element={<CreateGame />} />
-            <Route path="*" element={<div>Page not found 😱 - Go <Link to={'/'}>Home</Link></div>} />
+            <Route path="*" element={<div>Page not found 😱 - Go <Link href={'/'}>Home</Link></div>} />
           </Route>
         </Routes>
       </MaterialThemeContextProvider>

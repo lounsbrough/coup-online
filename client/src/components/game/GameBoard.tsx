@@ -24,7 +24,11 @@ function GameBoard() {
   return (
     <Grid2 container>
       <Grid2 size={{ xs: 12, sm: 12, md: 2 }} />
-      <Grid2 p={2} size={{ xs: 12, sm: 12, md: 8 }}>
+      <Grid2
+        p={2}
+        size={{ xs: 12, sm: 12, md: 8 }}
+        sx={{ maxHeight: 'calc(85vh - 54px)', height: 'calc(85vh - 54px)', overflowY: 'auto' }}
+      >
         {gameIsOver && (
           <Grid2 sx={{ mb: 5 }}>
             <Victory player={playersLeft[0]} />
@@ -44,22 +48,23 @@ function GameBoard() {
           <Box mb={2}>
             <Typography
               component="span"
-              sx={{ fontWeight: 'bold', color: turnPlayer.color, fontSize: '24px' }}
+              variant="h5"
+              sx={{ fontWeight: 'bold', color: turnPlayer.color }}
             >{gameState.turnPlayer}</Typography>
-            <Typography component="span" sx={{ fontSize: '24px' }}>'s Turn</Typography>
+            <Typography component="span" variant="h5">'s Turn</Typography>
           </Box>
         )}
         {!!gameState?.selfPlayer?.influences?.length && (
           <Grid2 container justifyContent="center">
             <Box sx={{ background: 'rgba(120, 120, 120, 0.25)', p: 2, borderRadius: 3 }}>
-              <Typography mb={1} fontSize='24px'>Your Influences</Typography>
+              <Typography mb={1} variant="body1">Your Influences</Typography>
               <PlayerInfluences />
             </Box>
           </Grid2>
         )}
         <Grid2 container justifyContent="center" sx={{ my: 2 }}>
           <Box sx={{ background: 'rgba(120, 120, 120, 0.25)', p: 2, borderRadius: 3 }}>
-            <Typography mb={1} fontSize='24px'>Players</Typography>
+            <Typography mb={1} variant="body1">Players</Typography>
             <Players />
           </Box>
         </Grid2>
@@ -71,7 +76,10 @@ function GameBoard() {
           </Grid2>
         )}
       </Grid2>
-      <Grid2 sx={{ textAlign: 'left', px: 2 }} size={{ xs: 12, sm: 12, md: 2 }}>
+      <Grid2
+        size={{ xs: 12, sm: 12, md: 2 }}
+        sx={{ textAlign: 'left', px: 2 }}
+      >
         <EventLog />
       </Grid2>
     </Grid2>

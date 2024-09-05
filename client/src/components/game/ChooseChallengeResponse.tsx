@@ -37,10 +37,10 @@ function ChooseChallengeResponse() {
 
   return (
     <>
-      <GameTypography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
+      <GameTypography sx={{ my: 1, fontWeight: 'bold' }}>
         {`${challengingPlayer} is challenging ${challengedPlayer}`}
       </GameTypography>
-      <Typography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
+      <Typography sx={{ my: 1, fontWeight: 'bold' }}>
         Choose an Influence to Reveal:
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">

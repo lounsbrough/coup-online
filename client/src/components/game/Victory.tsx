@@ -5,7 +5,7 @@ import GameTypography from "../utilities/GameTypography";
 function Victory({ player }: { player: PublicPlayer }) {
   return (
     <Box>
-      <GameTypography fontSize='48px'>{`${player.name} Wins!`}</GameTypography>
+      <GameTypography variant="h1">{`${player.name} Wins!`}</GameTypography>
     </Box>
   );
 }

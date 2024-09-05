@@ -37,7 +37,7 @@ function ChooseActionResponse() {
     <>
       {selectedResponse ? (
         <>
-          <Typography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
+          <Typography sx={{ my: 1, fontWeight: 'bold' }}>
             Claim an Influence:
           </Typography>
           <Grid2 container spacing={2} justifyContent="center">
@@ -66,7 +66,7 @@ function ChooseActionResponse() {
         </>
       ) : (
         <>
-          <GameTypography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
+          <GameTypography sx={{ my: 1, fontWeight: 'bold' }}>
             {`${gameState.turnPlayer} is trying to use ${gameState.pendingAction.action}${gameState.pendingAction.targetPlayer
               ? ` on ${gameState.pendingAction.targetPlayer}`
               : ''}`}

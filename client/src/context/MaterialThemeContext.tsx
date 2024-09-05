@@ -36,6 +36,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
   );
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const isSmallScreen = useMediaQuery('screen and (max-width: 768px)');
 
   let activeColorMode: PaletteMode;
   if (mode === SYSTEM_COLOR_MODE) {
@@ -71,8 +72,39 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
       secondary: {
         main: secondaryColor[activeColorMode]
       }
+    },
+    spacing: isSmallScreen ? 2 : 8,
+    components: {
+      MuiTypography: {
+        styleOverrides: {
+          body1: {
+            fontSize: isSmallScreen ? '1rem' : undefined
+          },
+          body2: {
+            fontSize: isSmallScreen ? '0.9rem' : undefined
+          },
+          h1: {
+            fontSize: isSmallScreen ? '1.7rem' : undefined
+          },
+          h2: {
+            fontSize: isSmallScreen ? '1.6rem' : undefined
+          },
+          h3: {
+            fontSize: isSmallScreen ? '1.5rem' : undefined
+          },
+          h4: {
+            fontSize: isSmallScreen ? '1.4rem' : undefined
+          },
+          h5: {
+            fontSize: isSmallScreen ? '1.3rem' : undefined
+          },
+          h6: {
+            fontSize: isSmallScreen ? '1.2rem' : undefined
+          }
+        }
+      }
     }
-  }), [isLightMode, activeColorMode]);
+  }), [isLightMode, activeColorMode, isSmallScreen]);
 
   return (
     <>

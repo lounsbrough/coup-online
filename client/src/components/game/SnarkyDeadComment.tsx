@@ -25,8 +25,8 @@ function SnarkyDeadComment() {
 
   return (
     <>
-      <Typography sx={{ fontSize: '36px' }}>🪦</Typography>
-      <Typography sx={{ fontSize: '24px' }}>
+      <Typography variant="h3">🪦</Typography>
+      <Typography variant="h4">
         {comments[Math.floor(Math.random() * comments.length)]}
       </Typography>
     </>
