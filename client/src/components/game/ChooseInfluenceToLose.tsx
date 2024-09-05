@@ -37,24 +37,26 @@ function ChooseInfluenceToLose() {
         Choose an Influence to Lose:
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
-        {gameState.selfPlayer.influences.map((influence, index) => {
-          return <Button
-            key={index}
-            onClick={() => {
-              trigger({
-                roomId: gameState.roomId,
-                playerId: getPlayerId(),
-                influence: influence as Influences
-              })
-            }}
-            sx={{
-              background: InfluenceAttributes[influence].color[colorMode]
-            }} variant="contained"
-            disabled={isMutating}
-          >
-            {influence}
-          </Button>
-        })}
+        {gameState.selfPlayer.influences
+          .sort((a, b) => a.localeCompare(b))
+          .map((influence, index) => {
+            return <Button
+              key={index}
+              onClick={() => {
+                trigger({
+                  roomId: gameState.roomId,
+                  playerId: getPlayerId(),
+                  influence: influence as Influences
+                })
+              }}
+              sx={{
+                background: InfluenceAttributes[influence].color[colorMode]
+              }} variant="contained"
+              disabled={isMutating}
+            >
+              {influence}
+            </Button>
+          })}
       </Grid2>
       {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>

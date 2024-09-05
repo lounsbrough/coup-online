@@ -308,7 +308,7 @@ app.post('/actionResponse', async (req, res) => {
                 sourcePlayer: player.name,
                 claimedInfluence
             };
-            (0, gameState_1.logEvent)(state, `${player.name} is blocking ${state.turnPlayer} as ${claimedInfluence}`);
+            (0, gameState_1.logEvent)(state, `${player.name} is trying to block ${state.turnPlayer} as ${claimedInfluence}`);
         });
     }
     res.status(200).json(await (0, gameState_1.getPublicGameState)(roomId, playerId));

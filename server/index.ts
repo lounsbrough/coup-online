@@ -375,7 +375,7 @@ app.post('/actionResponse', async (req, res) => {
                 sourcePlayer: player.name,
                 claimedInfluence
             }
-            logEvent(state, `${player.name} is blocking ${state.turnPlayer} as ${claimedInfluence}`)
+            logEvent(state, `${player.name} is trying to block ${state.turnPlayer} as ${claimedInfluence}`)
         });
     }
 
