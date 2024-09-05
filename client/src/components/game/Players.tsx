@@ -33,7 +33,7 @@ function Players() {
                   borderStyle: isSelf ? 'solid' : undefined,
                   borderWidth: isSelf ? '3px' : undefined,
                   p: 1,
-                  width: '8rem'
+                  width: '6rem'
                 }}>
                 <Typography variant="h6" sx={{
                   fontWeight: 'bold'
@@ -41,8 +41,8 @@ function Players() {
                 >
                   {name}
                 </Typography>
-                <Typography variant="h6" component="span"><MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}</Typography>
-                <Typography variant="h6" ml={4} component="span"><Group sx={{ verticalAlign: 'text-bottom' }} />{` ${effectiveInfluenceCount}`}</Typography>
+                <Typography variant="h6"><MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}</Typography>
+                <Typography variant="h6"><Group sx={{ verticalAlign: 'text-bottom' }} />{` ${effectiveInfluenceCount}`}</Typography>
               </Box>
             )
           }

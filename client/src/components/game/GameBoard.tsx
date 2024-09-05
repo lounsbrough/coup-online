@@ -27,10 +27,9 @@ function GameBoard() {
       <Grid2
         p={2}
         size={{ xs: 12, sm: 12, md: 8 }}
-        sx={{ maxHeight: 'calc(85vh - 54px)', height: 'calc(85vh - 54px)', overflowY: 'auto' }}
       >
         {gameIsOver && (
-          <Grid2 sx={{ mb: 5 }}>
+          <Grid2 sx={{ m: 5 }}>
             <Victory player={playersLeft[0]} />
           </Grid2>
         )}
