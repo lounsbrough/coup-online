@@ -642,6 +642,8 @@ app.post('/loseInfluence', async (req, res) => {
 
         if (state.pendingInfluenceLoss[sadPlayer.name][0].putBackInDeck) {
             state.deck.unshift(removedInfluence);
+        } else {
+            logEvent(state, `${player.name} lost their ${influence}`);
         }
 
         if (state.pendingInfluenceLoss[sadPlayer.name].length > 1) {
@@ -649,8 +651,6 @@ app.post('/loseInfluence', async (req, res) => {
         } else {
             delete state.pendingInfluenceLoss[sadPlayer.name];
         }
-
-        logEvent(state, `${player.name} lost their ${influence}`)
     });
 
     res.status(200).json(await getPublicGameState(roomId, playerId));
