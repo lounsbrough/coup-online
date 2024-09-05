@@ -107,19 +107,19 @@ function Rules() {
             <ul>
               <li><strong>Duke</strong>: Can Tax and Block Foreign Aid.</li>
               <li><strong>Assassin</strong>: Can Force one player to give up an Influence card.</li>
-              <li><strong>Captain</strong>: Can Steals two coins from another player and Block stealing attempts.</li>
+              <li><strong>Captain</strong>: Can Steal two coins from another player and Block stealing attempts.</li>
               <li><strong>Ambassador</strong>: Can Exchange your Influence cards with new ones from the deck and Block stealing attempts.</li>
               <li><strong>Contessa</strong>: Can Block assassination attempts.</li>
             </ul>
             <p><strong>Actions</strong>: Players take turns performing one of these available actions:</p>
             <ul>
-              <li>Income: Take one coin from the bank. This cannot be Challenged or Blocked.</li>
-              <li>Foreign Aid: Take two coins from the bank. This cannot be Challenged but it can be Blocked by the Duke.</li>
-              <li>Coup: Costs seven coins. Cause a player to give up an Influence card. Cannot be Challenged or Blocked. If you start your turn with 10+ coins, you must take this action.</li>
-              <li>Tax (the Duke): Take three coins from the bank. Can be Challenged.</li>
-              <li>Assassinate (the Assassin): Costs three coins. Force one player to give up an Influence card of their choice. Can be Challenged. Can be Blocked by the Contessa.</li>
-              <li>Steal (the Captain): Take two coins from another player. Can be Challenged. Can be Blocked by another Captain or an Ambassador.</li>
-              <li>Exchange (the Ambassador): Draw two Influence cards from the deck, look at them and mix them with your current Influence cards. Place two cards back in the deck and shuffle the deck. Can be Challenged. Cannot be Blocked.</li>
+              <li><strong>Income</strong>: Take one coin from the bank. Cannot be Challenged or Blocked.</li>
+              <li><strong>Foreign Aid</strong>: Take two coins from the bank. Cannot be Challenged. Can be Blocked by the Duke.</li>
+              <li><strong>Coup</strong>: Costs seven coins. Cause a player to give up an Influence card. Cannot be Challenged or Blocked. If you start your turn with 10+ coins, you must take this action.</li>
+              <li><strong>Tax</strong>: (the Duke): Take three coins from the bank. Can be Challenged. Cannot be Blocked.</li>
+              <li><strong>Assassinate</strong>: (the Assassin): Costs three coins. Force one player to give up an Influence card of their choice. Can be Challenged. Can be Blocked by the Contessa.</li>
+              <li><strong>Steal</strong>: (the Captain): Take two coins from another player. Can be Challenged. Can be Blocked by Captain or Ambassador.</li>
+              <li><strong>Exchange</strong>: (the Ambassador): Draw two Influence cards from the deck, look at them and mix them with your current Influence cards. Place two cards back in the deck and shuffle the deck. Can be Challenged. Cannot be Blocked.</li>
             </ul>
             <p><strong>Blocking</strong>: If another player takes an action that can be Blocked, any other player may Block it by claiming to have the proper character on one of their Influence cards. The acting player cannot perform the action and takes no other action this turn. The acting player MAY choose to Challenge the Blocking player. If they win the Challenge, the action goes through as normal.</p>
             <p><strong>Challenge</strong>: When the acting player declares their action, any other player may Challenge their right to take the action. They are saying “I don't believe you have the proper character to do that.” The acting player now must prove they have the power to take the action or lose the Challenge. If they have the right character, they reveal it and place the revealed card back in the deck. They then shuffle the deck and draw a new card. The Challenging player has lost the Callenge. If they do NOT have the proper character, they lose the Challenge.</p>
