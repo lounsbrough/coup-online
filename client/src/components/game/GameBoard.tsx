@@ -1,4 +1,4 @@
-import { Grid2, Typography } from "@mui/material";
+import { Box, Grid2, Typography } from "@mui/material";
 import PlayerInfluences from "../game/PlayerInfluences";
 import Players from "../game/Players";
 import EventLog from "./EventLog";
@@ -22,62 +22,56 @@ function GameBoard() {
   const gameIsOver = playersLeft.length === 1;
 
   return (
-    <>
-      <Grid2 container sx={{ p: 2 }} justifyContent="space-between">
-        {turnPlayer && (
-          <Grid2>
-            {!gameIsOver && (
-              <>
-                <Typography component="span" sx={{ fontSize: '20px' }}>Turn: </Typography>
-                <Typography
-                  component="span"
-                  sx={{
-                    fontWeight: 'bold',
-                    color: turnPlayer.color,
-                    fontSize: '24px'
-                  }}
-                >{gameState.turnPlayer}</Typography>
-              </>
-            )}
+    <Grid2 container>
+      <Grid2 p={2} size={{ xs: 12, sm: 12, md: 10 }}>
+        {gameIsOver && (
+          <Grid2 sx={{ mb: 5 }}>
+            <Victory player={playersLeft[0]} />
           </Grid2>
         )}
-        <Grid2>
-          <EventLog />
-        </Grid2>
-      </Grid2>
-      {gameIsOver && (
-        <Grid2 sx={{ mb: 5 }}>
-          <Victory player={playersLeft[0]} />
-        </Grid2>
-      )}
-      {gameIsOver && (
-        <Grid2 sx={{ m: 5 }}>
-          <PlayAgain />
-        </Grid2>
-      )}
-      {!gameState.selfPlayer.influences.length && (
-        <Grid2>
-          <SnarkyDeadComment />
-        </Grid2>
-      )}
-      <Grid2 container justifyContent="center">
-        <Grid2>
-          <PlayerInfluences />
-        </Grid2>
-      </Grid2>
-      <Grid2 container justifyContent="center" sx={{ my: 2 }}>
-        <Grid2>
-          <Players />
-        </Grid2>
-      </Grid2>
-      {!gameIsOver && (
-        <Grid2 container justifyContent="center">
-          <Grid2 sx={{ p: 2 }}>
-            <PlayerDecision />
+        {gameIsOver && (
+          <Grid2 sx={{ m: 5 }}>
+            <PlayAgain />
           </Grid2>
+        )}
+        {!gameState.selfPlayer.influences.length && (
+          <Grid2>
+            <SnarkyDeadComment />
+          </Grid2>
+        )}
+        {turnPlayer && !gameIsOver && (
+          <Box mb={2}>
+            <Typography
+              component="span"
+              sx={{ fontWeight: 'bold', color: turnPlayer.color, fontSize: '24px' }}
+            >{gameState.turnPlayer}</Typography>
+            <Typography component="span" sx={{ fontSize: '24px' }}>'s Turn</Typography>
+          </Box>
+        )}
+        <Grid2 container justifyContent="center">
+          <Box sx={{ background: 'rgba(120, 120, 120, 0.25)', p: 2, borderRadius: 3 }}>
+            <Typography mb={1} fontSize='24px'>Your Influences</Typography>
+            <PlayerInfluences />
+          </Box>
         </Grid2>
-      )}
-    </>
+        <Grid2 container justifyContent="center" sx={{ my: 2 }}>
+          <Box sx={{ background: 'rgba(120, 120, 120, 0.25)', p: 2, borderRadius: 3 }}>
+            <Typography mb={1} fontSize='24px'>Players</Typography>
+            <Players />
+          </Box>
+        </Grid2>
+        {!gameIsOver && (
+          <Grid2 container justifyContent="center">
+            <Grid2 sx={{ p: 2 }}>
+              <PlayerDecision />
+            </Grid2>
+          </Grid2>
+        )}
+      </Grid2>
+      <Grid2 sx={{ textAlign: 'left', px: 2 }} size={{ xs: 12, sm: 12, md: 2 }}>
+        <EventLog />
+      </Grid2>
+    </Grid2>
   )
 }
 

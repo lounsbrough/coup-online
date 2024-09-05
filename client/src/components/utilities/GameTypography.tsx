@@ -28,7 +28,7 @@ function GameTypography({ children, ...props }: Omit<TypographyProps, 'children'
     ];
   }, [children, gameState?.players, colorMode]);
 
-  type Segment = { text: string, position: number, color?: string }
+  type Segment = { text: string, position: number, color?: string, fontWeight?: string }
 
   const remainingSegments: Segment[] = [{ text: children, position: 0 }];
   const coloredSegments: Segment[] = [];
@@ -48,7 +48,8 @@ function GameTypography({ children, ...props }: Omit<TypographyProps, 'children'
           coloredSegments.push({
             text: match,
             position: remainingSegment.position + matchedIndex!,
-            color
+            color,
+            fontWeight: 'bold'
           });
           lastEnd = matchedIndex! + match.length;
         });
@@ -67,8 +68,14 @@ function GameTypography({ children, ...props }: Omit<TypographyProps, 'children'
 
   return (
     <Typography {...props}>
-      {finalSegments.map(({ text, color }, index) =>
-        <Typography {...props} key={index} component='span' color={color}>{text}</Typography>)}
+      {finalSegments.map(({ text, color, fontWeight }, index) =>
+        <Typography
+          {...props}
+          key={index}
+          component='span'
+          color={color}
+          fontWeight={fontWeight}
+        >{text}</Typography>)}
     </Typography>
   );
 }
