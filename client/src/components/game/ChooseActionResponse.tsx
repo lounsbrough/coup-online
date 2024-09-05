@@ -28,7 +28,7 @@ function ChooseActionResponse() {
     })
   }))
 
-  if (!gameState) {
+  if (!gameState?.pendingAction) {
     return null;
   }
 
@@ -64,7 +64,25 @@ function ChooseActionResponse() {
       ) : (
         <>
           <Typography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
-            Choose a Response:
+            <Typography component="span" fontSize='inherit' fontWeight='inherit'
+              sx={{ color: gameState.players.find((player) => player.name === gameState.turnPlayer)?.color }}
+            >{gameState.turnPlayer}</Typography>
+            <Typography component="span" fontSize='inherit' fontWeight='inherit'>
+              {' is trying to use '}
+            </Typography>
+            <Typography component="span" fontSize='inherit' fontWeight='inherit'
+              sx={{ color: ActionAttributes[gameState.pendingAction.action].color[colorMode] }}
+            >{gameState.pendingAction.action}</Typography>
+            {gameState.pendingAction.targetPlayer && (
+              <>
+                <Typography component="span" fontSize='inherit' fontWeight='inherit'>
+                  {' on '}
+                </Typography>
+                <Typography component="span" fontSize='inherit' fontWeight='inherit'
+                  sx={{ color: gameState.players.find((player) => player.name === gameState.pendingAction?.targetPlayer)?.color }}
+                >{gameState.pendingAction.targetPlayer}</Typography>
+              </>
+            )}
           </Typography>
           <Grid2 container spacing={2} justifyContent="center">
             {Object.entries(ResponseAttributes).map(([response, responseAttributes], index) => {

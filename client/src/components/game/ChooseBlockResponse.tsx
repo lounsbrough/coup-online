@@ -1,5 +1,5 @@
 import { Button, Grid2, Typography } from "@mui/material";
-import { ResponseAttributes, Responses } from "../../shared/types/game";
+import { InfluenceAttributes, ResponseAttributes, Responses } from "../../shared/types/game";
 import useSWRMutation from "swr/mutation";
 import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
@@ -27,14 +27,33 @@ function ChooseBlockResponse() {
     })
   }));
 
-  if (!gameState) {
+  if (!gameState?.pendingBlock) {
     return null;
   }
 
   return (
     <>
       <Typography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
-        Choose a Response:
+        <Typography
+          component="span" fontSize='inherit' fontWeight='inherit'
+          sx={{ color: gameState.players.find((player) => player.name === gameState.pendingBlock?.sourcePlayer)?.color }}
+        >{gameState.pendingBlock.sourcePlayer}</Typography>
+        <Typography component="span" fontSize='inherit' fontWeight='inherit'>
+          {' is trying to block '}
+        </Typography>
+        <Typography component="span" fontSize='inherit' fontWeight='inherit'
+          sx={{ color: gameState.players.find((player) => player.name === gameState.turnPlayer)?.color }}
+        >{gameState.turnPlayer}</Typography>
+        {gameState.pendingBlock.claimedInfluence && (
+          <>
+            <Typography component="span" fontSize="inherit" fontWeight='inherit'>
+              {' as '}
+            </Typography>
+            <Typography component="span" fontSize='inherit' fontWeight='inherit'
+              sx={{ color: InfluenceAttributes[gameState.pendingBlock.claimedInfluence].color[colorMode] }}
+            >{gameState.pendingBlock.claimedInfluence}</Typography>
+          </>
+        )}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.entries(ResponseAttributes).map(([response, responseAttributes], index) => {
