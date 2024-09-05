@@ -569,6 +569,11 @@ app.post('/blockChallengeResponse', async (req, res) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             killPlayerInfluence(state, challengePlayer.name);
+            blockPlayer.influences.splice(
+                blockPlayer.influences.findIndex((i) => i === influence),
+                1
+            );
+            blockPlayer.influences.push(drawCardFromDeck(state));
             logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
             state.turnPlayer = getNextPlayerTurn(state);
             delete state.pendingBlockChallenge;
