@@ -165,7 +165,7 @@ export const addPlayerToGame = async (roomId: string, playerId: string, playerNa
       name: playerName,
       coins: 2,
       influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
-      color: ['#73C373', '#7AB8D3', '#DD6C75', '#8C6CE6', '#EA9158', '#CB8F8F', '#FFC303'][state.players.length]
+      color: ['#23C373', '#0078ff', '#fD6C33', '#ff7799', '#FFC303', '#fA0088'][state.players.length]
     })
     return state;
   });
