@@ -19,7 +19,12 @@ function EventLog() {
   }
 
   return (
-    <Box ref={logBox} sx={{ width: '100%', maxHeight: '15vh', overflowY: 'auto' }}>
+    <Box ref={logBox} sx={{
+      width: '100%',
+      maxHeight: '85dvh',
+      overflowY: 'auto',
+      p: 2
+    }}>
       {gameState?.eventLogs.map((log, logIndex) =>
         <GameTypography key={logIndex}>{log}</GameTypography>
       )}
