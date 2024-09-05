@@ -16,12 +16,12 @@ function GameTypography({ children, ...props }: Omit<TypographyProps, 'children'
     }
 
     return [
-      ...Object.entries(InfluenceAttributes)
-        .filter(([influence]) => children.includes(influence))
-        .map<[string, string]>(([influence, attributes]) => [influence, attributes.color[colorMode]]),
       ...Object.entries(ActionAttributes)
         .filter(([action]) => children.includes(action))
         .map<[string, string]>(([action, attributes]) => [action, attributes.color[colorMode]]),
+      ...Object.entries(InfluenceAttributes)
+        .filter(([influence]) => children.includes(influence))
+        .map<[string, string]>(([influence, attributes]) => [influence, attributes.color[colorMode]]),
       ...gameState?.players
         .filter(({ name }) => children.includes(name))
         .map<[string, string]>(({ name, color }) => [name, color])
