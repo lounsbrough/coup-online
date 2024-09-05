@@ -657,6 +657,7 @@ app.post('/loseInfluence', async (req, res) => {
 
         if (!sadPlayer.influences.length) {
             logEvent(state, `${sadPlayer.name} is out!`);
+            delete state.pendingInfluenceLoss[sadPlayer.name];
         }
     });
 
