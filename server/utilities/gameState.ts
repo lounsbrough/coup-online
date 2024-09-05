@@ -68,7 +68,11 @@ export const mutateGameState = async (
   await setGameState(roomId, gameState);
 }
 
-export const killPlayerInfluence = (state: GameState, playerName: string, putBackInDeck: boolean = false) => {
+export const killPlayerInfluence = (
+  state: GameState,
+  playerName: string,
+  putBackInDeck: boolean = false
+) => {
   state.pendingInfluenceLoss[playerName] = [
     ...(state.pendingInfluenceLoss[playerName] ?? []),
     { putBackInDeck }
@@ -106,6 +110,11 @@ export const processPendingAction = async (state: GameState) => {
   } else if (state.pendingAction.action === Actions.Tax) {
     actionPlayer.coins += 3;
   }
+
+  if (!Object.keys(state.pendingInfluenceLoss).length) {
+    state.turnPlayer = getNextPlayerTurn(state);
+  }
+
   logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
   delete state.pendingAction;
 }

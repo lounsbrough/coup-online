@@ -209,7 +209,6 @@ app.post('/action', async (req, res) => {
             await (0, gameState_1.mutateGameState)(roomId, (state) => {
                 state.players.find(({ id }) => id === playerId).coins -= 7;
                 (0, gameState_1.killPlayerInfluence)(state, targetPlayer);
-                state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
                 (0, gameState_1.logEvent)(state, `${player.name} used ${action} on ${targetPlayer}`);
             });
         }
@@ -275,7 +274,6 @@ app.post('/actionResponse', async (req, res) => {
         if (gameState.pendingAction.pendingPlayers.length === 1) {
             await (0, gameState_1.mutateGameState)(roomId, (state) => {
                 (0, gameState_1.processPendingAction)(state);
-                state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
             });
         }
         else {
@@ -357,7 +355,6 @@ app.post('/actionChallengeResponse', async (req, res) => {
             actionPlayer.influences.push((0, gameState_1.drawCardFromDeck)(state));
             delete state.pendingActionChallenge;
             (0, gameState_1.processPendingAction)(state);
-            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
         });
     }
     else {
@@ -366,7 +363,6 @@ app.post('/actionChallengeResponse', async (req, res) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
             (0, gameState_1.killPlayerInfluence)(state, actionPlayer.name);
             (0, gameState_1.logEvent)(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`);
-            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
             delete state.pendingActionChallenge;
             delete state.pendingAction;
         });
@@ -468,7 +464,6 @@ app.post('/blockChallengeResponse', async (req, res) => {
             blockPlayer.influences.splice(blockPlayer.influences.findIndex((i) => i === influence), 1);
             blockPlayer.influences.push((0, gameState_1.drawCardFromDeck)(state));
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
-            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;
             delete state.pendingActionChallenge;
@@ -481,7 +476,6 @@ app.post('/blockChallengeResponse', async (req, res) => {
             (0, gameState_1.killPlayerInfluence)(state, blockPlayer.name);
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`);
             (0, gameState_1.processPendingAction)(state);
-            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;
             delete state.pendingActionChallenge;
@@ -534,6 +528,12 @@ app.post('/loseInfluence', async (req, res) => {
         }
         else {
             delete state.pendingInfluenceLoss[sadPlayer.name];
+        }
+        if (!Object.keys(state.pendingInfluenceLoss).length) {
+            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
+        }
+        if (!sadPlayer.influences.length) {
+            (0, gameState_1.logEvent)(state, `${sadPlayer.name} is out!`);
         }
     });
     res.status(200).json(await (0, gameState_1.getPublicGameState)(roomId, playerId));
