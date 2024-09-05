@@ -11,32 +11,34 @@ function Players() {
   return (
     <>
       <Grid2 container justifyContent="center" spacing={2}>
-        {gameState.players.map(({ name, color, coins, influenceCount }, index) => {
-          const isSelf = gameState.selfPlayer.name === name;
+        {gameState.players
+          .filter(({ influenceCount }) => influenceCount > 0)
+          .map(({ name, color, coins, influenceCount }, index) => {
+            const isSelf = gameState.selfPlayer.name === name;
 
-          return (
-            <Box
-              key={index}
-              sx={{
-                alignContent: 'center',
-                background: color,
-                borderRadius: 3,
-                p: 2,
-                width: '8rem'
-              }}>
-              <Typography sx={{
-                fontWeight: 'bold',
-                fontSize: isSelf ? '1.8rem' : '1.5rem'
-              }}
-              >
-                {name}
-              </Typography>
-              <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Coins: ${coins}`}</Typography>
-              <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Influences: ${influenceCount}`}</Typography>
-            </Box>
-          )
-        }
-        )}
+            return (
+              <Box
+                key={index}
+                sx={{
+                  alignContent: 'center',
+                  background: color,
+                  borderRadius: 3,
+                  p: 2,
+                  width: '8rem'
+                }}>
+                <Typography sx={{
+                  fontWeight: 'bold',
+                  fontSize: isSelf ? '1.8rem' : '1.5rem'
+                }}
+                >
+                  {name}
+                </Typography>
+                <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Coins: ${coins}`}</Typography>
+                <Typography sx={{ fontSize: isSelf ? '1.2rem' : '1rem' }}>{`Influences: ${influenceCount}`}</Typography>
+              </Box>
+            )
+          }
+          )}
       </Grid2>
     </>
   )
