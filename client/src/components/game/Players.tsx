@@ -32,7 +32,7 @@ function Players() {
                   borderRadius: 3,
                   borderStyle: isSelf ? 'solid' : undefined,
                   borderWidth: isSelf ? '3px' : undefined,
-                  // p: 2,
+                  p: 1,
                   width: '8rem'
                 }}>
                 <Typography variant="h6" sx={{
