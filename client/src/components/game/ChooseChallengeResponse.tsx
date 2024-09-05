@@ -27,7 +27,7 @@ function ChooseChallengeResponse() {
     })
   }));
 
-  if (!gameState) {
+  if (!gameState?.pendingActionChallenge && !gameState?.pendingBlockChallenge) {
     return null;
   }
 
