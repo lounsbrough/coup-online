@@ -23,7 +23,8 @@ function GameBoard() {
 
   return (
     <Grid2 container>
-      <Grid2 p={2} size={{ xs: 12, sm: 12, md: 10 }}>
+      <Grid2 size={{ xs: 12, sm: 12, md: 2 }} />
+      <Grid2 p={2} size={{ xs: 12, sm: 12, md: 8 }}>
         {gameIsOver && (
           <Grid2 sx={{ mb: 5 }}>
             <Victory player={playersLeft[0]} />
