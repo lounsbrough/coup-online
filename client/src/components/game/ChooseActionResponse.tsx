@@ -5,6 +5,7 @@ import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 import { useGameStateContext } from "../../context/GameStateContext";
 import { useColorModeContext } from "../../context/MaterialThemeContext";
+import GameTypography from "../utilities/GameTypography";
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>();
@@ -40,83 +41,71 @@ function ChooseActionResponse() {
             Claim an Influence:
           </Typography>
           <Grid2 container spacing={2} justifyContent="center">
-            {Object.entries(InfluenceAttributes).map(([influence, influenceAttributes]) => {
-              if (influenceAttributes.legalBlock !== gameState.pendingAction?.action) {
-                return null
-              }
+            {Object.entries(InfluenceAttributes)
+              .sort((a, b) => a[0].localeCompare(b[0]))
+              .map(([influence, influenceAttributes]) => {
+                if (influenceAttributes.legalBlock !== gameState.pendingAction?.action) {
+                  return null
+                }
 
-              return <Button
-                key={influence}
-                onClick={() => {
-                  trigger({
-                    roomId: gameState.roomId,
-                    playerId: getPlayerId(),
-                    response: selectedResponse,
-                    claimedInfluence: influence as Influences
-                  })
-                }} sx={{ background: influenceAttributes.color[colorMode] }}
-                disabled={isMutating}
-                variant="contained"
-              >{influence}</Button>
-            })}
+                return <Button
+                  key={influence}
+                  onClick={() => {
+                    trigger({
+                      roomId: gameState.roomId,
+                      playerId: getPlayerId(),
+                      response: selectedResponse,
+                      claimedInfluence: influence as Influences
+                    })
+                  }} sx={{ background: influenceAttributes.color[colorMode] }}
+                  disabled={isMutating}
+                  variant="contained"
+                >{influence}</Button>
+              })}
           </Grid2>
         </>
       ) : (
         <>
-          <Typography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
-            <Typography component="span" fontSize='inherit' fontWeight='inherit'
-              sx={{ color: gameState.players.find((player) => player.name === gameState.turnPlayer)?.color }}
-            >{gameState.turnPlayer}</Typography>
-            <Typography component="span" fontSize='inherit' fontWeight='inherit'>
-              {' is trying to use '}
-            </Typography>
-            <Typography component="span" fontSize='inherit' fontWeight='inherit'
-              sx={{ color: ActionAttributes[gameState.pendingAction.action].color[colorMode] }}
-            >{gameState.pendingAction.action}</Typography>
-            {gameState.pendingAction.targetPlayer && (
-              <>
-                <Typography component="span" fontSize='inherit' fontWeight='inherit'>
-                  {' on '}
-                </Typography>
-                <Typography component="span" fontSize='inherit' fontWeight='inherit'
-                  sx={{ color: gameState.players.find((player) => player.name === gameState.pendingAction?.targetPlayer)?.color }}
-                >{gameState.pendingAction.targetPlayer}</Typography>
-              </>
-            )}
-          </Typography>
+          <GameTypography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
+            {`${gameState.turnPlayer} is trying to use ${gameState.pendingAction.action}${gameState.pendingAction.targetPlayer
+              ? ` on ${gameState.pendingAction.targetPlayer}`
+              : ''}`}
+          </GameTypography>
           <Grid2 container spacing={2} justifyContent="center">
-            {Object.entries(ResponseAttributes).map(([response, responseAttributes], index) => {
-              if (response === Responses.Challenge &&
-                !ActionAttributes[gameState.pendingAction?.action as Actions].challengeable) {
-                return null;
-              }
+            {Object.entries(ResponseAttributes)
+              .sort((a, b) => a[0].localeCompare(b[0]))
+              .map(([response, responseAttributes], index) => {
+                if (response === Responses.Challenge &&
+                  !ActionAttributes[gameState.pendingAction?.action as Actions].challengeable) {
+                  return null;
+                }
 
-              if (response === Responses.Block &&
-                !ActionAttributes[gameState.pendingAction?.action as Actions].blockable) {
-                return null;
-              }
+                if (response === Responses.Block &&
+                  !ActionAttributes[gameState.pendingAction?.action as Actions].blockable) {
+                  return null;
+                }
 
-              return <Button
-                key={index}
-                onClick={() => {
-                  if (response === Responses.Block) {
-                    setSelectedResponse(response);
-                  } else {
-                    trigger({
-                      roomId: gameState.roomId,
-                      playerId: getPlayerId(),
-                      response: response as Responses
-                    })
-                  }
-                }}
-                sx={{
-                  background: responseAttributes.color[colorMode]
-                }} variant="contained"
-                disabled={isMutating}
-              >
-                {response}
-              </Button>
-            })}
+                return <Button
+                  key={index}
+                  onClick={() => {
+                    if (response === Responses.Block) {
+                      setSelectedResponse(response);
+                    } else {
+                      trigger({
+                        roomId: gameState.roomId,
+                        playerId: getPlayerId(),
+                        response: response as Responses
+                      })
+                    }
+                  }}
+                  sx={{
+                    background: responseAttributes.color[colorMode]
+                  }} variant="contained"
+                  disabled={isMutating}
+                >
+                  {response}
+                </Button>
+              })}
           </Grid2>
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </>

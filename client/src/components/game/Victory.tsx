@@ -1,11 +1,11 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { PublicPlayer } from "../../shared/types/game";
+import GameTypography from "../utilities/GameTypography";
 
 function Victory({ player }: { player: PublicPlayer }) {
   return (
     <Box>
-      <Typography component="span" sx={{ fontSize: '48px', color: player.color }}>{player.name}</Typography>
-      <Typography component="span" sx={{ fontSize: '48px' }}> Wins!</Typography>
+      <GameTypography fontSize='48px'>{`${player.name} Wins!`}</GameTypography>
     </Box>
   );
 }

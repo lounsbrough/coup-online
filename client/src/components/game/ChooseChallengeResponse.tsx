@@ -5,6 +5,7 @@ import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 import { useGameStateContext } from "../../context/GameStateContext";
 import { useColorModeContext } from "../../context/MaterialThemeContext";
+import GameTypography from "../utilities/GameTypography";
 
 function ChooseChallengeResponse() {
   const [error, setError] = useState<string>();
@@ -31,53 +32,38 @@ function ChooseChallengeResponse() {
     return null;
   }
 
-  const challengingPlayer = gameState.players.find((player) =>
-    player.name === gameState.pendingBlockChallenge?.sourcePlayer ||
-    player.name === gameState.pendingActionChallenge?.sourcePlayer
-  );
-
-  const challengedPlayer = gameState.players.find((player) =>
-    player.name === gameState.pendingBlock?.sourcePlayer ||
-    player.name === gameState.turnPlayer
-  );
+  const challengingPlayer = gameState.pendingBlockChallenge?.sourcePlayer || gameState.pendingActionChallenge?.sourcePlayer;
+  const challengedPlayer = gameState.pendingBlock?.sourcePlayer || gameState.turnPlayer;
 
   return (
     <>
+      <GameTypography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
+        {`${challengingPlayer} is challenging ${challengedPlayer}`}
+      </GameTypography>
       <Typography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
-        <Typography component="span" fontSize='inherit' fontWeight='inherit'
-          sx={{ color: challengingPlayer?.color }}
-        >
-          {challengingPlayer?.name}
-        </Typography>
-        <Typography component="span" fontSize='inherit' fontWeight='inherit'>
-          {' is challenging '}
-        </Typography>
-        <Typography component="span" fontSize='inherit' fontWeight='inherit'
-          sx={{ color: challengedPlayer?.color }}
-        >{challengedPlayer?.name}</Typography>
-      </Typography>
-      <Typography  sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
         Choose an Influence to Reveal:
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
-        {gameState.selfPlayer.influences.map((influence, index) => {
-          return <Button
-            key={index}
-            onClick={() => {
-              trigger({
-                roomId: gameState.roomId,
-                playerId: getPlayerId(),
-                influence: influence as Influences
-              })
-            }}
-            disabled={isMutating}
-            sx={{
-              background: InfluenceAttributes[influence].color[colorMode]
-            }} variant="contained"
-          >
-            {influence}
-          </Button>
-        })}
+        {gameState.selfPlayer.influences
+          .sort((a, b) => a.localeCompare(b))
+          .map((influence, index) => {
+            return <Button
+              key={index}
+              onClick={() => {
+                trigger({
+                  roomId: gameState.roomId,
+                  playerId: getPlayerId(),
+                  influence: influence as Influences
+                })
+              }}
+              disabled={isMutating}
+              sx={{
+                background: InfluenceAttributes[influence].color[colorMode]
+              }} variant="contained"
+            >
+              {influence}
+            </Button>
+          })}
       </Grid2>
       {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
