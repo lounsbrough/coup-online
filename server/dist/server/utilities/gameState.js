@@ -96,6 +96,9 @@ const processPendingAction = async (state) => {
     else if (state.pendingAction.action === game_1.Actions.Tax) {
         actionPlayer.coins += 3;
     }
+    if (!Object.keys(state.pendingInfluenceLoss).length) {
+        state.turnPlayer = (0, exports.getNextPlayerTurn)(state);
+    }
     (0, exports.logEvent)(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`);
     delete state.pendingAction;
 };
