@@ -8,10 +8,11 @@ function EventLog() {
   const { gameState } = useGameStateContext();
 
   useEffect(() => {
-    logBox.current?.scrollTo({ top: 0, behavior: "smooth" });
+    logBox.current?.scrollTo({
+      top: logBox.current.scrollHeight,
+      behavior: "smooth"
+    });
   }, [gameState?.eventLogs?.length])
-
-  const reversedLogs = useMemo(() => [...gameState?.eventLogs ?? []].reverse(), [gameState?.eventLogs]);
 
   if (!gameState) {
     return null;
@@ -19,7 +20,7 @@ function EventLog() {
 
   return (
     <Box ref={logBox} sx={{ maxHeight: '75vh', width: '100%', overflowY: 'scroll' }}>
-      {reversedLogs.map((log, logIndex) =>
+      {gameState?.eventLogs.map((log, logIndex) =>
         <GameTypography key={logIndex}>{log}</GameTypography>
       )}
     </Box>

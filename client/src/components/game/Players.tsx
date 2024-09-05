@@ -23,6 +23,8 @@ function Players() {
                   alignContent: 'center',
                   background: color,
                   borderRadius: 3,
+                  borderStyle: isSelf ? 'solid' : undefined,
+                  borderWidth: isSelf ? '3px' : undefined,
                   p: 2,
                   width: '8rem'
                 }}>
