@@ -73,7 +73,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
         main: secondaryColor[activeColorMode]
       }
     },
-    spacing: isSmallScreen ? 2 : 8,
+    spacing: isSmallScreen ? 4 : 8,
     components: {
       MuiTypography: {
         styleOverrides: {
