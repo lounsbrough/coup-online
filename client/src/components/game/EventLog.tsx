@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useEffect, useMemo, useRef } from "react";
 import { useGameStateContext } from "../../context/GameStateContext";
 import GameTypography from "../utilities/GameTypography";
