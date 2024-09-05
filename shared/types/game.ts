@@ -29,14 +29,14 @@ export const InfluenceAttributes: {
     legalAction: Actions.Assassinate,
     color: {
       light: '#555555',
-      dark: '#777777'
+      dark: '#555555'
     }
   },
   [Influences.Contessa]: {
     legalBlock: Actions.Assassinate,
     color: {
       light: '#E35646',
-      dark: '#e87e72'
+      dark: '#E35646'
     }
   },
   [Influences.Captain]: {
@@ -44,7 +44,7 @@ export const InfluenceAttributes: {
     legalBlock: Actions.Steal,
     color: {
       light: '#80C6E5',
-      dark: '#afe2f8'
+      dark: '#80C6E5'
     }
   },
   [Influences.Ambassador]: {
@@ -52,7 +52,7 @@ export const InfluenceAttributes: {
     legalBlock: Actions.Steal,
     color: {
       light: '#B4CA1F',
-      dark: '#d4e65a'
+      dark: '#B4CA1F'
     }
   },
   [Influences.Duke]: {
@@ -60,7 +60,7 @@ export const InfluenceAttributes: {
     legalBlock: Actions.ForeignAid,
     color: {
       light: '#D55DC7',
-      dark: '#ec98e2'
+      dark: '#D55DC7'
     }
   }
 }
