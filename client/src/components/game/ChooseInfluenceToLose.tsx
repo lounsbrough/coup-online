@@ -33,7 +33,7 @@ function ChooseInfluenceToLose() {
 
   return (
     <>
-      <Typography sx={{ my: 1, fontWeight: 'bold', fontSize: '24px' }}>
+      <Typography sx={{ my: 1, fontWeight: 'bold' }}>
         Choose an Influence to Lose:
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">

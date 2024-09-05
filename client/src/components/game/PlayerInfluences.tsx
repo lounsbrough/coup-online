@@ -22,13 +22,10 @@ function PlayerInfluences() {
               background: InfluenceAttributes[influence].color[colorMode],
               borderRadius: 3,
               p: 2,
-              width: '8rem',
+              width: '7rem',
               height: '2rem'
             }}>
-              <Typography sx={{
-                fontWeight: 'bold',
-                fontSize: '1.4rem'
-              }}
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}
               >{influence}
               </Typography>
             </Box>

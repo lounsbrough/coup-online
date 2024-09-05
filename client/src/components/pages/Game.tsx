@@ -1,5 +1,4 @@
-import { Breadcrumbs, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Typography } from "@mui/material";
 import GameBoard from "../game/GameBoard";
 import WaitingRoom from "../game/WaitingRoom";
 import { useGameStateContext } from "../../context/GameStateContext";
@@ -9,10 +8,6 @@ function Game() {
 
   return (
     <>
-      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link to='/'>Home</Link>
-        <Typography>Room {gameState?.roomId}</Typography>
-      </Breadcrumbs>
       {gameState && !gameState.selfPlayer && (
         <Typography>You are not in this game</Typography>
       )}

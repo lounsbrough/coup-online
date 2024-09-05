@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  margin: 0.5rem 0;
+  height: '54px';
   display: flex;
   flex-direction: row;
   align-items: center;

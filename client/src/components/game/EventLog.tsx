@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGameStateContext } from "../../context/GameStateContext";
 import GameTypography from "../utilities/GameTypography";
 
@@ -19,7 +19,7 @@ function EventLog() {
   }
 
   return (
-    <Box ref={logBox} sx={{ maxHeight: '75vh', width: '100%', overflowY: 'scroll' }}>
+    <Box ref={logBox} sx={{ width: '100%', maxHeight: '15vh', overflowY: 'auto' }}>
       {gameState?.eventLogs.map((log, logIndex) =>
         <GameTypography key={logIndex}>{log}</GameTypography>
       )}
