@@ -188,6 +188,7 @@ export type GameState = {
   pendingBlock?: {
     sourcePlayer: string
     claimedInfluence: Influences
+    pendingPlayers: string[]
   }
   pendingBlockChallenge?: {
     sourcePlayer: string

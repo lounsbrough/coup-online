@@ -41,8 +41,13 @@ function ChooseChallengeResponse() {
         {`${challengingPlayer} is challenging ${challengedPlayer}`}
       </GameTypography>
       <Typography sx={{ my: 1, fontWeight: 'bold' }}>
-        Choose an Influence to Reveal:
+        Choose an Influence to Reveal
       </Typography>
+      {gameState.pendingBlock?.claimedInfluence && (
+        <GameTypography sx={{ my: 1, fontWeight: 'bold' }}>
+          {`${gameState.pendingBlock?.claimedInfluence} was claimed`}
+        </GameTypography>
+      )}
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
