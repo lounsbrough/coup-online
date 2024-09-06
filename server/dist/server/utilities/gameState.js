@@ -77,7 +77,7 @@ const processPendingAction = async (state) => {
     const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
     const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
     if (state.pendingAction.action === game_1.Actions.Assassinate) {
-        actionPlayer.coins -= 3;
+        actionPlayer.coins -= game_1.ActionAttributes.Assassinate.coinsRequired;
         (0, exports.killPlayerInfluence)(state, targetPlayer.name);
     }
     else if (state.pendingAction.action === game_1.Actions.Exchange) {

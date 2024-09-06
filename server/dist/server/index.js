@@ -207,7 +207,7 @@ app.post('/action', async (req, res) => {
     if (!game_1.ActionAttributes[action].blockable && !game_1.ActionAttributes[action].challengeable) {
         if (action === game_1.Actions.Coup) {
             await (0, gameState_1.mutateGameState)(roomId, (state) => {
-                state.players.find(({ id }) => id === playerId).coins -= 7;
+                state.players.find(({ id }) => id === playerId).coins -= game_1.ActionAttributes.Coup.coinsRequired;
                 (0, gameState_1.killPlayerInfluence)(state, targetPlayer);
                 (0, gameState_1.logEvent)(state, `${player.name} used ${action} on ${targetPlayer}`);
             });
@@ -402,7 +402,7 @@ app.post('/blockResponse', async (req, res) => {
         return;
     }
     if (response === game_1.Responses.Block) {
-        res.status(400).send('You can\t block a block');
+        res.status(400).send('You can\'t block a block');
         return;
     }
     if (response === game_1.Responses.Challenge) {
@@ -416,6 +416,10 @@ app.post('/blockResponse', async (req, res) => {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
+            if (state.pendingAction.action === game_1.Actions.Assassinate) {
+                state.players.find(({ name }) => name === state.turnPlayer).coins
+                    -= game_1.ActionAttributes.Assassinate.coinsRequired;
+            }
             state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
             delete state.pendingBlock;
             delete state.pendingActionChallenge;
@@ -468,6 +472,10 @@ app.post('/blockChallengeResponse', async (req, res) => {
             blockPlayer.influences.push((0, gameState_1.drawCardFromDeck)(state));
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} revealed and replaced ${influence}`);
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
+            if (state.pendingAction.action === game_1.Actions.Assassinate) {
+                state.players.find(({ name }) => name === state.turnPlayer).coins
+                    -= game_1.ActionAttributes.Assassinate.coinsRequired;
+            }
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;
             delete state.pendingActionChallenge;

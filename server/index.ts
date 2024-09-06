@@ -263,7 +263,7 @@ app.post('/action', async (req, res) => {
     if (!ActionAttributes[action].blockable && !ActionAttributes[action].challengeable) {
         if (action === Actions.Coup) {
             await mutateGameState(roomId, (state) => {
-                state.players.find(({ id }) => id === playerId).coins -= 7;
+                state.players.find(({ id }) => id === playerId).coins -= ActionAttributes.Coup.coinsRequired;
                 killPlayerInfluence(state, targetPlayer);
                 logEvent(state, `${player.name} used ${action} on ${targetPlayer}`)
             });
@@ -494,7 +494,7 @@ app.post('/blockResponse', async (req, res) => {
     }
 
     if (response === Responses.Block) {
-        res.status(400).send('You can\t block a block');
+        res.status(400).send('You can\'t block a block');
         return;
     }
 
@@ -508,6 +508,10 @@ app.post('/blockResponse', async (req, res) => {
         await mutateGameState(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
+            if (state.pendingAction.action === Actions.Assassinate) {
+                state.players.find(({ name }) => name === state.turnPlayer).coins
+                    -= ActionAttributes.Assassinate.coinsRequired;
+            }
             state.turnPlayer = getNextPlayerTurn(state);
             delete state.pendingBlock;
             delete state.pendingActionChallenge;
@@ -575,6 +579,10 @@ app.post('/blockChallengeResponse', async (req, res) => {
             blockPlayer.influences.push(drawCardFromDeck(state));
             logEvent(state, `${blockPlayer.name} revealed and replaced ${influence}`);
             logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
+            if (state.pendingAction.action === Actions.Assassinate) {
+                state.players.find(({ name }) => name === state.turnPlayer).coins
+                    -= ActionAttributes.Assassinate.coinsRequired;
+            }
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;
             delete state.pendingActionChallenge;
