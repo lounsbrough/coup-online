@@ -208,7 +208,7 @@ app.post('/action', async (req, res) => {
         if (action === game_1.Actions.Coup) {
             await (0, gameState_1.mutateGameState)(roomId, (state) => {
                 state.players.find(({ id }) => id === playerId).coins -= game_1.ActionAttributes.Coup.coinsRequired;
-                (0, gameState_1.killPlayerInfluence)(state, targetPlayer);
+                (0, gameState_1.promptPlayerToLoseInfluence)(state, targetPlayer);
                 (0, gameState_1.logEvent)(state, `${player.name} used ${action} on ${targetPlayer}`);
             });
         }
@@ -354,7 +354,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
-            (0, gameState_1.killPlayerInfluence)(state, challengePlayer.name);
+            (0, gameState_1.promptPlayerToLoseInfluence)(state, challengePlayer.name);
             (0, gameState_1.logEvent)(state, `${actionPlayer.name} revealed and replaced ${influence}`);
             (0, gameState_1.logEvent)(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`);
             state.deck.push(actionPlayer.influences.splice(actionPlayer.influences.findIndex((i) => i === influence), 1)[0]);
@@ -368,8 +368,10 @@ app.post('/actionChallengeResponse', async (req, res) => {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
-            (0, gameState_1.killPlayerInfluence)(state, actionPlayer.name);
             (0, gameState_1.logEvent)(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`);
+            actionPlayer.influences.splice(actionPlayer.influences.findIndex((i) => i === influence), 1);
+            (0, gameState_1.logEvent)(state, `${actionPlayer.name} lost their ${influence}`);
+            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
             delete state.pendingActionChallenge;
             delete state.pendingAction;
         });
@@ -471,7 +473,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
-            (0, gameState_1.killPlayerInfluence)(state, challengePlayer.name);
+            (0, gameState_1.promptPlayerToLoseInfluence)(state, challengePlayer.name);
             state.deck.push(blockPlayer.influences.splice(blockPlayer.influences.findIndex((i) => i === influence), 1)[0]);
             state.deck = (0, gameState_1.shuffle)(state.deck);
             blockPlayer.influences.push((0, gameState_1.drawCardFromDeck)(state));
@@ -490,8 +492,9 @@ app.post('/blockChallengeResponse', async (req, res) => {
     else {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
-            (0, gameState_1.killPlayerInfluence)(state, blockPlayer.name);
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`);
+            blockPlayer.influences.splice(blockPlayer.influences.findIndex((i) => i === influence), 1);
+            (0, gameState_1.logEvent)(state, `${blockPlayer.name} lost their ${influence}`);
             (0, gameState_1.processPendingAction)(state);
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;
