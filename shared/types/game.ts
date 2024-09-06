@@ -28,8 +28,8 @@ export const InfluenceAttributes: {
   [Influences.Assassin]: {
     legalAction: Actions.Assassinate,
     color: {
-      light: '#555555',
-      dark: '#555555'
+      light: '#777777',
+      dark: '#777777'
     }
   },
   [Influences.Contessa]: {
@@ -107,8 +107,8 @@ export const ActionAttributes: {
     blockable: true,
     challengeable: false,
     color: {
-      light: '#555555',
-      dark: '#555555'
+      light: '#33aa33',
+      dark: '#33aa33'
     },
     requiresTarget: false
   },
@@ -116,8 +116,8 @@ export const ActionAttributes: {
     blockable: false,
     challengeable: false,
     color: {
-      light: '#555555',
-      dark: '#555555'
+      light: '#ffa900',
+      dark: '#ffa900'
     },
     requiresTarget: false
   },

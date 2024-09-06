@@ -52,7 +52,8 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
       coloredSegments.push({
         text: matchedSpecialWord.word,
         position: matchedSpecialWord.position!,
-        color: colorsMap.find(([match]) => match === matchedSpecialWord.word)?.[1]
+        color: colorsMap.find(([match]) => match === matchedSpecialWord.word)?.[1],
+        fontWeight: 'bold'
       });
       nonColoredSegments.push({
         text: children.slice(matchedSpecialWord.position! + matchedSpecialWord.word.length, i < matchedSpecialWords.length - 1 ? matchedSpecialWords[i + 1].position! : undefined),
