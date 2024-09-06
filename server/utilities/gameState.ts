@@ -68,7 +68,7 @@ export const mutateGameState = async (
   await setGameState(roomId, gameState);
 }
 
-export const killPlayerInfluence = (
+export const promptPlayerToLoseInfluence = (
   state: GameState,
   playerName: string,
   putBackInDeck: boolean = false
@@ -95,12 +95,12 @@ export const processPendingAction = async (state: GameState) => {
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
   if (state.pendingAction.action === Actions.Assassinate) {
     actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired;
-    killPlayerInfluence(state, targetPlayer.name);
+    promptPlayerToLoseInfluence(state, targetPlayer.name);
   } else if (state.pendingAction.action === Actions.Exchange) {
     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
     state.deck = shuffle(state.deck);
-    killPlayerInfluence(state, actionPlayer.name, true);
-    killPlayerInfluence(state, actionPlayer.name, true);
+    promptPlayerToLoseInfluence(state, actionPlayer.name, true);
+    promptPlayerToLoseInfluence(state, actionPlayer.name, true);
   } else if (state.pendingAction.action === Actions.ForeignAid) {
     actionPlayer.coins += 2;
   } else if (state.pendingAction.action === Actions.Steal) {

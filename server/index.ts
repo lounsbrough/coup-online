@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction, resetGame, shuffle, startGame } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, promptPlayerToLoseInfluence, logEvent, mutateGameState, processPendingAction, resetGame, shuffle, startGame } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
@@ -264,7 +264,7 @@ app.post('/action', async (req, res) => {
         if (action === Actions.Coup) {
             await mutateGameState(roomId, (state) => {
                 state.players.find(({ id }) => id === playerId).coins -= ActionAttributes.Coup.coinsRequired;
-                killPlayerInfluence(state, targetPlayer);
+                promptPlayerToLoseInfluence(state, targetPlayer);
                 logEvent(state, `${player.name} used ${action} on ${targetPlayer}`)
             });
         } else if (action === Actions.Income) {
@@ -435,7 +435,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
         await mutateGameState(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
-            killPlayerInfluence(state, challengePlayer.name);
+            promptPlayerToLoseInfluence(state, challengePlayer.name);
             logEvent(state, `${actionPlayer.name} revealed and replaced ${influence}`);
             logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`);
             state.deck.push(actionPlayer.influences.splice(
@@ -451,8 +451,13 @@ app.post('/actionChallengeResponse', async (req, res) => {
         await mutateGameState(roomId, (state) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
-            killPlayerInfluence(state, actionPlayer.name);
             logEvent(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`)
+            actionPlayer.influences.splice(
+                actionPlayer.influences.findIndex((i) => i === influence),
+                1
+            );
+            logEvent(state, `${actionPlayer.name} lost their ${influence}`);
+            state.turnPlayer = getNextPlayerTurn(state);
             delete state.pendingActionChallenge;
             delete state.pendingAction;
         });
@@ -577,7 +582,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
         await mutateGameState(roomId, (state) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
-            killPlayerInfluence(state, challengePlayer.name);
+            promptPlayerToLoseInfluence(state, challengePlayer.name);
             state.deck.push(blockPlayer.influences.splice(
                 blockPlayer.influences.findIndex((i) => i === influence),
                 1
@@ -598,8 +603,12 @@ app.post('/blockChallengeResponse', async (req, res) => {
     } else {
         await mutateGameState(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
-            killPlayerInfluence(state, blockPlayer.name);
             logEvent(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`)
+            blockPlayer.influences.splice(
+                blockPlayer.influences.findIndex((i) => i === influence),
+                1
+            );
+            logEvent(state, `${blockPlayer.name} lost their ${influence}`);
             processPendingAction(state);
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;

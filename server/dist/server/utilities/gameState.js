@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNextPlayerTurn = exports.addPlayerToGame = exports.resetGame = exports.startGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.shuffle = exports.killPlayerInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
+exports.getNextPlayerTurn = exports.addPlayerToGame = exports.resetGame = exports.startGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.shuffle = exports.promptPlayerToLoseInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
 const game_1 = require("../../shared/types/game");
 const storage_1 = require("./storage");
 const getGameState = async (roomId) => {
@@ -57,13 +57,13 @@ const mutateGameState = async (roomId, mutation) => {
     await setGameState(roomId, gameState);
 };
 exports.mutateGameState = mutateGameState;
-const killPlayerInfluence = (state, playerName, putBackInDeck = false) => {
+const promptPlayerToLoseInfluence = (state, playerName, putBackInDeck = false) => {
     state.pendingInfluenceLoss[playerName] = [
         ...(state.pendingInfluenceLoss[playerName] ?? []),
         { putBackInDeck }
     ];
 };
-exports.killPlayerInfluence = killPlayerInfluence;
+exports.promptPlayerToLoseInfluence = promptPlayerToLoseInfluence;
 const shuffle = (array) => {
     const unShuffled = [...array];
     const shuffled = [];
@@ -78,13 +78,13 @@ const processPendingAction = async (state) => {
     const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
     if (state.pendingAction.action === game_1.Actions.Assassinate) {
         actionPlayer.coins -= game_1.ActionAttributes.Assassinate.coinsRequired;
-        (0, exports.killPlayerInfluence)(state, targetPlayer.name);
+        (0, exports.promptPlayerToLoseInfluence)(state, targetPlayer.name);
     }
     else if (state.pendingAction.action === game_1.Actions.Exchange) {
         actionPlayer.influences.push((0, exports.drawCardFromDeck)(state), (0, exports.drawCardFromDeck)(state));
         state.deck = (0, exports.shuffle)(state.deck);
-        (0, exports.killPlayerInfluence)(state, actionPlayer.name, true);
-        (0, exports.killPlayerInfluence)(state, actionPlayer.name, true);
+        (0, exports.promptPlayerToLoseInfluence)(state, actionPlayer.name, true);
+        (0, exports.promptPlayerToLoseInfluence)(state, actionPlayer.name, true);
     }
     else if (state.pendingAction.action === game_1.Actions.ForeignAid) {
         actionPlayer.coins += 2;
