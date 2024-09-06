@@ -1,4 +1,4 @@
-import { Actions, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../shared/types/game';
+import { ActionAttributes, Actions, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../shared/types/game';
 import { getValue, setValue } from './storage';
 
 export const getGameState = async (
@@ -94,7 +94,7 @@ export const processPendingAction = async (state: GameState) => {
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
   if (state.pendingAction.action === Actions.Assassinate) {
-    actionPlayer.coins -= 3;
+    actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired;
     killPlayerInfluence(state, targetPlayer.name);
   } else if (state.pendingAction.action === Actions.Exchange) {
     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state));
