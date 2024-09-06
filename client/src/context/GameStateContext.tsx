@@ -39,7 +39,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
         setGameState(newState);
       }
     },
-    { refreshInterval: 1000 }
+    { refreshInterval: 2000 }
   );
 
   const contextValue = {
