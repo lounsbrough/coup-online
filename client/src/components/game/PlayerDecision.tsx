@@ -35,6 +35,7 @@ function PlayerDecision() {
   if (!isMyTurn &&
     gameState.pendingAction &&
     !gameState.pendingActionChallenge &&
+    !gameState.pendingBlock &&
     gameState.pendingAction.pendingPlayers.includes(gameState.selfPlayer.name)) {
     return <ChooseActionResponse />;
   }
