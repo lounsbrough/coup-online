@@ -10,7 +10,7 @@ function WaitingRoom() {
   const [error, setError] = useState<string>();
   const { gameState, setGameState } = useGameStateContext();
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {

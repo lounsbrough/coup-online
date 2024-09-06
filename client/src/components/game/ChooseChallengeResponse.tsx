@@ -5,14 +5,14 @@ import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 import { useGameStateContext } from "../../context/GameStateContext";
 import { useColorModeContext } from "../../context/MaterialThemeContext";
-import GameTypography from "../utilities/GameTypography";
+import ColoredTypography from "../utilities/ColoredTypography";
 
 function ChooseChallengeResponse() {
   const [error, setError] = useState<string>();
   const { gameState, setGameState } = useGameStateContext();
   const { colorMode } = useColorModeContext();
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/${gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -37,16 +37,16 @@ function ChooseChallengeResponse() {
 
   return (
     <>
-      <GameTypography sx={{ my: 1, fontWeight: 'bold' }}>
+      <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
         {`${challengingPlayer} is challenging ${challengedPlayer}`}
-      </GameTypography>
+      </ColoredTypography>
       <Typography sx={{ my: 1, fontWeight: 'bold' }}>
         Choose an Influence to Reveal
       </Typography>
       {gameState.pendingBlock?.claimedInfluence && (
-        <GameTypography sx={{ my: 1, fontWeight: 'bold' }}>
+        <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
           {`${gameState.pendingBlock?.claimedInfluence} was claimed`}
-        </GameTypography>
+        </ColoredTypography>
       )}
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences

@@ -6,7 +6,7 @@ import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNext
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
-const port = process.env.EXPRESS_PORT || 8000;
+const port = process.env.EXPRESS_PORT || 8008;
 
 const app = express();
 app.use(cors());

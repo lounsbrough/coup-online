@@ -21,7 +21,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
   const roomId = searchParams.get('roomId');
 
   const { error } = useSWR<void, Error>(
-    `${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/gameState?roomId=${roomId}&playerId=${getPlayerId()}`,
+    `${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/gameState?roomId=${roomId}&playerId=${getPlayerId()}`,
     async function (input: RequestInfo, init?: RequestInit) {
       const res = await fetch(input, init);
 

@@ -1,7 +1,7 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { useGameStateContext } from "../../context/GameStateContext";
-import GameTypography from "../utilities/GameTypography";
+import ColoredTypography from "../utilities/ColoredTypography";
 
 function EventLog() {
   const logBox = useRef<HTMLElement>(null);
@@ -28,7 +28,7 @@ function EventLog() {
       p: 2
     }}>
       {gameState?.eventLogs.map((log, logIndex) =>
-        <GameTypography key={logIndex}>{log}</GameTypography>
+        <ColoredTypography key={logIndex}>{log}</ColoredTypography>
       )}
     </Box>
   )

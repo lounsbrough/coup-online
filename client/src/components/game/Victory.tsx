@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { PublicPlayer } from "../../shared/types/game";
-import GameTypography from "../utilities/GameTypography";
+import ColoredTypography from "../utilities/ColoredTypography";
 
 function Victory({ player }: { player: PublicPlayer }) {
   return (
     <Box>
-      <GameTypography variant="h1">{`${player.name} Wins!`}</GameTypography>
+      <ColoredTypography variant="h1">{`${player.name} Wins!`}</ColoredTypography>
     </Box>
   );
 }

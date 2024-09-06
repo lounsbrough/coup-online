@@ -4,7 +4,7 @@ import { useGameStateContext } from "../../context/GameStateContext";
 import { useColorModeContext } from "../../context/MaterialThemeContext";
 import { ActionAttributes, InfluenceAttributes } from "../../shared/types/game";
 
-function GameTypography({ children, ...props }: Omit<TypographyProps, 'children'> & {
+function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'children'> & {
   children: string
 }) {
   const { gameState } = useGameStateContext();
@@ -31,40 +31,39 @@ function GameTypography({ children, ...props }: Omit<TypographyProps, 'children'
 
   type Segment = { text: string, position: number, color?: string, fontWeight?: string }
 
-  const remainingSegments: Segment[] = [{ text: children, position: 0 }];
   const coloredSegments: Segment[] = [];
-  colorsMap.forEach(([match, color]) => {
-    remainingSegments.forEach((remainingSegment, i) => {
-      const matchedIndexes = [...remainingSegment.text.matchAll(new RegExp(match, 'g'))].map(({ index }) => index)
-      if (matchedIndexes.length) {
-        remainingSegments.splice(i, 1);
-        let lastEnd = 0;
-        matchedIndexes.forEach((matchedIndex) => {
-          if (matchedIndex! > lastEnd) {
-            remainingSegments.push({
-              text: remainingSegment.text.slice(lastEnd, matchedIndex! - lastEnd),
-              position: remainingSegment.position + lastEnd
-            });
-          }
-          coloredSegments.push({
-            text: match,
-            position: remainingSegment.position + matchedIndex!,
-            color,
-            fontWeight: 'bold'
-          });
-          lastEnd = matchedIndex! + match.length;
-        });
-        if (lastEnd < remainingSegment.text.length - 1) {
-          remainingSegments.push({
-            text: remainingSegment.text.slice(lastEnd),
-            position: remainingSegment.position + lastEnd
-          });
-        }
-      }
-    });
-  });
 
-  const finalSegments = [...remainingSegments, ...coloredSegments]
+  const matchedSpecialWords = colorsMap.length ? [
+    ...children.matchAll(new RegExp(colorsMap.map(([match]) => `\\b${match}\\b`).join('|'), 'g'))
+  ]
+    .map(({ index: position, '0': word }) => ({ position, word }))
+    .sort((a, b) => a.position! - b.position!) : [];
+
+  let nonColoredSegments: Segment[];
+  if (matchedSpecialWords.length) {
+    nonColoredSegments = [];
+    if (matchedSpecialWords[0].position! > 0) {
+      nonColoredSegments.push({
+        text: children.slice(0, matchedSpecialWords[0].position!),
+        position: 0
+      })
+    }
+    matchedSpecialWords.forEach((matchedSpecialWord, i) => {
+      coloredSegments.push({
+        text: matchedSpecialWord.word,
+        position: matchedSpecialWord.position!,
+        color: colorsMap.find(([match]) => match === matchedSpecialWord.word)?.[1]
+      });
+      nonColoredSegments.push({
+        text: children.slice(matchedSpecialWord.position! + matchedSpecialWord.word.length, i < matchedSpecialWords.length - 1 ? matchedSpecialWords[i + 1].position! : undefined),
+        position: matchedSpecialWord.position! + matchedSpecialWord.word.length
+      });
+    });
+  } else {
+    nonColoredSegments = [{ text: children, position: 0 }];
+  }
+
+  const finalSegments = [...nonColoredSegments, ...coloredSegments]
     .sort((a, b) => a.position - b.position);
 
   return (
@@ -81,4 +80,4 @@ function GameTypography({ children, ...props }: Omit<TypographyProps, 'children'
   );
 }
 
-export default GameTypography;
+export default ColoredTypography;
