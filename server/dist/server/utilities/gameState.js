@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNextPlayerTurn = exports.addPlayerToGame = exports.resetGame = exports.startGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.killPlayerInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
+exports.getNextPlayerTurn = exports.addPlayerToGame = exports.resetGame = exports.startGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.shuffle = exports.killPlayerInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
 const game_1 = require("../../shared/types/game");
 const storage_1 = require("./storage");
 const getGameState = async (roomId) => {
@@ -72,6 +72,7 @@ const shuffle = (array) => {
     }
     return shuffled;
 };
+exports.shuffle = shuffle;
 const processPendingAction = async (state) => {
     const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
     const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer);
@@ -81,7 +82,7 @@ const processPendingAction = async (state) => {
     }
     else if (state.pendingAction.action === game_1.Actions.Exchange) {
         actionPlayer.influences.push((0, exports.drawCardFromDeck)(state), (0, exports.drawCardFromDeck)(state));
-        state.deck = shuffle(state.deck);
+        state.deck = (0, exports.shuffle)(state.deck);
         (0, exports.killPlayerInfluence)(state, actionPlayer.name, true);
         (0, exports.killPlayerInfluence)(state, actionPlayer.name, true);
     }
@@ -104,7 +105,7 @@ const processPendingAction = async (state) => {
 };
 exports.processPendingAction = processPendingAction;
 const buildShuffledDeck = () => {
-    return shuffle(Object.values(game_1.Influences)
+    return (0, exports.shuffle)(Object.values(game_1.Influences)
         .flatMap((influence) => Array.from({ length: 3 }, () => influence)));
 };
 const drawCardFromDeck = (state) => {
@@ -141,7 +142,7 @@ const resetGame = async (roomId) => {
     const oldGameState = await (0, exports.getGameState)(roomId);
     await (0, exports.createNewGame)(roomId);
     await (0, exports.mutateGameState)(roomId, (state) => {
-        const newPlayers = shuffle(oldGameState.players.map((player) => ({
+        const newPlayers = (0, exports.shuffle)(oldGameState.players.map((player) => ({
             ...player,
             coins: 2,
             influences: Array.from({ length: 2 }, () => (0, exports.drawCardFromDeck)(state))

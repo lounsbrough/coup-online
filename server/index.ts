@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction, resetGame, startGame } from './utilities/gameState';
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, killPlayerInfluence, logEvent, mutateGameState, processPendingAction, resetGame, shuffle, startGame } from './utilities/gameState';
 import { generateRoomId } from './utilities/identifiers';
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game';
 
@@ -429,11 +429,13 @@ app.post('/actionChallengeResponse', async (req, res) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
             killPlayerInfluence(state, challengePlayer.name);
-            logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`)
-            actionPlayer.influences.splice(
+            logEvent(state, `${actionPlayer.name} revealed and replaced ${influence}`);
+            logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`);
+            state.deck.push(actionPlayer.influences.splice(
                 actionPlayer.influences.findIndex((i) => i === influence),
                 1
-            );
+            )[0]);
+            state.deck = shuffle(state.deck);
             actionPlayer.influences.push(drawCardFromDeck(state));
             delete state.pendingActionChallenge;
             processPendingAction(state);
@@ -565,11 +567,13 @@ app.post('/blockChallengeResponse', async (req, res) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             killPlayerInfluence(state, challengePlayer.name);
-            blockPlayer.influences.splice(
+            state.deck.push(blockPlayer.influences.splice(
                 blockPlayer.influences.findIndex((i) => i === influence),
                 1
-            );
+            )[0]);
+            state.deck = shuffle(state.deck);
             blockPlayer.influences.push(drawCardFromDeck(state));
+            logEvent(state, `${blockPlayer.name} revealed and replaced ${influence}`);
             logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;
