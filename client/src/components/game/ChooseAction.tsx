@@ -12,7 +12,7 @@ function ChooseAction() {
   const { gameState, setGameState } = useGameStateContext();
   const { colorMode } = useColorModeContext();
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/action`, (async (
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/action`, (async (
     url: string, { arg }: {
       arg: {
         roomId: string,

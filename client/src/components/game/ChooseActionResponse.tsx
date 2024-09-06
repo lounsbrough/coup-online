@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 import { useGameStateContext } from "../../context/GameStateContext";
 import { useColorModeContext } from "../../context/MaterialThemeContext";
-import GameTypography from "../utilities/GameTypography";
+import ColoredTypography from "../utilities/ColoredTypography";
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>();
@@ -13,7 +13,7 @@ function ChooseActionResponse() {
   const { gameState, setGameState } = useGameStateContext();
   const { colorMode } = useColorModeContext();
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/actionResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses, claimedInfluence?: Influences }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/actionResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses, claimedInfluence?: Influences }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -66,11 +66,11 @@ function ChooseActionResponse() {
         </>
       ) : (
         <>
-          <GameTypography sx={{ my: 1, fontWeight: 'bold' }}>
+          <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
             {`${gameState.turnPlayer} is trying to use ${gameState.pendingAction.action}${gameState.pendingAction.targetPlayer
               ? ` on ${gameState.pendingAction.targetPlayer}`
               : ''}`}
-          </GameTypography>
+          </ColoredTypography>
           <Grid2 container spacing={2} justifyContent="center">
             {Object.entries(ResponseAttributes)
               .sort((a, b) => a[0].localeCompare(b[0]))

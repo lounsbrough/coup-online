@@ -11,7 +11,7 @@ function ChooseInfluenceToLose() {
   const { gameState, setGameState } = useGameStateContext();
   const { colorMode } = useColorModeContext();
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/loseInfluence`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/loseInfluence`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -34,7 +34,7 @@ function ChooseInfluenceToLose() {
   return (
     <>
       <Typography sx={{ my: 1, fontWeight: 'bold' }}>
-        Choose an Influence to Lose
+        {`Choose an Influence to ${gameState.pendingInfluenceLoss[gameState.selfPlayer.name][0]?.putBackInDeck ? 'Put Back In Deck' : 'Lose'}`}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences

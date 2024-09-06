@@ -10,7 +10,7 @@ const cors_1 = __importDefault(require("cors"));
 const gameState_1 = require("./utilities/gameState");
 const identifiers_1 = require("./utilities/identifiers");
 const game_1 = require("../shared/types/game");
-const port = process.env.EXPRESS_PORT || 8000;
+const port = process.env.EXPRESS_PORT || 8008;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use((0, body_parser_1.json)());

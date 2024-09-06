@@ -5,14 +5,14 @@ import { useState } from "react";
 import { getPlayerId } from "../../helpers/playerId";
 import { useGameStateContext } from "../../context/GameStateContext";
 import { useColorModeContext } from "../../context/MaterialThemeContext";
-import GameTypography from "../utilities/GameTypography";
+import ColoredTypography from "../utilities/ColoredTypography";
 
 function ChooseBlockResponse() {
   const [error, setError] = useState<string>();
   const { gameState, setGameState } = useGameStateContext();
   const { colorMode } = useColorModeContext();
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -34,9 +34,9 @@ function ChooseBlockResponse() {
 
   return (
     <>
-      <GameTypography sx={{ my: 1, fontWeight: 'bold' }}>
+      <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
         {`${gameState.pendingBlock.sourcePlayer} is trying to block ${gameState.turnPlayer} as ${gameState.pendingBlock.claimedInfluence}`}
-      </GameTypography>
+      </ColoredTypography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.entries(ResponseAttributes)
           .sort((a, b) => a[0].localeCompare(b[0]))

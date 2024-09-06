@@ -12,7 +12,7 @@ function JoinGame() {
   const [error, setError] = useState<string>();
   const navigate = useNavigate();
 
-  const { trigger } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8000'}/joinGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string, playerName: string; }; }) => {
+  const { trigger } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/joinGame`, (async (url: string, { arg }: { arg: { roomId: string; playerId: string, playerName: string; }; }) => {
     setError(undefined);
     return fetch(url, {
       method: 'POST',
