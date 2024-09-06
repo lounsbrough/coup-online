@@ -34,7 +34,7 @@ function ChooseInfluenceToLose() {
   return (
     <>
       <Typography sx={{ my: 1, fontWeight: 'bold' }}>
-        Choose an Influence to Lose:
+        Choose an Influence to Lose
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences

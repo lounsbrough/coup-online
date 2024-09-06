@@ -49,7 +49,7 @@ function ChooseAction() {
       {selectedAction ? (
         <>
           <Typography sx={{ my: 1, fontWeight: 'bold' }}>
-            Choose a Target:
+            Choose a Target
           </Typography>
           <Grid2 container spacing={2} justifyContent="center">
             {gameState.players.map((player) => {
@@ -76,7 +76,7 @@ function ChooseAction() {
       ) : (
         <>
           <Typography sx={{ my: 1, fontWeight: 'bold' }}>
-            Choose an Action:
+            Choose an Action
           </Typography>
           <Grid2 container spacing={2} justifyContent="center">
             {Object.entries(ActionAttributes)
