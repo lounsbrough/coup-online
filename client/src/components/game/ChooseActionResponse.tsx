@@ -38,7 +38,7 @@ function ChooseActionResponse() {
       {selectedResponse ? (
         <>
           <Typography sx={{ my: 1, fontWeight: 'bold' }}>
-            Claim an Influence:
+            Claim an Influence
           </Typography>
           <Grid2 container spacing={2} justifyContent="center">
             {Object.entries(InfluenceAttributes)
