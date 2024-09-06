@@ -362,6 +362,13 @@ app.post('/actionResponse', async (req, res) => {
             return;
         }
 
+        if (gameState.pendingAction.targetPlayer &&
+            player.name !== gameState.pendingAction.targetPlayer
+        ) {
+            res.status(400).send(`You are not the target of the pending action`);
+            return;
+        }
+
         if (!Object.values(Influences).includes(claimedInfluence)) {
             res.status(400).send('Unknown claimedInfluence');
             return;

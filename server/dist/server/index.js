@@ -296,6 +296,11 @@ app.post('/actionResponse', async (req, res) => {
             res.status(400).send('claimedInfluence is required when blocking');
             return;
         }
+        if (gameState.pendingAction.targetPlayer &&
+            player.name !== gameState.pendingAction.targetPlayer) {
+            res.status(400).send(`You are not the target of the pending action`);
+            return;
+        }
         if (!Object.values(game_1.Influences).includes(claimedInfluence)) {
             res.status(400).send('Unknown claimedInfluence');
             return;
