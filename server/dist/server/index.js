@@ -296,6 +296,10 @@ app.post('/actionResponse', async (req, res) => {
             res.status(400).send('claimedInfluence is required when blocking');
             return;
         }
+        if (game_1.InfluenceAttributes[claimedInfluence].legalBlock !== gameState.pendingAction.action) {
+            res.status(400).send('claimedInfluence can not block this action');
+            return;
+        }
         if (gameState.pendingAction.targetPlayer &&
             player.name !== gameState.pendingAction.targetPlayer) {
             res.status(400).send(`You are not the target of the pending action`);
@@ -309,7 +313,13 @@ app.post('/actionResponse', async (req, res) => {
             state.pendingAction.pendingPlayers = [];
             state.pendingBlock = {
                 sourcePlayer: player.name,
-                claimedInfluence
+                claimedInfluence,
+                pendingPlayers: state.players.reduce((agg, cur) => {
+                    if (cur.influences.length && cur.name !== player.name) {
+                        agg.push(cur.name);
+                    }
+                    return agg;
+                }, []),
             };
             (0, gameState_1.logEvent)(state, `${player.name} is trying to block ${state.turnPlayer} as ${claimedInfluence}`);
         });
@@ -400,7 +410,9 @@ app.post('/blockResponse', async (req, res) => {
         res.status(400).send('You had your chance');
         return;
     }
-    if (!gameState.pendingBlock) {
+    if (!gameState.pendingBlock
+        || gameState.pendingBlockChallenge
+        || !gameState.pendingBlock.pendingPlayers.includes(player.name)) {
         res.status(400).send('You can\'t choose a block response right now');
         return;
     }
@@ -414,24 +426,32 @@ app.post('/blockResponse', async (req, res) => {
     }
     if (response === game_1.Responses.Challenge) {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
+            state.pendingBlock.pendingPlayers = [];
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             (0, gameState_1.logEvent)(state, `${player.name} is challenging ${blockPlayer.name}`);
             state.pendingBlockChallenge = { sourcePlayer: player.name };
         });
     }
     else if (response === game_1.Responses.Pass) {
-        await (0, gameState_1.mutateGameState)(roomId, (state) => {
-            const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
-            (0, gameState_1.logEvent)(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
-            if (state.pendingAction.action === game_1.Actions.Assassinate) {
-                state.players.find(({ name }) => name === state.turnPlayer).coins
-                    -= game_1.ActionAttributes.Assassinate.coinsRequired;
-            }
-            state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
-            delete state.pendingBlock;
-            delete state.pendingActionChallenge;
-            delete state.pendingAction;
-        });
+        if (gameState.pendingBlock.pendingPlayers.length === 1) {
+            await (0, gameState_1.mutateGameState)(roomId, (state) => {
+                const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
+                (0, gameState_1.logEvent)(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
+                if (state.pendingAction.action === game_1.Actions.Assassinate) {
+                    state.players.find(({ name }) => name === state.turnPlayer).coins
+                        -= game_1.ActionAttributes.Assassinate.coinsRequired;
+                }
+                state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
+                delete state.pendingBlock;
+                delete state.pendingActionChallenge;
+                delete state.pendingAction;
+            });
+        }
+        else {
+            await (0, gameState_1.mutateGameState)(roomId, (state) => {
+                state.pendingBlock.pendingPlayers.splice(state.pendingBlock.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name), 1);
+            });
+        }
     }
     res.status(200).json(await (0, gameState_1.getPublicGameState)(roomId, playerId));
 });
@@ -469,7 +489,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
         res.status(400).send('You don\'t have that influence');
         return;
     }
-    if (game_1.InfluenceAttributes[influence].legalBlock === gameState.pendingAction.action) {
+    if (influence === gameState.pendingBlock.claimedInfluence) {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);

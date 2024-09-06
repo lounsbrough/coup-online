@@ -45,9 +45,10 @@ function PlayerDecision() {
     return <ChooseChallengeResponse />;
   }
 
-  if (isMyTurn &&
-    gameState.pendingBlock &&
-    !gameState.pendingBlockChallenge
+  if (gameState.pendingBlock &&
+    !gameState.pendingBlockChallenge &&
+    gameState.selfPlayer.name !== gameState.pendingBlock.sourcePlayer &&
+    gameState.pendingBlock.pendingPlayers.includes(gameState.selfPlayer.name)
   ) {
     return <ChooseBlockResponse />;
   }

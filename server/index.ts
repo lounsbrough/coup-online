@@ -362,6 +362,11 @@ app.post('/actionResponse', async (req, res) => {
             return;
         }
 
+        if (InfluenceAttributes[claimedInfluence as Influences].legalBlock !== gameState.pendingAction.action) {
+            res.status(400).send('claimedInfluence can not block this action');
+            return;
+        }
+
         if (gameState.pendingAction.targetPlayer &&
             player.name !== gameState.pendingAction.targetPlayer
         ) {
@@ -378,7 +383,13 @@ app.post('/actionResponse', async (req, res) => {
             state.pendingAction.pendingPlayers = [];
             state.pendingBlock = {
                 sourcePlayer: player.name,
-                claimedInfluence
+                claimedInfluence,
+                pendingPlayers: state.players.reduce((agg: string[], cur) => {
+                    if (cur.influences.length && cur.name !== player.name) {
+                        agg.push(cur.name)
+                    }
+                    return agg;
+                }, []),
             }
             logEvent(state, `${player.name} is trying to block ${state.turnPlayer} as ${claimedInfluence}`)
         });
@@ -495,7 +506,10 @@ app.post('/blockResponse', async (req, res) => {
         return;
     }
 
-    if (!gameState.pendingBlock) {
+    if (!gameState.pendingBlock
+        || gameState.pendingBlockChallenge
+        || !gameState.pendingBlock.pendingPlayers.includes(player.name)
+    ) {
         res.status(400).send('You can\'t choose a block response right now');
         return;
     }
@@ -512,23 +526,33 @@ app.post('/blockResponse', async (req, res) => {
 
     if (response === Responses.Challenge) {
         await mutateGameState(roomId, (state) => {
+            state.pendingBlock.pendingPlayers = [];
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             logEvent(state, `${player.name} is challenging ${blockPlayer.name}`)
             state.pendingBlockChallenge = { sourcePlayer: player.name }
         });
     } else if (response === Responses.Pass) {
-        await mutateGameState(roomId, (state) => {
-            const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
-            logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
-            if (state.pendingAction.action === Actions.Assassinate) {
-                state.players.find(({ name }) => name === state.turnPlayer).coins
-                    -= ActionAttributes.Assassinate.coinsRequired;
-            }
-            state.turnPlayer = getNextPlayerTurn(state);
-            delete state.pendingBlock;
-            delete state.pendingActionChallenge;
-            delete state.pendingAction;
-        });
+        if (gameState.pendingBlock.pendingPlayers.length === 1) {
+            await mutateGameState(roomId, (state) => {
+                const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
+                logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
+                if (state.pendingAction.action === Actions.Assassinate) {
+                    state.players.find(({ name }) => name === state.turnPlayer).coins
+                        -= ActionAttributes.Assassinate.coinsRequired;
+                }
+                state.turnPlayer = getNextPlayerTurn(state);
+                delete state.pendingBlock;
+                delete state.pendingActionChallenge;
+                delete state.pendingAction;
+            });
+        } else {
+            await mutateGameState(roomId, (state) => {
+                state.pendingBlock.pendingPlayers.splice(
+                    state.pendingBlock.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name),
+                    1
+                );
+            });
+        }
     }
 
     res.status(200).json(await getPublicGameState(roomId, playerId));
@@ -578,7 +602,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
         return;
     }
 
-    if (InfluenceAttributes[influence as Influences].legalBlock === gameState.pendingAction.action) {
+    if (influence === gameState.pendingBlock.claimedInfluence) {
         await mutateGameState(roomId, (state) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
