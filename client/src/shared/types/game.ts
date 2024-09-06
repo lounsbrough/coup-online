@@ -181,6 +181,7 @@ export type GameState = {
     targetPlayer?: string
     action: Actions
     pendingPlayers: string[]
+    claimConfirmed: boolean
   }
   pendingActionChallenge?: {
     sourcePlayer: string

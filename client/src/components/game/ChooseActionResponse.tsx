@@ -76,7 +76,9 @@ function ChooseActionResponse() {
               .sort((a, b) => a[0].localeCompare(b[0]))
               .map(([response, responseAttributes], index) => {
                 if (response === Responses.Challenge &&
-                  !ActionAttributes[gameState.pendingAction?.action as Actions].challengeable) {
+                  (!ActionAttributes[gameState.pendingAction?.action as Actions].challengeable
+                    || gameState.pendingActionChallenge
+                    || gameState.pendingAction?.claimConfirmed)) {
                   return null;
                 }
 
