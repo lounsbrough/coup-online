@@ -133,7 +133,8 @@ exports.createNewGame = createNewGame;
 const startGame = async (roomId) => {
     await (0, exports.mutateGameState)(roomId, (state) => {
         state.isStarted = true;
-        state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name;
+        state.players = (0, exports.shuffle)(state.players);
+        state.turnPlayer = state.players[0].name;
         (0, exports.logEvent)(state, 'Game has started');
     });
 };

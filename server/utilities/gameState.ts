@@ -84,7 +84,7 @@ export const shuffle = <T>(array: T[]): T[] => {
   const shuffled: T[] = [];
 
   while (unShuffled.length) {
-    shuffled.push(unShuffled.splice(Math.floor(Math.random() * unShuffled.length), 1)[0])
+    shuffled.push(unShuffled.splice(Math.floor(Math.random() * unShuffled.length), 1)[0]);
   }
 
   return shuffled;
@@ -149,7 +149,8 @@ export const createNewGame = async (roomId: string) => {
 export const startGame = async (roomId: string) => {
   await mutateGameState(roomId, (state) => {
     state.isStarted = true;
-    state.turnPlayer = state.players[Math.floor(Math.random() * state.players.length)].name
+    state.players = shuffle(state.players);
+    state.turnPlayer = state.players[0].name;
     logEvent(state, 'Game has started');
   });
 }
