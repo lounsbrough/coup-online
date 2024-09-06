@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { useGameStateContext } from "../../context/GameStateContext";
 import GameTypography from "../utilities/GameTypography";
@@ -6,6 +6,8 @@ import GameTypography from "../utilities/GameTypography";
 function EventLog() {
   const logBox = useRef<HTMLElement>(null);
   const { gameState } = useGameStateContext();
+
+  const isSmallScreen = useMediaQuery('screen and (max-width: 786px)');
 
   useEffect(() => {
     logBox.current?.scrollTo({
@@ -21,7 +23,7 @@ function EventLog() {
   return (
     <Box ref={logBox} sx={{
       width: '100%',
-      maxHeight: '85dvh',
+      maxHeight: isSmallScreen ? '25dvh' : '85dvh',
       overflowY: 'auto',
       p: 2
     }}>

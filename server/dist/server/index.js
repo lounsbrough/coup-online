@@ -350,8 +350,10 @@ app.post('/actionChallengeResponse', async (req, res) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
             (0, gameState_1.killPlayerInfluence)(state, challengePlayer.name);
+            (0, gameState_1.logEvent)(state, `${actionPlayer.name} revealed and replaced ${influence}`);
             (0, gameState_1.logEvent)(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`);
-            actionPlayer.influences.splice(actionPlayer.influences.findIndex((i) => i === influence), 1);
+            state.deck.push(actionPlayer.influences.splice(actionPlayer.influences.findIndex((i) => i === influence), 1)[0]);
+            state.deck = (0, gameState_1.shuffle)(state.deck);
             actionPlayer.influences.push((0, gameState_1.drawCardFromDeck)(state));
             delete state.pendingActionChallenge;
             (0, gameState_1.processPendingAction)(state);
@@ -461,8 +463,10 @@ app.post('/blockChallengeResponse', async (req, res) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer);
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             (0, gameState_1.killPlayerInfluence)(state, challengePlayer.name);
-            blockPlayer.influences.splice(blockPlayer.influences.findIndex((i) => i === influence), 1);
+            state.deck.push(blockPlayer.influences.splice(blockPlayer.influences.findIndex((i) => i === influence), 1)[0]);
+            state.deck = (0, gameState_1.shuffle)(state.deck);
             blockPlayer.influences.push((0, gameState_1.drawCardFromDeck)(state));
+            (0, gameState_1.logEvent)(state, `${blockPlayer.name} revealed and replaced ${influence}`);
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`);
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;

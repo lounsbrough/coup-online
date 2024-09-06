@@ -79,7 +79,7 @@ export const killPlayerInfluence = (
   ];
 }
 
-const shuffle = <T>(array: T[]): T[] => {
+export const shuffle = <T>(array: T[]): T[] => {
   const unShuffled = [...array];
   const shuffled: T[] = [];
 

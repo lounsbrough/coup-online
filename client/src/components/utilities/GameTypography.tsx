@@ -24,6 +24,7 @@ function GameTypography({ children, ...props }: Omit<TypographyProps, 'children'
         .map<[string, string]>(([influence, attributes]) => [influence, attributes.color[colorMode]]),
       ...gameState?.players
         .filter(({ name }) => children.includes(name))
+        .sort((a, b) => a.name.length - b.name.length)
         .map<[string, string]>(({ name, color }) => [name, color])
     ];
   }, [children, gameState?.players, colorMode]);
