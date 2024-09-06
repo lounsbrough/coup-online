@@ -81,7 +81,10 @@ function ChooseActionResponse() {
                 }
 
                 if (response === Responses.Block &&
-                  !ActionAttributes[gameState.pendingAction?.action as Actions].blockable) {
+                  (!ActionAttributes[gameState.pendingAction?.action as Actions].blockable ||
+                    (gameState.pendingAction?.targetPlayer &&
+                      gameState.selfPlayer.name !== gameState.pendingAction?.targetPlayer
+                    ))) {
                   return null;
                 }
 
