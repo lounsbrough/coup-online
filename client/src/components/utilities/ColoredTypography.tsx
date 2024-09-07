@@ -34,7 +34,7 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
   const coloredSegments: Segment[] = [];
 
   const matchedSpecialWords = colorsMap.length ? [
-    ...children.matchAll(new RegExp(colorsMap.map(([match]) => `\\b${match}\\b`).join('|'), 'g'))
+    ...children.matchAll(new RegExp(colorsMap.map(([match]) => `(?<!\\S)${match}(?!\\S)`).join('|'), 'g'))
   ]
     .map(({ index: position, '0': word }) => ({ position, word }))
     .sort((a, b) => a.position! - b.position!) : [];

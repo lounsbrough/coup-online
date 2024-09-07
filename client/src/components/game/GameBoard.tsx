@@ -45,11 +45,9 @@ function GameBoard() {
         )}
         {turnPlayer && !gameIsOver && (
           <Box mb={2}>
-            <Typography
-              component="span"
-              variant="h5"
-              sx={{ fontWeight: 'bold', color: turnPlayer.color }}
-            >{gameState.turnPlayer}</Typography>
+            <Typography component="span" variant="h5" sx={{
+              fontWeight: 'bold', color: turnPlayer.color
+            }}>{gameState.turnPlayer}</Typography>
             <Typography component="span" variant="h5">'s Turn</Typography>
           </Box>
         )}
