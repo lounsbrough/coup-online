@@ -58,7 +58,7 @@ const mutateGameState = async (roomId, mutation) => {
 };
 exports.mutateGameState = mutateGameState;
 const promptPlayerToLoseInfluence = (state, playerName, putBackInDeck = false) => {
-    if (state.players.find(({ name }) => name === playerName).influences.length <= state.pendingInfluenceLoss[playerName]?.length ?? 0) {
+    if (state.players.find(({ name }) => name === playerName).influences.length <= (state.pendingInfluenceLoss[playerName]?.length ?? 0)) {
         return;
     }
     state.pendingInfluenceLoss[playerName] = [
