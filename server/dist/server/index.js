@@ -377,7 +377,13 @@ app.post('/actionChallengeResponse', async (req, res) => {
             delete state.pendingActionChallenge;
             state.pendingAction.claimConfirmed = true;
             if (state.pendingAction.targetPlayer) {
-                state.pendingAction.pendingPlayers = [state.pendingAction.targetPlayer];
+                const targetPlayer = gameState.players.find(({ name }) => name === state.pendingAction.targetPlayer);
+                if (targetPlayer.influences.length > state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0) {
+                    state.pendingAction.pendingPlayers = [state.pendingAction.targetPlayer];
+                }
+                else {
+                    (0, gameState_1.processPendingAction)(state);
+                }
             }
             else if (game_1.ActionAttributes[state.pendingAction.action].blockable) {
                 state.pendingAction.pendingPlayers = state.players.reduce((agg, cur) => {
