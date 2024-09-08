@@ -464,7 +464,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
             state.pendingAction.claimConfirmed = true;
             if (state.pendingAction.targetPlayer) {
                 const targetPlayer = gameState.players.find(({ name }) => name === state.pendingAction.targetPlayer);
-                if (targetPlayer.influences.length > state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0) {
+                if (targetPlayer.influences.length > (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)) {
                     state.pendingAction.pendingPlayers = [state.pendingAction.targetPlayer];
                 } else {
                     processPendingAction(state);
