@@ -7,7 +7,6 @@ import SnarkyDeadComment from "./SnarkyDeadComment";
 import Victory from "./Victory";
 import PlayAgain from "./PlayAgain";
 import { useGameStateContext } from "../../context/GameStateContext";
-import VibrateOnTurn from "./VibrateOnTurn";
 
 function GameBoard() {
   const { gameState } = useGameStateContext();
@@ -80,7 +79,6 @@ function GameBoard() {
       >
         <EventLog />
       </Grid2>
-      <VibrateOnTurn />
     </Grid2>
   )
 }
