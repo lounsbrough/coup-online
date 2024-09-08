@@ -5,6 +5,7 @@ import ChooseChallengeResponse from "./ChooseChallengeResponse";
 import ChooseInfluenceToLose from "./ChooseInfluenceToLose";
 import ChooseBlockResponse from "./ChooseBlockResponse";
 import { useGameStateContext } from "../../context/GameStateContext";
+import { Circle } from "@mui/icons-material";
 
 function PlayerDecision() {
   const { gameState } = useGameStateContext();
@@ -61,7 +62,33 @@ function PlayerDecision() {
     return <ChooseChallengeResponse />;
   }
 
-  return <Typography>Waiting for other players</Typography>;
+  const waitingForColors = new Set<string>();
+  if (!gameState.pendingAction) {
+    waitingForColors.add(gameState.players.find(({ name }) => gameState.turnPlayer === name)!.color);
+  } else if (gameState.pendingBlockChallenge) {
+    waitingForColors.add(gameState.players.find(({ name }) => gameState.pendingBlock?.sourcePlayer === name)!.color);
+  } else if (gameState.pendingBlock) {
+    gameState.players
+      .filter(({ name }) => gameState.pendingBlock?.pendingPlayers.includes(name))
+      .forEach(({ color }) => waitingForColors.add(color));
+  } else if (gameState.pendingActionChallenge) {
+    waitingForColors.add(gameState.players.find(({ name }) => gameState.turnPlayer === name)!.color);
+  } else if (gameState.pendingAction) {
+    gameState.players
+      .filter(({ name }) => gameState.pendingAction?.pendingPlayers.includes(name))
+      .forEach(({ color }) => waitingForColors.add(color));
+  }
+
+  return (
+    <>
+      <Typography>Waiting for other players</Typography>
+      <Typography>
+        {[...waitingForColors].map((color) =>
+          <Circle key={color} sx={{ color }} />
+        )}
+      </Typography>
+    </>
+  );
 }
 
 export default PlayerDecision;
