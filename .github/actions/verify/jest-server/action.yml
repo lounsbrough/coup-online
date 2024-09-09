@@ -1,0 +1,10 @@
+name: Run Jest Server Tests
+
+runs:
+  using: composite
+  steps:
+  - uses: actions/checkout@v4
+  - uses: ./.github/actions/setup-node
+  - run: |
+      pnpm jest
+    shell: bash

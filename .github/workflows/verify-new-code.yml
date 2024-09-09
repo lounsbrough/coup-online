@@ -1,0 +1,11 @@
+name: Verify New Code
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [synchronize, opened, reopened, edited]
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+    secrets: inherit
