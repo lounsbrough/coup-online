@@ -1,14 +1,14 @@
-import { Box, Grid2, Typography } from "@mui/material";
+import { Box, Grid2, Typography } from "@mui/material"
 import { InfluenceAttributes } from '../../shared/types/game'
-import { useGameStateContext } from "../../context/GameStateContext";
-import { useColorModeContext } from "../../context/MaterialThemeContext";
+import { useGameStateContext } from "../../context/GameStateContext"
+import { useColorModeContext } from "../../context/MaterialThemeContext"
 
 function PlayerInfluences() {
-  const { gameState } = useGameStateContext();
-  const { colorMode } = useColorModeContext();
+  const { gameState } = useGameStateContext()
+  const { colorMode } = useColorModeContext()
 
   if (!gameState?.selfPlayer?.influences?.length) {
-    return null;
+    return null
   }
 
   return (
@@ -35,4 +35,4 @@ function PlayerInfluences() {
   )
 }
 
-export default PlayerInfluences;
+export default PlayerInfluences

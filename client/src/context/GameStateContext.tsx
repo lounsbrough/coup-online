@@ -1,9 +1,9 @@
-import { useState, createContext, useContext, ReactNode } from 'react';
-import useSWR from 'swr';
-import { PublicGameState } from '../shared/types/game';
-import { getPlayerId } from '../helpers/playerId';
-import { Typography } from '@mui/material';
-import { useSearchParams } from 'react-router-dom';
+import { useState, createContext, useContext, ReactNode } from 'react'
+import useSWR from 'swr'
+import { PublicGameState } from '../shared/types/game'
+import { getPlayerId } from '../helpers/playerId'
+import { Typography } from '@mui/material'
+import { useSearchParams } from 'react-router-dom'
 
 type GameStateContextType = {
   gameState?: PublicGameState,
@@ -12,18 +12,18 @@ type GameStateContextType = {
 
 export const GameStateContext = createContext<GameStateContextType>({
   setGameState: () => { }
-});
+})
 
 export function GameStateContextProvider({ children }: { children: ReactNode }) {
-  const [gameState, setGameState] = useState<PublicGameState>();
-  const [searchParams] = useSearchParams();
+  const [gameState, setGameState] = useState<PublicGameState>()
+  const [searchParams] = useSearchParams()
 
-  const roomId = searchParams.get('roomId');
+  const roomId = searchParams.get('roomId')
 
   const { error } = useSWR<void, Error>(
     `${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/gameState?roomId=${roomId}&playerId=${getPlayerId()}`,
     async function (input: RequestInfo, init?: RequestInit) {
-      const res = await fetch(input, init);
+      const res = await fetch(input, init)
 
       if (!res.ok) {
         if (res.status === 404) {
@@ -33,26 +33,26 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
         }
       }
 
-      const newState = await res.json();
+      const newState = await res.json()
 
       if (JSON.stringify(newState) !== JSON.stringify(gameState)) {
-        setGameState(newState);
+        setGameState(newState)
       }
     },
     { refreshInterval: 2000 }
-  );
+  )
 
   const contextValue = {
     gameState,
     setGameState
-  };
+  }
 
   return (
     <GameStateContext.Provider value={contextValue}>
       {children}
       {!!error && <Typography color='error' sx={{ m: 5 }}>{error.message}</Typography>}
     </GameStateContext.Provider>
-  );
+  )
 }
 
-export const useGameStateContext = () => useContext(GameStateContext);
+export const useGameStateContext = () => useContext(GameStateContext)

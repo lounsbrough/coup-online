@@ -1,15 +1,15 @@
-import globals from "globals"
-import pluginJs from "@eslint/js"
-import tseslint from "typescript-eslint"
+import eslint from '@eslint/js'
+import tseslint from 'typescript-eslint'
 
-export default [
-  { files: ["**/*.{js,jsx,ts,tsx}"] },
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
+export default tseslint.config(
+  {
+    ignores: ['build/']
+  },
+  eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
     rules: {
       semi: ['error', 'never']
     }
   }
-]
+)
