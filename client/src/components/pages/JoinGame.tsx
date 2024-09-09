@@ -60,7 +60,7 @@ function JoinGame() {
               <TextField
                 value={roomId}
                 onChange={(event) => {
-                  setRoomId(event.target.value.slice(0, 6));
+                  setRoomId(event.target.value.slice(0, 6).toUpperCase());
                 }}
                 label="Room Id"
                 variant="standard"
