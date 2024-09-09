@@ -1,16 +1,16 @@
-import { Button, Grid2, Typography } from "@mui/material";
-import { InfluenceAttributes, Influences } from "../../shared/types/game";
-import useSWRMutation from "swr/mutation";
-import { useState } from "react";
-import { getPlayerId } from "../../helpers/playerId";
-import { useGameStateContext } from "../../context/GameStateContext";
-import { useColorModeContext } from "../../context/MaterialThemeContext";
-import ColoredTypography from "../utilities/ColoredTypography";
+import { Button, Grid2, Typography } from "@mui/material"
+import { InfluenceAttributes, Influences } from "../../shared/types/game"
+import useSWRMutation from "swr/mutation"
+import { useState } from "react"
+import { getPlayerId } from "../../helpers/playerId"
+import { useGameStateContext } from "../../context/GameStateContext"
+import { useColorModeContext } from "../../context/MaterialThemeContext"
+import ColoredTypography from "../utilities/ColoredTypography"
 
 function ChooseChallengeResponse() {
-  const [error, setError] = useState<string>();
-  const { gameState, setGameState } = useGameStateContext();
-  const { colorMode } = useColorModeContext();
+  const [error, setError] = useState<string>()
+  const { gameState, setGameState } = useGameStateContext()
+  const { colorMode } = useColorModeContext()
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
     return fetch(url, {
@@ -21,19 +21,19 @@ function ChooseChallengeResponse() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        setGameState(await res.json());
+        setGameState(await res.json())
       } else {
-        setError('Error responding to challenge');
+        setError('Error responding to challenge')
       }
     })
-  }));
+  }))
 
   if (!gameState?.pendingActionChallenge && !gameState?.pendingBlockChallenge) {
-    return null;
+    return null
   }
 
-  const challengingPlayer = gameState.pendingBlockChallenge?.sourcePlayer || gameState.pendingActionChallenge?.sourcePlayer;
-  const challengedPlayer = gameState.pendingBlock?.sourcePlayer || gameState.turnPlayer;
+  const challengingPlayer = gameState.pendingBlockChallenge?.sourcePlayer || gameState.pendingActionChallenge?.sourcePlayer
+  const challengedPlayer = gameState.pendingBlock?.sourcePlayer || gameState.turnPlayer
 
   return (
     <>
@@ -72,7 +72,7 @@ function ChooseChallengeResponse() {
       </Grid2>
       {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
-  );
+  )
 }
 
-export default ChooseChallengeResponse;
+export default ChooseChallengeResponse

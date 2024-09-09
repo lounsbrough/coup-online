@@ -1,23 +1,23 @@
-import { Box, useMediaQuery } from "@mui/material";
-import { useEffect, useRef } from "react";
-import { useGameStateContext } from "../../context/GameStateContext";
-import ColoredTypography from "../utilities/ColoredTypography";
+import { Box, useMediaQuery } from "@mui/material"
+import { useEffect, useRef } from "react"
+import { useGameStateContext } from "../../context/GameStateContext"
+import ColoredTypography from "../utilities/ColoredTypography"
 
 function EventLog() {
-  const logBox = useRef<HTMLElement>(null);
-  const { gameState } = useGameStateContext();
+  const logBox = useRef<HTMLElement>(null)
+  const { gameState } = useGameStateContext()
 
-  const isSmallScreen = useMediaQuery('screen and (max-width: 786px)');
+  const isSmallScreen = useMediaQuery('screen and (max-width: 786px)')
 
   useEffect(() => {
     logBox.current?.scrollTo({
       top: logBox.current.scrollHeight,
       behavior: "smooth"
-    });
+    })
   }, [gameState?.eventLogs?.length])
 
   if (!gameState) {
-    return null;
+    return null
   }
 
   return (
@@ -34,4 +34,4 @@ function EventLog() {
   )
 }
 
-export default EventLog;
+export default EventLog

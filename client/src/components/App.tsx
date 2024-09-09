@@ -1,18 +1,18 @@
-import { Route, Routes } from 'react-router-dom';
-import { Link, Typography } from '@mui/material';
-import JoinGame from './pages/JoinGame';
-import CreateGame from './pages/CreateGame';
-import Home from './pages/Home';
-import Game from './pages/Game';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import './App.css';
-import { GameStateContextProvider } from '../context/GameStateContext';
-import { MaterialThemeContextProvider } from '../context/MaterialThemeContext';
-import ColorModeToggle from './ColorModeToggle';
-import Rules from './Rules';
+import { Route, Routes } from 'react-router-dom'
+import { Link, Typography } from '@mui/material'
+import JoinGame from './pages/JoinGame'
+import CreateGame from './pages/CreateGame'
+import Home from './pages/Home'
+import Game from './pages/Game'
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+import './App.css'
+import { GameStateContextProvider } from '../context/GameStateContext'
+import { MaterialThemeContextProvider } from '../context/MaterialThemeContext'
+import ColorModeToggle from './ColorModeToggle'
+import Rules from './Rules'
 
 function App() {
   return (
@@ -42,7 +42,7 @@ function App() {
         </Routes>
       </MaterialThemeContextProvider>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
