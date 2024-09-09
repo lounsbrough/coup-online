@@ -10,3 +10,8 @@ runs:
       cd server
       pnpm lint
     shell: bash
+  - name: Client Lint
+    run: |
+      cd client
+      pnpm lint
+    shell: bash
