@@ -5,7 +5,8 @@ runs:
   steps:
   - uses: actions/checkout@v4
   - uses: ./.github/actions/setup-node
-  - run: |
+  - name: Server Lint
+    run: |
       cd server
       pnpm lint
     shell: bash
