@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/verify/lint
-  jest-tests:
+  jest-server:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
