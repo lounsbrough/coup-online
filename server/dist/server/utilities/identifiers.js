@@ -2,13 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateRoomId = void 0;
 const generateRoomId = () => {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
-    const charactersLength = characters.length;
-    for (let i = 0; i < 6; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+    const characterCodes = [{ start: 48, count: 10 }, { start: 65, count: 26 }]
+        .flatMap(({ start, count }) => Array.from({ length: count }, (_, i) => start + i));
+    return Array.from({ length: 6 }, () => String.fromCharCode(characterCodes[Math.floor(Math.random() * characterCodes.length)])).join('');
 };
 exports.generateRoomId = generateRoomId;
 //# sourceMappingURL=identifiers.js.map

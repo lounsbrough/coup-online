@@ -9,6 +9,7 @@
     "add-build"
   ],
   "scripts": {
+    "lint": "eslint",
     "test": "jest",
     "build": "rm -rf dist && tsc",
     "dev": "ts-node index.ts",
