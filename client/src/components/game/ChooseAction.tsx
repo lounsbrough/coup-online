@@ -1,16 +1,16 @@
-import { Button, Grid2, Tooltip, Typography } from "@mui/material";
-import { ActionAttributes, Actions } from "../../shared/types/game";
-import useSWRMutation from "swr/mutation";
-import { useState } from "react";
-import { getPlayerId } from "../../helpers/playerId";
-import { useGameStateContext } from "../../context/GameStateContext";
-import { useColorModeContext } from "../../context/MaterialThemeContext";
+import { Button, Grid2, Tooltip, Typography } from "@mui/material"
+import { ActionAttributes, Actions } from "../../shared/types/game"
+import useSWRMutation from "swr/mutation"
+import { useState } from "react"
+import { getPlayerId } from "../../helpers/playerId"
+import { useGameStateContext } from "../../context/GameStateContext"
+import { useColorModeContext } from "../../context/MaterialThemeContext"
 
 function ChooseAction() {
-  const [selectedAction, setSelectedAction] = useState<Actions>();
-  const [error, setError] = useState<string>();
-  const { gameState, setGameState } = useGameStateContext();
-  const { colorMode } = useColorModeContext();
+  const [selectedAction, setSelectedAction] = useState<Actions>()
+  const [error, setError] = useState<string>()
+  const { gameState, setGameState } = useGameStateContext()
+  const { colorMode } = useColorModeContext()
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/action`, (async (
     url: string, { arg }: {
@@ -29,19 +29,19 @@ function ChooseAction() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        setGameState(await res.json());
+        setGameState(await res.json())
       } else {
         if (res.status === 400) {
-          setError(await res.text());
+          setError(await res.text())
         } else {
-          setError('Error choosing action');
+          setError('Error choosing action')
         }
       }
     })
-  }));
+  }))
 
   if (!gameState) {
-    return null;
+    return null
   }
 
   return (
@@ -55,7 +55,7 @@ function ChooseAction() {
             {gameState.players.map((player) => {
               if (player.name === gameState.selfPlayer.name || !player.influenceCount
               ) {
-                return null;
+                return null
               }
               return <Button
                 key={player.name}
@@ -82,10 +82,10 @@ function ChooseAction() {
             {Object.entries(ActionAttributes)
               .sort((a, b) => a[0].localeCompare(b[0]))
               .map(([action, actionAttributes], index) => {
-                const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer.coins < actionAttributes.coinsRequired;
+                const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer.coins < actionAttributes.coinsRequired
 
                 if (gameState.selfPlayer.coins >= 10 && action !== Actions.Coup) {
-                  return null;
+                  return null
                 }
 
                 return (
@@ -105,7 +105,7 @@ function ChooseAction() {
                       <Button
                         onClick={() => {
                           if (actionAttributes.requiresTarget) {
-                            setSelectedAction(action as Actions);
+                            setSelectedAction(action as Actions)
                           } else {
                             trigger({
                               roomId: gameState.roomId,
@@ -123,14 +123,14 @@ function ChooseAction() {
                       </Button>
                     )}
                   </Grid2>
-                );
+                )
               })}
           </Grid2>
         </>
       )}
       {error && <Typography color='error' sx={{ mt: 3 }}>{error}</Typography>}
     </>
-  );
+  )
 }
 
-export default ChooseAction;
+export default ChooseAction

@@ -1,18 +1,18 @@
-import { useMemo } from 'react';
-import { Typography, TypographyProps } from "@mui/material";
-import { useGameStateContext } from "../../context/GameStateContext";
-import { useColorModeContext } from "../../context/MaterialThemeContext";
-import { ActionAttributes, InfluenceAttributes } from "../../shared/types/game";
+import { useMemo } from 'react'
+import { Typography, TypographyProps } from "@mui/material"
+import { useGameStateContext } from "../../context/GameStateContext"
+import { useColorModeContext } from "../../context/MaterialThemeContext"
+import { ActionAttributes, InfluenceAttributes } from "../../shared/types/game"
 
 function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'children'> & {
   children: string
 }) {
-  const { gameState } = useGameStateContext();
-  const { colorMode } = useColorModeContext();
+  const { gameState } = useGameStateContext()
+  const { colorMode } = useColorModeContext()
 
   const colorsMap: [string, string][] = useMemo(() => {
     if (!gameState?.players) {
-      return [];
+      return []
     }
 
     return [
@@ -22,26 +22,26 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
       ...Object.entries(InfluenceAttributes)
         .filter(([influence]) => children.includes(influence))
         .map<[string, string]>(([influence, attributes]) => [influence, attributes.color[colorMode]]),
-      ...gameState?.players
+      ...gameState.players
         .filter(({ name }) => children.includes(name))
         .sort((a, b) => a.name.length - b.name.length)
         .map<[string, string]>(({ name, color }) => [name, color])
-    ];
-  }, [children, gameState?.players, colorMode]);
+    ]
+  }, [children, gameState?.players, colorMode])
 
   type Segment = { text: string, position: number, color?: string, fontWeight?: string }
 
-  const coloredSegments: Segment[] = [];
+  const coloredSegments: Segment[] = []
 
   const matchedSpecialWords = colorsMap.length ? [
     ...children.matchAll(new RegExp(colorsMap.map(([match]) => `(?<!\\S)${match}(?!\\S)`).join('|'), 'g'))
   ]
     .map(({ index: position, '0': word }) => ({ position, word }))
-    .sort((a, b) => a.position! - b.position!) : [];
+    .sort((a, b) => a.position! - b.position!) : []
 
-  let nonColoredSegments: Segment[];
+  let nonColoredSegments: Segment[]
   if (matchedSpecialWords.length) {
-    nonColoredSegments = [];
+    nonColoredSegments = []
     if (matchedSpecialWords[0].position! > 0) {
       nonColoredSegments.push({
         text: children.slice(0, matchedSpecialWords[0].position!),
@@ -54,18 +54,18 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
         position: matchedSpecialWord.position!,
         color: colorsMap.find(([match]) => match === matchedSpecialWord.word)?.[1],
         fontWeight: 'bold'
-      });
+      })
       nonColoredSegments.push({
         text: children.slice(matchedSpecialWord.position! + matchedSpecialWord.word.length, i < matchedSpecialWords.length - 1 ? matchedSpecialWords[i + 1].position! : undefined),
         position: matchedSpecialWord.position! + matchedSpecialWord.word.length
-      });
-    });
+      })
+    })
   } else {
-    nonColoredSegments = [{ text: children, position: 0 }];
+    nonColoredSegments = [{ text: children, position: 0 }]
   }
 
   const finalSegments = [...nonColoredSegments, ...coloredSegments]
-    .sort((a, b) => a.position - b.position);
+    .sort((a, b) => a.position - b.position)
 
   return (
     <Typography {...props}>
@@ -78,7 +78,7 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
           fontWeight={fontWeight}
         >{text}</Typography>)}
     </Typography>
-  );
+  )
 }
 
-export default ColoredTypography;
+export default ColoredTypography
