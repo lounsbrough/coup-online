@@ -28,6 +28,7 @@ jobs:
       run: |
         cd server
         vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+        pnpm build
         vercel build --token=${{ secrets.VERCEL_TOKEN }}
         vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
