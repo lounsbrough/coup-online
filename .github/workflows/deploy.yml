@@ -1,0 +1,35 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+    secrets: inherit
+
+  deploy-server:
+    runs-on: ubuntu-latest
+    concurrency: deploy-${{ inputs.environment }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build and Deploy Server
+      run: |
+        cd server
+        pnpm build
+        vercel -t ${{ secrets.VERCEL_AUTH_TOKEN }} --target=${{ inputs.environment }}
+
+    - name: Build and Deploy Client
+      run: |
+        cd ../client
+        pnpm build
+        vercel -t ${{ secrets.VERCEL_AUTH_TOKEN }} --target=${{ inputs.environment }}

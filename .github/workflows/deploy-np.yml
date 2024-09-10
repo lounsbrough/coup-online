@@ -1,0 +1,12 @@
+name: Deploy Preview
+
+on:
+  push:
+    branches: [ci-deployments]
+
+jobs:
+  call-deploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: preview
+    secrets: inherit
