@@ -18,14 +18,13 @@ jobs:
   deploy-server:
     needs: verify
     runs-on: ubuntu-latest
-    concurrency: deploy-${{ inputs.environment }}
+    concurrency: deploy-server-${{ inputs.environment }}
 
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-node
 
-    - name: Build and Deploy Server
-      run: |
+    - run: |
         cd server
         vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
         vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
@@ -37,8 +36,16 @@ jobs:
         fi
         vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
-    - name: Build and Deploy Client
-      run: |
+  deploy-client:
+    needs: verify
+    runs-on: ubuntu-latest
+    concurrency: deploy-client-${{ inputs.environment }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-node
+
+    - run: |
         cd client
         vercel link --yes --project coup-client --token=${{ secrets.VERCEL_TOKEN }}
         vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
