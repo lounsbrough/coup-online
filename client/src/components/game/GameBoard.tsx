@@ -1,25 +1,27 @@
-import { Box, Grid2, Typography } from "@mui/material"
-import PlayerInfluences from "../game/PlayerInfluences"
-import Players from "../game/Players"
-import EventLog from "./EventLog"
-import PlayerDecision from "./PlayerDecision"
-import SnarkyDeadComment from "./SnarkyDeadComment"
-import Victory from "./Victory"
-import PlayAgain from "./PlayAgain"
-import { useGameStateContext } from "../../context/GameStateContext"
+import { Box, Grid2, Typography, useTheme } from "@mui/material";
+import PlayerInfluences from "../game/PlayerInfluences";
+import Players from "../game/Players";
+import EventLog from "./EventLog";
+import PlayerDecision from "./PlayerDecision";
+import SnarkyDeadComment from "./SnarkyDeadComment";
+import Victory from "./Victory";
+import PlayAgain from "./PlayAgain";
+import { useGameStateContext } from "../../context/GameStateContext";
+import DeadCards from "./DeadCards";
 
 function GameBoard() {
-  const { gameState } = useGameStateContext()
+  const { gameState } = useGameStateContext();
+  const theme = useTheme();
 
   if (!gameState) {
-    return null
+    return null;
   }
 
   const turnPlayer = gameState.players.find((player) =>
     player.name === gameState.turnPlayer
-  )
-  const playersLeft = gameState.players.filter(({ influenceCount }) => influenceCount)
-  const gameIsOver = playersLeft.length === 1
+  );
+  const playersLeft = gameState.players.filter(({ influenceCount }) => influenceCount);
+  const gameIsOver = playersLeft.length === 1;
 
   return (
     <Grid2 container>
@@ -75,12 +77,13 @@ function GameBoard() {
       </Grid2>
       <Grid2
         size={{ xs: 12, sm: 12, md: 3 }}
-        sx={{ textAlign: 'left', px: 2 }}
+        sx={{ p: 2, textAlign: theme.isSmallScreen ? 'center' : 'right' }}
       >
+        <DeadCards />
         <EventLog />
       </Grid2>
     </Grid2>
   )
 }
 
-export default GameBoard
+export default GameBoard;

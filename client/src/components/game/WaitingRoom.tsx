@@ -1,14 +1,14 @@
-import { Button, Grid2, Typography } from "@mui/material"
-import Players from "../game/Players"
-import useSWRMutation from "swr/mutation"
-import { ContentCopy } from "@mui/icons-material"
-import { getPlayerId } from "../../helpers/playerId"
-import { useGameStateContext } from "../../context/GameStateContext"
-import { useState } from "react"
+import { Button, Grid2, Typography } from "@mui/material";
+import Players from "../game/Players";
+import useSWRMutation from "swr/mutation";
+import { ContentCopy } from "@mui/icons-material";
+import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
+import { useState } from "react";
 
 function WaitingRoom() {
-  const [error, setError] = useState<string>()
-  const { gameState, setGameState } = useGameStateContext()
+  const [error, setError] = useState<string>();
+  const { gameState, setGameState } = useGameStateContext();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
     return fetch(url, {
@@ -19,15 +19,15 @@ function WaitingRoom() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        setGameState(await res.json())
+        setGameState(await res.json());
       } else {
-        setError('Error starting new game')
+        setError('Error starting new game');
       }
     })
-  }))
+  }));
 
   if (!gameState) {
-    return null
+    return null;
   }
 
   return (
@@ -76,4 +76,4 @@ function WaitingRoom() {
   )
 }
 
-export default WaitingRoom
+export default WaitingRoom;

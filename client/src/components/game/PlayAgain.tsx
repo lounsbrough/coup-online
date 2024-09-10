@@ -1,12 +1,12 @@
-import { useState } from "react"
-import { Button, Typography } from "@mui/material"
-import useSWRMutation from "swr/mutation"
-import { getPlayerId } from "../../helpers/playerId"
-import { useGameStateContext } from "../../context/GameStateContext"
+import { useState } from "react";
+import { Button, Typography } from "@mui/material";
+import useSWRMutation from "swr/mutation";
+import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
 
 function PlayAgain() {
-  const [error, setError] = useState<string>()
-  const { gameState, setGameState } = useGameStateContext()
+  const [error, setError] = useState<string>();
+  const { gameState, setGameState } = useGameStateContext();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/resetGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
     return fetch(url, {
@@ -17,15 +17,15 @@ function PlayAgain() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        setGameState(await res.json())
+        setGameState(await res.json());
       } else {
-        setError('Error starting new game')
+        setError('Error starting new game');
       }
     })
   }))
 
   if (!gameState) {
-    return null
+    return null;
   }
 
   return (
@@ -42,7 +42,7 @@ function PlayAgain() {
       >Play Again</Button>
       {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
-  )
+  );
 }
 
-export default PlayAgain
+export default PlayAgain;
