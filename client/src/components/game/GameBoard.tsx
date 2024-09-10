@@ -7,6 +7,7 @@ import SnarkyDeadComment from "./SnarkyDeadComment";
 import Victory from "./Victory";
 import PlayAgain from "./PlayAgain";
 import { useGameStateContext } from "../../context/GameStateContext";
+import DeadCards from "./DeadCards";
 
 function GameBoard() {
   const { gameState } = useGameStateContext();
@@ -75,8 +76,9 @@ function GameBoard() {
       </Grid2>
       <Grid2
         size={{ xs: 12, sm: 12, md: 3 }}
-        sx={{ textAlign: 'left', px: 2 }}
+        sx={{ textAlign: 'left', p: 2 }}
       >
+        <DeadCards />
         <EventLog />
       </Grid2>
     </Grid2>

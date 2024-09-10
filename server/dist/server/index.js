@@ -403,8 +403,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
             const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer);
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer);
             (0, gameState_1.logEvent)(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`);
-            actionPlayer.influences.splice(actionPlayer.influences.findIndex((i) => i === influence), 1);
-            (0, gameState_1.logEvent)(state, `${actionPlayer.name} lost their ${influence}`);
+            (0, gameState_1.killPlayerInfluence)(state, actionPlayer.name, influence);
             state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
             delete state.pendingActionChallenge;
             delete state.pendingAction;
@@ -536,8 +535,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
         await (0, gameState_1.mutateGameState)(roomId, (state) => {
             const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer);
             (0, gameState_1.logEvent)(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`);
-            blockPlayer.influences.splice(blockPlayer.influences.findIndex((i) => i === influence), 1);
-            (0, gameState_1.logEvent)(state, `${blockPlayer.name} lost their ${influence}`);
+            (0, gameState_1.killPlayerInfluence)(state, blockPlayer.name, influence);
             (0, gameState_1.processPendingAction)(state);
             delete state.pendingBlockChallenge;
             delete state.pendingBlock;
@@ -578,26 +576,25 @@ app.post('/loseInfluence', async (req, res) => {
         return;
     }
     await (0, gameState_1.mutateGameState)(roomId, (state) => {
-        const sadPlayer = state.players.find(({ id }) => id === player.id);
-        const removedInfluence = sadPlayer.influences.splice(sadPlayer.influences.findIndex((i) => i === influence), 1)[0];
-        if (state.pendingInfluenceLoss[sadPlayer.name][0].putBackInDeck) {
+        if (state.pendingInfluenceLoss[player.name][0].putBackInDeck) {
+            const removedInfluence = player.influences.splice(player.influences.findIndex((i) => i === influence), 1)[0];
             state.deck.unshift(removedInfluence);
         }
         else {
-            (0, gameState_1.logEvent)(state, `${player.name} lost their ${influence}`);
+            (0, gameState_1.killPlayerInfluence)(state, player.name, influence);
         }
-        if (state.pendingInfluenceLoss[sadPlayer.name].length > 1) {
-            state.pendingInfluenceLoss[sadPlayer.name].splice(0, 1);
+        if (state.pendingInfluenceLoss[player.name].length > 1) {
+            state.pendingInfluenceLoss[player.name].splice(0, 1);
         }
         else {
-            delete state.pendingInfluenceLoss[sadPlayer.name];
+            delete state.pendingInfluenceLoss[player.name];
         }
         if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
             state.turnPlayer = (0, gameState_1.getNextPlayerTurn)(state);
         }
-        if (!sadPlayer.influences.length) {
-            (0, gameState_1.logEvent)(state, `${sadPlayer.name} is out!`);
-            delete state.pendingInfluenceLoss[sadPlayer.name];
+        if (!player.influences.length) {
+            (0, gameState_1.logEvent)(state, `${player.name} is out!`);
+            delete state.pendingInfluenceLoss[player.name];
         }
     });
     res.status(200).json(await (0, gameState_1.getPublicGameState)(roomId, playerId));

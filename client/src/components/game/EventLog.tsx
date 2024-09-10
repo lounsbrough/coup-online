@@ -24,8 +24,7 @@ function EventLog() {
     <Box ref={logBox} sx={{
       width: '100%',
       maxHeight: isSmallScreen ? '25dvh' : '85dvh',
-      overflowY: 'auto',
-      p: 2
+      overflowY: 'auto'
     }}>
       {gameState?.eventLogs.map((log, logIndex) =>
         <ColoredTypography key={logIndex}>{log}</ColoredTypography>

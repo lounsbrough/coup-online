@@ -130,7 +130,7 @@ function Rules() {
         <DialogActions>
           <Button variant='contained' onClick={() => { setModalOpen(false); }}>Close</Button>
         </DialogActions>
-      </Dialog >
+      </Dialog>
     </>
   );
 }
