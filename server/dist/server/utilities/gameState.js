@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNextPlayerTurn = exports.addPlayerToGame = exports.resetGame = exports.startGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.shuffle = exports.promptPlayerToLoseInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
+exports.getNextPlayerTurn = exports.killPlayerInfluence = exports.addPlayerToGame = exports.resetGame = exports.startGame = exports.createNewGame = exports.logEvent = exports.drawCardFromDeck = exports.processPendingAction = exports.shuffle = exports.promptPlayerToLoseInfluence = exports.mutateGameState = exports.getPublicGameState = exports.getGameState = void 0;
 const game_1 = require("../../shared/types/game");
 const storage_1 = require("./storage");
 const getGameState = async (roomId) => {
@@ -27,17 +27,18 @@ const getPublicGameState = async (roomId, playerId) => {
         }
     });
     return {
-        roomId: gameState.roomId,
-        turnPlayer: gameState.turnPlayer,
+        deadCards: gameState.deadCards,
+        eventLogs: gameState.eventLogs,
         isStarted: gameState.isStarted,
         pendingAction: gameState.pendingAction,
         pendingActionChallenge: gameState.pendingActionChallenge,
         pendingBlock: gameState.pendingBlock,
         pendingBlockChallenge: gameState.pendingBlockChallenge,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
-        eventLogs: gameState.eventLogs,
         players: publicPlayers,
-        selfPlayer
+        roomId: gameState.roomId,
+        selfPlayer,
+        turnPlayer: gameState.turnPlayer
     };
 };
 exports.getPublicGameState = getPublicGameState;
@@ -127,6 +128,7 @@ const createNewGame = async (roomId) => {
         roomId,
         players: [],
         deck: buildShuffledDeck(),
+        deadCards: [],
         pendingInfluenceLoss: {},
         isStarted: false,
         eventLogs: []
@@ -168,6 +170,13 @@ const addPlayerToGame = async (roomId, playerId, playerName) => {
     });
 };
 exports.addPlayerToGame = addPlayerToGame;
+const killPlayerInfluence = async (state, playerName, influence) => {
+    const player = state.players.find(({ name }) => name === playerName);
+    player.influences.splice(player.influences.findIndex((i) => i === influence), 1);
+    (0, exports.logEvent)(state, `${player.name} lost their ${influence}`);
+    state.deadCards.push(influence);
+};
+exports.killPlayerInfluence = killPlayerInfluence;
 const getNextPlayerTurn = (state) => {
     const currentIndex = state.players.findIndex((player) => player.name === state.turnPlayer);
     let nextIndex = currentIndex + 1;

@@ -33,17 +33,18 @@ export const getPublicGameState = async (
   })
 
   return {
-    roomId: gameState.roomId,
-    turnPlayer: gameState.turnPlayer,
+    deadCards: gameState.deadCards,
+    eventLogs: gameState.eventLogs,
     isStarted: gameState.isStarted,
     pendingAction: gameState.pendingAction,
     pendingActionChallenge: gameState.pendingActionChallenge,
     pendingBlock: gameState.pendingBlock,
     pendingBlockChallenge: gameState.pendingBlockChallenge,
     pendingInfluenceLoss: gameState.pendingInfluenceLoss,
-    eventLogs: gameState.eventLogs,
     players: publicPlayers,
-    selfPlayer
+    roomId: gameState.roomId,
+    selfPlayer,
+    turnPlayer: gameState.turnPlayer
   }
 }
 
@@ -144,6 +145,7 @@ export const createNewGame = async (roomId: string) => {
     roomId,
     players: [],
     deck: buildShuffledDeck(),
+    deadCards: [],
     pendingInfluenceLoss: {},
     isStarted: false,
     eventLogs: []
@@ -183,6 +185,16 @@ export const addPlayerToGame = async (roomId: string, playerId: string, playerNa
     })
     return state
   })
+}
+
+export const killPlayerInfluence = async (state: GameState, playerName: string, influence: Influences) => {
+  const player = state.players.find(({ name }) => name === playerName)
+  player.influences.splice(
+    player.influences.findIndex((i) => i === influence),
+    1
+  )
+  logEvent(state, `${player.name} lost their ${influence}`)
+  state.deadCards.push(influence)
 }
 
 export const getNextPlayerTurn = (state: GameState) => {

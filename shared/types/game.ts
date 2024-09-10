@@ -173,10 +173,11 @@ export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
 };
 
 export type GameState = {
-  roomId: string
-  players: Player[]
+  deadCards: Influences[],
   deck: Influences[]
-  turnPlayer?: string
+  eventLogs: string[]
+  isStarted: boolean
+  players: Player[]
   pendingAction?: {
     targetPlayer?: string
     action: Actions
@@ -199,20 +200,21 @@ export type GameState = {
       putBackInDeck: boolean
     }[]
   }
-  isStarted: boolean
-  eventLogs: string[]
+  roomId: string
+  turnPlayer?: string
 }
 
 export type PublicGameState = Pick<GameState,
-  'roomId' |
-  'turnPlayer' |
+  'deadCards' |
+  'eventLogs' |
+  'isStarted' |
   'pendingAction' |
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
   'pendingInfluenceLoss' |
-  'isStarted' |
-  'eventLogs'
+  'roomId' |
+  'turnPlayer'
 > & {
   players: PublicPlayer[]
   selfPlayer: Player

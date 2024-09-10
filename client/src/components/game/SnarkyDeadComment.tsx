@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material"
+import { Typography } from "@mui/material";
 
 function SnarkyDeadComment() {
   const comments = [
@@ -30,7 +30,7 @@ function SnarkyDeadComment() {
         {comments[Math.floor(Math.random() * comments.length)]}
       </Typography>
     </>
-  )
+  );
 }
 
-export default SnarkyDeadComment
+export default SnarkyDeadComment;

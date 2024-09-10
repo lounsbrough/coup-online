@@ -1,23 +1,23 @@
-import { useState } from "react"
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material"
-import { Gavel } from "@mui/icons-material"
-import { colord } from "colord"
-import { InfluenceAttributes } from "../shared/types/game"
-import { useColorModeContext } from "../context/MaterialThemeContext"
-import './Rules.css'
+import { useState } from "react";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
+import { Gavel } from "@mui/icons-material";
+import { colord } from "colord";
+import { InfluenceAttributes } from "../shared/types/game";
+import { useColorModeContext } from "../context/MaterialThemeContext";
+import './Rules.css';
 
 function Rules() {
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const { colorMode } = useColorModeContext()
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const { colorMode } = useColorModeContext();
 
-  const influenceBackgroundOpacity = 0.5
+  const influenceBackgroundOpacity = 0.5;
 
   return (
     <>
       <Button
         startIcon={<Gavel />}
         onClick={() => {
-          setModalOpen(true)
+          setModalOpen(true);
         }}
       >
         Rules
@@ -26,7 +26,7 @@ function Rules() {
         fullWidth
         maxWidth={false}
         open={modalOpen}
-        onClose={() => { setModalOpen(false) }}
+        onClose={() => { setModalOpen(false); }}
       >
         <DialogContent>
           <DialogContentText>
@@ -128,11 +128,11 @@ function Rules() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' onClick={() => { setModalOpen(false) }}>Close</Button>
+          <Button variant='contained' onClick={() => { setModalOpen(false); }}>Close</Button>
         </DialogActions>
-      </Dialog >
+      </Dialog>
     </>
-  )
+  );
 }
 
-export default Rules
+export default Rules;
