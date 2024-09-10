@@ -1,16 +1,16 @@
-import { Button, Grid2, Typography } from "@mui/material"
-import { ResponseAttributes, Responses } from "../../shared/types/game"
-import useSWRMutation from "swr/mutation"
-import { useState } from "react"
-import { getPlayerId } from "../../helpers/playerId"
-import { useGameStateContext } from "../../context/GameStateContext"
-import { useColorModeContext } from "../../context/MaterialThemeContext"
-import ColoredTypography from "../utilities/ColoredTypography"
+import { Button, Grid2, Typography } from "@mui/material";
+import { ResponseAttributes, Responses } from "../../shared/types/game";
+import useSWRMutation from "swr/mutation";
+import { useState } from "react";
+import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
+import { useColorModeContext } from "../../context/MaterialThemeContext";
+import ColoredTypography from "../utilities/ColoredTypography";
 
 function ChooseBlockResponse() {
-  const [error, setError] = useState<string>()
-  const { gameState, setGameState } = useGameStateContext()
-  const { colorMode } = useColorModeContext()
+  const [error, setError] = useState<string>();
+  const { gameState, setGameState } = useGameStateContext();
+  const { colorMode } = useColorModeContext();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/blockResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses }; }) => {
     return fetch(url, {
@@ -21,15 +21,15 @@ function ChooseBlockResponse() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        setGameState(await res.json())
+        setGameState(await res.json());
       } else {
-        setError('Error responding to block')
+        setError('Error responding to block');
       }
     })
-  }))
+  }));
 
   if (!gameState?.pendingBlock) {
-    return null
+    return null;
   }
 
   return (
@@ -42,7 +42,7 @@ function ChooseBlockResponse() {
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map(([response, responseAttributes], index) => {
             if (response === Responses.Block) {
-              return null
+              return null;
             }
 
             return <Button
@@ -65,7 +65,7 @@ function ChooseBlockResponse() {
       </Grid2>
       {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
-  )
+  );
 }
 
-export default ChooseBlockResponse
+export default ChooseBlockResponse;

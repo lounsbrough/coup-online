@@ -1,17 +1,17 @@
-import { Button, Grid2, Typography } from "@mui/material"
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, ResponseAttributes, Responses } from "../../shared/types/game"
-import useSWRMutation from "swr/mutation"
-import { useState } from "react"
-import { getPlayerId } from "../../helpers/playerId"
-import { useGameStateContext } from "../../context/GameStateContext"
-import { useColorModeContext } from "../../context/MaterialThemeContext"
-import ColoredTypography from "../utilities/ColoredTypography"
+import { Button, Grid2, Typography } from "@mui/material";
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, ResponseAttributes, Responses } from "../../shared/types/game";
+import useSWRMutation from "swr/mutation";
+import { useState } from "react";
+import { getPlayerId } from "../../helpers/playerId";
+import { useGameStateContext } from "../../context/GameStateContext";
+import { useColorModeContext } from "../../context/MaterialThemeContext";
+import ColoredTypography from "../utilities/ColoredTypography";
 
 function ChooseActionResponse() {
-  const [selectedResponse, setSelectedResponse] = useState<Responses>()
-  const [error, setError] = useState<string>()
-  const { gameState, setGameState } = useGameStateContext()
-  const { colorMode } = useColorModeContext()
+  const [selectedResponse, setSelectedResponse] = useState<Responses>();
+  const [error, setError] = useState<string>();
+  const { gameState, setGameState } = useGameStateContext();
+  const { colorMode } = useColorModeContext();
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/actionResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses, claimedInfluence?: Influences }; }) => {
     return fetch(url, {
@@ -22,15 +22,15 @@ function ChooseActionResponse() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        setGameState(await res.json())
+        setGameState(await res.json());
       } else {
-        setError('Error responding to action')
+        setError('Error responding to action');
       }
     })
   }))
 
   if (!gameState?.pendingAction) {
-    return null
+    return null;
   }
 
   return (
@@ -79,7 +79,7 @@ function ChooseActionResponse() {
                   (!ActionAttributes[gameState.pendingAction?.action as Actions].challengeable
                     || gameState.pendingActionChallenge
                     || gameState.pendingAction?.claimConfirmed)) {
-                  return null
+                  return null;
                 }
 
                 if (response === Responses.Block &&
@@ -87,14 +87,14 @@ function ChooseActionResponse() {
                     (gameState.pendingAction?.targetPlayer &&
                       gameState.selfPlayer.name !== gameState.pendingAction?.targetPlayer
                     ))) {
-                  return null
+                  return null;
                 }
 
                 return <Button
                   key={index}
                   onClick={() => {
                     if (response === Responses.Block) {
-                      setSelectedResponse(response)
+                      setSelectedResponse(response);
                     } else {
                       trigger({
                         roomId: gameState.roomId,
@@ -116,7 +116,7 @@ function ChooseActionResponse() {
         </>
       )}
     </>
-  )
+  );
 }
 
-export default ChooseActionResponse
+export default ChooseActionResponse;

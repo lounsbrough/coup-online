@@ -1,25 +1,25 @@
-import { Box, Grid2, Typography } from "@mui/material"
-import PlayerInfluences from "../game/PlayerInfluences"
-import Players from "../game/Players"
-import EventLog from "./EventLog"
-import PlayerDecision from "./PlayerDecision"
-import SnarkyDeadComment from "./SnarkyDeadComment"
-import Victory from "./Victory"
-import PlayAgain from "./PlayAgain"
-import { useGameStateContext } from "../../context/GameStateContext"
+import { Box, Grid2, Typography } from "@mui/material";
+import PlayerInfluences from "../game/PlayerInfluences";
+import Players from "../game/Players";
+import EventLog from "./EventLog";
+import PlayerDecision from "./PlayerDecision";
+import SnarkyDeadComment from "./SnarkyDeadComment";
+import Victory from "./Victory";
+import PlayAgain from "./PlayAgain";
+import { useGameStateContext } from "../../context/GameStateContext";
 
 function GameBoard() {
-  const { gameState } = useGameStateContext()
+  const { gameState } = useGameStateContext();
 
   if (!gameState) {
-    return null
+    return null;
   }
 
   const turnPlayer = gameState.players.find((player) =>
     player.name === gameState.turnPlayer
-  )
-  const playersLeft = gameState.players.filter(({ influenceCount }) => influenceCount)
-  const gameIsOver = playersLeft.length === 1
+  );
+  const playersLeft = gameState.players.filter(({ influenceCount }) => influenceCount);
+  const gameIsOver = playersLeft.length === 1;
 
   return (
     <Grid2 container>
@@ -83,4 +83,4 @@ function GameBoard() {
   )
 }
 
-export default GameBoard
+export default GameBoard;

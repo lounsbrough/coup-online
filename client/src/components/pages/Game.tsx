@@ -1,10 +1,10 @@
-import { Typography } from "@mui/material"
-import GameBoard from "../game/GameBoard"
-import WaitingRoom from "../game/WaitingRoom"
-import { useGameStateContext } from "../../context/GameStateContext"
+import { Typography } from "@mui/material";
+import GameBoard from "../game/GameBoard";
+import WaitingRoom from "../game/WaitingRoom";
+import { useGameStateContext } from "../../context/GameStateContext";
 
 function Game() {
-  const { gameState } = useGameStateContext()
+  const { gameState } = useGameStateContext();
 
   return (
     <>
@@ -21,4 +21,4 @@ function Game() {
   )
 }
 
-export default Game
+export default Game;
