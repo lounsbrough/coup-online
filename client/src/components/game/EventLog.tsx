@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { useGameStateContext } from "../../context/GameStateContext";
 import ColoredTypography from "../utilities/ColoredTypography";
@@ -6,8 +6,7 @@ import ColoredTypography from "../utilities/ColoredTypography";
 function EventLog() {
   const logBox = useRef<HTMLElement>(null);
   const { gameState } = useGameStateContext();
-
-  const isSmallScreen = useMediaQuery('screen and (max-width: 786px)');
+  const theme = useTheme();
 
   useEffect(() => {
     logBox.current?.scrollTo({
@@ -21,15 +20,18 @@ function EventLog() {
   }
 
   return (
-    <Box ref={logBox} sx={{
-      width: '100%',
-      maxHeight: isSmallScreen ? '25dvh' : '85dvh',
-      overflowY: 'auto'
-    }}>
-      {gameState?.eventLogs.map((log, logIndex) =>
-        <ColoredTypography key={logIndex}>{log}</ColoredTypography>
-      )}
-    </Box>
+    <>
+      <Typography sx={{ mt: 2, fontWeight: 700 }}>Event Log</Typography>
+      <Box ref={logBox} sx={{
+        width: '100%',
+        maxHeight: theme.isSmallScreen ? '25dvh' : '85dvh',
+        overflowY: 'auto'
+      }}>
+        {gameState?.eventLogs.map((log, logIndex) =>
+          <ColoredTypography key={logIndex}>{log}</ColoredTypography>
+        )}
+      </Box>
+    </>
   )
 }
 

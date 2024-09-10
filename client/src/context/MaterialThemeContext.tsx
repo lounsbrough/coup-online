@@ -2,6 +2,15 @@ import { useState, useMemo, createContext, useEffect, useContext, ReactNode } fr
 import { createTheme, ThemeProvider, GlobalStyles, useMediaQuery, PaletteMode } from '@mui/material';
 import { grey, blueGrey } from '@mui/material/colors';
 
+declare module '@mui/material/styles' {
+  interface Theme {
+    isSmallScreen: boolean
+  }
+  interface ThemeOptions {
+    isSmallScreen: boolean
+  }
+}
+
 export const LIGHT_COLOR_MODE = 'light';
 export const DARK_COLOR_MODE = 'dark';
 export const SYSTEM_COLOR_MODE = 'system';
@@ -63,6 +72,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
   const defaultBackgroundColor = isLightMode ? white : '#212121';
 
   const materialTheme = useMemo(() => createTheme({
+    isSmallScreen,
     palette: {
       mode: activeColorMode,
       background: (isLightMode ? {} : { default: grey[800] }),

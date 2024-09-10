@@ -23,14 +23,14 @@ function DeadCards() {
           open={modalOpen}
           onClose={() => { setModalOpen(false); }}
         >
-          <DialogTitle textAlign="center">Dead Cards</DialogTitle>
+          <DialogTitle variant="h5" textAlign="center">Dead Cards</DialogTitle>
           <DialogContent>
             {gameState.deadCards.length
               ? <Grid2 container spacing={2}>
-                {[...gameState.deadCards, ...gameState.deadCards, ...gameState.deadCards, ...gameState.deadCards].map((influence, index) =>
+                {gameState.deadCards.map((influence, index) =>
                   <InfluenceCard key={index} influence={influence} />)}
               </Grid2>
-              : <Typography variant="h5">No dead cards yet</Typography>}
+              : <Typography variant="h6">No dead cards yet</Typography>}
           </DialogContent>
           <DialogActions>
             <Button variant='contained' onClick={() => { setModalOpen(false); }}>Close</Button>

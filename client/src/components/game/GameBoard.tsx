@@ -1,4 +1,4 @@
-import { Box, Grid2, Typography } from "@mui/material";
+import { Box, Grid2, Typography, useTheme } from "@mui/material";
 import PlayerInfluences from "../game/PlayerInfluences";
 import Players from "../game/Players";
 import EventLog from "./EventLog";
@@ -11,6 +11,7 @@ import DeadCards from "./DeadCards";
 
 function GameBoard() {
   const { gameState } = useGameStateContext();
+  const theme = useTheme();
 
   if (!gameState) {
     return null;
@@ -76,7 +77,7 @@ function GameBoard() {
       </Grid2>
       <Grid2
         size={{ xs: 12, sm: 12, md: 3 }}
-        sx={{ textAlign: 'left', p: 2 }}
+        sx={{ p: 2, textAlign: theme.isSmallScreen ? 'center' : 'right' }}
       >
         <DeadCards />
         <EventLog />
