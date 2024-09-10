@@ -27,11 +27,13 @@ jobs:
     - name: Build and Deploy Server
       run: |
         cd server
-        pnpm build
-        vercel -t ${{ secrets.VERCEL_AUTH_TOKEN }} --target=${{ inputs.environment }}
+        vercel pull --yes --environment=${{ inputs.environment }} --token=$VERCEL_TOKEN
+        vercel build --token=$VERCEL_TOKEN
+        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=$VERCEL_TOKEN
 
     - name: Build and Deploy Client
       run: |
-        cd ../client
-        pnpm build
-        vercel -t ${{ secrets.VERCEL_AUTH_TOKEN }} --target=${{ inputs.environment }}
+        cd client
+        vercel pull --yes --environment=${{ inputs.environment }} --token=$VERCEL_TOKEN
+        vercel build --token=$VERCEL_TOKEN
+        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=$VERCEL_TOKEN
