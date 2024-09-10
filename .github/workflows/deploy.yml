@@ -30,7 +30,12 @@ jobs:
         vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
         vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
         pnpm build
-        vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        if ["${{ inputs.environment }}"="production"]
+        then
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        else
+          vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        fi
         vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
     - name: Build and Deploy Client
@@ -38,5 +43,10 @@ jobs:
         cd client
         vercel link --yes --project coup-client --token=${{ secrets.VERCEL_TOKEN }}
         vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
-        vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        if ["${{ inputs.environment }}"="production"]
+        then
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        else
+          vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        fi
         vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
