@@ -27,6 +27,7 @@ jobs:
     - name: Build and Deploy Server
       run: |
         cd server
+        vercel link --yes --project coup-server
         vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
         pnpm build
         vercel build --token=${{ secrets.VERCEL_TOKEN }}
@@ -35,6 +36,7 @@ jobs:
     - name: Build and Deploy Client
       run: |
         cd client
+        vercel link --yes --project coup-client
         vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
         vercel build --token=${{ secrets.VERCEL_TOKEN }}
         vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
