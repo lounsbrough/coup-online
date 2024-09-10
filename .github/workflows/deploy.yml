@@ -27,13 +27,13 @@ jobs:
     - name: Build and Deploy Server
       run: |
         cd server
-        vercel pull --yes --environment=${{ inputs.environment }} --token=$VERCEL_TOKEN
-        vercel build --token=$VERCEL_TOKEN
-        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=$VERCEL_TOKEN
+        vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+        vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
     - name: Build and Deploy Client
       run: |
         cd client
-        vercel pull --yes --environment=${{ inputs.environment }} --token=$VERCEL_TOKEN
-        vercel build --token=$VERCEL_TOKEN
-        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=$VERCEL_TOKEN
+        vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+        vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
