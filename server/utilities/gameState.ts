@@ -117,7 +117,7 @@ export const processPendingAction = async (state: GameState) => {
   }
 
   if (!Object.keys(state.pendingInfluenceLoss).length) {
-    state.turnPlayer = getNextPlayerTurn(state)
+    moveTurnToNextPlayer(state)
   }
 
   logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
@@ -197,7 +197,7 @@ export const killPlayerInfluence = async (state: GameState, playerName: string, 
   state.deadCards.push(influence)
 }
 
-export const getNextPlayerTurn = (state: GameState) => {
+export const moveTurnToNextPlayer = (state: GameState) => {
   const currentIndex = state.players.findIndex((player) => player.name === state.turnPlayer)
 
   let nextIndex = currentIndex + 1
@@ -209,5 +209,5 @@ export const getNextPlayerTurn = (state: GameState) => {
     nextIndex++
   }
 
-  return state.players[nextIndex % state.players.length].name
+  state.turnPlayer = state.players[nextIndex % state.players.length].name
 }

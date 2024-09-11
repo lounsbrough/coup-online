@@ -2,7 +2,7 @@ import http from 'http'
 import express from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, getNextPlayerTurn, getPublicGameState, promptPlayerToLoseInfluence, logEvent, mutateGameState, processPendingAction, resetGame, shuffle, startGame, killPlayerInfluence } from './utilities/gameState'
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, promptPlayerToLoseInfluence, logEvent, mutateGameState, processPendingAction, resetGame, shuffle, startGame, killPlayerInfluence } from './utilities/gameState'
 import { generateRoomId } from './utilities/identifiers'
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game'
 
@@ -270,7 +270,7 @@ app.post('/action', async (req, res) => {
         } else if (action === Actions.Income) {
             await mutateGameState(roomId, (state) => {
                 state.players.find(({ id }) => id === playerId).coins += 1
-                state.turnPlayer = getNextPlayerTurn(state)
+                moveTurnToNextPlayer(state)
                 logEvent(state, `${player.name} used ${action}`)
             })
         }
@@ -486,7 +486,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
             const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer)
             logEvent(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`)
             killPlayerInfluence(state, actionPlayer.name, influence)
-            state.turnPlayer = getNextPlayerTurn(state)
+            moveTurnToNextPlayer(state)
             delete state.pendingActionChallenge
             delete state.pendingAction
         })
@@ -557,7 +557,7 @@ app.post('/blockResponse', async (req, res) => {
                     state.players.find(({ name }) => name === state.turnPlayer).coins
                         -= ActionAttributes.Assassinate.coinsRequired
                 }
-                state.turnPlayer = getNextPlayerTurn(state)
+                moveTurnToNextPlayer(state)
                 delete state.pendingBlock
                 delete state.pendingActionChallenge
                 delete state.pendingAction
@@ -715,7 +715,7 @@ app.post('/loseInfluence', async (req, res) => {
         }
 
         if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
-            state.turnPlayer = getNextPlayerTurn(state)
+            moveTurnToNextPlayer(state)
         }
 
         if (!losingPlayer.influences.length) {
