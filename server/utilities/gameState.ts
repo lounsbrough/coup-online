@@ -1,4 +1,5 @@
 import { ActionAttributes, Actions, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../shared/types/game'
+import { shuffle } from './array'
 import { getValue, setValue } from './storage'
 
 export const getGameState = async (
@@ -53,9 +54,24 @@ const setGameState = async (roomId: string, newState: GameState) => {
   await setValue(roomId, JSON.stringify(newState), fifteenMinutes)
 }
 
-const validateGameState = (state: GameState) => {
+export const validateGameState = (state: GameState) => {
   if (state.players.length < 1 || state.players.length > 6) {
     throw new Error("Game state must always have 1 to 6 players")
+  }
+  if (!state.players.find((player) => player.name === state.turnPlayer)?.influences.length) {
+    throw new Error("Invalid turn player")
+  }
+  if (state.players.some((player) =>
+    player.influences.length - (state.pendingInfluenceLoss[player.name]?.length ?? 0) > 2)
+  ) {
+    throw new Error("Players must have at most 2 influences")
+  }
+  const cardCounts = Object.fromEntries(Object.values(Influences).map((influence) => [influence, 0]))
+  state.deck.forEach((card) => cardCounts[card]++)
+  state.deadCards.forEach((card) => cardCounts[card]++)
+  state.players.flatMap(({ influences }) => influences).forEach((card) => cardCounts[card]++)
+  if (Object.values(cardCounts).some((count) => count !== 3)) {
+    throw new Error("Incorrect total card count in game")
   }
 }
 
@@ -84,17 +100,6 @@ export const promptPlayerToLoseInfluence = (
   ]
 }
 
-export const shuffle = <T>(array: T[]): T[] => {
-  const unShuffled = [...array]
-  const shuffled: T[] = []
-
-  while (unShuffled.length) {
-    shuffled.push(unShuffled.splice(Math.floor(Math.random() * unShuffled.length), 1)[0])
-  }
-
-  return shuffled
-}
-
 export const processPendingAction = async (state: GameState) => {
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer)
@@ -117,16 +122,20 @@ export const processPendingAction = async (state: GameState) => {
   }
 
   if (!Object.keys(state.pendingInfluenceLoss).length) {
-    state.turnPlayer = getNextPlayerTurn(state)
+    moveTurnToNextPlayer(state)
   }
 
   logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
   delete state.pendingAction
 }
 
-const buildShuffledDeck = () => {
-  return shuffle(Object.values(Influences)
-    .flatMap((influence) => Array.from({ length: 3 }, () => influence)))
+const buildGameDeck = () => {
+  return Object.values(Influences)
+    .flatMap((influence) => Array.from({ length: 3 }, () => influence))
+}
+
+export const shuffleDeck = (state: GameState) => {
+  state.deck = shuffle(state.deck)
 }
 
 export const drawCardFromDeck = (state: GameState) => {
@@ -144,7 +153,7 @@ export const createNewGame = async (roomId: string) => {
   await setGameState(roomId, {
     roomId,
     players: [],
-    deck: buildShuffledDeck(),
+    deck: shuffle(buildGameDeck()),
     deadCards: [],
     pendingInfluenceLoss: {},
     isStarted: false,
@@ -197,7 +206,7 @@ export const killPlayerInfluence = async (state: GameState, playerName: string, 
   state.deadCards.push(influence)
 }
 
-export const getNextPlayerTurn = (state: GameState) => {
+export const moveTurnToNextPlayer = (state: GameState) => {
   const currentIndex = state.players.findIndex((player) => player.name === state.turnPlayer)
 
   let nextIndex = currentIndex + 1
@@ -209,5 +218,5 @@ export const getNextPlayerTurn = (state: GameState) => {
     nextIndex++
   }
 
-  return state.players[nextIndex % state.players.length].name
+  state.turnPlayer = state.players[nextIndex % state.players.length].name
 }

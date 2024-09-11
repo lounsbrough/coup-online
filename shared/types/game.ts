@@ -16,7 +16,7 @@ export enum Actions {
   Exchange = 'Exchange'
 }
 
-type ColorMode = 'light' | 'dark';
+type ColorMode = 'light' | 'dark'
 
 export const InfluenceAttributes: {
   [influence in Influences]: {
@@ -161,19 +161,19 @@ export const ResponseAttributes: {
 }
 
 export type Player = {
-  influences: Influences[],
   coins: number
-  name: string
-  id: string
   color: string
+  id: string
+  influences: Influences[]
+  name: string
 }
 
 export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
   influenceCount: number
-};
+}
 
 export type GameState = {
-  deadCards: Influences[],
+  deadCards: Influences[]
   deck: Influences[]
   eventLogs: string[]
   isStarted: boolean
