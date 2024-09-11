@@ -49,7 +49,7 @@ export const render = (jsx: React.JSX.Element, {
   const TestComponent = () => {
     const { colorMode } = useColorModeContext()
 
-    return <MaterialThemeContextProvider>
+    return (
       <GameStateContext.Provider value={{
         setGameState: () => { },
         gameState: gameState ?? getRandomGameState()
@@ -59,10 +59,13 @@ export const render = (jsx: React.JSX.Element, {
           {jsx}
         </>
       </GameStateContext.Provider>
-    </MaterialThemeContextProvider>
+    )
   }
 
-  return testingLibraryRender(<TestComponent />)
+  return testingLibraryRender(
+    <MaterialThemeContextProvider>
+      <TestComponent />
+    </MaterialThemeContextProvider>)
 }
 
 export const getCurrentColorMode = async () => {
