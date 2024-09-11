@@ -1,6 +1,6 @@
 import { Chance } from "chance"
-import { getGameState, getPublicGameState } from "./gameState"
-import { Actions, Influences } from '../../shared/types/game'
+import { drawCardFromDeck, getGameState, getPublicGameState, logEvent } from "./gameState"
+import { Actions, GameState, Influences } from '../../shared/types/game'
 import { getValue } from "./storage"
 
 jest.mock("./storage")
@@ -8,7 +8,7 @@ const getValueMock = jest.mocked(getValue)
 
 const chance = new Chance()
 
-const getRandomGameState = () => ({
+const getRandomGameState = (): GameState => ({
   deadCards: [Influences.Ambassador],
   deck: chance.n(() => chance.pickone(Object.values(Influences)), chance.natural({ min: 1, max: 5 })),
   eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
@@ -31,7 +31,7 @@ const getRandomGameState = () => ({
   pendingBlock: {
     sourcePlayer: chance.string(),
     pendingPlayers: chance.n(chance.string, chance.natural({ min: 1, max: 5 })),
-    claimedInfluence: chance.pickone(Object.values(Actions))
+    claimedInfluence: chance.pickone(Object.values(Influences))
   },
   pendingBlockChallenge: {
     sourcePlayer: chance.string()
@@ -46,44 +46,70 @@ const getRandomGameState = () => ({
 describe('gameState', () => {
   describe('getGameState', () => {
     it('should get game state object from storage by room id key', async () => {
-      const expectedRoomId = 'some room'
-      const expectedGameState = getRandomGameState()
-      getValueMock.mockResolvedValue(JSON.stringify(expectedGameState))
+      const roomId = 'some room'
+      const gameState = getRandomGameState()
+      getValueMock.mockResolvedValue(JSON.stringify(gameState))
 
-      const gameState = await getGameState(expectedRoomId)
-
-      expect(gameState).toEqual(expectedGameState)
+      expect(await getGameState(roomId)).toEqual(gameState)
       expect(getValueMock).toHaveBeenCalledTimes(1)
-      expect(getValueMock).toHaveBeenCalledWith(expectedRoomId)
+      expect(getValueMock).toHaveBeenCalledWith(roomId)
     })
   })
 
   describe('getPublicGameState', () => {
     it('should get portion of game state that is accessible to player', async () => {
-      const expectedGameState = getRandomGameState()
-      const expectedPlayer = chance.pickone(expectedGameState.players)
-      getValueMock.mockResolvedValue(JSON.stringify(expectedGameState))
+      const gameState = getRandomGameState()
+      const selfPlayer = chance.pickone(gameState.players)
+      getValueMock.mockResolvedValue(JSON.stringify(gameState))
 
-      const expectedPublicGameState = {
-        ...expectedGameState,
+      const publicGameState = {
+        ...gameState,
         selfPlayer: {
-          id: expectedPlayer.id,
-          name: expectedPlayer.name,
-          color: expectedPlayer.color,
-          coins: expectedPlayer.coins,
-          influences: expectedPlayer.influences
+          id: selfPlayer.id,
+          name: selfPlayer.name,
+          color: selfPlayer.color,
+          coins: selfPlayer.coins,
+          influences: selfPlayer.influences
         },
-        players: expectedGameState.players.map((player) => ({
+        players: gameState.players.map((player) => ({
           name: player.name,
           color: player.color,
           coins: player.coins,
           influenceCount: player.influences.length
         }))
       }
-      delete expectedPublicGameState.deck
+      delete publicGameState.deck
 
-      expect(await getPublicGameState(expectedGameState.roomId, expectedPlayer.id))
-        .toStrictEqual(expectedPublicGameState)
+      expect(await getPublicGameState(gameState.roomId, selfPlayer.id))
+        .toStrictEqual(publicGameState)
     })
+  })
+
+  describe('drawCardFromDeck', () => {
+    it('should return top card and remove it from deck', () => {
+      const gameState = getRandomGameState()
+
+      const expectedCard = gameState.deck.at(-1)
+      const expectedDeckSize = gameState.deck.length - 1
+
+      expect(drawCardFromDeck(gameState)).toBe(expectedCard)
+      expect(gameState.deck.length).toBe(expectedDeckSize)
+    })
+  })
+
+  describe('logEvent', () => {
+    const gameState = getRandomGameState()
+
+    const newLog = chance.string()
+
+    let expectedEventLogs = [...gameState.eventLogs, newLog]
+    logEvent(gameState, newLog)
+    expect(gameState.eventLogs).toEqual(expectedEventLogs)
+
+    gameState.eventLogs = chance.n(chance.string, 100)
+
+    expectedEventLogs = [...gameState.eventLogs.slice(1), newLog]
+    logEvent(gameState, newLog)
+    expect(gameState.eventLogs).toEqual(expectedEventLogs)
   })
 })
