@@ -697,29 +697,30 @@ app.post('/loseInfluence', async (req, res) => {
     }
 
     await mutateGameState(roomId, (state) => {
-        if (state.pendingInfluenceLoss[player.name][0].putBackInDeck) {
-            const removedInfluence = player.influences.splice(
-                player.influences.findIndex((i) => i === influence),
+        const losingPlayer = state.players.find(({ id }) => id === playerId)
+        if (state.pendingInfluenceLoss[losingPlayer.name][0].putBackInDeck) {
+            const removedInfluence = losingPlayer.influences.splice(
+                losingPlayer.influences.findIndex((i) => i === influence),
                 1
             )[0]
             state.deck.unshift(removedInfluence)
         } else {
-            killPlayerInfluence(state, player.name, influence)
+            killPlayerInfluence(state, losingPlayer.name, influence)
         }
 
-        if (state.pendingInfluenceLoss[player.name].length > 1) {
-            state.pendingInfluenceLoss[player.name].splice(0, 1)
+        if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
+            state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
         } else {
-            delete state.pendingInfluenceLoss[player.name]
+            delete state.pendingInfluenceLoss[losingPlayer.name]
         }
 
         if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
             state.turnPlayer = getNextPlayerTurn(state)
         }
 
-        if (!player.influences.length) {
-            logEvent(state, `${player.name} is out!`)
-            delete state.pendingInfluenceLoss[player.name]
+        if (!losingPlayer.influences.length) {
+            logEvent(state, `${losingPlayer.name} is out!`)
+            delete state.pendingInfluenceLoss[losingPlayer.name]
         }
     })
 
