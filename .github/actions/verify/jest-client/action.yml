@@ -1,0 +1,11 @@
+name: Run Jest Client Tests
+
+runs:
+  using: composite
+  steps:
+  - uses: actions/checkout@v4
+  - uses: ./.github/actions/setup-node
+  - run: |
+      cd client
+      pnpm test
+    shell: bash
