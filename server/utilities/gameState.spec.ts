@@ -1,56 +1,54 @@
 import { Chance } from "chance"
-import { drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, logEvent } from "./gameState"
-import { Actions, GameState, Influences, Player } from '../../shared/types/game'
-import { getValue } from "./storage"
+import { drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, logEvent, mutateGameState, validateGameState } from "./gameState"
+import { GameState, Influences } from '../../shared/types/game'
+import { getValue, setValue } from "./storage"
+import { shuffle } from "./array"
 
 jest.mock("./storage")
 const getValueMock = jest.mocked(getValue)
+const setValueMock = jest.mocked(setValue)
 
 const chance = new Chance()
+const fifteenMinutes = 900
 
 const getRandomPlayers = (count?: number) =>
   chance.n(() => ({
     id: chance.string(),
     name: chance.string(),
     color: chance.color(),
-    coins: chance.natural({ min: 0, max: 12 }),
-    influences: chance.n(() => chance.pickone(Object.values(Influences)), chance.natural({ min: 1, max: 2 }))
+    coins: 2,
+    influences: []
   }), count ?? chance.natural({ min: 2, max: 6 }))
 
-const getRandomGameState = (players?: Player[]): GameState => {
-  const gamePlayers = players ?? getRandomPlayers()
+const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
+  const players = getRandomPlayers(playersCount)
 
-  return ({
-    deadCards: [Influences.Ambassador],
-    deck: chance.n(() => chance.pickone(Object.values(Influences)), chance.natural({ min: 1, max: 5 })),
+  const gameState: GameState = {
+    deadCards: [],
+    deck: shuffle(Object.values(Influences)
+      .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
     isStarted: chance.bool(),
-    players: gamePlayers,
-    pendingAction: {
-      action: chance.pickone(Object.values(Actions)),
-      pendingPlayers: chance.n(() => chance.pickone(gamePlayers).name, chance.natural({ min: 1, max: 5 })),
-      claimConfirmed: chance.bool()
-    },
-    pendingActionChallenge: {
-      sourcePlayer: chance.pickone(gamePlayers).name
-    },
-    pendingBlock: {
-      sourcePlayer: chance.pickone(gamePlayers).name,
-      pendingPlayers: chance.n(() => chance.pickone(gamePlayers).name, chance.natural({ min: 1, max: 5 })),
-      claimedInfluence: chance.pickone(Object.values(Influences))
-    },
-    pendingBlockChallenge: {
-      sourcePlayer: chance.pickone(gamePlayers).name
-    },
-    pendingInfluenceLoss: {
-      [chance.string()]: [{ putBackInDeck: chance.bool() }]
-    },
+    players,
+    pendingAction: undefined,
+    pendingActionChallenge: undefined,
+    pendingBlock: undefined,
+    pendingBlockChallenge: undefined,
+    pendingInfluenceLoss: {},
     roomId: chance.string(),
-    turnPlayer: chance.pickone(gamePlayers).name
+    turnPlayer: chance.pickone(players).name
+  }
+
+  gameState.players.forEach((player) => {
+    player.influences.push(...Array.from({ length: 2 }, () => drawCardFromDeck(gameState)))
   })
+
+  return gameState
 }
 
 describe('gameState', () => {
+  afterEach(jest.clearAllMocks)
+
   describe('getGameState', () => {
     it('should get game state object from storage by room id key', async () => {
       const roomId = 'some room'
@@ -89,6 +87,86 @@ describe('gameState', () => {
 
       expect(await getPublicGameState(gameState.roomId, selfPlayer.id))
         .toStrictEqual(publicGameState)
+    })
+  })
+
+  describe('mutateGameState', () => {
+    it('should validate state before updating storage', async () => {
+      const gameState = getRandomGameState()
+      getValueMock.mockResolvedValue(JSON.stringify(gameState))
+
+      await expect(mutateGameState(gameState.roomId, (state) => {
+        state.players[0].influences = []
+        state.turnPlayer = state.players[0].name
+      })).rejects.toThrow()
+
+      expect(setValueMock).not.toHaveBeenCalled()
+    })
+
+    it('should update storage with new state', async () => {
+      const gameState = getRandomGameState()
+      getValueMock.mockResolvedValue(JSON.stringify(gameState))
+
+      let newTurnPlayer: string
+      await mutateGameState(gameState.roomId, (state) => {
+        moveTurnToNextPlayer(state)
+        newTurnPlayer = state.turnPlayer
+      })
+
+      expect(setValueMock).toHaveBeenCalledTimes(1)
+      expect(newTurnPlayer).not.toBe(gameState.turnPlayer)
+      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId, JSON.stringify({
+        ...gameState,
+        turnPlayer: newTurnPlayer
+      }), fifteenMinutes)
+    })
+  })
+
+  describe('validateGameState', () => {
+    it.each([
+      { mutation: () => { } },
+      {
+        mutation: (state: GameState) => {
+          state.players[0].influences.push(...[drawCardFromDeck(state), drawCardFromDeck(state)])
+          state.pendingInfluenceLoss[state.players[0].name] = [{ putBackInDeck: true }, { putBackInDeck: true }]
+        }
+      },
+      {
+        mutation: (state: GameState) => {
+          const killedInfluence = state.players[0].influences.splice(0, 1)[0]
+          state.deadCards.push(killedInfluence)
+        }
+      }
+    ])('should not throw if game state is valid', ({ mutation }) => {
+      const gameState = getRandomGameState()
+      mutation(gameState)
+      expect(() => validateGameState(gameState)).not.toThrow()
+    })
+
+    it.each([
+      {
+        mutation: (state: GameState) => { state.players.length = 0 },
+        error: "Game state must always have 1 to 6 players"
+      },
+      {
+        mutation: (state: GameState) => { state.players = getRandomPlayers(7) },
+        error: "Game state must always have 1 to 6 players"
+      },
+      {
+        mutation: (state: GameState) => {
+          state.players[0].influences.push(...[drawCardFromDeck(state), drawCardFromDeck(state)])
+          state.pendingInfluenceLoss[state.players[0].name] = [{ putBackInDeck: true }]
+        },
+        error: "Players must have at most 2 influences"
+      },
+      {
+        mutation: (state: GameState) => { state.players[0].influences.splice(0, 1) },
+        error: "Incorrect total card count in game"
+      }
+    ])('should throw $error if state is not valid', async ({ mutation, error }) => {
+      const gameState = getRandomGameState()
+      mutation(gameState)
+      expect(() => validateGameState(gameState)).toThrow(error)
     })
   })
 
@@ -133,28 +211,26 @@ describe('gameState', () => {
     })
 
     it('should skip players with no influences left', () => {
-      const players = getRandomPlayers(6)
-      players[1].influences = []
-      players[4].influences = []
-      const gameState = getRandomGameState(players)
-      gameState.turnPlayer = players[0].name
+      const gameState = getRandomGameState({ playersCount: 6 })
+      gameState.players[1].influences = []
+      gameState.players[4].influences = []
+      gameState.turnPlayer = gameState.players[0].name
       moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(players[2].name)
+      expect(gameState.turnPlayer).toBe(gameState.players[2].name)
       moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(players[3].name)
+      expect(gameState.turnPlayer).toBe(gameState.players[3].name)
       moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(players[5].name)
+      expect(gameState.turnPlayer).toBe(gameState.players[5].name)
     })
 
     it('should wrap back to beginning of player list', () => {
-      const players = getRandomPlayers(3)
-      players[1].influences = []
-      const gameState = getRandomGameState(players)
-      gameState.turnPlayer = players[0].name
+      const gameState = getRandomGameState({ playersCount: 3 })
+      gameState.players[1].influences = []
+      gameState.turnPlayer = gameState.players[0].name
       moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(players[2].name)
+      expect(gameState.turnPlayer).toBe(gameState.players[2].name)
       moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(players[0].name)
+      expect(gameState.turnPlayer).toBe(gameState.players[0].name)
     })
   })
 })

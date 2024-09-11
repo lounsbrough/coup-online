@@ -2,7 +2,7 @@ import http from 'http'
 import express from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, promptPlayerToLoseInfluence, logEvent, mutateGameState, processPendingAction, resetGame, shuffle, startGame, killPlayerInfluence } from './utilities/gameState'
+import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, promptPlayerToLoseInfluence, logEvent, mutateGameState, processPendingAction, resetGame, startGame, killPlayerInfluence, shuffleDeck } from './utilities/gameState'
 import { generateRoomId } from './utilities/identifiers'
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game'
 
@@ -458,7 +458,7 @@ app.post('/actionChallengeResponse', async (req, res) => {
                 actionPlayer.influences.findIndex((i) => i === influence),
                 1
             )[0])
-            state.deck = shuffle(state.deck)
+            shuffleDeck(state)
             actionPlayer.influences.push(drawCardFromDeck(state))
             delete state.pendingActionChallenge
             state.pendingAction.claimConfirmed = true
@@ -628,7 +628,7 @@ app.post('/blockChallengeResponse', async (req, res) => {
                 blockPlayer.influences.findIndex((i) => i === influence),
                 1
             )[0])
-            state.deck = shuffle(state.deck)
+            shuffleDeck(state)
             blockPlayer.influences.push(drawCardFromDeck(state))
             logEvent(state, `${blockPlayer.name} revealed and replaced ${influence}`)
             logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
