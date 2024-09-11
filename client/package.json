@@ -29,7 +29,7 @@
     "copy-shared": "rm -rf ./src/shared && cp -r ../shared ./src/shared",
     "lint": "pnpm eslint",
     "start": "pnpm copy-shared && react-scripts start",
-    "build": "react-scripts build",
+    "build": "pnpm copy-shared && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
