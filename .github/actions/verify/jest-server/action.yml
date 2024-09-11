@@ -5,7 +5,10 @@ runs:
   steps:
   - uses: actions/checkout@v4
   - uses: ./.github/actions/setup-node
+  - run: sudo apt-get install -y redis-tools redis-server
+  - run: redis-cli ping
   - run: |
       cd server
-      pnpm jest
+      pnpm add -g concurrently wait-on
+      pnpm concurrently --kill-others --success first "pnpm dev" "pnpm wait-on tcp:8008 && pnpm jest"
     shell: bash
