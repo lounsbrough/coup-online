@@ -58,7 +58,7 @@ export const validateGameState = (state: GameState) => {
   if (state.players.length < 1 || state.players.length > 6) {
     throw new Error("Game state must always have 1 to 6 players")
   }
-  if (!state.players.find((player) => player.name === state.turnPlayer)?.influences.length) {
+  if (state.isStarted && !state.players.find((player) => player.name === state.turnPlayer)?.influences.length) {
     throw new Error("Invalid turn player")
   }
   if (state.players.some((player) =>
