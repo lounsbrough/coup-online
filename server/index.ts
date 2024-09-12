@@ -81,6 +81,72 @@ app.post('/createGame', async (
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
+app.post('/joinGame', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
+    const roomId = req.body?.roomId
+    const playerId = req.body?.playerId
+    const playerName = req.body?.playerName?.trim()
+
+    if (!roomId || !playerId || !playerName) {
+        res.status(400).json({ error: 'roomId, playerId, and playerName are required' })
+        return
+    }
+
+    if (playerName.length > 10) {
+        res.status(400).json({ error: 'playerName must be 10 characters or less' })
+        return
+    }
+
+    const gameState = await getGameState(roomId)
+
+    if (!gameState) {
+        res.status(404).json({ error: `Room ${roomId} does not exist` })
+        return
+    }
+
+    const existingPlayer = gameState.players.find((player) => player.id === playerId)
+
+    if (existingPlayer) {
+        if (existingPlayer.name.toUpperCase() !== playerName.toUpperCase()) {
+            res.status(400).json({ error: `Previously joined Room ${roomId} as ${existingPlayer.name}` })
+            return
+        }
+    } else {
+        if (gameState.players.length >= 6) {
+            res.status(400).json({ error: `Room ${roomId} is full` })
+            return
+        }
+
+        if (gameState.isStarted) {
+            res.status(400).json({ error: 'Game has already started' })
+            return
+        }
+
+        if (Object.values(Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
+            res.status(400).json({ error: 'You may not choose the name of an influence' })
+            return
+        }
+
+        if (Object.values(Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
+            res.status(400).json({ error: 'You may not choose the name of an action' })
+            return
+        }
+
+        if (gameState.players.some((existingPlayer) =>
+            existingPlayer.name.toUpperCase() === playerName.toUpperCase()
+        )) {
+            res.status(400).json({ error: `Room ${roomId} already has player named ${playerName}` })
+            return
+        }
+
+        await addPlayerToGame(roomId, playerId, playerName)
+    }
+
+    res.status(200).json(await getPublicGameState(roomId, playerId))
+})
+
 app.post('/resetGame', async (
     req: Request,
     res: Response<PublicGameStateOrError>
@@ -144,75 +210,17 @@ app.post('/startGame', async (
         return
     }
 
-    if (!gameState.isStarted) {
-        await startGame(roomId)
-    }
-
-    res.status(200).json(await getPublicGameState(roomId, playerId))
-})
-
-app.post('/joinGame', async (
-    req: Request,
-    res: Response<PublicGameStateOrError>
-) => {
-    const roomId = req.body?.roomId
-    const playerId = req.body?.playerId
-    const playerName = req.body?.playerName?.trim()
-
-    if (!roomId || !playerId || !playerName) {
-        res.status(400).json({ error: 'roomId, playerId, and playerName are required' })
+    if (gameState.players.length < 2) {
+        res.status(400).json({ error: 'Game must have at least 2 players to start' })
         return
     }
 
-    if (playerName.length > 10) {
-        res.status(400).json({ error: 'playerName must be 10 characters or less' })
+    if (gameState.isStarted) {
+        res.status(400).json({ error: 'Game has already started' })
         return
     }
 
-    const gameState = await getGameState(roomId)
-
-    if (!gameState) {
-        res.status(404).json({ error: `Room ${roomId} does not exist` })
-        return
-    }
-
-    const existingPlayer = gameState.players.find((player) => player.id === playerId)
-
-    if (existingPlayer) {
-        if (existingPlayer.name.toUpperCase() !== playerName.toUpperCase()) {
-            res.status(400).json({ error: `Previously joined Room ${roomId} as ${existingPlayer.name}` })
-            return
-        }
-    } else {
-        if (gameState.players.length >= 6) {
-            res.status(400).json({ error: `Room ${roomId} is full` })
-            return
-        }
-
-        if (gameState.isStarted) {
-            res.status(400).json({ error: `Room ${roomId} is already playing` })
-            return
-        }
-
-        if (Object.values(Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
-            res.status(400).json({ error: `You may not choose the name of an influence` })
-            return
-        }
-
-        if (Object.values(Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
-            res.status(400).json({ error: `You may not choose the name of an action` })
-            return
-        }
-
-        if (gameState.players.some((existingPlayer) =>
-            existingPlayer.name.toUpperCase() === playerName.toUpperCase()
-        )) {
-            res.status(400).json({ error: `Room ${roomId} already has player named ${playerName}` })
-            return
-        }
-
-        await addPlayerToGame(roomId, playerId, playerName)
-    }
+    await startGame(roomId)
 
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
