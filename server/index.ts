@@ -1,10 +1,10 @@
 import http from 'http'
-import express from 'express'
+import express, { Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, promptPlayerToLoseInfluence, logEvent, mutateGameState, processPendingAction, resetGame, startGame, killPlayerInfluence, shuffleDeck } from './utilities/gameState'
 import { generateRoomId } from './utilities/identifiers'
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '../shared/types/game'
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses, PublicGameState } from '../shared/types/game'
 
 const port = process.env.EXPRESS_PORT || 8008
 
@@ -13,46 +13,63 @@ app.use(cors())
 app.use(json())
 const server = http.createServer(app)
 
-app.get('/gameState', async (req, res) => {
+type PublicGameStateOrError = PublicGameState | {
+    error: string
+}
+
+app.get('/gameState', (async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.query?.roomId
     const playerId = req.query?.playerId
 
     if (typeof roomId !== 'string' || typeof playerId !== 'string') {
-        res.status(400).send('roomId and playerId are required')
+        res.status(400).json({ error: 'roomId and playerId are required' })
         return
     }
 
-    const gameState = await getPublicGameState(roomId, playerId)
+    const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(404).send()
+        res.status(404).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
-    res.json(gameState)
-})
+    const player = gameState.players.find(({ id }) => id === playerId)
 
-app.post('/createGame', async (req, res) => {
+    if (!player) {
+        res.status(400).json({ error: 'Player not in game' })
+        return
+    }
+
+    res.status(200).json(await getPublicGameState(roomId, playerId))
+}))
+
+app.post('/createGame', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const playerId = req.body?.playerId
     const playerName = req.body?.playerName
 
     if (!playerId || !playerName) {
-        res.status(400).send('playerId and playerName are required')
+        res.status(400).json({ error: 'playerId and playerName are required' })
         return
     }
 
     if (playerName.length > 10) {
-        res.status(400).send('playerName must be 10 characters or less')
+        res.status(400).json({ error: 'playerName must be 10 characters or less' })
         return
     }
 
     if (Object.values(Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
-        res.status(400).send(`You may not choose the name of an influence`)
+        res.status(400).json({ error: 'You may not choose the name of an influence' })
         return
     }
 
     if (Object.values(Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
-        res.status(400).send(`You may not choose the name of an action`)
+        res.status(400).json({ error: 'You may not choose the name of an action' })
         return
     }
 
@@ -64,31 +81,34 @@ app.post('/createGame', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/resetGame', async (req, res) => {
+app.post('/resetGame', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
 
     if (!roomId || !playerId) {
-        res.status(400).send('roomId and playerId are required')
+        res.status(400).json({ error: 'roomId and playerId are required' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(404).send(`Room ${roomId} does not exist`)
+        res.status(404).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('Player not in game')
+        res.status(400).json({ error: 'Player not in game' })
         return
     }
 
-    if (gameState.players.filter(({ influences }) => influences.length).length > 1) {
-        res.status(400).send('Current game is not over')
+    if (gameState.isStarted && gameState.players.filter(({ influences }) => influences.length).length > 1) {
+        res.status(400).json({ error: 'Current game is in progress' })
         return
     }
 
@@ -98,26 +118,29 @@ app.post('/resetGame', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/startGame', async (req, res) => {
+app.post('/startGame', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
 
     if (!roomId || !playerId) {
-        res.status(400).send('roomId and playerId are required')
+        res.status(400).json({ error: 'roomId and playerId are required' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(404).send(`Room ${roomId} does not exist`)
+        res.status(404).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('Player not in game')
+        res.status(400).json({ error: 'Player not in game' })
         return
     }
 
@@ -128,25 +151,28 @@ app.post('/startGame', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/joinGame', async (req, res) => {
+app.post('/joinGame', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
     const playerName = req.body?.playerName?.trim()
 
     if (!roomId || !playerId || !playerName) {
-        res.status(400).send('roomId, playerId, and playerName are required')
+        res.status(400).json({ error: 'roomId, playerId, and playerName are required' })
         return
     }
 
     if (playerName.length > 10) {
-        res.status(400).send('playerName must be 10 characters or less')
+        res.status(400).json({ error: 'playerName must be 10 characters or less' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(404).send(`Room ${roomId} does not exist`)
+        res.status(404).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
@@ -154,34 +180,34 @@ app.post('/joinGame', async (req, res) => {
 
     if (existingPlayer) {
         if (existingPlayer.name.toUpperCase() !== playerName.toUpperCase()) {
-            res.status(400).send(`Previously joined Room ${roomId} as ${existingPlayer.name}`)
+            res.status(400).json({ error: `Previously joined Room ${roomId} as ${existingPlayer.name}` })
             return
         }
     } else {
         if (gameState.players.length >= 6) {
-            res.status(400).send(`Room ${roomId} is full`)
+            res.status(400).json({ error: `Room ${roomId} is full` })
             return
         }
 
         if (gameState.isStarted) {
-            res.status(400).send(`Room ${roomId} is already playing`)
+            res.status(400).json({ error: `Room ${roomId} is already playing` })
             return
         }
 
         if (Object.values(Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
-            res.status(400).send(`You may not choose the name of an influence`)
+            res.status(400).json({ error: `You may not choose the name of an influence` })
             return
         }
 
         if (Object.values(Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
-            res.status(400).send(`You may not choose the name of an action`)
+            res.status(400).json({ error: `You may not choose the name of an action` })
             return
         }
 
         if (gameState.players.some((existingPlayer) =>
             existingPlayer.name.toUpperCase() === playerName.toUpperCase()
         )) {
-            res.status(400).send(`Room ${roomId} already has player named ${playerName}`)
+            res.status(400).json({ error: `Room ${roomId} already has player named ${playerName}` })
             return
         }
 
@@ -191,38 +217,41 @@ app.post('/joinGame', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/action', async (req, res) => {
+app.post('/action', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
     const action = req.body?.action as Actions
     const targetPlayer = req.body?.targetPlayer
 
     if (!roomId || !playerId || !action) {
-        res.status(400).send('roomId, playerId, and action are required')
+        res.status(400).json({ error: 'roomId, playerId, and action are required' })
         return
     }
 
     if (!Object.values(Actions).includes(action)) {
-        res.status(400).send('Unknown action')
+        res.status(400).json({ error: 'Unknown action' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(400).send(`Room ${roomId} does not exist`)
+        res.status(400).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('Player not in game')
+        res.status(400).json({ error: 'Player not in game' })
         return
     }
 
     if (!player.influences.length) {
-        res.status(400).send('You had your chance')
+        res.status(400).json({ error: 'You had your chance' })
         return
     }
 
@@ -231,32 +260,32 @@ app.post('/action', async (req, res) => {
         || gameState.pendingActionChallenge
         || gameState.pendingBlock
         || gameState.pendingBlockChallenge) {
-        res.status(400).send('You can\'t choose an action right now')
+        res.status(400).json({ error: 'You can\'t choose an action right now' })
         return
     }
 
     if ((ActionAttributes[action].coinsRequired ?? 0) > player.coins) {
-        res.status(400).send('You don\'t have enough coins')
+        res.status(400).json({ error: 'You don\'t have enough coins' })
         return
     }
 
     if (player.coins >= 10 && action !== Actions.Coup) {
-        res.status(400).send('You must coup when you have 10 or more coins')
+        res.status(400).json({ error: 'You must coup when you have 10 or more coins' })
         return
     }
 
     if (targetPlayer && !gameState.players.some((player) => player.name === targetPlayer)) {
-        res.status(400).send('Unknown target player')
+        res.status(400).json({ error: 'Unknown target player' })
         return
     }
 
     if (ActionAttributes[action].requiresTarget && !targetPlayer) {
-        res.status(400).send('Target player is required for this action')
+        res.status(400).json({ error: 'Target player is required for this action' })
         return
     }
 
     if (!ActionAttributes[action].requiresTarget && targetPlayer) {
-        res.status(400).send('Target player is not allowed for this action')
+        res.status(400).json({ error: 'Target player is not allowed for this action' })
         return
     }
 
@@ -294,45 +323,48 @@ app.post('/action', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/actionResponse', async (req, res) => {
+app.post('/actionResponse', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
     const response = req.body?.response
     const claimedInfluence = req.body?.claimedInfluence
 
     if (!roomId || !playerId || !response) {
-        res.status(400).send('roomId, playerId, and response are required')
+        res.status(400).json({ error: 'roomId, playerId, and response are required' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(400).send(`Room ${roomId} does not exist`)
+        res.status(400).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('Player not in room')
+        res.status(400).json({ error: 'Player not in room' })
         return
     }
 
     if (!player.influences.length) {
-        res.status(400).send('You had your chance')
+        res.status(400).json({ error: 'You had your chance' })
         return
     }
 
     if (!gameState.pendingAction
         || gameState.pendingActionChallenge
         || !gameState.pendingAction.pendingPlayers.includes(player.name)) {
-        res.status(400).send('You can\'t choose an action response right now')
+        res.status(400).json({ error: 'You can\'t choose an action response right now' })
         return
     }
 
     if (!Object.values(Responses).includes(response)) {
-        res.status(400).send('Unknown response')
+        res.status(400).json({ error: 'Unknown response' })
         return
     }
 
@@ -351,7 +383,7 @@ app.post('/actionResponse', async (req, res) => {
         }
     } else if (response === Responses.Challenge) {
         if (gameState.pendingAction.claimConfirmed) {
-            res.status(400).send(`${gameState.turnPlayer} has already confirmed their claim`)
+            res.status(400).json({ error: `${gameState.turnPlayer} has already confirmed their claim` })
             return
         }
 
@@ -363,24 +395,24 @@ app.post('/actionResponse', async (req, res) => {
         })
     } else if (response === Responses.Block) {
         if (!claimedInfluence) {
-            res.status(400).send('claimedInfluence is required when blocking')
+            res.status(400).json({ error: 'claimedInfluence is required when blocking' })
             return
         }
 
         if (InfluenceAttributes[claimedInfluence as Influences].legalBlock !== gameState.pendingAction.action) {
-            res.status(400).send('claimedInfluence can not block this action')
+            res.status(400).json({ error: 'claimedInfluence can not block this action' })
             return
         }
 
         if (gameState.pendingAction.targetPlayer &&
             player.name !== gameState.pendingAction.targetPlayer
         ) {
-            res.status(400).send(`You are not the target of the pending action`)
+            res.status(400).json({ error: `You are not the target of the pending action` })
             return
         }
 
         if (!Object.values(Influences).includes(claimedInfluence)) {
-            res.status(400).send('Unknown claimedInfluence')
+            res.status(400).json({ error: 'Unknown claimedInfluence' })
             return
         }
 
@@ -403,47 +435,50 @@ app.post('/actionResponse', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/actionChallengeResponse', async (req, res) => {
+app.post('/actionChallengeResponse', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
     const influence = req.body?.influence
 
     if (!roomId || !playerId || !influence) {
-        res.status(400).send('roomId, playerId, and influence are required')
+        res.status(400).json({ error: 'roomId, playerId, and influence are required' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(400).send(`Room ${roomId} does not exist`)
+        res.status(400).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('Player not in room')
+        res.status(400).json({ error: 'Player not in room' })
         return
     }
 
     if (!player.influences.length) {
-        res.status(400).send('You had your chance')
+        res.status(400).json({ error: 'You had your chance' })
         return
     }
 
     if (!gameState.pendingActionChallenge) {
-        res.status(400).send('You can\'t choose a challenge response right now')
+        res.status(400).json({ error: 'You can\'t choose a challenge response right now' })
         return
     }
 
     if (!Object.values(Influences).includes(influence)) {
-        res.status(400).send('Unknown influence')
+        res.status(400).json({ error: 'Unknown influence' })
         return
     }
 
     if (!player.influences.includes(influence)) {
-        res.status(400).send('You don\'t have that influence')
+        res.status(400).json({ error: 'You don\'t have that influence' })
         return
     }
 
@@ -495,32 +530,35 @@ app.post('/actionChallengeResponse', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/blockResponse', async (req, res) => {
+app.post('/blockResponse', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
     const response = req.body?.response
 
     if (!roomId || !playerId || !response) {
-        res.status(400).send('roomId, playerId, and response are required')
+        res.status(400).json({ error: 'roomId, playerId, and response are required' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(400).send(`Room ${roomId} does not exist`)
+        res.status(400).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('Player not in room')
+        res.status(400).json({ error: 'Player not in room' })
         return
     }
 
     if (!player.influences.length) {
-        res.status(400).send('You had your chance')
+        res.status(400).json({ error: 'You had your chance' })
         return
     }
 
@@ -528,17 +566,17 @@ app.post('/blockResponse', async (req, res) => {
         || gameState.pendingBlockChallenge
         || !gameState.pendingBlock.pendingPlayers.includes(player.name)
     ) {
-        res.status(400).send('You can\'t choose a block response right now')
+        res.status(400).json({ error: 'You can\'t choose a block response right now' })
         return
     }
 
     if (!Object.values(Responses).includes(response)) {
-        res.status(400).send('Unknown response')
+        res.status(400).json({ error: 'Unknown response' })
         return
     }
 
     if (response === Responses.Block) {
-        res.status(400).send('You can\'t block a block')
+        res.status(400).json({ error: 'You can\'t block a block' })
         return
     }
 
@@ -575,47 +613,50 @@ app.post('/blockResponse', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/blockChallengeResponse', async (req, res) => {
+app.post('/blockChallengeResponse', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
     const influence = req.body?.influence
 
     if (!roomId || !playerId || !influence) {
-        res.status(400).send('roomId, playerId, and influence are required')
+        res.status(400).json({ error: 'roomId, playerId, and influence are required' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(400).send(`Room ${roomId} does not exist`)
+        res.status(400).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('Player not in room')
+        res.status(400).json({ error: 'Player not in room' })
         return
     }
 
     if (!player.influences.length) {
-        res.status(400).send('You had your chance')
+        res.status(400).json({ error: 'You had your chance' })
         return
     }
 
     if (!gameState.pendingBlockChallenge) {
-        res.status(400).send('You can\'t choose a challenge response right now')
+        res.status(400).json({ error: 'You can\'t choose a challenge response right now' })
         return
     }
 
     if (!Object.values(Influences).includes(influence)) {
-        res.status(400).send('Unknown influence')
+        res.status(400).json({ error: 'Unknown influence' })
         return
     }
 
     if (!player.influences.includes(influence)) {
-        res.status(400).send('You don\'t have that influence')
+        res.status(400).json({ error: 'You don\'t have that influence' })
         return
     }
 
@@ -657,42 +698,45 @@ app.post('/blockChallengeResponse', async (req, res) => {
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/loseInfluence', async (req, res) => {
+app.post('/loseInfluence', async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
     const roomId = req.body?.roomId
     const playerId = req.body?.playerId
     const influence = req.body?.influence
 
     if (!roomId || !playerId || !influence) {
-        res.status(400).send('roomId, playerId, and influence are required')
+        res.status(400).json({ error: 'roomId, playerId, and influence are required' })
         return
     }
 
     const gameState = await getGameState(roomId)
 
     if (!gameState) {
-        res.status(400).send(`Room ${roomId} does not exist`)
+        res.status(400).json({ error: `Room ${roomId} does not exist` })
         return
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
-        res.status(400).send('Player not in room')
+        res.status(400).json({ error: 'Player not in room' })
         return
     }
 
     if (!player.influences.length) {
-        res.status(400).send('You had your chance')
+        res.status(400).json({ error: 'You had your chance' })
         return
     }
 
     if (!gameState.pendingInfluenceLoss[player.name]) {
-        res.status(400).send('You can\'t lose influence right now')
+        res.status(400).json({ error: 'You can\'t lose influence right now' })
         return
     }
 
     if (!Object.values(Influences).includes(influence)) {
-        res.status(400).send('Unknown influence')
+        res.status(400).json({ error: 'Unknown influence' })
         return
     }
 
