@@ -47,13 +47,8 @@ describe('index', () => {
                 status: 200
             },
             {
-                getQueryParams: () => ({ playerId: chance.string({ length: 10 }) }),
-                error: 'roomId and playerId are required',
-                status: 400
-            },
-            {
-                getQueryParams: () => ({ roomId: chance.string({ length: 10 }) }),
-                error: 'roomId and playerId are required',
+                getQueryParams: () => ({}),
+                error: '"roomId" is required, "playerId" is required',
                 status: 400
             },
             {
@@ -111,13 +106,8 @@ describe('index', () => {
                 status: 200
             },
             {
-                body: { playerName: chance.string({ length: 10 }) },
-                error: 'playerId and playerName are required',
-                status: 400
-            },
-            {
-                body: { playerId: chance.string({ length: 10 }) },
-                error: 'playerId and playerName are required',
+                body: {},
+                error: '"playerId" is required, "playerName" is required',
                 status: 400
             },
             {
@@ -125,7 +115,7 @@ describe('index', () => {
                     playerId: chance.string({ length: 10 }),
                     playerName: chance.string({ length: 11 })
                 },
-                error: 'playerName must be 10 characters or less',
+                error: '"playerName" length must be less than or equal to 10 characters long',
                 status: 400
             },
             {
@@ -133,7 +123,7 @@ describe('index', () => {
                     playerId: chance.string({ length: 10 }),
                     playerName: Influences.Duke
                 },
-                error: 'You may not choose the name of an influence',
+                error: '"playerName" contains an invalid value',
                 status: 400
             },
             {
@@ -141,7 +131,7 @@ describe('index', () => {
                     playerId: chance.string({ length: 10 }),
                     playerName: Actions.Exchange
                 },
-                error: 'You may not choose the name of an action',
+                error: '"playerName" contains an invalid value',
                 status: 400
             }
         ] as {
@@ -178,27 +168,8 @@ describe('index', () => {
                 status: 200
             },
             {
-                getBody: () => ({
-                    playerId: chance.string({ length: 10 }),
-                    playerName: chance.string({ length: 10 })
-                }),
-                error: 'roomId, playerId, and playerName are required',
-                status: 400
-            },
-            {
-                getBody: () => ({
-                    roomId: chance.string({ length: 10 }),
-                    playerName: chance.string({ length: 10 })
-                }),
-                error: 'roomId, playerId, and playerName are required',
-                status: 400
-            },
-            {
-                getBody: () => ({
-                    roomId: chance.string({ length: 10 }),
-                    playerId: chance.string({ length: 10 })
-                }),
-                error: 'roomId, playerId, and playerName are required',
+                getBody: () => ({}),
+                error: '"roomId" is required, "playerId" is required, "playerName" is required',
                 status: 400
             },
             {
@@ -207,7 +178,7 @@ describe('index', () => {
                     playerId: chance.string({ length: 10 }),
                     playerName: chance.string({ length: 11 })
                 }),
-                error: 'playerName must be 10 characters or less',
+                error: '"playerName" length must be less than or equal to 10 characters long',
                 status: 400
             },
             {
@@ -282,7 +253,7 @@ describe('index', () => {
 
                     return { roomId, playerId: chance.string({ length: 10 }), playerName: Influences.Captain }
                 },
-                error: 'You may not choose the name of an influence',
+                error: '"playerName" contains an invalid value',
                 status: 400
             },
             {
@@ -296,7 +267,7 @@ describe('index', () => {
 
                     return { roomId, playerId: chance.string({ length: 10 }), playerName: Actions.Income }
                 },
-                error: 'You may not choose the name of an action',
+                error: '"playerName" contains an invalid value',
                 status: 400
             },
             {
@@ -392,13 +363,8 @@ describe('index', () => {
                 status: 200
             },
             {
-                getBody: () => ({ playerId: chance.string({ length: 10 }) }),
-                error: 'roomId and playerId are required',
-                status: 400
-            },
-            {
-                getBody: () => ({ roomId: chance.string({ length: 10 }) }),
-                error: 'roomId and playerId are required',
+                getBody: () => ({}),
+                error: '"roomId" is required, "playerId" is required',
                 status: 400
             },
             {
@@ -478,6 +444,117 @@ describe('index', () => {
             } else {
                 validatePublicState(responseJson)
                 expect(responseJson.players.every((player: PublicPlayer) => player.influenceCount === 2))
+                expect(responseJson.isStarted).toBe(true)
+            }
+        })
+    })
+
+    describe('startGame', () => {
+        it.each([
+            {
+                getBody: async () => {
+                    const players = [{
+                        id: chance.string({ length: 10 }),
+                        name: chance.string({ length: 10 })
+                    }, {
+                        id: chance.string({ length: 10 }),
+                        name: chance.string({ length: 10 })
+                    }]
+
+                    const response = await postApi('createGame', {
+                        playerId: players[0].id,
+                        playerName: players[0].name
+                    })
+
+                    const roomId = (await response.json()).roomId
+
+                    await postApi('joinGame', {
+                        roomId,
+                        playerId: players[1].id,
+                        playerName: players[1].name
+                    })
+
+                    return { roomId, playerId: players[0].id }
+                },
+                error: '',
+                status: 200
+            },
+            {
+                getBody: () => ({}),
+                error: '"roomId" is required, "playerId" is required',
+                status: 400
+            },
+            {
+                getBody: () => ({
+                    roomId: chance.string({ length: 10 }),
+                    playerId: chance.string({ length: 10 })
+                }),
+                error: /Room .+ does not exist/,
+                status: 404
+            },
+            {
+                getBody: async () => {
+                    const playerId = chance.string({ length: 10 })
+                    const playerName = chance.string({ length: 10 })
+
+                    const response = await postApi('createGame', { playerId, playerName })
+
+                    const roomId = (await response.json()).roomId
+
+                    return { roomId, playerId: chance.string({ length: 10 }) }
+                },
+                error: 'Player not in game',
+                status: 400
+            },
+            {
+                getBody: async () => {
+                    const playerId = chance.string({ length: 10 })
+                    const playerName = chance.string({ length: 10 })
+
+                    const response = await postApi('createGame', { playerId, playerName })
+
+                    const roomId = (await response.json()).roomId
+
+                    return { roomId, playerId }
+                },
+                error: 'Game must have at least 2 players to start',
+                status: 400
+            },
+            {
+                getBody: async () => {
+                    const playerId = chance.string({ length: 10 })
+                    const playerName = chance.string({ length: 10 })
+
+                    const response = await postApi('createGame', { playerId, playerName })
+
+                    const roomId = (await response.json()).roomId
+
+                    await postApi('joinGame', {
+                        roomId,
+                        playerId: chance.string({ length: 10 }),
+                        playerName: chance.string({ length: 10 })
+                    })
+
+                    await postApi('startGame', { roomId, playerId })
+
+                    return { roomId, playerId }
+                },
+                error: 'Game has already started',
+                status: 400
+            }
+        ] as {
+            getBody: () => Promise<Partial<{ roomId: string, playerId: string }>>,
+            error: string,
+            status: number
+        }[])('should return $status $error', async ({ getBody, error, status }) => {
+            const response = await postApi('startGame', await getBody())
+
+            expect(response.status).toBe(status)
+            const responseJson = await response.json()
+            if (error) {
+                expect(responseJson).toEqual({ error: expect.stringMatching(error) })
+            } else {
+                validatePublicState(responseJson)
                 expect(responseJson.isStarted).toBe(true)
             }
         })

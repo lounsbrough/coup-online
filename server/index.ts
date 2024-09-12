@@ -1,10 +1,11 @@
 import http from 'http'
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
+import Joi, { ObjectSchema } from 'joi'
 import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, promptPlayerToLoseInfluence, logEvent, mutateGameState, processPendingAction, resetGame, startGame, killPlayerInfluence, shuffleDeck } from './utilities/gameState'
 import { generateRoomId } from './utilities/identifiers'
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses, PublicGameState } from '../shared/types/game'
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses, PublicGameState, GameState } from '../shared/types/game'
 
 const port = process.env.EXPRESS_PORT || 8008
 
@@ -17,61 +18,76 @@ type PublicGameStateOrError = PublicGameState | {
     error: string
 }
 
-app.get('/gameState', (async (
-    req: Request,
-    res: Response<PublicGameStateOrError>
-) => {
-    const roomId = req.query?.roomId
-    const playerId = req.query?.playerId
-
-    if (typeof roomId !== 'string' || typeof playerId !== 'string') {
-        res.status(400).json({ error: 'roomId and playerId are required' })
-        return
+const validateRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const result = schema.validate(req[requestProperty], { abortEarly: false })
+        if (result.error) {
+            res.status(400).json({
+                error: result.error.details.map(({ message }) => message).join(', '),
+            })
+            return
+        }
+        next()
     }
+}
+const validateBody = (schema: ObjectSchema) => validateRequest(schema, 'body')
+const validateQuery = (schema: ObjectSchema) => validateRequest(schema, 'query')
 
-    const gameState = await getGameState(roomId)
-
+const validateRoomId = (res: Response, gameState: GameState, roomId: string) => {
     if (!gameState) {
         res.status(404).json({ error: `Room ${roomId} does not exist` })
-        return
+        return false
+    }
+
+    return true
+}
+
+const validateRoomIdAndPlayerId = (res: Response, gameState: GameState, roomId: string, playerId: string) => {
+    if (!validateRoomId(res, gameState, roomId)) {
+        return false
     }
 
     const player = gameState.players.find(({ id }) => id === playerId)
 
     if (!player) {
         res.status(400).json({ error: 'Player not in game' })
+        return false
+    }
+
+    return true
+}
+
+app.get('/gameState', validateQuery(Joi.object().keys({
+    roomId: Joi.string().required(),
+    playerId: Joi.string().required()
+})), (async (
+    req: Request,
+    res: Response<PublicGameStateOrError>
+) => {
+    const roomId: string = req.query.roomId as string
+    const playerId: string = req.query.playerId as string
+
+    const gameState = await getGameState(roomId)
+
+    if (!validateRoomIdAndPlayerId(res, gameState, roomId, playerId)) {
         return
     }
 
     res.status(200).json(await getPublicGameState(roomId, playerId))
 }))
 
-app.post('/createGame', async (
+app.post('/createGame', validateBody(Joi.object().keys({
+    playerId: Joi.string().required(),
+    playerName: Joi.string().min(1).max(10).disallow(
+        ...Object.values(Influences),
+        ...Object.values(Actions)
+    ).required()
+})), async (
     req: Request,
     res: Response<PublicGameStateOrError>
 ) => {
-    const playerId = req.body?.playerId
-    const playerName = req.body?.playerName
-
-    if (!playerId || !playerName) {
-        res.status(400).json({ error: 'playerId and playerName are required' })
-        return
-    }
-
-    if (playerName.length > 10) {
-        res.status(400).json({ error: 'playerName must be 10 characters or less' })
-        return
-    }
-
-    if (Object.values(Influences).some((influence) => influence.toUpperCase() === playerName.toUpperCase())) {
-        res.status(400).json({ error: 'You may not choose the name of an influence' })
-        return
-    }
-
-    if (Object.values(Actions).some((action) => action.toUpperCase() === playerName.toUpperCase())) {
-        res.status(400).json({ error: 'You may not choose the name of an action' })
-        return
-    }
+    const playerId: string = req.body.playerId
+    const playerName: string = req.body.playerName
 
     const roomId = generateRoomId()
 
@@ -81,28 +97,24 @@ app.post('/createGame', async (
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/joinGame', async (
+app.post('/joinGame', validateBody(Joi.object().keys({
+    roomId: Joi.string().required(),
+    playerId: Joi.string().required(),
+    playerName: Joi.string().min(1).max(10).disallow(
+        ...Object.values(Influences),
+        ...Object.values(Actions)
+    ).required()
+})), async (
     req: Request,
     res: Response<PublicGameStateOrError>
 ) => {
-    const roomId = req.body?.roomId
-    const playerId = req.body?.playerId
-    const playerName = req.body?.playerName?.trim()
-
-    if (!roomId || !playerId || !playerName) {
-        res.status(400).json({ error: 'roomId, playerId, and playerName are required' })
-        return
-    }
-
-    if (playerName.length > 10) {
-        res.status(400).json({ error: 'playerName must be 10 characters or less' })
-        return
-    }
+    const roomId: string = req.body.roomId
+    const playerId: string = req.body.playerId
+    const playerName: string = req.body.playerName.trim()
 
     const gameState = await getGameState(roomId)
 
-    if (!gameState) {
-        res.status(404).json({ error: `Room ${roomId} does not exist` })
+    if (!validateRoomId(res, gameState, roomId)) {
         return
     }
 
@@ -147,29 +159,19 @@ app.post('/joinGame', async (
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/resetGame', async (
+app.post('/resetGame', validateBody(Joi.object().keys({
+    roomId: Joi.string().required(),
+    playerId: Joi.string().required()
+})), async (
     req: Request,
     res: Response<PublicGameStateOrError>
 ) => {
-    const roomId = req.body?.roomId
-    const playerId = req.body?.playerId
-
-    if (!roomId || !playerId) {
-        res.status(400).json({ error: 'roomId and playerId are required' })
-        return
-    }
+    const roomId: string = req.body.roomId
+    const playerId: string = req.body.playerId
 
     const gameState = await getGameState(roomId)
 
-    if (!gameState) {
-        res.status(404).json({ error: `Room ${roomId} does not exist` })
-        return
-    }
-
-    const player = gameState.players.find(({ id }) => id === playerId)
-
-    if (!player) {
-        res.status(400).json({ error: 'Player not in game' })
+    if (!validateRoomIdAndPlayerId(res, gameState, roomId, playerId)) {
         return
     }
 
@@ -184,29 +186,19 @@ app.post('/resetGame', async (
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
 
-app.post('/startGame', async (
+app.post('/startGame', validateBody(Joi.object().keys({
+    roomId: Joi.string().required(),
+    playerId: Joi.string().required()
+})), async (
     req: Request,
     res: Response<PublicGameStateOrError>
 ) => {
-    const roomId = req.body?.roomId
-    const playerId = req.body?.playerId
-
-    if (!roomId || !playerId) {
-        res.status(400).json({ error: 'roomId and playerId are required' })
-        return
-    }
+    const roomId: string = req.body.roomId
+    const playerId: string = req.body.playerId
 
     const gameState = await getGameState(roomId)
 
-    if (!gameState) {
-        res.status(404).json({ error: `Room ${roomId} does not exist` })
-        return
-    }
-
-    const player = gameState.players.find(({ id }) => id === playerId)
-
-    if (!player) {
-        res.status(400).json({ error: 'Player not in game' })
+    if (!validateRoomIdAndPlayerId(res, gameState, roomId, playerId)) {
         return
     }
 
