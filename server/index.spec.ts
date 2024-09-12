@@ -1,5 +1,5 @@
 import Chance from 'chance'
-import { Actions, Influences } from '../shared/types/game'
+import { Actions, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../shared/types/game'
 
 const chance = new Chance()
 
@@ -15,6 +15,19 @@ const postApi = (endpoint: string, body: object) =>
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(body)
     })
+
+const validatePublicState = (gameState: GameState & PublicGameState) => {
+    expect(gameState.selfPlayer).toBeTruthy()
+    expect(gameState.deck).toBeUndefined()
+    gameState.players.forEach((player: Player & PublicPlayer) => {
+        expect(player.id).toBeUndefined()
+        expect(player.influences).toBeUndefined()
+        expect(player.influenceCount).toBeTruthy()
+        expect(player.name).toBeTruthy()
+        expect(player.coins).toBeTruthy()
+        expect(player.color).toBeTruthy()
+    })
+}
 
 describe('index', () => {
     describe('gameState', () => {
@@ -78,8 +91,7 @@ describe('index', () => {
             if (error) {
                 expect(responseJson).toEqual({ error: expect.stringMatching(error) })
             } else {
-                expect(responseJson.selfPlayer.id).not.toBeNull()
-                expect(responseJson.players[0]).not.toHaveProperty('influences')
+                validatePublicState(responseJson)
             }
         })
     })
@@ -136,8 +148,7 @@ describe('index', () => {
             if (error) {
                 expect(responseJson).toEqual({ error: expect.stringMatching(error) })
             } else {
-                expect(responseJson.selfPlayer.id).not.toBeNull()
-                expect(responseJson.players[0]).not.toHaveProperty('influences')
+                validatePublicState(responseJson)
             }
         })
     })
@@ -239,8 +250,7 @@ describe('index', () => {
             if (error) {
                 expect(responseJson).toEqual({ error: expect.stringMatching(error) })
             } else {
-                expect(responseJson.selfPlayer.id).not.toBeNull()
-                expect(responseJson.players[0]).not.toHaveProperty('influences')
+                validatePublicState(responseJson)
             }
         })
     })
