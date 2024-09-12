@@ -18,6 +18,11 @@ type PublicGameStateOrError = PublicGameState | {
     error: string
 }
 
+const playerNameRule = Joi.string().min(1).max(10).disallow(
+    ...Object.values(Influences),
+    ...Object.values(Actions)
+).required()
+
 const validateRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
     return (req: Request, res: Response, next: NextFunction) => {
         const result = schema.validate(req[requestProperty], { abortEarly: false })
@@ -78,10 +83,7 @@ app.get('/gameState', validateQuery(Joi.object().keys({
 
 app.post('/createGame', validateBody(Joi.object().keys({
     playerId: Joi.string().required(),
-    playerName: Joi.string().min(1).max(10).disallow(
-        ...Object.values(Influences),
-        ...Object.values(Actions)
-    ).required()
+    playerName: playerNameRule
 })), async (
     req: Request,
     res: Response<PublicGameStateOrError>
@@ -100,10 +102,7 @@ app.post('/createGame', validateBody(Joi.object().keys({
 app.post('/joinGame', validateBody(Joi.object().keys({
     roomId: Joi.string().required(),
     playerId: Joi.string().required(),
-    playerName: Joi.string().min(1).max(10).disallow(
-        ...Object.values(Influences),
-        ...Object.values(Actions)
-    ).required()
+    playerName: playerNameRule
 })), async (
     req: Request,
     res: Response<PublicGameStateOrError>
