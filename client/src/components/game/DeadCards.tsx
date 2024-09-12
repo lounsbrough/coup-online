@@ -26,7 +26,7 @@ function DeadCards() {
           <DialogTitle variant="h5" textAlign="center">Dead Cards</DialogTitle>
           <DialogContent>
             {gameState.deadCards.length
-              ? <Grid2 container spacing={2}>
+              ? <Grid2 container spacing={2} justifyContent="center">
                 {gameState.deadCards.map((influence, index) =>
                   <InfluenceCard key={index} influence={influence} />)}
               </Grid2>
