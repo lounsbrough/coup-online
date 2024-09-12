@@ -18,87 +18,146 @@ const postApi = (endpoint: string, body: object) =>
 
 describe('index', () => {
     describe('gameState', () => {
-        it('should return 200 and public game state', async () => {
-            const playerId = chance.string()
-            const playerName = chance.string({ length: 10 })
+        it.each([
+            {
+                getQueryParams: async () => {
+                    const playerId = chance.string()
+                    const playerName = chance.string({ length: 10 })
 
-            let response = await postApi('createGame', { playerId, playerName })
+                    const response = await postApi('createGame', { playerId, playerName })
 
-            const roomId = (await response.json()).roomId
+                    const roomId = (await response.json()).roomId
 
-            response = await getApi(`gameState?roomId=${roomId}&playerId=${playerId}`)
+                    return { roomId, playerId }
+                },
+                error: '',
+                status: 200
+            },
+            {
+                getQueryParams: () => ({ playerId: chance.string({ length: 10 }) }),
+                error: 'roomId and playerId are required',
+                status: 400
+            },
+            {
+                getQueryParams: () => ({ roomId: chance.string({ length: 10 }) }),
+                error: 'roomId and playerId are required',
+                status: 400
+            },
+            {
+                getQueryParams: () => ({
+                    roomId: chance.string({ length: 10 }),
+                    playerId: chance.string({ length: 10 })
+                }),
+                error: /Room .+ does not exist/,
+                status: 404
+            },
+            {
+                getQueryParams: async () => {
+                    const playerId = chance.string()
+                    const playerName = chance.string({ length: 10 })
 
-            expect(response.status).toBe(200)
+                    const response = await postApi('createGame', { playerId, playerName })
+
+                    const roomId = (await response.json()).roomId
+
+                    return { roomId, playerId: chance.string({ length: 10 }) }
+                },
+                error: 'Player not in game',
+                status: 400
+            }
+        ])('should return $status $error', async ({ getQueryParams, error, status }) => {
+            const queryParams = await getQueryParams()
+            const queryString = Object.entries(queryParams)
+                .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+                .join('&')
+
+            const response = await getApi(`gameState?${queryString}`)
+
+            expect(response.status).toBe(status)
             const responseJson = await response.json()
-            expect(responseJson.selfPlayer.name).toBe(playerName)
+            if (error) {
+                expect(responseJson).toEqual({ error: expect.stringMatching(error) })
+            } else {
+                expect(responseJson.selfPlayer.id).not.toBeNull()
+                expect(responseJson.players[0]).not.toHaveProperty('influences')
+            }
         })
     })
 
     describe('createGame', () => {
-        it('should return 200 and public game state', async () => {
-            const playerName = chance.string({ length: 10 })
-            const response = await postApi('createGame', {
-                playerId: chance.string(),
-                playerName
-            })
-
-            expect(response.status).toBe(200)
-            expect((await response.json()).selfPlayer.name).toBe(playerName)
-        })
-
         it.each([
             {
+                body: {
+                    playerId: chance.string({ length: 10 }),
+                    playerName: chance.string({ length: 10 })
+                },
+                error: '',
+                status: 200
+            },
+            {
                 body: { playerName: chance.string({ length: 10 }) },
-                error: 'playerId and playerName are required'
+                error: 'playerId and playerName are required',
+                status: 400
             },
             {
                 body: { playerId: chance.string({ length: 10 }) },
-                error: 'playerId and playerName are required'
+                error: 'playerId and playerName are required',
+                status: 400
             },
             {
                 body: {
                     playerId: chance.string({ length: 10 }),
                     playerName: chance.string({ length: 11 })
-                }, error: 'playerName must be 10 characters or less'
+                },
+                error: 'playerName must be 10 characters or less',
+                status: 400
             },
             {
                 body: {
                     playerId: chance.string({ length: 10 }),
                     playerName: Influences.Duke
-                }, error: 'You may not choose the name of an influence'
+                },
+                error: 'You may not choose the name of an influence',
+                status: 400
             },
             {
                 body: {
                     playerId: chance.string({ length: 10 }),
                     playerName: Actions.Exchange
-                }, error: 'You may not choose the name of an action'
+                },
+                error: 'You may not choose the name of an action',
+                status: 400
             }
-        ])('should return error: "$error"', async ({ body, error }) => {
+        ])('should return $status $error', async ({ body, error, status }) => {
             const response = await postApi('createGame', body)
 
-            expect(response.status).toBe(400)
-            expect((await response.json())).toEqual({ error })
+            expect(response.status).toBe(status)
+            const responseJson = await response.json()
+            if (error) {
+                expect(responseJson).toEqual({ error: expect.stringMatching(error) })
+            } else {
+                expect(responseJson.selfPlayer.id).not.toBeNull()
+                expect(responseJson.players[0]).not.toHaveProperty('influences')
+            }
         })
     })
 
     describe('resetGame', () => {
-        it('should return 200 and public game state', async () => {
-            const playerId = chance.string()
-            const playerName = chance.string({ length: 10 })
-
-            let response = await postApi('createGame', { playerId, playerName })
-
-            const roomId = (await response.json()).roomId
-
-            response = await postApi('resetGame', { roomId, playerId })
-
-            expect(response.status).toBe(200)
-            expect((await response.json()).selfPlayer.name).toBe(playerName)
-        })
-
-        const nonExistentRoomId = chance.string({ length: 10 })
-
         it.each([
+            {
+                getBody: async () => {
+                    const playerId = chance.string()
+                    const playerName = chance.string({ length: 10 })
+
+                    const response = await postApi('createGame', { playerId, playerName })
+
+                    const roomId = (await response.json()).roomId
+
+                    return { roomId, playerId }
+                },
+                error: '',
+                status: 200
+            },
             {
                 getBody: () => ({ playerId: chance.string({ length: 10 }) }),
                 error: 'roomId and playerId are required',
@@ -111,10 +170,10 @@ describe('index', () => {
             },
             {
                 getBody: () => ({
-                    roomId: nonExistentRoomId,
+                    roomId: chance.string({ length: 10 }),
                     playerId: chance.string({ length: 10 })
                 }),
-                error: `Room ${nonExistentRoomId} does not exist`,
+                error: /Room .+ does not exist/,
                 status: 404
             },
             {
@@ -173,13 +232,15 @@ describe('index', () => {
                 status: 200
             }
         ])('should return $status $error', async ({ getBody, error, status }) => {
-            const body = await getBody()
-
-            const response = await postApi('resetGame', body)
+            const response = await postApi('resetGame', (await getBody()))
 
             expect(response.status).toBe(status)
+            const responseJson = await response.json()
             if (error) {
-                expect((await response.json())).toEqual({ error })
+                expect(responseJson).toEqual({ error: expect.stringMatching(error) })
+            } else {
+                expect(responseJson.selfPlayer.id).not.toBeNull()
+                expect(responseJson.players[0]).not.toHaveProperty('influences')
             }
         })
     })
