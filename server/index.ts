@@ -171,7 +171,6 @@ app.post('/resetGame', validateBody(Joi.object().keys({
     }
 
     await resetGame(roomId)
-    await startGame(roomId)
 
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
