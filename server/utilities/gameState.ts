@@ -73,6 +73,15 @@ export const validateGameState = (state: GameState) => {
   if (Object.values(cardCounts).some((count) => count !== 3)) {
     throw new Error("Incorrect total card count in game")
   }
+  if (state.pendingAction?.pendingPlayers?.length === 0
+    && !state.pendingActionChallenge
+    && !state.pendingBlock) {
+      throw new Error('Everyone has passed but the action is still pending')
+  }
+  if (state.pendingBlock?.pendingPlayers?.length === 0
+    && !state.pendingBlockChallenge) {
+      throw new Error('Everyone has passed but the block is still pending')
+  }
 }
 
 export const mutateGameState = async (

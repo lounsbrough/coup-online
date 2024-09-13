@@ -1,6 +1,6 @@
 import { Chance } from "chance"
 import { drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, logEvent, mutateGameState, validateGameState } from "./gameState"
-import { GameState, Influences } from '../../shared/types/game'
+import { Actions, GameState, Influences } from '../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 
@@ -162,8 +162,28 @@ describe('gameState', () => {
       {
         mutation: (state: GameState) => { state.players[0].influences.splice(0, 1) },
         error: "Incorrect total card count in game"
+      },
+      {
+        mutation: (state: GameState) => {
+          state.pendingAction = {
+            action: chance.pickone(Object.values(Actions)),
+            pendingPlayers: [],
+            claimConfirmed: false
+          }
+        },
+        error: "Everyone has passed but the action is still pending"
+      },
+      {
+        mutation: (state: GameState) => {
+          state.pendingBlock = {
+            pendingPlayers: [],
+            sourcePlayer: chance.pickone(state.players).name,
+            claimedInfluence: chance.pickone(Object.values(Influences))
+          }
+        },
+        error: "Everyone has passed but the block is still pending"
       }
-    ])('should throw $error if state is not valid', async ({ mutation, error }) => {
+    ])('should throw $error', async ({ mutation, error }) => {
       const gameState = getRandomGameState()
       mutation(gameState)
       expect(() => validateGameState(gameState)).toThrow(error)
