@@ -3,9 +3,10 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
-import { addPlayerToGame, createNewGame, drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, promptPlayerToLoseInfluence, logEvent, mutateGameState, processPendingAction, resetGame, startGame, killPlayerInfluence, shuffleDeck } from './utilities/gameState'
-import { generateRoomId } from './utilities/identifiers'
+import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, mutateGameState, shuffleDeck } from './src/utilities/gameState'
+import { generateRoomId } from './src/utilities/identifiers'
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses, PublicGameState, GameState } from '../shared/types/game'
+import { createNewGame, addPlayerToGame, resetGame, startGame, promptPlayerToLoseInfluence, moveTurnToNextPlayer, processPendingAction, killPlayerInfluence } from './src/game/logic'
 
 const port = process.env.EXPRESS_PORT || 8008
 
