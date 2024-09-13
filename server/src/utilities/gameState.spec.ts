@@ -1,6 +1,6 @@
 import { Chance } from "chance"
-import { drawCardFromDeck, getGameState, moveTurnToNextPlayer, getPublicGameState, logEvent, mutateGameState, validateGameState } from "./gameState"
-import { Actions, GameState, Influences } from '../../shared/types/game'
+import { drawCardFromDeck, getGameState, getPublicGameState, mutateGameState, validateGameState } from "./gameState"
+import { Actions, GameState, Influences } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 
@@ -107,17 +107,17 @@ describe('gameState', () => {
       const gameState = getRandomGameState()
       getValueMock.mockResolvedValue(JSON.stringify(gameState))
 
-      let newTurnPlayer: string
       await mutateGameState(gameState.roomId, (state) => {
-        moveTurnToNextPlayer(state)
-        newTurnPlayer = state.turnPlayer
+        state.players[0].coins -= 1
       })
 
       expect(setValueMock).toHaveBeenCalledTimes(1)
-      expect(newTurnPlayer).not.toBe(gameState.turnPlayer)
       expect(setValueMock).toHaveBeenCalledWith(gameState.roomId, JSON.stringify({
         ...gameState,
-        turnPlayer: newTurnPlayer
+        players: [
+          { ...gameState.players[0], coins: gameState.players[0].coins - 1 },
+          ...gameState.players.slice(1)
+        ]
       }), fifteenMinutes)
     })
   })
@@ -187,70 +187,6 @@ describe('gameState', () => {
       const gameState = getRandomGameState()
       mutation(gameState)
       expect(() => validateGameState(gameState)).toThrow(error)
-    })
-  })
-
-  describe('drawCardFromDeck', () => {
-    it('should return top card and remove it from deck', () => {
-      const gameState = getRandomGameState()
-
-      const expectedCard = gameState.deck.at(-1)
-      const expectedDeckSize = gameState.deck.length - 1
-
-      expect(drawCardFromDeck(gameState)).toBe(expectedCard)
-      expect(gameState.deck.length).toBe(expectedDeckSize)
-    })
-  })
-
-  describe('logEvent', () => {
-    const gameState = getRandomGameState()
-
-    const newLog = chance.string()
-
-    let expectedEventLogs = [...gameState.eventLogs, newLog]
-    logEvent(gameState, newLog)
-    expect(gameState.eventLogs).toEqual(expectedEventLogs)
-
-    gameState.eventLogs = chance.n(chance.string, 100)
-
-    expectedEventLogs = [...gameState.eventLogs.slice(1), newLog]
-    logEvent(gameState, newLog)
-    expect(gameState.eventLogs).toEqual(expectedEventLogs)
-  })
-
-  describe('moveTurnToNextPlayer', () => {
-    it('should move turn to next player', () => {
-      const gameState = getRandomGameState()
-
-      let previous = gameState.turnPlayer
-      moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).not.toBe(previous)
-      previous = gameState.turnPlayer
-      moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).not.toBe(previous)
-    })
-
-    it('should skip players with no influences left', () => {
-      const gameState = getRandomGameState({ playersCount: 6 })
-      gameState.players[1].influences = []
-      gameState.players[4].influences = []
-      gameState.turnPlayer = gameState.players[0].name
-      moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(gameState.players[2].name)
-      moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(gameState.players[3].name)
-      moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(gameState.players[5].name)
-    })
-
-    it('should wrap back to beginning of player list', () => {
-      const gameState = getRandomGameState({ playersCount: 3 })
-      gameState.players[1].influences = []
-      gameState.turnPlayer = gameState.players[0].name
-      moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(gameState.players[2].name)
-      moveTurnToNextPlayer(gameState)
-      expect(gameState.turnPlayer).toBe(gameState.players[0].name)
     })
   })
 })

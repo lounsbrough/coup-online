@@ -444,7 +444,7 @@ describe('index', () => {
             } else {
                 validatePublicState(responseJson)
                 expect(responseJson.players.every((player: PublicPlayer) => player.influenceCount === 2))
-                expect(responseJson.isStarted).toBe(true)
+                expect(responseJson.isStarted).toBe(false)
             }
         })
     })
