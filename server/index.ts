@@ -336,18 +336,16 @@ app.post('/actionResponse', validateBody(Joi.object().keys({
     }
 
     if (response === Responses.Pass) {
-        if (gameState.pendingAction.pendingPlayers.length === 1) {
-            await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
+            if (state.pendingAction.pendingPlayers.length === 1) {
                 processPendingAction(state)
-            })
-        } else {
-            await mutateGameState(roomId, (state) => {
+            } else {
                 state.pendingAction.pendingPlayers.splice(
                     state.pendingAction.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name),
                     1
                 )
-            })
-        }
+            }
+        })
     } else if (response === Responses.Challenge) {
         if (gameState.pendingAction.claimConfirmed) {
             res.status(400).json({ error: `${gameState.turnPlayer} has already confirmed their claim` })
@@ -525,8 +523,8 @@ app.post('/blockResponse', validateBody(Joi.object().keys({
             state.pendingBlockChallenge = { sourcePlayer: player.name }
         })
     } else if (response === Responses.Pass) {
-        if (gameState.pendingBlock.pendingPlayers.length === 1) {
-            await mutateGameState(roomId, (state) => {
+        await mutateGameState(roomId, (state) => {
+            if (state.pendingBlock.pendingPlayers.length === 1) {
                 const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer)
                 logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
                 if (state.pendingAction.action === Actions.Assassinate) {
@@ -537,15 +535,13 @@ app.post('/blockResponse', validateBody(Joi.object().keys({
                 delete state.pendingBlock
                 delete state.pendingActionChallenge
                 delete state.pendingAction
-            })
-        } else {
-            await mutateGameState(roomId, (state) => {
+            } else {
                 state.pendingBlock.pendingPlayers.splice(
                     state.pendingBlock.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name),
                     1
                 )
-            })
-        }
+            }
+        })
     }
 
     res.status(200).json(await getPublicGameState(roomId, playerId))
