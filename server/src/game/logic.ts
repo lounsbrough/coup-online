@@ -52,16 +52,30 @@ const buildGameDeck = () => {
     .flatMap((influence) => Array.from({ length: 3 }, () => influence))
 }
 
-export const createNewGame = async (roomId: string) => {
-  await createGameState(roomId, {
-    roomId,
-    players: [],
-    deck: shuffle(buildGameDeck()),
-    deadCards: [],
-    pendingInfluenceLoss: {},
-    isStarted: false,
-    eventLogs: []
+const getNewGameState = (roomId: string): GameState => ({
+  roomId,
+  players: [],
+  deck: shuffle(buildGameDeck()),
+  deadCards: [],
+  pendingInfluenceLoss: {},
+  isStarted: false,
+  eventLogs: []
+})
+
+export const addPlayerToGame = async (state: GameState, playerId: string, playerName: string) => {
+  state.players.push({
+    id: playerId,
+    name: playerName,
+    coins: 2,
+    influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
+    color: ['#23C373', '#0078ff', '#fD6C33', '#ff7799', '#FFC303', '#fA0088'][state.players.length]
   })
+}
+
+export const createNewGame = async (roomId: string, playerId: string, playerName: string) => {
+  const newGameState = getNewGameState(roomId)
+  addPlayerToGame(newGameState, playerId, playerName)
+  await createGameState(roomId, newGameState)
 }
 
 export const startGame = async (roomId: string) => {
@@ -75,28 +89,13 @@ export const startGame = async (roomId: string) => {
 
 export const resetGame = async (roomId: string) => {
   const oldGameState = await getGameState(roomId)
-  await createNewGame(roomId)
-  await mutateGameState(roomId, (state) => {
-    const newPlayers = shuffle(oldGameState.players.map((player) => ({
-      ...player,
-      coins: 2,
-      influences: Array.from({ length: 2 }, () => drawCardFromDeck(state))
-    })))
-    state.players = newPlayers
-  })
-}
-
-export const addPlayerToGame = async (roomId: string, playerId: string, playerName: string) => {
-  await mutateGameState(roomId, (state) => {
-    state.players.push({
-      id: playerId,
-      name: playerName,
-      coins: 2,
-      influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
-      color: ['#23C373', '#0078ff', '#fD6C33', '#ff7799', '#FFC303', '#fA0088'][state.players.length]
-    })
-    return state
-  })
+  const newGameState = getNewGameState(roomId)
+  newGameState.players = shuffle(oldGameState.players.map((player) => ({
+    ...player,
+    coins: 2,
+    influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState))
+  })))
+  await createGameState(roomId, newGameState)
 }
 
 export const killPlayerInfluence = async (state: GameState, playerName: string, influence: Influences) => {

@@ -94,8 +94,7 @@ app.post('/createGame', validateBody(Joi.object().keys({
 
     const roomId = generateRoomId()
 
-    await createNewGame(roomId)
-    await addPlayerToGame(roomId, playerId, playerName)
+    await createNewGame(roomId, playerId, playerName)
 
     res.status(200).json(await getPublicGameState(roomId, playerId))
 })
@@ -143,7 +142,9 @@ app.post('/joinGame', validateBody(Joi.object().keys({
             return
         }
 
-        await addPlayerToGame(roomId, playerId, playerName)
+        await mutateGameState(roomId, (state) => {
+            addPlayerToGame(state, playerId, playerName)
+        })
     }
 
     res.status(200).json(await getPublicGameState(roomId, playerId))
