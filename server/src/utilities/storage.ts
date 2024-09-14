@@ -6,10 +6,15 @@ const createRedisClient = () =>
     .connect()
 
 let redisClientPromise: Promise<RedisClientType> | undefined
-const getRedisClientPromise = () => redisClientPromise ?? createRedisClient()
+const getRedisClientPromise = () => {
+  if (!redisClientPromise) {
+    redisClientPromise = createRedisClient() as Promise<RedisClientType>
+  }
+  return redisClientPromise
+}
 
 export const getValue = async (key: string) => {
-  return await (await getRedisClientPromise()).get(key)
+  return (await getRedisClientPromise()).get(key)
 }
 
 export const setValue = async (key: string, value: string, lifeInSeconds: number) => {
