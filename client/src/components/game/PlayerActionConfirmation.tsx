@@ -47,7 +47,7 @@ function PlayerActionConfirmation({
         }
         return newProgress
       })
-    }, 100))
+    }, 200))
 
     return () => {
       clearInterval(autoSubmitInterval)
@@ -61,7 +61,7 @@ function PlayerActionConfirmation({
   return (
     <>
       <ColoredTypography>{message}</ColoredTypography>
-      <Grid2 mt={2} container spacing={2}>
+      <Grid2 mt={2} container spacing={2} justifyContent="center">
         <Grid2>
           <Button
             color="error"
