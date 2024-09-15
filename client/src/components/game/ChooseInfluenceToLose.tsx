@@ -1,17 +1,17 @@
-import { Button, Grid2, Typography } from "@mui/material";
-import { InfluenceAttributes, Influences } from "../../shared/types/game";
-import useSWRMutation from "swr/mutation";
-import { useState } from "react";
-import { getPlayerId } from "../../helpers/playerId";
-import { useGameStateContext } from "../../context/GameStateContext";
-import { useColorModeContext } from "../../context/MaterialThemeContext";
+import { Button, Grid2, Typography } from "@mui/material"
+import { InfluenceAttributes, Influences } from "../../shared/types/game"
+import useSWRMutation from "swr/mutation"
+import { useState } from "react"
+import { getPlayerId } from "../../helpers/playerId"
+import { useGameStateContext } from "../../context/GameStateContext"
+import { useColorModeContext } from "../../context/MaterialThemeContext"
 
 function ChooseInfluenceToLose() {
-  const [error, setError] = useState<string>();
-  const { gameState, setGameState } = useGameStateContext();
-  const { colorMode } = useColorModeContext();
+  const [error, setError] = useState<string>()
+  const { gameState, setGameState } = useGameStateContext()
+  const { colorMode } = useColorModeContext()
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/loseInfluence`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
+  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/loseInfluences`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influences: Influences[] }; }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -20,21 +20,21 @@ function ChooseInfluenceToLose() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        setGameState(await res.json());
+        setGameState(await res.json())
       } else {
-        setError('Error losing influence');
+        setError('Error losing influence')
       }
     })
   }))
 
   if (!gameState) {
-    return null;
+    return null
   }
 
   return (
     <>
       <Typography sx={{ my: 1, fontWeight: 'bold' }}>
-        {`Choose an Influence to ${gameState.pendingInfluenceLoss[gameState.selfPlayer.name][0]?.putBackInDeck ? 'Put Back In Deck' : 'Lose'}`}
+        {'Choose an Influence to Lose'}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
@@ -46,7 +46,7 @@ function ChooseInfluenceToLose() {
                 trigger({
                   roomId: gameState.roomId,
                   playerId: getPlayerId(),
-                  influence: influence as Influences
+                  influences: [influence]
                 })
               }}
               sx={{
@@ -60,7 +60,7 @@ function ChooseInfluenceToLose() {
       </Grid2>
       {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
-  );
+  )
 }
 
-export default ChooseInfluenceToLose;
+export default ChooseInfluenceToLose
