@@ -1,4 +1,4 @@
-import { GameMutationError } from "../utilities/errors"
+import { GameMutationInputError } from "../utilities/errors"
 import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
 import { drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
 import { getPublicGameState } from "../utilities/gameState"
@@ -7,7 +7,7 @@ import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlay
 
 const validateRoomId = (gameState: GameState, roomId: string) => {
   if (!gameState) {
-    throw new GameMutationError(`Room ${roomId} does not exist`, 404)
+    throw new GameMutationInputError(`Room ${roomId} does not exist`, 404)
   }
 }
 
@@ -17,7 +17,7 @@ const validateRoomIdAndPlayerId = (gameState: GameState, roomId: string, playerI
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player) {
-    throw new GameMutationError('Player not in game')
+    throw new GameMutationInputError('Player not in game')
   }
 }
 
@@ -56,21 +56,21 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
 
   if (existingPlayer) {
     if (existingPlayer.name.toUpperCase() !== playerName.toUpperCase()) {
-      throw new GameMutationError(`Previously joined Room ${roomId} as ${existingPlayer.name}`)
+      throw new GameMutationInputError(`Previously joined Room ${roomId} as ${existingPlayer.name}`)
     }
   } else {
     if (gameState.players.length >= 6) {
-      throw new GameMutationError(`Room ${roomId} is full`)
+      throw new GameMutationInputError(`Room ${roomId} is full`)
     }
 
     if (gameState.isStarted) {
-      throw new GameMutationError('Game has already started')
+      throw new GameMutationInputError('Game has already started')
     }
 
     if (gameState.players.some((existingPlayer) =>
       existingPlayer.name.toUpperCase() === playerName.toUpperCase()
     )) {
-      throw new GameMutationError(`Room ${roomId} already has player named ${playerName}`)
+      throw new GameMutationInputError(`Room ${roomId} already has player named ${playerName}`)
     }
 
     await mutateGameState(roomId, (state) => {
@@ -90,7 +90,7 @@ export const resetGameHandler = async ({ roomId, playerId }: {
   validateRoomIdAndPlayerId(gameState, roomId, playerId)
 
   if (gameState.isStarted && gameState.players.filter(({ influences }) => influences.length).length > 1) {
-    throw new GameMutationError('Current game is in progress')
+    throw new GameMutationInputError('Current game is in progress')
   }
 
   await resetGame(roomId)
@@ -107,11 +107,11 @@ export const startGameHandler = async ({ roomId, playerId }: {
   validateRoomIdAndPlayerId(gameState, roomId, playerId)
 
   if (gameState.players.length < 2) {
-    throw new GameMutationError('Game must have at least 2 players to start')
+    throw new GameMutationInputError('Game must have at least 2 players to start')
   }
 
   if (gameState.isStarted) {
-    throw new GameMutationError('Game has already started')
+    throw new GameMutationInputError('Game has already started')
   }
 
   await startGame(roomId)
@@ -132,7 +132,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player.influences.length) {
-    throw new GameMutationError('You had your chance')
+    throw new GameMutationInputError('You had your chance')
   }
 
   if (gameState.turnPlayer !== player.name
@@ -140,27 +140,27 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     || gameState.pendingActionChallenge
     || gameState.pendingBlock
     || gameState.pendingBlockChallenge) {
-    throw new GameMutationError('You can\'t choose an action right now')
+    throw new GameMutationInputError('You can\'t choose an action right now')
   }
 
   if ((ActionAttributes[action].coinsRequired ?? 0) > player.coins) {
-    throw new GameMutationError('You don\'t have enough coins')
+    throw new GameMutationInputError('You don\'t have enough coins')
   }
 
   if (player.coins >= 10 && action !== Actions.Coup) {
-    throw new GameMutationError('You must coup when you have 10 or more coins')
+    throw new GameMutationInputError('You must coup when you have 10 or more coins')
   }
 
   if (targetPlayer && !gameState.players.some((player) => player.name === targetPlayer)) {
-    throw new GameMutationError('Unknown target player')
+    throw new GameMutationInputError('Unknown target player')
   }
 
   if (ActionAttributes[action].requiresTarget && !targetPlayer) {
-    throw new GameMutationError('Target player is required for this action')
+    throw new GameMutationInputError('Target player is required for this action')
   }
 
   if (!ActionAttributes[action].requiresTarget && targetPlayer) {
-    throw new GameMutationError('Target player is not allowed for this action')
+    throw new GameMutationInputError('Target player is not allowed for this action')
   }
 
   if (!ActionAttributes[action].blockable && !ActionAttributes[action].challengeable) {
@@ -210,14 +210,14 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player.influences.length) {
-    throw new GameMutationError('You had your chance')
+    throw new GameMutationInputError('You had your chance')
     return
   }
 
   if (!gameState.pendingAction
     || gameState.pendingActionChallenge
     || !gameState.pendingAction.pendingPlayers.includes(player.name)) {
-    throw new GameMutationError('You can\'t choose an action response right now')
+    throw new GameMutationInputError('You can\'t choose an action response right now')
     return
   }
 
@@ -234,7 +234,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     })
   } else if (response === Responses.Challenge) {
     if (gameState.pendingAction.claimConfirmed) {
-      throw new GameMutationError(`${gameState.turnPlayer} has already confirmed their claim`)
+      throw new GameMutationInputError(`${gameState.turnPlayer} has already confirmed their claim`)
       return
     }
 
@@ -246,19 +246,19 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     })
   } else if (response === Responses.Block) {
     if (!claimedInfluence) {
-      throw new GameMutationError('claimedInfluence is required when blocking')
+      throw new GameMutationInputError('claimedInfluence is required when blocking')
       return
     }
 
     if (InfluenceAttributes[claimedInfluence as Influences].legalBlock !== gameState.pendingAction.action) {
-      throw new GameMutationError('claimedInfluence can not block this action')
+      throw new GameMutationInputError('claimedInfluence can not block this action')
       return
     }
 
     if (gameState.pendingAction.targetPlayer &&
       player.name !== gameState.pendingAction.targetPlayer
     ) {
-      throw new GameMutationError(`You are not the target of the pending action`)
+      throw new GameMutationInputError(`You are not the target of the pending action`)
       return
     }
 
@@ -293,15 +293,15 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player.influences.length) {
-    throw new GameMutationError('You had your chance')
+    throw new GameMutationInputError('You had your chance')
   }
 
   if (!gameState.pendingActionChallenge) {
-    throw new GameMutationError('You can\'t choose a challenge response right now')
+    throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
   if (!player.influences.includes(influence)) {
-    throw new GameMutationError('You don\'t have that influence')
+    throw new GameMutationInputError('You don\'t have that influence')
   }
 
   if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
@@ -364,18 +364,18 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player.influences.length) {
-    throw new GameMutationError('You had your chance')
+    throw new GameMutationInputError('You had your chance')
   }
 
   if (!gameState.pendingBlock
     || gameState.pendingBlockChallenge
     || !gameState.pendingBlock.pendingPlayers.includes(player.name)
   ) {
-    throw new GameMutationError('You can\'t choose a block response right now')
+    throw new GameMutationInputError('You can\'t choose a block response right now')
   }
 
   if (response === Responses.Block) {
-    throw new GameMutationError('You can\'t block a block')
+    throw new GameMutationInputError('You can\'t block a block')
   }
 
   if (response === Responses.Challenge) {
@@ -421,15 +421,15 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player.influences.length) {
-    throw new GameMutationError('You had your chance')
+    throw new GameMutationInputError('You had your chance')
   }
 
   if (!gameState.pendingBlockChallenge) {
-    throw new GameMutationError('You can\'t choose a challenge response right now')
+    throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
   if (!player.influences.includes(influence)) {
-    throw new GameMutationError('You don\'t have that influence')
+    throw new GameMutationInputError('You don\'t have that influence')
   }
 
   if (influence === gameState.pendingBlock.claimedInfluence) {
@@ -482,11 +482,11 @@ export const loseInfluenceHandler = async ({ roomId, playerId, influence }: {
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player.influences.length) {
-    throw new GameMutationError('You had your chance')
+    throw new GameMutationInputError('You had your chance')
   }
 
   if (!gameState.pendingInfluenceLoss[player.name]) {
-    throw new GameMutationError('You can\'t lose influence right now')
+    throw new GameMutationInputError('You can\'t lose influence right now')
   }
 
   await mutateGameState(roomId, (state) => {

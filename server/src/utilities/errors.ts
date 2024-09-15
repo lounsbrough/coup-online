@@ -1,4 +1,4 @@
-export class GameMutationError extends Error {
+export class GameMutationInputError extends Error {
   message: string
   httpCode: number
 
