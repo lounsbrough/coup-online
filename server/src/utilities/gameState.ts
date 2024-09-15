@@ -22,10 +22,12 @@ export const getPublicGameState = async (
   let selfPlayer: Player
   const publicPlayers: PublicPlayer[] = []
   gameState.players.forEach((player) => {
+    const pendingInfluenceCountToPutBack = gameState.pendingInfluenceLoss[player.name]
+      ?.filter(({ putBackInDeck }) => putBackInDeck)?.length ?? 0
     publicPlayers.push({
       name: player.name,
       coins: player.coins,
-      influenceCount: player.influences.length,
+      influenceCount: player.influences.length - pendingInfluenceCountToPutBack,
       color: player.color
     })
     if (player.id === playerId) {
