@@ -62,8 +62,7 @@ function ChooseInfluenceToKeep() {
               }} variant="contained"
             >
               <Checkbox
-                color="default"
-                sx={{ p: 0, pr: 1 }}
+                sx={{ color: 'inherit', p: 0, pr: 1 }}
                 checked={checkedIndexes.includes(index)}
               />
               {influence}
