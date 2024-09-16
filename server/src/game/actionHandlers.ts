@@ -470,10 +470,10 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
   return getPublicGameState(roomId, playerId)
 }
 
-export const loseInfluenceHandler = async ({ roomId, playerId, influence }: {
+export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
   roomId: string
   playerId: string
-  influence: Influences
+  influences: Influences[]
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -485,36 +485,39 @@ export const loseInfluenceHandler = async ({ roomId, playerId, influence }: {
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingInfluenceLoss[player.name]) {
-    throw new GameMutationInputError('You can\'t lose influence right now')
+  const pendingInfluenceLossCount = gameState.pendingInfluenceLoss[player.name]?.length ?? 0
+  if (influences.length > gameState.pendingInfluenceLoss[player.name]?.length) {
+    throw new GameMutationInputError(`You can't lose ${pendingInfluenceLossCount} influence${pendingInfluenceLossCount === 1 ? '' : 's'} right now`)
   }
 
   await mutateGameState(roomId, (state) => {
     const losingPlayer = state.players.find(({ id }) => id === playerId)
-    if (state.pendingInfluenceLoss[losingPlayer.name][0].putBackInDeck) {
-      const removedInfluence = losingPlayer.influences.splice(
-        losingPlayer.influences.findIndex((i) => i === influence),
-        1
-      )[0]
-      state.deck.unshift(removedInfluence)
-    } else {
-      killPlayerInfluence(state, losingPlayer.name, influence)
-    }
+    influences.forEach((influence) => {
+      if (state.pendingInfluenceLoss[losingPlayer.name][0].putBackInDeck) {
+        const removedInfluence = losingPlayer.influences.splice(
+          losingPlayer.influences.findIndex((i) => i === influence),
+          1
+        )[0]
+        state.deck.unshift(removedInfluence)
+      } else {
+        killPlayerInfluence(state, losingPlayer.name, influence)
+      }
 
-    if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
-      state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
-    } else {
-      delete state.pendingInfluenceLoss[losingPlayer.name]
-    }
+      if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
+        state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
+      } else {
+        delete state.pendingInfluenceLoss[losingPlayer.name]
+      }
 
-    if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
-      moveTurnToNextPlayer(state)
-    }
+      if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
+        moveTurnToNextPlayer(state)
+      }
 
-    if (!losingPlayer.influences.length) {
-      logEvent(state, `${losingPlayer.name} is out!`)
-      delete state.pendingInfluenceLoss[losingPlayer.name]
-    }
+      if (!losingPlayer.influences.length) {
+        logEvent(state, `${losingPlayer.name} is out!`)
+        delete state.pendingInfluenceLoss[losingPlayer.name]
+      }
+    })
   })
 
   return getPublicGameState(roomId, playerId)

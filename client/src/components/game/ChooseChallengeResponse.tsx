@@ -1,39 +1,38 @@
-import { Button, Grid2, Typography } from "@mui/material";
-import { InfluenceAttributes, Influences } from "../../shared/types/game";
-import useSWRMutation from "swr/mutation";
-import { useState } from "react";
-import { getPlayerId } from "../../helpers/playerId";
-import { useGameStateContext } from "../../context/GameStateContext";
-import { useColorModeContext } from "../../context/MaterialThemeContext";
-import ColoredTypography from "../utilities/ColoredTypography";
+import { Button, Grid2, Typography } from "@mui/material"
+import { InfluenceAttributes, Influences } from "../../shared/types/game"
+import { useState } from "react"
+import { getPlayerId } from "../../helpers/playerId"
+import { useGameStateContext } from "../../context/GameStateContext"
+import { useColorModeContext } from "../../context/MaterialThemeContext"
+import ColoredTypography from "../utilities/ColoredTypography"
+import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
 function ChooseChallengeResponse() {
-  const [error, setError] = useState<string>();
-  const { gameState, setGameState } = useGameStateContext();
-  const { colorMode } = useColorModeContext();
-
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influence: Influences }; }) => {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(arg)
-    }).then(async (res) => {
-      if (res.ok) {
-        setGameState(await res.json());
-      } else {
-        setError('Error responding to challenge');
-      }
-    })
-  }));
+  const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
+  const { gameState } = useGameStateContext()
+  const { colorMode } = useColorModeContext()
 
   if (!gameState?.pendingActionChallenge && !gameState?.pendingBlockChallenge) {
-    return null;
+    return null
   }
 
-  const challengingPlayer = gameState.pendingBlockChallenge?.sourcePlayer || gameState.pendingActionChallenge?.sourcePlayer;
-  const challengedPlayer = gameState.pendingBlock?.sourcePlayer || gameState.turnPlayer;
+  if (selectedInfluence) {
+    return <PlayerActionConfirmation
+      message={`Revealing ${selectedInfluence}`}
+      endpoint={gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}
+      variables={{
+        roomId: gameState.roomId,
+        playerId: getPlayerId(),
+        influence: selectedInfluence
+      }}
+      onCancel={() => {
+        setSelectedInfluence(undefined)
+      }}
+    />
+  }
+
+  const challengingPlayer = gameState.pendingBlockChallenge?.sourcePlayer || gameState.pendingActionChallenge?.sourcePlayer
+  const challengedPlayer = gameState.pendingBlock?.sourcePlayer || gameState.turnPlayer
 
   return (
     <>
@@ -55,13 +54,8 @@ function ChooseChallengeResponse() {
             return <Button
               key={index}
               onClick={() => {
-                trigger({
-                  roomId: gameState.roomId,
-                  playerId: getPlayerId(),
-                  influence: influence as Influences
-                })
+                setSelectedInfluence(influence as Influences)
               }}
-              disabled={isMutating}
               sx={{
                 background: InfluenceAttributes[influence].color[colorMode]
               }} variant="contained"
@@ -70,9 +64,8 @@ function ChooseChallengeResponse() {
             </Button>
           })}
       </Grid2>
-      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
-  );
+  )
 }
 
-export default ChooseChallengeResponse;
+export default ChooseChallengeResponse
