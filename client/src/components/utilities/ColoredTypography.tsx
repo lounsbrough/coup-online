@@ -78,7 +78,7 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
           {...props}
           key={index}
           component='span'
-          fontWeight={fontWeight}
+          fontWeight={fontWeight ?? 'inherit'}
           sx={{ color }}
         >{text}</Typography>)}
     </Typography>
