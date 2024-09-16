@@ -43,8 +43,8 @@ export const InfluenceAttributes: {
     legalAction: Actions.Steal,
     legalBlock: Actions.Steal,
     color: {
-      light: '#80C6E5',
-      dark: '#80C6E5'
+      light: '#60A6C5',
+      dark: '#60A6C5'
     }
   },
   [Influences.Ambassador]: {
@@ -92,8 +92,8 @@ export const ActionAttributes: {
     challengeable: false,
     coinsRequired: 7,
     color: {
-      light: '#770077',
-      dark: '#770077'
+      light: '#8811ff',
+      dark: '#8811ff'
     },
     requiresTarget: true
   },

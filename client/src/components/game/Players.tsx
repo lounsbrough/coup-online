@@ -21,6 +21,7 @@ function Players() {
               <Box
                 key={index}
                 sx={{
+                  color: 'white',
                   alignContent: 'center',
                   background: color,
                   borderRadius: 3,
