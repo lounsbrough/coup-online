@@ -15,8 +15,9 @@ function ChooseInfluenceToKeep() {
     return null
   }
 
-  const influenceCountToKeep = gameState.pendingInfluenceLoss[gameState.selfPlayer.name]
-    .filter(({ putBackInDeck }) => putBackInDeck).length
+  const influenceCountToKeep = gameState.selfPlayer.influences.length
+    - gameState.pendingInfluenceLoss[gameState.selfPlayer.name]
+      .filter(({ putBackInDeck }) => putBackInDeck).length
 
   if (checkedIndexes.length === influenceCountToKeep) {
     return <PlayerActionConfirmation
