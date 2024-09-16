@@ -84,13 +84,14 @@ function PlayerActionConfirmation({
             startIcon={(
               <Check />
             )}
+            color="success"
             sx={{
               background: `
                 linear-gradient(
                   to right,
                   ${theme.palette.success.main}
                   ${autoSubmitProgress}%,
-                  ${theme.palette.mode === LIGHT_COLOR_MODE ? 'rgba(0, 0, 0, 0.24)' : 'rgba(255, 255, 255, 0.24)'}
+                  ${theme.palette.mode === LIGHT_COLOR_MODE ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.24)'}
                   ${autoSubmitProgress}%
                 ) !important`
             }}

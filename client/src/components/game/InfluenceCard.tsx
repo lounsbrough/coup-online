@@ -1,12 +1,13 @@
-import { Box, Typography } from "@mui/material";
-import { InfluenceAttributes, Influences } from "../../shared/types/game";
-import { useColorModeContext } from "../../context/MaterialThemeContext";
+import { Box, Typography } from "@mui/material"
+import { InfluenceAttributes, Influences } from "../../shared/types/game"
+import { useColorModeContext } from "../../context/MaterialThemeContext"
 
 function InfluenceCard({ influence }: { influence: Influences }) {
-  const { colorMode } = useColorModeContext();
+  const { colorMode } = useColorModeContext()
 
   return (
     <Box sx={{
+      color: 'white',
       textAlign: 'center',
       background: InfluenceAttributes[influence].color[colorMode],
       borderRadius: 3,
@@ -20,7 +21,7 @@ function InfluenceCard({ influence }: { influence: Influences }) {
       >{influence}
       </Typography>
     </Box>
-  );
+  )
 }
 
-export default InfluenceCard;
+export default InfluenceCard

@@ -68,7 +68,7 @@ export const addPlayerToGame = async (state: GameState, playerId: string, player
     name: playerName,
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
-    color: ['#23C373', '#0078ff', '#fD6C33', '#ff7799', '#FFC303', '#fA0088'][state.players.length]
+    color: ['#13B363', '#0068FF', '#FD6C33', '#CC55CC', '#FFC303', '#FA0088'][state.players.length]
   })
 }
 
