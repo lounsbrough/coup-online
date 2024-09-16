@@ -9,7 +9,7 @@ const getValueMock = jest.mocked(getValue)
 const setValueMock = jest.mocked(setValue)
 
 const chance = new Chance()
-const fifteenMinutes = 900
+const oneDay = 86400
 
 const getRandomPlayers = (count?: number) =>
   chance.n(() => ({
@@ -118,7 +118,7 @@ describe('gameState', () => {
           { ...gameState.players[0], coins: gameState.players[0].coins - 1 },
           ...gameState.players.slice(1)
         ]
-      }), fifteenMinutes)
+      }), oneDay)
     })
   })
 

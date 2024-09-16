@@ -82,9 +82,9 @@ export const validateGameState = (state: GameState) => {
 }
 
 const setGameState = async (roomId: string, newState: GameState) => {
-  const fifteenMinutes = 900
+  const oneDay = 86400
   validateGameState(newState)
-  await setValue(roomId, JSON.stringify(newState), fifteenMinutes)
+  await setValue(roomId, JSON.stringify(newState), oneDay)
 }
 
 export const createGameState = async (roomId: string, gameState: GameState) => {
