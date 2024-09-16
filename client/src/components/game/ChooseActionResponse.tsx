@@ -6,6 +6,7 @@ import { useGameStateContext } from "../../context/GameStateContext"
 import { useColorModeContext } from "../../context/MaterialThemeContext"
 import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import { getPresentProgressiveResponse as presentProgressiveResponse } from "../../helpers/grammar"
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
@@ -19,7 +20,7 @@ function ChooseActionResponse() {
 
   if (selectedResponse && (selectedResponse !== Responses.Block || selectedInfluence)) {
     return <PlayerActionConfirmation
-      message={`${selectedResponse}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
+      message={`${presentProgressiveResponse(selectedResponse)}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
       endpoint="actionResponse"
       variables={{
         roomId: gameState.roomId,
