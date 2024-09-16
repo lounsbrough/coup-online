@@ -1,36 +1,38 @@
-import { Button, Grid2, Typography } from "@mui/material";
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, ResponseAttributes, Responses } from "../../shared/types/game";
-import useSWRMutation from "swr/mutation";
-import { useState } from "react";
-import { getPlayerId } from "../../helpers/playerId";
-import { useGameStateContext } from "../../context/GameStateContext";
-import { useColorModeContext } from "../../context/MaterialThemeContext";
-import ColoredTypography from "../utilities/ColoredTypography";
+import { Button, Grid2, Typography } from "@mui/material"
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, ResponseAttributes, Responses } from "../../shared/types/game"
+import { useState } from "react"
+import { getPlayerId } from "../../helpers/playerId"
+import { useGameStateContext } from "../../context/GameStateContext"
+import { useColorModeContext } from "../../context/MaterialThemeContext"
+import ColoredTypography from "../utilities/ColoredTypography"
+import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import { getPresentProgressiveResponse as presentProgressiveResponse } from "../../helpers/grammar"
 
 function ChooseActionResponse() {
-  const [selectedResponse, setSelectedResponse] = useState<Responses>();
-  const [error, setError] = useState<string>();
-  const { gameState, setGameState } = useGameStateContext();
-  const { colorMode } = useColorModeContext();
-
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/actionResponse`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; response: Responses, claimedInfluence?: Influences }; }) => {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(arg)
-    }).then(async (res) => {
-      if (res.ok) {
-        setGameState(await res.json());
-      } else {
-        setError('Error responding to action');
-      }
-    })
-  }))
+  const [selectedResponse, setSelectedResponse] = useState<Responses>()
+  const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
+  const { gameState } = useGameStateContext()
+  const { colorMode } = useColorModeContext()
 
   if (!gameState?.pendingAction) {
-    return null;
+    return null
+  }
+
+  if (selectedResponse && (selectedResponse !== Responses.Block || selectedInfluence)) {
+    return <PlayerActionConfirmation
+      message={`${presentProgressiveResponse(selectedResponse)}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
+      endpoint="actionResponse"
+      variables={{
+        roomId: gameState.roomId,
+        playerId: getPlayerId(),
+        response: selectedResponse,
+        claimedInfluence: selectedInfluence
+      }}
+      onCancel={() => {
+        setSelectedResponse(undefined)
+        setSelectedInfluence(undefined)
+      }}
+    />
   }
 
   return (
@@ -51,14 +53,8 @@ function ChooseActionResponse() {
                 return <Button
                   key={influence}
                   onClick={() => {
-                    trigger({
-                      roomId: gameState.roomId,
-                      playerId: getPlayerId(),
-                      response: selectedResponse,
-                      claimedInfluence: influence as Influences
-                    })
+                    setSelectedInfluence(influence as Influences)
                   }} sx={{ background: influenceAttributes.color[colorMode] }}
-                  disabled={isMutating}
                   variant="contained"
                 >{influence}</Button>
               })}
@@ -79,7 +75,7 @@ function ChooseActionResponse() {
                   (!ActionAttributes[gameState.pendingAction?.action as Actions].challengeable
                     || gameState.pendingActionChallenge
                     || gameState.pendingAction?.claimConfirmed)) {
-                  return null;
+                  return null
                 }
 
                 if (response === Responses.Block &&
@@ -87,36 +83,26 @@ function ChooseActionResponse() {
                     (gameState.pendingAction?.targetPlayer &&
                       gameState.selfPlayer.name !== gameState.pendingAction?.targetPlayer
                     ))) {
-                  return null;
+                  return null
                 }
 
                 return <Button
                   key={index}
                   onClick={() => {
-                    if (response === Responses.Block) {
-                      setSelectedResponse(response);
-                    } else {
-                      trigger({
-                        roomId: gameState.roomId,
-                        playerId: getPlayerId(),
-                        response: response as Responses
-                      })
-                    }
+                    setSelectedResponse(response as Responses)
                   }}
                   sx={{
                     background: responseAttributes.color[colorMode]
                   }} variant="contained"
-                  disabled={isMutating}
                 >
                   {response}
                 </Button>
               })}
           </Grid2>
-          {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </>
       )}
     </>
-  );
+  )
 }
 
-export default ChooseActionResponse;
+export default ChooseActionResponse
