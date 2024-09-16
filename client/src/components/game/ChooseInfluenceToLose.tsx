@@ -1,34 +1,33 @@
 import { Button, Grid2, Typography } from "@mui/material"
 import { InfluenceAttributes, Influences } from "../../shared/types/game"
-import useSWRMutation from "swr/mutation"
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../context/GameStateContext"
 import { useColorModeContext } from "../../context/MaterialThemeContext"
+import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
 function ChooseInfluenceToLose() {
-  const [error, setError] = useState<string>()
-  const { gameState, setGameState } = useGameStateContext()
+  const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
+  const { gameState } = useGameStateContext()
   const { colorMode } = useColorModeContext()
-
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/loseInfluences`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string; influences: Influences[] }; }) => {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(arg)
-    }).then(async (res) => {
-      if (res.ok) {
-        setGameState(await res.json())
-      } else {
-        setError('Error losing influence')
-      }
-    })
-  }))
 
   if (!gameState) {
     return null
+  }
+
+  if (selectedInfluence) {
+    return <PlayerActionConfirmation
+      message={`Losing ${selectedInfluence}`}
+      endpoint="loseInfluences"
+      variables={{
+        roomId: gameState.roomId,
+        playerId: getPlayerId(),
+        influences: [selectedInfluence]
+      }}
+      onCancel={() => {
+        setSelectedInfluence(undefined)
+      }}
+    />
   }
 
   return (
@@ -43,22 +42,16 @@ function ChooseInfluenceToLose() {
             return <Button
               key={index}
               onClick={() => {
-                trigger({
-                  roomId: gameState.roomId,
-                  playerId: getPlayerId(),
-                  influences: [influence]
-                })
+                setSelectedInfluence(influence)
               }}
               sx={{
                 background: InfluenceAttributes[influence].color[colorMode]
               }} variant="contained"
-              disabled={isMutating}
             >
               {influence}
             </Button>
           })}
       </Grid2>
-      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
   )
 }
