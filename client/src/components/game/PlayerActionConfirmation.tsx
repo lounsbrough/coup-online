@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { useGameStateContext } from "../../context/GameStateContext"
 import useSWRMutation from "swr/mutation"
-import { Button, CircularProgress, Grid2, Typography } from "@mui/material"
+import { Button, Grid2, Typography, useTheme } from "@mui/material"
 import ColoredTypography from "../utilities/ColoredTypography"
-import { Cancel } from "@mui/icons-material"
+import { Cancel, Check } from "@mui/icons-material"
+import { LIGHT_COLOR_MODE } from "../../context/MaterialThemeContext"
 
 function PlayerActionConfirmation({
   message,
@@ -20,6 +21,7 @@ function PlayerActionConfirmation({
   const [autoSubmitProgress, setAutoSubmitProgress] = useState<number>(0)
   const autoSubmitInterval = useRef<NodeJS.Timer>()
   const { gameState, setGameState } = useGameStateContext()
+  const theme = useTheme()
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${endpoint}`, (async (url: string, { arg }: { arg: object }) => {
     return fetch(url, {
@@ -43,8 +45,8 @@ function PlayerActionConfirmation({
 
   useEffect(() => {
     autoSubmitInterval.current = setInterval(() => {
-      setAutoSubmitProgress((prev) => Math.min(100, prev + 3))
-    }, 90)
+      setAutoSubmitProgress((prev) => Math.min(100, prev + 1))
+    }, 50)
     return () => {
       clearInterval(autoSubmitInterval.current)
     }
@@ -79,22 +81,28 @@ function PlayerActionConfirmation({
         </Grid2>
         <Grid2>
           <Button
-            color="success"
             startIcon={(
-              <CircularProgress
-                variant="determinate"
-                value={autoSubmitProgress}
-                size={20}
-                color="inherit"
-              />
+              <Check />
             )}
+            sx={{
+              background: `
+                linear-gradient(
+                  to right,
+                  ${theme.palette.success.main}
+                  ${autoSubmitProgress}%,
+                  ${theme.palette.mode === LIGHT_COLOR_MODE ? 'rgba(0, 0, 0, 0.24)' : 'rgba(255, 255, 255, 0.24)'}
+                  ${autoSubmitProgress}%
+                ) !important`
+            }}
             variant="contained"
             onClick={() => {
               clearInterval(autoSubmitInterval.current)
               trigger(variables)
             }}
             disabled={isMutating}
-          >Confirm</Button>
+          >
+            Confirm
+          </Button>
         </Grid2>
       </Grid2>
       {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
