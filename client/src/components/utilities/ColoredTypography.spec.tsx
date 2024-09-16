@@ -3,13 +3,13 @@ import { render, getRandomGameState, getCurrentColorMode } from '../../../tests/
 import { ActionAttributes, Actions, InfluenceAttributes, Influences } from "../../shared/types/game"
 
 describe('ColoredTypography', () => {
-  it('should render a single element when no matches', async () => {
+  it('should render a single element when no matches found', async () => {
     const { findByText } = render(<ColoredTypography>text to color</ColoredTypography>)
 
     await findByText('text to color')
   })
 
-  it('should render a single element when no matches', async () => {
+  it('should render multiple colored elements when matches found', async () => {
     const gameState = getRandomGameState()
 
     gameState.players[0].name = 'David'
