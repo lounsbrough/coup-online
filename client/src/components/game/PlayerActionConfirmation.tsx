@@ -39,20 +39,21 @@ function PlayerActionConfirmation({
 
   useEffect(() => {
     setAutoSubmitInterval(setInterval(() => {
-      setAutoSubmitProgress((prev) => {
-        const newProgress = Math.min(100, prev + 5)
-        if (newProgress === 100) {
-          trigger(variables)
-          clearInterval(autoSubmitInterval)
-        }
-        return newProgress
-      })
+      setAutoSubmitProgress((prev) => Math.min(100, prev + 2))
     }, 200))
 
     return () => {
       clearInterval(autoSubmitInterval)
     }
   }, [])
+
+  useEffect(() => {
+    if (autoSubmitProgress === 100) {
+      clearInterval(autoSubmitInterval)
+      trigger(variables)
+      return
+    }
+  }, [autoSubmitProgress, autoSubmitInterval])
 
   if (!gameState) {
     return null
