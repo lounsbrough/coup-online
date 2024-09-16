@@ -4,7 +4,7 @@ import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, PublicGameState } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluenceHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 
 const port = process.env.EXPRESS_PORT || 8008
@@ -165,16 +165,18 @@ app.post('/blockChallengeResponse', validateBody(Joi.object().keys({
     await responseHandler(blockChallengeResponseHandler)(res, { roomId, playerId, influence })
 })
 
-app.post('/loseInfluence', validateBody(Joi.object().keys({
+app.post('/loseInfluences', validateBody(Joi.object().keys({
     roomId: Joi.string().required(),
     playerId: Joi.string().required(),
-    influence: Joi.string().allow(...Object.values(Influences)).required()
+    influences: Joi.array().items(
+        Joi.string().allow(...Object.values(Influences)).required()
+    ).min(1).max(2).required()
 })), async (req, res) => {
     const roomId: string = req.body.roomId
     const playerId: string = req.body.playerId
-    const influence: Influences = req.body.influence
+    const influences: Influences[] = req.body.influences
 
-    await responseHandler(loseInfluenceHandler)(res, { roomId, playerId, influence })
+    await responseHandler(loseInfluencesHandler)(res, { roomId, playerId, influences })
 })
 
 server.listen(port, function () {

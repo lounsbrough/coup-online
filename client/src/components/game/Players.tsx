@@ -1,12 +1,12 @@
-import { Box, Grid2, Typography } from "@mui/material";
-import { useGameStateContext } from "../../context/GameStateContext";
-import { Group, MonetizationOn } from "@mui/icons-material";
+import { Box, Grid2, Typography } from "@mui/material"
+import { useGameStateContext } from "../../context/GameStateContext"
+import { Group, MonetizationOn } from "@mui/icons-material"
 
 function Players() {
-  const { gameState } = useGameStateContext();
+  const { gameState } = useGameStateContext()
 
   if (!gameState) {
-    return null;
+    return null
   }
 
   return (
@@ -15,13 +15,7 @@ function Players() {
         {gameState.players
           .filter(({ influenceCount }) => influenceCount > 0)
           .map(({ name, color, coins, influenceCount }, index) => {
-            const isSelf = gameState.selfPlayer.name === name;
-
-            let effectiveInfluenceCount = influenceCount;
-            if (gameState.pendingInfluenceLoss[name]) {
-              effectiveInfluenceCount -= gameState.pendingInfluenceLoss[name]
-                .filter(({ putBackInDeck }) => putBackInDeck).length;
-            }
+            const isSelf = gameState.selfPlayer.name === name
 
             return (
               <Box
@@ -42,7 +36,7 @@ function Players() {
                   {name}
                 </Typography>
                 <Typography variant="h6"><MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}</Typography>
-                <Typography variant="h6"><Group sx={{ verticalAlign: 'text-bottom' }} />{` ${effectiveInfluenceCount}`}</Typography>
+                <Typography variant="h6"><Group sx={{ verticalAlign: 'text-bottom' }} />{` ${influenceCount}`}</Typography>
               </Box>
             )
           }
@@ -52,4 +46,4 @@ function Players() {
   )
 }
 
-export default Players;
+export default Players
