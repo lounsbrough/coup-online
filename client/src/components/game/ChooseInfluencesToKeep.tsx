@@ -7,9 +7,9 @@ import { useColorModeContext } from "../../context/MaterialThemeContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
 function ChooseInfluenceToKeep() {
+  const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
   const { gameState } = useGameStateContext()
   const { colorMode } = useColorModeContext()
-  const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
 
   if (!gameState) {
     return null

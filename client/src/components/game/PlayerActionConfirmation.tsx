@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useGameStateContext } from "../../context/GameStateContext"
 import useSWRMutation from "swr/mutation"
 import { Button, CircularProgress, Grid2, Typography } from "@mui/material"
@@ -18,7 +18,7 @@ function PlayerActionConfirmation({
 }) {
   const [error, setError] = useState<string>()
   const [autoSubmitProgress, setAutoSubmitProgress] = useState<number>(0)
-  const [autoSubmitInterval, setAutoSubmitInterval] = useState<NodeJS.Timer>()
+  const autoSubmitInterval = useRef<NodeJS.Timer>()
   const { gameState, setGameState } = useGameStateContext()
 
   const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${endpoint}`, (async (url: string, { arg }: { arg: object }) => {
@@ -32,28 +32,30 @@ function PlayerActionConfirmation({
       if (res.ok) {
         setGameState(await res.json())
       } else {
-        setError('Error performing action')
+        if (res.status === 400) {
+          setError(await res.text())
+        } else {
+          setError('Error performing action')
+        }
       }
     })
   }))
 
   useEffect(() => {
-    setAutoSubmitInterval(setInterval(() => {
-      setAutoSubmitProgress((prev) => Math.min(100, prev + 2))
-    }, 200))
-
+    autoSubmitInterval.current = setInterval(() => {
+      setAutoSubmitProgress((prev) => Math.min(100, prev + 3))
+    }, 90)
     return () => {
-      clearInterval(autoSubmitInterval)
+      clearInterval(autoSubmitInterval.current)
     }
   }, [])
 
   useEffect(() => {
     if (autoSubmitProgress === 100) {
-      clearInterval(autoSubmitInterval)
+      clearInterval(autoSubmitInterval.current)
       trigger(variables)
-      return
     }
-  }, [autoSubmitProgress, autoSubmitInterval])
+  }, [autoSubmitProgress, trigger, variables])
 
   if (!gameState) {
     return null
@@ -69,7 +71,7 @@ function PlayerActionConfirmation({
             startIcon={<Cancel />}
             variant="contained"
             onClick={() => {
-              clearInterval(autoSubmitInterval)
+              clearInterval(autoSubmitInterval.current)
               onCancel()
             }}
             disabled={isMutating}
@@ -88,7 +90,7 @@ function PlayerActionConfirmation({
             )}
             variant="contained"
             onClick={() => {
-              clearInterval(autoSubmitInterval)
+              clearInterval(autoSubmitInterval.current)
               trigger(variables)
             }}
             disabled={isMutating}
