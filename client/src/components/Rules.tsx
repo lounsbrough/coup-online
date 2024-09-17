@@ -1,23 +1,23 @@
-import { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
-import { Gavel } from "@mui/icons-material";
-import { colord } from "colord";
-import { InfluenceAttributes } from "../shared/types/game";
-import { useColorModeContext } from "../context/MaterialThemeContext";
-import './Rules.css';
+import { useState } from "react"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material"
+import { Gavel } from "@mui/icons-material"
+import { colord } from "colord"
+import { InfluenceAttributes } from "../shared/types/game"
+import { useColorModeContext } from "../context/MaterialThemeContext"
+import './Rules.css'
 
 function Rules() {
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const { colorMode } = useColorModeContext();
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const { colorMode } = useColorModeContext()
 
-  const influenceBackgroundOpacity = 0.5;
+  const influenceBackgroundOpacity = 0.5
 
   return (
     <>
       <Button
         startIcon={<Gavel />}
         onClick={() => {
-          setModalOpen(true);
+          setModalOpen(true)
         }}
       >
         Rules
@@ -26,75 +26,78 @@ function Rules() {
         fullWidth
         maxWidth={false}
         open={modalOpen}
-        onClose={() => { setModalOpen(false); }}
+        onClose={() => { setModalOpen(false) }}
       >
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText component='div'>
             <h2>Cheat Sheet</h2>
             <table className="cheat-sheet-table">
               <thead>
                 <tr>
-                  <th>Influence</th><th>Action</th><th>Effect</th><th>Block</th>
+                  <th>Influence</th>
+                  <th>Action</th>
+                  <th>Block</th>
+                  <th>Effect</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td></td>
                   <td>Income</td>
-                  <td>Collect 1 coin</td>
                   <td></td>
+                  <td>Collect 1 coin</td>
                 </tr>
                 <tr>
                   <td></td>
                   <td>Foreign Aid</td>
-                  <td>Collect 2 coins</td>
                   <td></td>
+                  <td>Collect 2 coins</td>
                 </tr>
                 <tr>
                   <td></td>
                   <td>Coup</td>
-                  <td>Pay 7 coins and make a player lose an influence</td>
                   <td></td>
+                  <td>Pay 7 coins to kill an influence</td>
                 </tr>
                 <tr style={{
                   background: colord(InfluenceAttributes.Duke.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
                 }}>
                   <td>Duke</td>
                   <td>Tax</td>
+                  <td>Foreign Aid</td>
                   <td>Collect 3 coins</td>
-                  <td>Block Foreign Aid</td>
                 </tr>
                 <tr style={{
                   background: colord(InfluenceAttributes.Assassin.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
                 }}>
                   <td>Assassin</td>
                   <td>Assassinate</td>
-                  <td>Pay 3 coins and make a player lose an influence</td>
                   <td></td>
+                  <td>Pay 3 coins to kill an influence</td>
                 </tr>
                 <tr style={{
                   background: colord(InfluenceAttributes.Ambassador.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
                 }}>
                   <td>Ambassador</td>
                   <td>Exchange</td>
+                  <td>Stealing</td>
                   <td>Draw 2 influences and put 2 back</td>
-                  <td>Block Stealing</td>
                 </tr>
                 <tr style={{
                   background: colord(InfluenceAttributes.Captain.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
                 }}>
                   <td>Captain</td>
                   <td>Steal</td>
+                  <td>Stealing</td>
                   <td>Steal 2 coins from another player</td>
-                  <td>Block Stealing</td>
                 </tr>
                 <tr style={{
                   background: colord(InfluenceAttributes.Contessa.color[colorMode]).alpha(influenceBackgroundOpacity).toRgbString()
                 }}>
                   <td>Contessa</td>
                   <td></td>
+                  <td>Assassination</td>
                   <td></td>
-                  <td>Block Assassination</td>
                 </tr>
               </tbody>
             </table>
@@ -128,11 +131,11 @@ function Rules() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' onClick={() => { setModalOpen(false); }}>Close</Button>
+          <Button variant='contained' onClick={() => { setModalOpen(false) }}>Close</Button>
         </DialogActions>
       </Dialog>
     </>
-  );
+  )
 }
 
-export default Rules;
+export default Rules

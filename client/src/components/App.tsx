@@ -11,8 +11,8 @@ import '@fontsource/roboto/700.css'
 import './App.css'
 import { GameStateContextProvider } from '../context/GameStateContext'
 import { MaterialThemeContextProvider } from '../context/MaterialThemeContext'
-import ColorModeToggle from './ColorModeToggle'
 import Rules from './Rules'
+import UserSettings from './UserSettings'
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
           ><Typography variant="h4" style={{
             fontWeight: 500
           }}>Coup</Typography></Link>
-          <ColorModeToggle />
+          <UserSettings />
         </header>
         <Routes>
           <Route path="/">

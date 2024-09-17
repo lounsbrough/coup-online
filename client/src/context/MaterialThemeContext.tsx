@@ -1,6 +1,7 @@
 import { useState, useMemo, createContext, useEffect, useContext, ReactNode } from 'react'
 import { createTheme, ThemeProvider, GlobalStyles, useMediaQuery, PaletteMode } from '@mui/material'
 import { grey, blueGrey } from '@mui/material/colors'
+import { activeColorModeStorageKey } from '../helpers/localStorageKeys'
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -36,8 +37,6 @@ export const ColorModeContext = createContext<ColorModeContextType>({
   internalColorMode: SYSTEM_COLOR_MODE,
   setColorMode: () => { }
 })
-
-const activeColorModeStorageKey = 'coupActiveColorMode'
 
 export function MaterialThemeContextProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<AppColorMode>(
