@@ -1,14 +1,13 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
+import { playerIdStorageKey } from './localStorageKeys'
 
 export const getPlayerId = () => {
-  const storageKey = 'coupPlayerId';
-
-  const existingPlayerId = localStorage.getItem(storageKey);
+  const existingPlayerId = localStorage.getItem(playerIdStorageKey)
   if (existingPlayerId) {
-    return existingPlayerId;
+    return existingPlayerId
   }
 
-  const playerId = uuidv4();
-  localStorage.setItem(storageKey, playerId);
-  return playerId;
+  const playerId = uuidv4()
+  localStorage.setItem(playerIdStorageKey, playerId)
+  return playerId
 }

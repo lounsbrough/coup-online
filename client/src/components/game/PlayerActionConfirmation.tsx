@@ -5,6 +5,7 @@ import { Button, Grid2, Typography, useTheme } from "@mui/material"
 import ColoredTypography from "../utilities/ColoredTypography"
 import { Cancel, Check } from "@mui/icons-material"
 import { LIGHT_COLOR_MODE } from "../../context/MaterialThemeContext"
+import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
 
 function PlayerActionConfirmation({
   message,
@@ -43,14 +44,21 @@ function PlayerActionConfirmation({
     })
   }))
 
+  const skipConfirmation = !JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
+
   useEffect(() => {
-    autoSubmitInterval.current = setInterval(() => {
-      setAutoSubmitProgress((prev) => Math.min(100, prev + 1))
-    }, 50)
+    if (skipConfirmation) {
+      trigger(variables)
+    } else {
+      autoSubmitInterval.current = setInterval(() => {
+        setAutoSubmitProgress((prev) => Math.min(100, prev + 1))
+      }, 50)
+    }
+
     return () => {
       clearInterval(autoSubmitInterval.current)
     }
-  }, [])
+  }, [skipConfirmation, trigger, variables])
 
   useEffect(() => {
     if (autoSubmitProgress === 100) {
@@ -59,7 +67,7 @@ function PlayerActionConfirmation({
     }
   }, [autoSubmitProgress, trigger, variables])
 
-  if (!gameState) {
+  if (!gameState || skipConfirmation) {
     return null
   }
 
