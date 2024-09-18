@@ -24,7 +24,7 @@ function EventLog() {
       <Typography sx={{ mt: 2, fontWeight: 700 }}>Event Log</Typography>
       <Box ref={logBox} sx={{
         width: '100%',
-        maxHeight: theme.isSmallScreen ? '25dvh' : '85dvh',
+        maxHeight: theme.isSmallScreen ? '25dvh' : '80dvh',
         overflowY: 'auto'
       }}>
         {gameState?.eventLogs.map((log, logIndex) =>
