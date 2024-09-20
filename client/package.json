@@ -20,16 +20,17 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.7.5",
     "swr": "^2.2.5",
     "typescript": "^4.9.5",
     "uuid": "^10.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "copy-shared": "rm -rf ./src/shared && cp -r ../shared ./src/shared",
+    "build-shared": "pnpm --prefix ../shared build",
     "lint": "pnpm eslint",
-    "start": "pnpm copy-shared && react-scripts start",
-    "build": "pnpm copy-shared && react-scripts build",
+    "start": "pnpm build-shared && react-scripts start",
+    "build": "pnpm build-shared && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -52,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "@shared": "../shared",
     "@types/chance": "^1.1.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^10.0.0",

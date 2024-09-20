@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import useSWRMutation from "swr/mutation"
 import { Button, Grid2, Typography, useTheme } from "@mui/material"
@@ -6,6 +6,7 @@ import ColoredTypography from "../utilities/ColoredTypography"
 import { Cancel, Check } from "@mui/icons-material"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
+import { useWebSocketContext } from "../../contexts/WebSocketContext"
 
 function PlayerActionConfirmation({
   message,
@@ -21,10 +22,11 @@ function PlayerActionConfirmation({
   const [error, setError] = useState<string>()
   const [autoSubmitProgress, setAutoSubmitProgress] = useState<number>(0)
   const autoSubmitInterval = useRef<NodeJS.Timer>()
+  const { socket } = useWebSocketContext()
   const { gameState, setGameState } = useGameStateContext()
   const theme = useTheme()
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${endpoint}`, (async (url: string, { arg }: { arg: object }) => {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${endpoint}`, (async (url: string, { arg }: { arg: object }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -43,6 +45,13 @@ function PlayerActionConfirmation({
       }
     })
   }))
+
+  const trigger = useMemo(() => socket?.connected
+    ? (params: object) => {
+      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
+      socket.emit(endpoint, params)
+    }
+    : triggerSwr, [endpoint, socket, triggerSwr])
 
   const skipConfirmation = !JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
 
@@ -82,6 +91,7 @@ function PlayerActionConfirmation({
             variant="contained"
             onClick={() => {
               clearInterval(autoSubmitInterval.current)
+              setAutoSubmitProgress(100)
               onCancel()
             }}
             disabled={isMutating}

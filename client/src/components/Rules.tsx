@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material"
 import { Gavel } from "@mui/icons-material"
 import { colord } from "colord"
-import { InfluenceAttributes } from "../shared/types/game"
+import { InfluenceAttributes } from '@shared'
 import { useColorModeContext } from "../contexts/MaterialThemeContext"
 import './Rules.css'
 
