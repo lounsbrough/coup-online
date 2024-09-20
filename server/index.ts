@@ -7,7 +7,33 @@ import { Actions, Influences, Responses, PublicGameState } from '../shared/types
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer } from 'socket.io'
-import { getPublicGameState } from './src/utilities/gameState'
+import { getGameState, getPublicGameState } from './src/utilities/gameState'
+import { getObjectEntries } from './src/utilities/object'
+
+enum PlayerActions {
+    gameState = 'gameState',
+    createGame = 'createGame',
+    joinGame = 'joinGame',
+    startGame = 'startGame',
+    resetGame = 'resetGame',
+    action = 'action',
+    actionResponse = 'actionResponse',
+    actionChallengeResponse = 'actionChallengeResponse',
+    blockResponse = 'blockResponse',
+    blockChallengeResponse = 'blockChallengeResponse',
+    loseInfluences = 'loseInfluences'
+}
+
+type ServerToClientEvents = {
+    error: (error: string) => void
+    gameStateChanged: (gameState: PublicGameState) => void
+}
+
+type ClientToServerEvents = {
+    [action in PlayerActions]: (params: unknown) => Promise<void>
+}
+
+type SocketData = { playerId: string }
 
 const port = process.env.EXPRESS_PORT || 8008
 
@@ -15,7 +41,7 @@ const app = express()
 app.use(cors())
 app.use(json())
 const server = http.createServer(app)
-const io = new ioServer(server, {
+const io = new ioServer<ClientToServerEvents, ServerToClientEvents, SocketData>(server, {
     cors: { origin: "*" }
 })
 
@@ -40,8 +66,8 @@ const validateExpressBody = (schema: ObjectSchema) => validateExpressRequest(sch
 const validateExpressQuery = (schema: ObjectSchema) => validateExpressRequest(schema, 'query')
 
 const eventHandlers: {
-    [event: string]: {
-        handler: (args: unknown) => Promise<PublicGameState>
+    [event in PlayerActions]: {
+        handler: (args: unknown) => Promise<{ roomId: string, playerId: string }>
         express: {
             method: 'post' | 'get'
             parseParams: (req: Request) => unknown
@@ -249,7 +275,7 @@ const eventHandlers: {
 }
 
 io.on('connection', (socket) => {
-    Object.entries(eventHandlers).forEach(([event, { handler, joiSchema }]) => {
+    getObjectEntries(eventHandlers).forEach(([event, { handler, joiSchema }]) => {
         socket.on(event, async (params) => {
             const result = joiSchema.validate(params)
 
@@ -257,28 +283,32 @@ io.on('connection', (socket) => {
                 socket.emit('error', result.error.details.map(({ message }) => message).join(', '))
             } else {
                 try {
-                    const gameState = await handler(params)
-                    if (!socket.data.playerId && gameState.selfPlayer.id) {
-                        socket.data.playerId = gameState.selfPlayer.id
+                    const { roomId, playerId } = await handler(params)
+                    if (!socket.data.playerId && playerId) {
+                        socket.data.playerId = playerId
                     }
                     const roomPrefix = 'coup-game-'
-                    socket.emit('gameStateChanged', gameState)
-                    const socketRoom = `${roomPrefix}${gameState.roomId}`
-                    if (![...socket.rooms].some((room) => room.startsWith(roomPrefix)) && gameState.roomId) {
+                    const socketRoom = `${roomPrefix}${roomId}`
+                    if (![...socket.rooms].some((room) => room.startsWith(roomPrefix)) && roomId) {
                         console.log(`socket ${socket.id} joined room ${socketRoom}`)
                         await socket.join(socketRoom)
+                    }
+                    const fullGameState = await getGameState(roomId)
+                    const emitGameStateChanged = async (pushToSocket: {
+                        emit: (event: string, gameState: PublicGameState) => void;
+                        data: { playerId: string }
+                    }) => {
+                        pushToSocket.emit('gameStateChanged', await getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
                     }
                     if (event !== 'gameState') {
                         socket.rooms.forEach(async (room) => {
                             if (room.startsWith(roomPrefix)) {
                                 const roomSockets = await io.in(room).fetchSockets()
-                                roomSockets.forEach(async (otherSocket) => {
-                                    if (otherSocket.id !== socket.id) {
-                                        otherSocket.emit('gameStateChanged', await getPublicGameState(gameState.roomId, otherSocket.data.playerId))
-                                    }
-                                })
+                                roomSockets.forEach(emitGameStateChanged)
                             }
                         })
+                    } else {
+                        await emitGameStateChanged(socket)
                     }
                 } catch (error) {
                     if (error instanceof GameMutationInputError) {
@@ -295,9 +325,9 @@ io.on('connection', (socket) => {
 type PublicGameStateOrError = PublicGameState | { error: string }
 
 const responseHandler = <T>(handler: (props: T) =>
-    Promise<PublicGameState>) => async (res: Response<PublicGameStateOrError>, props: T) => {
+    Promise<{ roomId: string, playerId: string }>) => async (res: Response<PublicGameStateOrError>, props: T) => {
         try {
-            res.status(200).json(await handler(props))
+            res.status(200).json(await getPublicGameState(await handler(props)))
         } catch (error) {
             if (error instanceof GameMutationInputError) {
                 res.status(error.httpCode).json({ error: error.message })
@@ -307,9 +337,10 @@ const responseHandler = <T>(handler: (props: T) =>
         }
     }
 
-Object.entries(eventHandlers).forEach(([event, { express, handler, joiSchema }]) => {
-    app[express.method](`/${event}`, express.validator(joiSchema), (req, res) =>
-        responseHandler(handler)(res, express.parseParams(req))
+getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }]) => {
+    app[express.method](`/${event}`, express.validator(joiSchema), (req, res) => {
+        return responseHandler(handler)(res, express.parseParams(req))
+    }
     )
 })
 

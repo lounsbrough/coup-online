@@ -9,20 +9,25 @@ export const getGameState = async (
   return state ? { ...state } : null
 }
 
-export const getPublicGameState = async (
-  roomId: string,
+export const getPublicGameState = async ({ roomId, gameState, playerId }: {
+  roomId?: string
+  gameState?: GameState
   playerId: string
-): Promise<PublicGameState | null> => {
-  const gameState = await getGameState(roomId)
+}): Promise<PublicGameState | null> => {
+  if ([roomId, gameState].filter(Boolean).length !== 1) {
+    throw new Error('Please provide roomId or gameState')
+  }
 
-  if (gameState === null) {
+  const fullGameState = gameState ?? await getGameState(roomId)
+
+  if (fullGameState === null) {
     return null
   }
 
   let selfPlayer: Player
   const publicPlayers: PublicPlayer[] = []
-  gameState.players.forEach((player) => {
-    const pendingInfluenceCountToPutBack = gameState.pendingInfluenceLoss[player.name]
+  fullGameState.players.forEach((player) => {
+    const pendingInfluenceCountToPutBack = fullGameState.pendingInfluenceLoss[player.name]
       ?.filter(({ putBackInDeck }) => putBackInDeck)?.length ?? 0
     publicPlayers.push({
       name: player.name,
@@ -36,18 +41,18 @@ export const getPublicGameState = async (
   })
 
   return {
-    deadCards: gameState.deadCards,
-    eventLogs: gameState.eventLogs,
-    isStarted: gameState.isStarted,
-    pendingAction: gameState.pendingAction,
-    pendingActionChallenge: gameState.pendingActionChallenge,
-    pendingBlock: gameState.pendingBlock,
-    pendingBlockChallenge: gameState.pendingBlockChallenge,
-    pendingInfluenceLoss: gameState.pendingInfluenceLoss,
+    deadCards: fullGameState.deadCards,
+    eventLogs: fullGameState.eventLogs,
+    isStarted: fullGameState.isStarted,
+    pendingAction: fullGameState.pendingAction,
+    pendingActionChallenge: fullGameState.pendingActionChallenge,
+    pendingBlock: fullGameState.pendingBlock,
+    pendingBlockChallenge: fullGameState.pendingBlockChallenge,
+    pendingInfluenceLoss: fullGameState.pendingInfluenceLoss,
     players: publicPlayers,
-    roomId: gameState.roomId,
+    roomId: fullGameState.roomId,
     selfPlayer,
-    turnPlayer: gameState.turnPlayer
+    turnPlayer: fullGameState.turnPlayer
   }
 }
 

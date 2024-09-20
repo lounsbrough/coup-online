@@ -85,7 +85,7 @@ describe('gameState', () => {
       }
       delete publicGameState.deck
 
-      expect(await getPublicGameState(gameState.roomId, selfPlayer.id))
+      expect(await getPublicGameState({ gameState, playerId: selfPlayer.id }))
         .toStrictEqual(publicGameState)
     })
   })
