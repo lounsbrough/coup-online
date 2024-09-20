@@ -3,7 +3,7 @@ import React from "react"
 import { screen, render as testingLibraryRender } from "@testing-library/react"
 import Chance from 'chance'
 import { GameStateContext } from "../../src/contexts/GameStateContext"
-import { PublicGameState } from '@shared/dist/types/game'
+import { PublicGameState } from '@shared'
 import { MaterialThemeContextProvider, useColorModeContext } from "../../src/contexts/MaterialThemeContext"
 import { PaletteMode } from "@mui/material"
 

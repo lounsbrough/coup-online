@@ -1,4 +1,4 @@
-import { Responses } from '@shared/dist/types/game'
+import { Responses } from '@shared'
 
 export const toTitleCase = (s: string) => {
   if (typeof s !== 'string') {

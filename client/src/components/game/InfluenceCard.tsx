@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material"
-import { InfluenceAttributes, Influences } from '@shared/dist/types/game'
+import { InfluenceAttributes, Influences } from '@shared'
 import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 
 function InfluenceCard({ influence }: { influence: Influences }) {

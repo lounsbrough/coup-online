@@ -1,6 +1,6 @@
 import ColoredTypography from "./ColoredTypography"
 import { render, getRandomGameState, getCurrentColorMode } from '../../../tests/utilities/render'
-import { ActionAttributes, Actions, InfluenceAttributes, Influences } from '@shared/dist/types/game'
+import { ActionAttributes, Actions, InfluenceAttributes, Influences } from '@shared'
 
 describe('ColoredTypography', () => {
   it('should render a single element when no matches found', async () => {

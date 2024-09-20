@@ -1,5 +1,5 @@
 import { Button, Grid2 } from "@mui/material"
-import { ResponseAttributes, Responses } from '@shared/dist/types/game'
+import { ResponseAttributes, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"

@@ -1,5 +1,5 @@
 import { Button, Grid2, Tooltip, Typography } from "@mui/material"
-import { ActionAttributes, Actions } from '@shared/dist/types/game'
+import { ActionAttributes, Actions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
