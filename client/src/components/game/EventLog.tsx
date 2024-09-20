@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { useEffect, useRef } from "react";
-import { useGameStateContext } from "../../context/GameStateContext";
+import { useGameStateContext } from "../../contexts/GameStateContext";
 import ColoredTypography from "../utilities/ColoredTypography";
 
 function EventLog() {

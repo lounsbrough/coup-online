@@ -1,6 +1,6 @@
 import { LightMode, DarkMode, SettingsBrightness } from '@mui/icons-material'
 import { Button } from '@mui/material'
-import { AppColorMode, DARK_COLOR_MODE, LIGHT_COLOR_MODE, SYSTEM_COLOR_MODE, useColorModeContext } from '../context/MaterialThemeContext'
+import { AppColorMode, DARK_COLOR_MODE, LIGHT_COLOR_MODE, SYSTEM_COLOR_MODE, useColorModeContext } from '../contexts/MaterialThemeContext'
 import { toTitleCase } from '../helpers/grammar'
 
 function ColorModeToggle() {

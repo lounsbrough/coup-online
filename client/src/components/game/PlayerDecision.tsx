@@ -4,7 +4,7 @@ import ChooseActionResponse from "./ChooseActionResponse"
 import ChooseChallengeResponse from "./ChooseChallengeResponse"
 import ChooseInfluenceToLose from "./ChooseInfluenceToLose"
 import ChooseBlockResponse from "./ChooseBlockResponse"
-import { useGameStateContext } from "../../context/GameStateContext"
+import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Circle } from "@mui/icons-material"
 import ChooseInfluenceToKeep from "./ChooseInfluencesToKeep"
 

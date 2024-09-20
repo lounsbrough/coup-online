@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react"
-import { useGameStateContext } from "../../context/GameStateContext"
+import { useGameStateContext } from "../../contexts/GameStateContext"
 import useSWRMutation from "swr/mutation"
 import { Button, Grid2, Typography, useTheme } from "@mui/material"
 import ColoredTypography from "../utilities/ColoredTypography"
 import { Cancel, Check } from "@mui/icons-material"
-import { LIGHT_COLOR_MODE } from "../../context/MaterialThemeContext"
+import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
 
 function PlayerActionConfirmation({

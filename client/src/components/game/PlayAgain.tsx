@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Typography } from "@mui/material";
 import useSWRMutation from "swr/mutation";
 import { getPlayerId } from "../../helpers/playerId";
-import { useGameStateContext } from "../../context/GameStateContext";
+import { useGameStateContext } from "../../contexts/GameStateContext";
 
 function PlayAgain() {
   const [error, setError] = useState<string>();
