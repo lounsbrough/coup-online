@@ -1,6 +1,6 @@
 import { useState, createContext, useContext, ReactNode, useEffect } from 'react'
 import useSWR from 'swr'
-import { PublicGameState } from '../shared/types/game'
+import { PublicGameState } from '@shared/dist/types/game'
 import { getPlayerId } from '../helpers/playerId'
 import { Typography } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'

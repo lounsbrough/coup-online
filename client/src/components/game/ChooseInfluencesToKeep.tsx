@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Button, Checkbox, Grid2, Typography } from "@mui/material"
-import { InfluenceAttributes } from "../../shared/types/game"
+import { InfluenceAttributes } from '@shared/dist/types/game'
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useColorModeContext } from "../../contexts/MaterialThemeContext"

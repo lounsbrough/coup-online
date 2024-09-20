@@ -27,10 +27,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "copy-shared": "rm -rf ./src/shared && cp -r ../shared ./src/shared",
+    "build-shared": "pnpm --prefix ../shared build",
     "lint": "pnpm eslint",
-    "start": "pnpm copy-shared && react-scripts start",
-    "build": "pnpm copy-shared && react-scripts build",
+    "start": "pnpm build-shared && react-scripts start",
+    "build": "pnpm build-shared && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -53,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "@shared": "../shared",
     "@types/chance": "^1.1.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^10.0.0",

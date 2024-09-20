@@ -7,7 +7,7 @@ import { getPlayerId } from "../../helpers/playerId"
 import { Link } from "react-router-dom"
 import { useWebSocketContext } from "../../contexts/WebSocketContext"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { PublicGameState } from "../../shared/types/game"
+import { PublicGameState } from '@shared/dist/types/game'
 
 type CreateGameParams = { playerId: string, playerName: string }
 
