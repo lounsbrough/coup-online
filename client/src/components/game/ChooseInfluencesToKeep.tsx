@@ -2,8 +2,8 @@ import { useState } from "react"
 import { Button, Checkbox, Grid2, Typography } from "@mui/material"
 import { InfluenceAttributes } from "../../shared/types/game"
 import { getPlayerId } from "../../helpers/playerId"
-import { useGameStateContext } from "../../context/GameStateContext"
-import { useColorModeContext } from "../../context/MaterialThemeContext"
+import { useGameStateContext } from "../../contexts/GameStateContext"
+import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
 function ChooseInfluenceToKeep() {

@@ -1,5 +1,5 @@
 import { Box, Grid2, Typography } from "@mui/material"
-import { useGameStateContext } from "../../context/GameStateContext"
+import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Group, MonetizationOn } from "@mui/icons-material"
 
 function Players() {

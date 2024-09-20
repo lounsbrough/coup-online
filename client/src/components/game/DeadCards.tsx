@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, Typography } from "@mui/material";
 import { useState } from "react";
-import { useGameStateContext } from "../../context/GameStateContext";
+import { useGameStateContext } from "../../contexts/GameStateContext";
 import InfluenceCard from "./InfluenceCard";
 
 function DeadCards() {

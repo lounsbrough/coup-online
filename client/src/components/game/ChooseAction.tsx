@@ -2,8 +2,8 @@ import { Button, Grid2, Tooltip, Typography } from "@mui/material"
 import { ActionAttributes, Actions } from "../../shared/types/game"
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
-import { useGameStateContext } from "../../context/GameStateContext"
-import { useColorModeContext } from "../../context/MaterialThemeContext"
+import { useGameStateContext } from "../../contexts/GameStateContext"
+import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
 function ChooseAction() {

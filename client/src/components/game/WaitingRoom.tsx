@@ -3,7 +3,7 @@ import Players from "../game/Players";
 import useSWRMutation from "swr/mutation";
 import { ContentCopy } from "@mui/icons-material";
 import { getPlayerId } from "../../helpers/playerId";
-import { useGameStateContext } from "../../context/GameStateContext";
+import { useGameStateContext } from "../../contexts/GameStateContext";
 import { useState } from "react";
 
 function WaitingRoom() {
