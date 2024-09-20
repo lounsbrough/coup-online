@@ -1,7 +1,6 @@
 import { GameMutationInputError } from "../utilities/errors"
 import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
 import { drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
-import { getPublicGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, resetGame, startGame } from "./logic"
 
@@ -29,7 +28,7 @@ export const getGameStateHandler = async ({ roomId, playerId }: {
 
   validateRoomIdAndPlayerId(gameState, roomId, playerId)
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const createGameHandler = async ({ playerId, playerName }: {
@@ -40,7 +39,7 @@ export const createGameHandler = async ({ playerId, playerName }: {
 
   await createNewGame(roomId, playerId, playerName)
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const joinGameHandler = async ({ roomId, playerId, playerName }: {
@@ -78,7 +77,7 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
     })
   }
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const resetGameHandler = async ({ roomId, playerId }: {
@@ -95,7 +94,7 @@ export const resetGameHandler = async ({ roomId, playerId }: {
 
   await resetGame(roomId)
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const startGameHandler = async ({ roomId, playerId }: {
@@ -116,7 +115,7 @@ export const startGameHandler = async ({ roomId, playerId }: {
 
   await startGame(roomId)
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: {
@@ -194,7 +193,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     })
   }
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const actionResponseHandler = async ({ roomId, playerId, response, claimedInfluence }: {
@@ -278,7 +277,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     })
   }
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const actionChallengeResponseHandler = async ({ roomId, playerId, influence }: {
@@ -349,7 +348,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     })
   }
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const blockResponseHandler = async ({ roomId, playerId, response }: {
@@ -406,7 +405,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
     })
   }
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const blockChallengeResponseHandler = async ({ roomId, playerId, influence }: {
@@ -467,7 +466,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     })
   }
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }
 
 export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
@@ -520,5 +519,5 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
     })
   })
 
-  return getPublicGameState(roomId, playerId)
+  return { roomId, playerId }
 }

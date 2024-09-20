@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { PublicPlayer } from "../../shared/types/game";
+import { PublicPlayer } from '@shared'
 import ColoredTypography from "../utilities/ColoredTypography";
 
 function Victory({ player }: { player: PublicPlayer }) {

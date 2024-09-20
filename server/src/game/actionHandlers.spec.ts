@@ -2,6 +2,7 @@ import Chance from 'chance'
 import { Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { createGameHandler, getGameStateHandler } from './actionHandlers'
 import { getValue, setValue } from '../utilities/storage'
+import { getPublicGameState } from '../utilities/gameState'
 
 jest.mock('../utilities/storage')
 
@@ -69,13 +70,13 @@ describe('actionHandlers', () => {
         error: 'Player not in game'
       }
     ] as {
-      handler: () => Promise<PublicGameState>,
+      handler: () => Promise<{ roomId: string, playerId: string }>,
       error: string
     }[])('should return $status $error', async ({ handler, error }) => {
       if (error) {
         await expect(handler()).rejects.toThrow()
       } else {
-        validatePublicState(await handler())
+        validatePublicState(await getPublicGameState(await handler()))
       }
     })
   })

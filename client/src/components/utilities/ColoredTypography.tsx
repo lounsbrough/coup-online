@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Typography, TypographyProps } from "@mui/material"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useColorModeContext } from "../../contexts/MaterialThemeContext"
-import { ActionAttributes, InfluenceAttributes } from "../../shared/types/game"
+import { ActionAttributes, InfluenceAttributes } from '@shared'
 
 function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'children'> & {
   children: string

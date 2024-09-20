@@ -3,9 +3,11 @@ import React from "react"
 import { screen, render as testingLibraryRender } from "@testing-library/react"
 import Chance from 'chance'
 import { GameStateContext } from "../../src/contexts/GameStateContext"
-import { PublicGameState } from "../../src/shared/types/game"
+import { PublicGameState } from '@shared'
 import { MaterialThemeContextProvider, useColorModeContext } from "../../src/contexts/MaterialThemeContext"
 import { PaletteMode } from "@mui/material"
+
+jest.mock("../../src/contexts/WebSocketContext", () => ({ useWebSocketContext: () => ({}) }))
 
 const chance = new Chance()
 
