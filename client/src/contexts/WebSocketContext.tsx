@@ -1,7 +1,8 @@
 import { createContext, useContext, ReactNode, useMemo, useEffect, useState } from 'react'
 import { io, Socket } from "socket.io-client"
 
-const URL = 'http://localhost:8008'
+const socketUrl = process.env.REACT_APP_SOCKET_SERVER_URL ?? 'http://localhost:8008'
+const socketPath = process.env.REACT_APP_SOCKET_SERVER_PATH ?? ''
 
 type WebSocketContextType = { socket?: Socket, isConnected: boolean }
 
@@ -9,7 +10,7 @@ export const WebSocketContext = createContext<WebSocketContextType>({ isConnecte
 
 export function WebSocketContextProvider({ children }: { children: ReactNode }) {
   const [isConnected, setIsConnected] = useState<boolean>(false)
-  const socket = useMemo(() => io(URL), [])
+  const socket = useMemo(() => io(socketUrl, { path: socketPath }), [])
 
   useEffect(() => {
     socket.on('connect', () => {
