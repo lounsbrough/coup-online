@@ -20,26 +20,29 @@ function App() {
     <div className="App">
       <MaterialThemeContextProvider>
         <WebSocketContextProvider>
-          <GameStateContextProvider>
-            <header className="App-header">
-              <Rules />
-              <Link color='primary'
-                href={'/'}
-              ><Typography variant="h4" style={{
-                fontWeight: 500
-              }}>Coup</Typography></Link>
-              <UserSettings />
-            </header>
-            <Routes>
-              <Route path="/">
-                <Route index element={<Home />} />
-                <Route path="game" element={<Game />} />
-                <Route path="join-game" element={<JoinGame />} />
-                <Route path="create-game" element={<CreateGame />} />
-                <Route path="*" element={<div>Page not found 😱 - Go <Link href={'/'}>Home</Link></div>} />
-              </Route>
-            </Routes>
-          </GameStateContextProvider>
+          <header className="App-header">
+            <Rules />
+            <Link color='primary'
+              href={'/'}
+            ><Typography variant="h4" style={{
+              fontWeight: 500
+            }}>Coup</Typography></Link>
+            <UserSettings />
+          </header>
+          <Routes>
+            <Route path="/">
+              <Route index element={<Home />} />
+              <Route path="game" element={
+                <GameStateContextProvider>
+                  <Game />
+                </GameStateContextProvider>
+              } />
+              <Route path="join-game" element={<JoinGame />} />
+              <Route path="create-game" element={<CreateGame />} />
+              <Route path="*" element={<div>Page not found 😱 - Go <Link href={'/'}>Home</Link></div>} />
+            </Route>
+          </Routes>
+
         </WebSocketContextProvider>
       </MaterialThemeContextProvider>
     </div>

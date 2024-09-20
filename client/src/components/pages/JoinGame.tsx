@@ -50,7 +50,7 @@ function JoinGame() {
     })
   }))
 
-  const trigger = socket.connected
+  const trigger = socket?.connected
     ? (params: JoinGameParams) => {
       socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
         updateGameStateAndNavigate(gameState)

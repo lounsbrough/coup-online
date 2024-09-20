@@ -44,7 +44,7 @@ function CreateGame() {
     })
   }))
 
-  const trigger = socket.connected
+  const trigger = socket?.connected
     ? (params: CreateGameParams) => {
       socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
         updateGameStateAndNavigate(gameState)

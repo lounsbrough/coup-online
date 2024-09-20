@@ -30,7 +30,7 @@ function PlayAgain() {
     })
   }))
 
-  const trigger = socket.connected
+  const trigger = socket?.connected
     ? (params: ResetGameParams) => {
       socket.removeAllListeners('error').on('error', (error) => { setError(error) })
       socket.emit(resetGameEvent, params)

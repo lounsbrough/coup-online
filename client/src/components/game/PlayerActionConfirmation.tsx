@@ -46,7 +46,7 @@ function PlayerActionConfirmation({
     })
   }))
 
-  const trigger = useMemo(() => socket.connected
+  const trigger = useMemo(() => socket?.connected
     ? (params: object) => {
       socket.removeAllListeners('error').on('error', (error) => { setError(error) })
       socket.emit(endpoint, params)

@@ -32,7 +32,7 @@ function WaitingRoom() {
     })
   }))
 
-  const trigger = socket.connected
+  const trigger = socket?.connected
     ? (params: StartGameParams) => {
       socket.removeAllListeners('error').on('error', (error) => { setError(error) })
       socket.emit(startGameEvent, params)
