@@ -1,17 +1,31 @@
-import { useEffect, useState } from "react";
-import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material";
-import { AccountCircle } from "@mui/icons-material";
-import useSWRMutation from "swr/mutation";
-import { useNavigate } from "react-router-dom";
-import { getPlayerId } from "../../helpers/playerId";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
+import { AccountCircle } from "@mui/icons-material"
+import useSWRMutation from "swr/mutation"
+import { useNavigate } from "react-router-dom"
+import { getPlayerId } from "../../helpers/playerId"
+import { Link } from "react-router-dom"
+import { useWebSocketContext } from "../../contexts/WebSocketContext"
+import { useGameStateContext } from "../../contexts/GameStateContext"
+import { PublicGameState } from "../../shared/types/game"
+
+type CreateGameParams = { playerId: string, playerName: string }
 
 function CreateGame() {
-  const [playerName, setPlayerName] = useState('');
-  const [error, setError] = useState<string>();
-  const navigate = useNavigate();
+  const [playerName, setPlayerName] = useState('')
+  const [error, setError] = useState<string>()
+  const navigate = useNavigate()
+  const { socket } = useWebSocketContext()
+  const { setGameState } = useGameStateContext()
 
-  const { trigger, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/createGame`, (async (url: string, { arg }: { arg: { playerId: string; playerName: string; }; }) => {
+  const updateGameStateAndNavigate = (gameState: PublicGameState) => {
+    setGameState(gameState)
+    navigate(`/game?roomId=${gameState.roomId}`)
+  }
+
+  const { trigger: triggerSwr, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/createGame`, (async (url: string, { arg }: {
+    arg: CreateGameParams;
+  }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -20,20 +34,30 @@ function CreateGame() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        const roomId = (await res.json()).roomId;
-        navigate(`/game?roomId=${roomId}`);
+        const gameState = await res.json()
+        updateGameStateAndNavigate(gameState)
       } else {
-        setError('Error creating game');
+        setError('Error creating game')
       }
     })
   }))
 
+  const trigger = socket.connected
+    ? (params: CreateGameParams) => {
+      socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
+        updateGameStateAndNavigate(gameState)
+      })
+      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
+      socket.emit('createGame', params)
+    }
+    : triggerSwr
+
   useEffect(() => {
     if (swrError) {
-      console.log(swrError);
-      setError('Error creating game');
+      console.log(swrError)
+      setError('Error creating game')
     }
-  }, [swrError]);
+  }, [swrError])
 
   return (
     <>
@@ -44,22 +68,22 @@ function CreateGame() {
       <Typography variant="h5" sx={{ m: 5 }}>Create a New Game</Typography>
       <form
         onSubmit={(event) => {
-          event.preventDefault();
-          setError(undefined);
-          setPlayerName(playerName.trim());
+          event.preventDefault()
+          setError(undefined)
+          setPlayerName(playerName.trim())
 
           if (!playerName.trim()) {
-            setError('Player Name is required');
+            setError('Player Name is required')
           }
 
           if (playerName.trim().length > 10) {
-            setError('Player Name must be 10 characters or less');
+            setError('Player Name must be 10 characters or less')
           }
 
           trigger({
             playerId: getPlayerId(),
             playerName: playerName.trim()
-          });
+          })
         }}>
         <Grid2 container direction="column" alignContent='center'>
           <Grid2>
@@ -68,7 +92,7 @@ function CreateGame() {
               <TextField
                 value={playerName}
                 onChange={(event) => {
-                  setPlayerName(event.target.value.slice(0, 10));
+                  setPlayerName(event.target.value.slice(0, 10))
                 }}
                 label="What is your name?"
                 variant="standard"
@@ -90,4 +114,4 @@ function CreateGame() {
   )
 }
 
-export default CreateGame;
+export default CreateGame

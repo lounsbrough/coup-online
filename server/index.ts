@@ -18,16 +18,12 @@ const io = new ioServer(server, {
     cors: { origin: "*" }
 })
 
-io.on('connection', () => {
-    console.log('connected')
-})
-
 const playerNameRule = Joi.string().min(1).max(10).disallow(
     ...Object.values(Influences),
     ...Object.values(Actions)
 ).required()
 
-const validateRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
+const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
     return (req: Request, res: Response, next: NextFunction) => {
         const result = schema.validate(req[requestProperty], { abortEarly: false })
         if (result.error) {
@@ -39,8 +35,247 @@ const validateRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query'
         next()
     }
 }
-const validateBody = (schema: ObjectSchema) => validateRequest(schema, 'body')
-const validateQuery = (schema: ObjectSchema) => validateRequest(schema, 'query')
+const validateExpressBody = (schema: ObjectSchema) => validateExpressRequest(schema, 'body')
+const validateExpressQuery = (schema: ObjectSchema) => validateExpressRequest(schema, 'query')
+
+const eventHandlers: {
+    [event: string]: {
+        handler: (args: unknown) => Promise<PublicGameState>
+        express: {
+            method: 'post' | 'get'
+            parseParams: (req: Request) => unknown
+            validator: (schema: Joi.ObjectSchema) => (req: Request, res: Response, next: NextFunction) => void
+        }
+        joiSchema: Joi.ObjectSchema
+    }
+} = {
+    gameState: {
+        handler: getGameStateHandler,
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required()
+        }),
+        express: {
+            method: 'get',
+            parseParams: (req) => {
+                const roomId: string = req.query.roomId as string
+                const playerId: string = req.query.playerId as string
+                return { roomId, playerId }
+            },
+            validator: validateExpressQuery
+        }
+    },
+    createGame: {
+        handler: createGameHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const playerId: string = req.body.playerId
+                const playerName: string = req.body.playerName
+                return { playerId, playerName }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            playerId: Joi.string().required(),
+            playerName: playerNameRule
+        })
+    },
+    joinGame: {
+        handler: joinGameHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const playerName: string = req.body.playerName.trim()
+                return { roomId, playerId, playerName }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            playerName: playerNameRule
+        })
+    },
+    startGame: {
+        handler: startGameHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                return { roomId, playerId }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required()
+        })
+    },
+    resetGame: {
+        handler: resetGameHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                return { roomId, playerId }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required()
+        })
+    },
+    action: {
+        handler: actionHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const action: Actions = req.body.action
+                const targetPlayer: string | undefined = req.body.targetPlayer
+                return { roomId, playerId, action, targetPlayer }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            action: Joi.string().allow(...Object.values(Actions)).required(),
+            targetPlayer: Joi.string()
+        })
+    },
+    actionResponse: {
+        handler: actionResponseHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const response: Responses = req.body.response
+                const claimedInfluence: Influences | undefined = req.body.claimedInfluence
+                return { roomId, playerId, response, claimedInfluence }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            response: Joi.string().allow(...Object.values(Responses)).required(),
+            claimedInfluence: Joi.string().allow(...Object.values(Influences))
+        })
+    },
+    actionChallengeResponse: {
+        handler: actionChallengeResponseHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const influence: Influences = req.body.influence
+                return { roomId, playerId, influence }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            influence: Joi.string().allow(...Object.values(Influences)).required()
+        })
+    },
+    blockResponse: {
+        handler: blockResponseHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const response: Responses = req.body.response
+                return { roomId, playerId, response }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            response: Joi.string().allow(...Object.values(Responses)).required()
+        })
+    },
+    blockChallengeResponse: {
+        handler: blockChallengeResponseHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const influence: Influences = req.body.influence
+                return { roomId, playerId, influence }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            influence: Joi.string().allow(...Object.values(Influences)).required()
+        })
+    },
+    loseInfluences: {
+        handler: loseInfluencesHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const influences: Influences[] = req.body.influences
+                return { roomId, playerId, influences }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            influences: Joi.array().items(
+                Joi.string().allow(...Object.values(Influences)).required()
+            ).min(1).max(2).required()
+        })
+    }
+}
+
+io.on('connection', (socket) => {
+    Object.entries(eventHandlers).forEach(([event, { handler, joiSchema }]) => {
+        socket.on(event, async (params) => {
+            const result = joiSchema.validate(params)
+
+            if (result.error) {
+                socket.emit('error', result.error.details.map(({ message }) => message).join(', '))
+            } else {
+                try {
+                    const gameState = await handler(params)
+                    const socketRoom = `coup-game-${gameState.roomId}`
+                    if (![...socket.rooms].some((room) => room.startsWith('coup-game-')) && gameState.roomId) {
+                        console.log(`socket ${socket.id} joined room ${socketRoom}`)
+                        await socket.join(socketRoom)
+                    }
+                    socket.rooms.forEach(async (room) => {
+                        io.to(room).emit('gameStateChanged', gameState)
+                    })
+                } catch (error) {
+                    if (error instanceof GameMutationInputError) {
+                        socket.emit('error', error.message)
+                    } else {
+                        socket.emit('error', 'Unexpected error processing request')
+                    }
+                }
+            }
+        })
+    })
+})
 
 type PublicGameStateOrError = PublicGameState | { error: string }
 
@@ -57,134 +292,10 @@ const responseHandler = <T>(handler: (props: T) =>
         }
     }
 
-app.get('/gameState', validateQuery(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required()
-})), (async (req, res) => {
-    const roomId: string = req.query.roomId as string
-    const playerId: string = req.query.playerId as string
-
-    await responseHandler(getGameStateHandler)(res, { roomId, playerId })
-}))
-
-app.post('/createGame', validateBody(Joi.object().keys({
-    playerId: Joi.string().required(),
-    playerName: playerNameRule
-})), async (req, res) => {
-    const playerId: string = req.body.playerId
-    const playerName: string = req.body.playerName
-
-    await responseHandler(createGameHandler)(res, { playerId, playerName })
-})
-
-app.post('/joinGame', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required(),
-    playerName: playerNameRule
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-    const playerName: string = req.body.playerName.trim()
-
-    await responseHandler(joinGameHandler)(res, { roomId, playerId, playerName })
-})
-
-app.post('/resetGame', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required()
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-
-    await responseHandler(resetGameHandler)(res, { roomId, playerId })
-})
-
-app.post('/startGame', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required()
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-
-    await responseHandler(startGameHandler)(res, { roomId, playerId })
-})
-
-app.post('/action', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required(),
-    action: Joi.string().allow(...Object.values(Actions)).required(),
-    targetPlayer: Joi.string()
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-    const action: Actions = req.body.action
-    const targetPlayer: string | undefined = req.body.targetPlayer
-
-    await responseHandler(actionHandler)(res, { roomId, playerId, action, targetPlayer })
-})
-
-app.post('/actionResponse', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required(),
-    response: Joi.string().allow(...Object.values(Responses)).required(),
-    claimedInfluence: Joi.string().allow(...Object.values(Influences))
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-    const response: Responses = req.body.response
-    const claimedInfluence: Influences | undefined = req.body.claimedInfluence
-
-    await responseHandler(actionResponseHandler)(res, { roomId, playerId, response, claimedInfluence })
-})
-
-app.post('/actionChallengeResponse', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required(),
-    influence: Joi.string().allow(...Object.values(Influences)).required()
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-    const influence: Influences = req.body.influence
-
-    await responseHandler(actionChallengeResponseHandler)(res, { roomId, playerId, influence })
-})
-
-app.post('/blockResponse', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required(),
-    response: Joi.string().allow(...Object.values(Responses)).required()
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-    const response: Responses = req.body.response
-
-    await responseHandler(blockResponseHandler)(res, { roomId, playerId, response })
-})
-
-app.post('/blockChallengeResponse', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required(),
-    influence: Joi.string().allow(...Object.values(Influences)).required()
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-    const influence: Influences = req.body.influence
-
-    await responseHandler(blockChallengeResponseHandler)(res, { roomId, playerId, influence })
-})
-
-app.post('/loseInfluences', validateBody(Joi.object().keys({
-    roomId: Joi.string().required(),
-    playerId: Joi.string().required(),
-    influences: Joi.array().items(
-        Joi.string().allow(...Object.values(Influences)).required()
-    ).min(1).max(2).required()
-})), async (req, res) => {
-    const roomId: string = req.body.roomId
-    const playerId: string = req.body.playerId
-    const influences: Influences[] = req.body.influences
-
-    await responseHandler(loseInfluencesHandler)(res, { roomId, playerId, influences })
+Object.entries(eventHandlers).forEach(([event, { express, handler, joiSchema }]) => {
+    app[express.method](`/${event}`, express.validator(joiSchema), (req, res) =>
+        responseHandler(handler)(res, express.parseParams(req))
+    )
 })
 
 server.listen(port, function () {
