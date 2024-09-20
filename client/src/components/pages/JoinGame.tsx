@@ -10,6 +10,8 @@ import { PublicGameState } from "../../shared/types/game"
 
 type JoinGameParams = { roomId: string, playerId: string, playerName: string }
 
+const joinGameEvent = 'joinGame'
+
 function JoinGame() {
   const [searchParams] = useSearchParams()
   const [roomId, setRoomId] = useState(searchParams.get('roomId') ?? '')
@@ -24,7 +26,7 @@ function JoinGame() {
     navigate(`/game?roomId=${gameState.roomId}`)
   }
 
-  const { trigger: triggerSwr } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/joinGame`, (async (url: string, { arg }: { arg: JoinGameParams }) => {
+  const { trigger: triggerSwr } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${joinGameEvent}`, (async (url: string, { arg }: { arg: JoinGameParams }) => {
     setError(undefined)
     return fetch(url, {
       method: 'POST',
@@ -54,7 +56,7 @@ function JoinGame() {
         updateGameStateAndNavigate(gameState)
       })
       socket.removeAllListeners('error').on('error', (error) => { setError(error) })
-      socket.emit('joinGame', params)
+      socket.emit(joinGameEvent, params)
     }
     : triggerSwr
 

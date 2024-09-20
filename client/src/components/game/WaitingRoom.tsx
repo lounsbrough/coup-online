@@ -1,16 +1,22 @@
-import { Button, Grid2, Typography } from "@mui/material";
-import Players from "../game/Players";
-import useSWRMutation from "swr/mutation";
-import { ContentCopy } from "@mui/icons-material";
-import { getPlayerId } from "../../helpers/playerId";
-import { useGameStateContext } from "../../contexts/GameStateContext";
-import { useState } from "react";
+import { Button, Grid2, Typography } from "@mui/material"
+import Players from "../game/Players"
+import useSWRMutation from "swr/mutation"
+import { ContentCopy } from "@mui/icons-material"
+import { getPlayerId } from "../../helpers/playerId"
+import { useGameStateContext } from "../../contexts/GameStateContext"
+import { useState } from "react"
+import { useWebSocketContext } from "../../contexts/WebSocketContext"
+
+type StartGameParams = { roomId: string, playerId: string }
+
+const startGameEvent = 'startGame'
 
 function WaitingRoom() {
-  const [error, setError] = useState<string>();
-  const { gameState, setGameState } = useGameStateContext();
+  const [error, setError] = useState<string>()
+  const { socket } = useWebSocketContext()
+  const { gameState, setGameState } = useGameStateContext()
 
-  const { trigger, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/startGame`, (async (url: string, { arg }: { arg: { roomId: string, playerId: string }; }) => {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${startGameEvent}`, (async (url: string, { arg }: { arg: StartGameParams }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -19,15 +25,25 @@ function WaitingRoom() {
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        setGameState(await res.json());
+        setGameState(await res.json())
       } else {
-        setError('Error starting new game');
+        setError('Error starting new game')
       }
     })
-  }));
+  }))
+
+  const trigger = socket.connected
+    ? (params: StartGameParams) => {
+      socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
+        setGameState(gameState)
+      })
+      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
+      socket.emit(startGameEvent, params)
+    }
+    : triggerSwr
 
   if (!gameState) {
-    return null;
+    return null
   }
 
   return (
@@ -76,4 +92,4 @@ function WaitingRoom() {
   )
 }
 
-export default WaitingRoom;
+export default WaitingRoom

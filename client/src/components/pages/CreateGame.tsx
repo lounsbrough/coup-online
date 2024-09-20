@@ -11,6 +11,8 @@ import { PublicGameState } from "../../shared/types/game"
 
 type CreateGameParams = { playerId: string, playerName: string }
 
+const createGameEvent = 'createGame'
+
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
   const [error, setError] = useState<string>()
@@ -23,7 +25,7 @@ function CreateGame() {
     navigate(`/game?roomId=${gameState.roomId}`)
   }
 
-  const { trigger: triggerSwr, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/createGame`, (async (url: string, { arg }: {
+  const { trigger: triggerSwr, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${createGameEvent}`, (async (url: string, { arg }: {
     arg: CreateGameParams;
   }) => {
     return fetch(url, {
@@ -48,7 +50,7 @@ function CreateGame() {
         updateGameStateAndNavigate(gameState)
       })
       socket.removeAllListeners('error').on('error', (error) => { setError(error) })
-      socket.emit('createGame', params)
+      socket.emit(createGameEvent, params)
     }
     : triggerSwr
 
