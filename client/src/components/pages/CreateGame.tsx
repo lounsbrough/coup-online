@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
 import { AccountCircle } from "@mui/icons-material"
 import useSWRMutation from "swr/mutation"
@@ -25,7 +25,7 @@ function CreateGame() {
     navigate(`/game?roomId=${gameState.roomId}`)
   }
 
-  const { trigger: triggerSwr, isMutating, error: swrError } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${createGameEvent}`, (async (url: string, { arg }: {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${createGameEvent}`, (async (url: string, { arg }: {
     arg: CreateGameParams;
   }) => {
     return fetch(url, {
@@ -53,13 +53,6 @@ function CreateGame() {
       socket.emit(createGameEvent, params)
     }
     : triggerSwr
-
-  useEffect(() => {
-    if (swrError) {
-      console.log(swrError)
-      setError('Error creating game')
-    }
-  }, [swrError])
 
   return (
     <>

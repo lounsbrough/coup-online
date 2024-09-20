@@ -26,7 +26,7 @@ function JoinGame() {
     navigate(`/game?roomId=${gameState.roomId}`)
   }
 
-  const { trigger: triggerSwr } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${joinGameEvent}`, (async (url: string, { arg }: { arg: JoinGameParams }) => {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${joinGameEvent}`, (async (url: string, { arg }: { arg: JoinGameParams }) => {
     setError(undefined)
     return fetch(url, {
       method: 'POST',
@@ -109,7 +109,11 @@ function JoinGame() {
           </Grid2>
         </Grid2>
         <Grid2>
-          <Button type="submit" sx={{ mt: 5 }} variant="contained">Join Game</Button>
+          <Button
+            type="submit" sx={{ mt: 5 }}
+            variant="contained"
+            disabled={isMutating}
+          >Join Game</Button>
         </Grid2>
         {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>

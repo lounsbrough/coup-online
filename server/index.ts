@@ -7,6 +7,7 @@ import { Actions, Influences, Responses, PublicGameState } from '../shared/types
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer } from 'socket.io'
+import { getPublicGameState } from './src/utilities/gameState'
 
 const port = process.env.EXPRESS_PORT || 8008
 
@@ -257,14 +258,28 @@ io.on('connection', (socket) => {
             } else {
                 try {
                     const gameState = await handler(params)
-                    const socketRoom = `coup-game-${gameState.roomId}`
-                    if (![...socket.rooms].some((room) => room.startsWith('coup-game-')) && gameState.roomId) {
+                    if (!socket.data.playerId && gameState.selfPlayer.id) {
+                        socket.data.playerId = gameState.selfPlayer.id
+                    }
+                    const roomPrefix = 'coup-game-'
+                    socket.emit('gameStateChanged', gameState)
+                    const socketRoom = `${roomPrefix}${gameState.roomId}`
+                    if (![...socket.rooms].some((room) => room.startsWith(roomPrefix)) && gameState.roomId) {
                         console.log(`socket ${socket.id} joined room ${socketRoom}`)
                         await socket.join(socketRoom)
                     }
-                    socket.rooms.forEach(async (room) => {
-                        io.to(room).emit('gameStateChanged', gameState)
-                    })
+                    if (event !== 'gameState') {
+                        socket.rooms.forEach(async (room) => {
+                            if (room.startsWith(roomPrefix)) {
+                                const roomSockets = await io.in(room).fetchSockets()
+                                roomSockets.forEach(async (otherSocket) => {
+                                    if (otherSocket.id !== socket.id) {
+                                        otherSocket.emit('gameStateChanged', await getPublicGameState(gameState.roomId, otherSocket.data.playerId))
+                                    }
+                                })
+                            }
+                        })
+                    }
                 } catch (error) {
                     if (error instanceof GameMutationInputError) {
                         socket.emit('error', error.message)

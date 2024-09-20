@@ -34,9 +34,6 @@ function WaitingRoom() {
 
   const trigger = socket.connected
     ? (params: StartGameParams) => {
-      socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
-        setGameState(gameState)
-      })
       socket.removeAllListeners('error').on('error', (error) => { setError(error) })
       socket.emit(startGameEvent, params)
     }

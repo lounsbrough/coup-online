@@ -1,4 +1,4 @@
-import { useState, createContext, useContext, ReactNode } from 'react'
+import { useState, createContext, useContext, ReactNode, useEffect } from 'react'
 import useSWR from 'swr'
 import { PublicGameState } from '../shared/types/game'
 import { getPlayerId } from '../helpers/playerId'
@@ -45,6 +45,18 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     },
     { refreshInterval: 2000, isPaused: () => socket.connected }
   )
+
+  useEffect(() => {
+    if (socket.connected) {
+      socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
+        setGameState(gameState)
+      })
+      socket.emit('gameState', {
+        roomId,
+        playerId: getPlayerId()
+      })
+    }
+  }, [roomId, socket, socket.connected])
 
   const contextValue = { gameState, setGameState }
 
