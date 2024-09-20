@@ -1,5 +1,5 @@
 import { Grid2 } from "@mui/material";
-import { useGameStateContext } from "../../context/GameStateContext";
+import { useGameStateContext } from "../../contexts/GameStateContext";
 import InfluenceCard from "./InfluenceCard";
 
 function PlayerInfluences() {

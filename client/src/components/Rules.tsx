@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from 
 import { Gavel } from "@mui/icons-material"
 import { colord } from "colord"
 import { InfluenceAttributes } from "../shared/types/game"
-import { useColorModeContext } from "../context/MaterialThemeContext"
+import { useColorModeContext } from "../contexts/MaterialThemeContext"
 import './Rules.css'
 
 function Rules() {

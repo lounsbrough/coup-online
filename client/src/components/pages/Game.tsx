@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import GameBoard from "../game/GameBoard";
 import WaitingRoom from "../game/WaitingRoom";
-import { useGameStateContext } from "../../context/GameStateContext";
+import { useGameStateContext } from "../../contexts/GameStateContext";
 
 function Game() {
   const { gameState } = useGameStateContext();
