@@ -6,6 +6,7 @@ import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, PublicGameState } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
+import { Server as ioServer } from 'socket.io'
 
 const port = process.env.EXPRESS_PORT || 8008
 
@@ -13,6 +14,13 @@ const app = express()
 app.use(cors())
 app.use(json())
 const server = http.createServer(app)
+const io = new ioServer(server, {
+    cors: { origin: "*" }
+})
+
+io.on('connection', () => {
+    console.log('connected')
+})
 
 const playerNameRule = Joi.string().min(1).max(10).disallow(
     ...Object.values(Influences),

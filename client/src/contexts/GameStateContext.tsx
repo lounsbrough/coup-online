@@ -4,6 +4,7 @@ import { PublicGameState } from '../shared/types/game'
 import { getPlayerId } from '../helpers/playerId'
 import { Typography } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'
+import { useWebSocketContext } from './WebSocketContext'
 
 type GameStateContextType = {
   gameState?: PublicGameState,
@@ -17,6 +18,7 @@ export const GameStateContext = createContext<GameStateContextType>({
 export function GameStateContextProvider({ children }: { children: ReactNode }) {
   const [gameState, setGameState] = useState<PublicGameState>()
   const [searchParams] = useSearchParams()
+  const { socket } = useWebSocketContext()
 
   const roomId = searchParams.get('roomId')
 
@@ -41,13 +43,10 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
         setGameState(newState)
       }
     },
-    { refreshInterval: 2000 }
+    { refreshInterval: 2000, isPaused: () => socket.connected }
   )
 
-  const contextValue = {
-    gameState,
-    setGameState
-  }
+  const contextValue = { gameState, setGameState }
 
   return (
     <GameStateContext.Provider value={contextValue}>
