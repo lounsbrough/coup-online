@@ -54,13 +54,13 @@ function Rules() {
                     <td>Collect 2 coins</td>
                   </tr>
                   <tr style={{
-                    background: InfluenceAttributes.Duke.color[colorMode]
+                    background: ActionAttributes.Tax.color[colorMode]
                   }}>
                     <td>Tax</td>
                     <td>Collect 3 coins</td>
                   </tr>
                   <tr style={{
-                    background: InfluenceAttributes.Assassin.color[colorMode]
+                    background: ActionAttributes.Assassinate.color[colorMode]
                   }}>
                     <td>Assassinate</td>
                     <td>Pay 3 coins - Kill an influence</td>
@@ -72,13 +72,13 @@ function Rules() {
                     <td>Pay 7 coins - Kill an influence</td>
                   </tr>
                   <tr style={{
-                    background: InfluenceAttributes.Ambassador.color[colorMode]
+                    background: ActionAttributes.Exchange.color[colorMode]
                   }}>
                     <td>Exchange</td>
                     <td>Draw 2 influences - Discard 2</td>
                   </tr>
                   <tr style={{
-                    background: InfluenceAttributes.Captain.color[colorMode]
+                    background: ActionAttributes.Steal.color[colorMode]
                   }}>
                     <td>Steal</td>
                     <td>Steal 2 coins from someone</td>
