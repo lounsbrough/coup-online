@@ -1,22 +1,22 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import { useEffect, useRef } from "react";
-import { useGameStateContext } from "../../contexts/GameStateContext";
-import ColoredTypography from "../utilities/ColoredTypography";
+import { Box, Typography, useTheme } from "@mui/material"
+import { useEffect, useRef } from "react"
+import { useGameStateContext } from "../../contexts/GameStateContext"
+import ColoredTypography from "../utilities/ColoredTypography"
 
 function EventLog() {
-  const logBox = useRef<HTMLElement>(null);
-  const { gameState } = useGameStateContext();
-  const theme = useTheme();
+  const logBox = useRef<HTMLElement>(null)
+  const { gameState } = useGameStateContext()
+  const theme = useTheme()
 
   useEffect(() => {
     logBox.current?.scrollTo({
       top: logBox.current.scrollHeight,
       behavior: "smooth"
-    });
+    })
   }, [gameState?.eventLogs?.length])
 
   if (!gameState) {
-    return null;
+    return null
   }
 
   return (
@@ -35,4 +35,4 @@ function EventLog() {
   )
 }
 
-export default EventLog;
+export default EventLog

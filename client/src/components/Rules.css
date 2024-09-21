@@ -1,15 +1,15 @@
 .cheat-sheet-table {
-  display: block;
   font-weight: 900;
   width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
   border-collapse: collapse;
+  color: white;
 }
 
 .cheat-sheet-table th {
   font-size: larger;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  padding: 4px 0;
+  background: #555;
 }
 
 .cheat-sheet-table td {
@@ -17,18 +17,31 @@
   font-size: 1.5rem;
   vertical-align: middle;
   height: 50px;
-  border-style: solid;
-  border-width: 1px;
   white-space: nowrap;
   padding: 0 8px;
 }
 
+.cheat-sheet-table tr th,td {
+  border-left-style: solid;
+  border-right-style: solid;
+  border-width: 1px;
+}
+
+.cheat-sheet-table tr th:first-of-type,td:first-of-type {
+  border-left-style: none;
+}
+
+.cheat-sheet-table tr th:last-of-type,td:last-of-type {
+  border-right-style: none;
+}
+
 @media screen and (max-width: 768px) {
   .cheat-sheet-table th {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .cheat-sheet-table td {
     font-size: 1rem;
+    padding: 0 2px;
   }
 }
