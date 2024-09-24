@@ -33,6 +33,7 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
       name: player.name,
       coins: player.coins,
       influenceCount: player.influences.length - pendingInfluenceCountToPutBack,
+      deadInfluences: player.deadInfluences,
       color: player.color
     })
     if (player.id === playerId) {
@@ -64,9 +65,11 @@ export const validateGameState = (state: GameState) => {
     throw new Error("Invalid turn player")
   }
   if (state.players.some((player) =>
-    player.influences.length - (state.pendingInfluenceLoss[player.name]?.length ?? 0) > 2)
+    (player.influences.length + player.deadInfluences.length) -
+    (state.pendingInfluenceLoss[player.name]?.filter(({ putBackInDeck }) => putBackInDeck)?.length ?? 0)
+    !== 2)
   ) {
-    throw new Error("Players must have at most 2 influences")
+    throw new Error("Players must have exactly 2 influences")
   }
   const cardCounts = Object.fromEntries(Object.values(Influences).map((influence) => [influence, 0]))
   state.deck.forEach((card) => cardCounts[card]++)

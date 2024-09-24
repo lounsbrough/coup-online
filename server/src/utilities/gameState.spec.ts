@@ -11,37 +11,34 @@ const setValueMock = jest.mocked(setValue)
 const chance = new Chance()
 const oneDay = 86400
 
-const getRandomPlayers = (count?: number) =>
+const getRandomPlayers = (state: GameState, count?: number) =>
   chance.n(() => ({
     id: chance.string(),
     name: chance.string(),
     color: chance.color(),
     coins: 2,
-    influences: []
+    influences: [...Array.from({ length: 2 }, () => drawCardFromDeck(state))],
+    deadInfluences: []
   }), count ?? chance.natural({ min: 2, max: 6 }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
-  const players = getRandomPlayers(playersCount)
-
   const gameState: GameState = {
     deadCards: [],
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
     isStarted: chance.bool(),
-    players,
+    players: [],
     pendingAction: undefined,
     pendingActionChallenge: undefined,
     pendingBlock: undefined,
     pendingBlockChallenge: undefined,
     pendingInfluenceLoss: {},
-    roomId: chance.string(),
-    turnPlayer: chance.pickone(players).name
+    roomId: chance.string()
   }
 
-  gameState.players.forEach((player) => {
-    player.influences.push(...Array.from({ length: 2 }, () => drawCardFromDeck(gameState)))
-  })
+  gameState.players = getRandomPlayers(gameState, playersCount)
+  gameState.turnPlayer = chance.pickone(gameState.players).name
 
   return gameState
 }
@@ -74,13 +71,15 @@ describe('gameState', () => {
           name: selfPlayer.name,
           color: selfPlayer.color,
           coins: selfPlayer.coins,
-          influences: selfPlayer.influences
+          influences: selfPlayer.influences,
+          deadInfluences: selfPlayer.deadInfluences
         },
         players: gameState.players.map((player) => ({
           name: player.name,
           color: player.color,
           coins: player.coins,
-          influenceCount: player.influences.length
+          influenceCount: player.influences.length,
+          deadInfluences: player.deadInfluences
         }))
       }
       delete publicGameState.deck
@@ -134,6 +133,7 @@ describe('gameState', () => {
       {
         mutation: (state: GameState) => {
           const killedInfluence = state.players[0].influences.splice(0, 1)[0]
+          state.players[0].deadInfluences.push(killedInfluence)
           state.deadCards.push(killedInfluence)
         }
       }
@@ -149,7 +149,7 @@ describe('gameState', () => {
         error: "Game state must always have 1 to 6 players"
       },
       {
-        mutation: (state: GameState) => { state.players = getRandomPlayers(7) },
+        mutation: (state: GameState) => { state.players = getRandomPlayers(state, 7) },
         error: "Game state must always have 1 to 6 players"
       },
       {
@@ -157,10 +157,10 @@ describe('gameState', () => {
           state.players[0].influences.push(...[drawCardFromDeck(state), drawCardFromDeck(state)])
           state.pendingInfluenceLoss[state.players[0].name] = [{ putBackInDeck: true }]
         },
-        error: "Players must have at most 2 influences"
+        error: "Players must have exactly 2 influences"
       },
       {
-        mutation: (state: GameState) => { state.players[0].influences.splice(0, 1) },
+        mutation: (state: GameState) => { state.deck.splice(0, 1) },
         error: "Incorrect total card count in game"
       },
       {

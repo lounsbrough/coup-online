@@ -165,6 +165,7 @@ export type Player = {
   color: string
   id: string
   influences: Influences[]
+  deadInfluences: Influences[]
   name: string
 }
 
