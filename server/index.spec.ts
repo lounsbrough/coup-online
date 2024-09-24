@@ -362,74 +362,74 @@ describe('index', () => {
                 error: '',
                 status: 200
             },
-            // {
-            //     getBody: () => ({}),
-            //     error: '"roomId" is required, "playerId" is required',
-            //     status: 400
-            // },
-            // {
-            //     getBody: () => ({
-            //         roomId: chance.string({ length: 10 }),
-            //         playerId: chance.string({ length: 10 })
-            //     }),
-            //     error: /Room .+ does not exist/,
-            //     status: 404
-            // },
-            // {
-            //     getBody: async () => {
-            //         const playerId = chance.string({ length: 10 })
-            //         const playerName = chance.string({ length: 10 })
+            {
+                getBody: () => ({}),
+                error: '"roomId" is required, "playerId" is required',
+                status: 400
+            },
+            {
+                getBody: () => ({
+                    roomId: chance.string({ length: 10 }),
+                    playerId: chance.string({ length: 10 })
+                }),
+                error: /Room .+ does not exist/,
+                status: 404
+            },
+            {
+                getBody: async () => {
+                    const playerId = chance.string({ length: 10 })
+                    const playerName = chance.string({ length: 10 })
 
-            //         const response = await postApi('createGame', { playerId, playerName })
+                    const response = await postApi('createGame', { playerId, playerName })
 
-            //         const roomId = (await response.json()).roomId
+                    const roomId = (await response.json()).roomId
 
-            //         return { roomId, playerId: chance.string({ length: 10 }) }
-            //     },
-            //     error: 'Player not in game',
-            //     status: 400
-            // },
-            // {
-            //     getBody: async () => {
-            //         const playerId = chance.string({ length: 10 })
-            //         const playerName = chance.string({ length: 10 })
+                    return { roomId, playerId: chance.string({ length: 10 }) }
+                },
+                error: 'Player not in game',
+                status: 400
+            },
+            {
+                getBody: async () => {
+                    const playerId = chance.string({ length: 10 })
+                    const playerName = chance.string({ length: 10 })
 
-            //         const response = await postApi('createGame', { playerId, playerName })
+                    const response = await postApi('createGame', { playerId, playerName })
 
-            //         const roomId = (await response.json()).roomId
+                    const roomId = (await response.json()).roomId
 
-            //         await postApi('joinGame', {
-            //             roomId,
-            //             playerId: chance.string({ length: 10 }),
-            //             playerName: chance.string({ length: 10 })
-            //         })
-            //         await postApi('startGame', { roomId, playerId })
+                    await postApi('joinGame', {
+                        roomId,
+                        playerId: chance.string({ length: 10 }),
+                        playerName: chance.string({ length: 10 })
+                    })
+                    await postApi('startGame', { roomId, playerId })
 
-            //         return { roomId, playerId }
-            //     },
-            //     error: 'Current game is in progress',
-            //     status: 400
-            // },
-            // {
-            //     getBody: async () => {
-            //         const playerId = chance.string({ length: 10 })
-            //         const playerName = chance.string({ length: 10 })
+                    return { roomId, playerId }
+                },
+                error: 'Current game is in progress',
+                status: 400
+            },
+            {
+                getBody: async () => {
+                    const playerId = chance.string({ length: 10 })
+                    const playerName = chance.string({ length: 10 })
 
-            //         const response = await postApi('createGame', { playerId, playerName })
+                    const response = await postApi('createGame', { playerId, playerName })
 
-            //         const roomId = (await response.json()).roomId
+                    const roomId = (await response.json()).roomId
 
-            //         await postApi('joinGame', {
-            //             roomId,
-            //             playerId: chance.string({ length: 10 }),
-            //             playerName: chance.string({ length: 10 })
-            //         })
+                    await postApi('joinGame', {
+                        roomId,
+                        playerId: chance.string({ length: 10 }),
+                        playerName: chance.string({ length: 10 })
+                    })
 
-            //         return { roomId, playerId }
-            //     },
-            //     error: '',
-            //     status: 200
-            // }
+                    return { roomId, playerId }
+                },
+                error: '',
+                status: 200
+            }
         ] as {
             getBody: () => Promise<Partial<{ roomId: string, playerId: string }>>,
             error: string,
