@@ -22,7 +22,6 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
   const players = getRandomPlayers(playersCount)
 
   const gameState: GameState = {
-    deadCards: [],
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),

@@ -174,7 +174,6 @@ export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
 }
 
 export type GameState = {
-  deadCards: Influences[]
   deck: Influences[]
   eventLogs: string[]
   isStarted: boolean
@@ -206,7 +205,6 @@ export type GameState = {
 }
 
 export type PublicGameState = Pick<GameState,
-  'deadCards' |
   'eventLogs' |
   'isStarted' |
   'pendingAction' |

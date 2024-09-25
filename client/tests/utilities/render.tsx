@@ -22,7 +22,6 @@ export const getRandomGameState = (): PublicGameState => {
   const selfPlayer = chance.pickone(players)
 
   return {
-    deadCards: [],
     players: players,
     roomId: chance.string(),
     eventLogs: [],

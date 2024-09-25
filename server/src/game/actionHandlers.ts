@@ -338,6 +338,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       moveTurnToNextPlayer(state)
       delete state.pendingActionChallenge
       delete state.pendingAction
+      console.log(state)
     })
   }
 

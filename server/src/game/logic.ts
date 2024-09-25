@@ -56,7 +56,6 @@ const getNewGameState = (roomId: string): GameState => ({
   roomId,
   players: [],
   deck: shuffle(buildGameDeck()),
-  deadCards: [],
   pendingInfluenceLoss: {},
   isStarted: false,
   eventLogs: []
@@ -69,7 +68,7 @@ export const addPlayerToGame = (state: GameState, playerId: string, playerName: 
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
     deadInfluences: [],
-    color: ['#13B363', '#0068FF', '#FD6C33', '#CC55CC', '#FFC303', '#FA0088'][state.players.length]
+    color: ['#13CC63', '#0068FF', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088'][state.players.length]
   })
 }
 
@@ -118,7 +117,6 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
     1
   )
   player.deadInfluences.push(influence)
-  state.deadCards.push(influence)
   logEvent(state, `${player.name} lost their ${influence}`)
 }
 

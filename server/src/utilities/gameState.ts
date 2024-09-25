@@ -1,5 +1,6 @@
 import { GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { shuffle } from './array'
+import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
 
 export const getGameState = async (
@@ -42,7 +43,6 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
   })
 
   return {
-    deadCards: fullGameState.deadCards,
     eventLogs: fullGameState.eventLogs,
     isStarted: fullGameState.isStarted,
     pendingAction: fullGameState.pendingAction,
@@ -59,33 +59,35 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
 
 export const validateGameState = (state: GameState) => {
   if (state.players.length < 1 || state.players.length > 6) {
-    throw new Error("Game state must always have 1 to 6 players")
+    throw new GameMutationInputError("Game state must always have 1 to 6 players")
   }
   if (state.isStarted && !state.players.find((player) => player.name === state.turnPlayer)?.influences.length) {
-    throw new Error("Invalid turn player")
+    throw new GameMutationInputError("Invalid turn player")
   }
   if (state.players.some((player) =>
     (player.influences.length + player.deadInfluences.length) -
     (state.pendingInfluenceLoss[player.name]?.filter(({ putBackInDeck }) => putBackInDeck)?.length ?? 0)
     !== 2)
   ) {
-    throw new Error("Players must have exactly 2 influences")
+    throw new GameMutationInputError("Players must have exactly 2 influences")
   }
   const cardCounts = Object.fromEntries(Object.values(Influences).map((influence) => [influence, 0]))
   state.deck.forEach((card) => cardCounts[card]++)
-  state.deadCards.forEach((card) => cardCounts[card]++)
-  state.players.flatMap(({ influences }) => influences).forEach((card) => cardCounts[card]++)
+  state.players.forEach(({ influences, deadInfluences }) => {
+    influences.forEach((card) => cardCounts[card]++)
+    deadInfluences.forEach((card) => cardCounts[card]++)
+  })
   if (Object.values(cardCounts).some((count) => count !== 3)) {
-    throw new Error("Incorrect total card count in game")
+    throw new GameMutationInputError("Incorrect total card count in game")
   }
   if (state.pendingAction?.pendingPlayers?.length === 0
     && !state.pendingActionChallenge
     && !state.pendingBlock) {
-    throw new Error('Everyone has passed but the action is still pending')
+    throw new GameMutationInputError('Everyone has passed but the action is still pending')
   }
   if (state.pendingBlock?.pendingPlayers?.length === 0
     && !state.pendingBlockChallenge) {
-    throw new Error('Everyone has passed but the block is still pending')
+    throw new GameMutationInputError('Everyone has passed but the block is still pending')
   }
 }
 

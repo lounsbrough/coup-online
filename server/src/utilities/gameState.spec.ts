@@ -23,7 +23,6 @@ const getRandomPlayers = (state: GameState, count?: number) =>
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
   const gameState: GameState = {
-    deadCards: [],
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
@@ -134,7 +133,6 @@ describe('gameState', () => {
         mutation: (state: GameState) => {
           const killedInfluence = state.players[0].influences.splice(0, 1)[0]
           state.players[0].deadInfluences.push(killedInfluence)
-          state.deadCards.push(killedInfluence)
         }
       }
     ])('should not throw if game state is valid', ({ mutation }) => {

@@ -116,6 +116,7 @@ function PlayerActionConfirmation({
             variant="contained"
             onClick={() => {
               clearInterval(autoSubmitInterval.current)
+              setAutoSubmitProgress(100)
               trigger(variables)
             }}
             disabled={isMutating}
