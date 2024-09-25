@@ -28,6 +28,7 @@ function CreateGame() {
   const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${createGameEvent}`, (async (url: string, { arg }: {
     arg: CreateGameParams;
   }) => {
+    setError(undefined)
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -39,7 +40,11 @@ function CreateGame() {
         const gameState = await res.json()
         updateGameStateAndNavigate(gameState)
       } else {
-        setError('Error creating game')
+        if (res.status === 400) {
+          setError(await res.text())
+        } else {
+          setError('Error creating game')
+        }
       }
     })
   }))
@@ -64,17 +69,6 @@ function CreateGame() {
       <form
         onSubmit={(event) => {
           event.preventDefault()
-          setError(undefined)
-          setPlayerName(playerName.trim())
-
-          if (!playerName.trim()) {
-            setError('Player Name is required')
-          }
-
-          if (playerName.trim().length > 10) {
-            setError('Player Name must be 10 characters or less')
-          }
-
           trigger({
             playerId: getPlayerId(),
             playerName: playerName.trim()

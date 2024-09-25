@@ -1,6 +1,8 @@
 import { Box, Grid2, Typography } from "@mui/material"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Group, MonetizationOn } from "@mui/icons-material"
+import { MonetizationOn, QuestionMark } from "@mui/icons-material"
+import OverflowTooltip from "../utilities/OverflowTooltip"
+import InfluenceIcon from "../icons/InfluenceIcon"
 
 function Players() {
   const { gameState } = useGameStateContext()
@@ -13,8 +15,7 @@ function Players() {
     <>
       <Grid2 container justifyContent="center" spacing={2}>
         {gameState.players
-          .filter(({ influenceCount }) => influenceCount > 0)
-          .map(({ name, color, coins, influenceCount }, index) => {
+          .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
             const isSelf = gameState.selfPlayer.name === name
 
             return (
@@ -34,10 +35,23 @@ function Players() {
                   fontWeight: 'bold'
                 }}
                 >
-                  {name}
+                  <OverflowTooltip>{name}</OverflowTooltip>
                 </Typography>
                 <Typography variant="h6"><MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}</Typography>
-                <Typography variant="h6"><Group sx={{ verticalAlign: 'text-bottom' }} />{` ${influenceCount}`}</Typography>
+                <Grid2
+                  container mt={1}
+                  spacing={1}
+                  justifyContent='center'
+                >
+                  {[
+                    ...Array.from({ length: influenceCount }, () => undefined),
+                    ...deadInfluences
+                  ].map((influence, index) => (
+                    <Grid2 key={index}>
+                      {influence ? <InfluenceIcon influence={influence} /> : <QuestionMark />}
+                    </Grid2>
+                  ))}
+                </Grid2>
               </Box>
             )
           }
