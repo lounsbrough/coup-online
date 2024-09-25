@@ -45,7 +45,8 @@ function WaitingRoom() {
 
   return (
     <>
-      <Grid2 container justifyContent="center">
+      <Typography variant="h5" mt={3}>Room: <strong>{gameState.roomId}</strong></Typography>
+      <Grid2 container direction='column' justifyContent="center">
         <Grid2 sx={{ p: 2 }}>
           <Players />
         </Grid2>
