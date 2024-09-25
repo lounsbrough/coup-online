@@ -1,12 +1,12 @@
-import { Grid2 } from "@mui/material";
-import { useGameStateContext } from "../../contexts/GameStateContext";
-import InfluenceCard from "./InfluenceCard";
+import { Grid2 } from "@mui/material"
+import { useGameStateContext } from "../../contexts/GameStateContext"
+import InfluenceCard from "./InfluenceCard"
 
 function PlayerInfluences() {
-  const { gameState } = useGameStateContext();
+  const { gameState } = useGameStateContext()
 
   if (!gameState?.selfPlayer?.influences?.length) {
-    return null;
+    return null
   }
 
   return (
@@ -21,4 +21,4 @@ function PlayerInfluences() {
   )
 }
 
-export default PlayerInfluences;
+export default PlayerInfluences

@@ -14,14 +14,14 @@ const getRandomPlayers = (count?: number) =>
     name: chance.string(),
     color: chance.color(),
     coins: 2,
-    influences: []
+    influences: [],
+    deadInfluences: []
   }), count ?? chance.natural({ min: 2, max: 6 }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
   const players = getRandomPlayers(playersCount)
 
   const gameState: GameState = {
-    deadCards: [],
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),

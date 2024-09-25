@@ -1,8 +1,8 @@
 import { GameMutationInputError } from "../utilities/errors"
 import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
-import { drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
+import { getGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, resetGame, startGame } from "./logic"
+import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 
 const validateRoomId = (gameState: GameState, roomId: string) => {
   if (!gameState) {
@@ -178,6 +178,10 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     }
   } else {
     await mutateGameState(roomId, (state) => {
+      if (state.pendingAction) {
+        throw new GameMutationInputError('There is already a pending action')
+      }
+
       state.pendingAction = {
         action: action,
         pendingPlayers: state.players.reduce((agg: string[], cur) => {
@@ -305,17 +309,10 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
 
   if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
     await mutateGameState(roomId, (state) => {
-      const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
       const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer)
       promptPlayerToLoseInfluence(state, challengePlayer.name)
-      logEvent(state, `${actionPlayer.name} revealed and replaced ${influence}`)
+      revealAndReplaceInfluence(state, state.turnPlayer, influence)
       logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`)
-      state.deck.push(actionPlayer.influences.splice(
-        actionPlayer.influences.findIndex((i) => i === influence),
-        1
-      )[0])
-      shuffleDeck(state)
-      actionPlayer.influences.push(drawCardFromDeck(state))
       delete state.pendingActionChallenge
       state.pendingAction.claimConfirmed = true
       if (state.pendingAction.targetPlayer) {
@@ -434,16 +431,9 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
   if (influence === gameState.pendingBlock.claimedInfluence) {
     await mutateGameState(roomId, (state) => {
       const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer)
-      const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock.sourcePlayer)
       promptPlayerToLoseInfluence(state, challengePlayer.name)
-      state.deck.push(blockPlayer.influences.splice(
-        blockPlayer.influences.findIndex((i) => i === influence),
-        1
-      )[0])
-      shuffleDeck(state)
-      blockPlayer.influences.push(drawCardFromDeck(state))
-      logEvent(state, `${blockPlayer.name} revealed and replaced ${influence}`)
-      logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
+      revealAndReplaceInfluence(state, state.pendingBlock.sourcePlayer, influence)
+      logEvent(state, `${state.pendingBlock.sourcePlayer} successfully blocked ${state.turnPlayer}`)
       if (state.pendingAction.action === Actions.Assassinate) {
         state.players.find(({ name }) => name === state.turnPlayer).coins
           -= ActionAttributes.Assassinate.coinsRequired
