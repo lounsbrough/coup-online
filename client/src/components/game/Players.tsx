@@ -17,8 +17,6 @@ function Players() {
       <Grid2 container justifyContent="center" spacing={2}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
-            const isSelf = gameState.selfPlayer.name === name
-
             return (
               <Box
                 key={index}
@@ -27,8 +25,6 @@ function Players() {
                   alignContent: 'center',
                   background: color,
                   borderRadius: 3,
-                  outlineStyle: isSelf ? 'solid' : undefined,
-                  outlineWidth: isSelf ? '3px' : undefined,
                   p: 0.5,
                   width: '6rem'
                 }}>
