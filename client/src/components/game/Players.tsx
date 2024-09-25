@@ -39,18 +39,24 @@ function Players() {
                 </Typography>
                 <Typography variant="h6"><MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}</Typography>
                 <Grid2
-                  container mt={1}
+                  container mt={0.5}
                   spacing={1}
                   justifyContent='center'
                 >
                   {[
                     ...Array.from({ length: influenceCount }, () => undefined),
                     ...deadInfluences
-                  ].map((influence, index) => (
-                    <Grid2 key={index}>
-                      {influence ? <InfluenceIcon influence={influence} /> : <QuestionMark />}
-                    </Grid2>
-                  ))}
+                  ].map((influence, index) => {
+                    const iconSx = { fontSize: '32px' }
+
+                    return (
+                      <Grid2 key={index}>
+                        {influence
+                          ? <InfluenceIcon sx={iconSx} influence={influence} />
+                          : <QuestionMark sx={iconSx} />}
+                      </Grid2>
+                    )
+                  })}
                 </Grid2>
               </Box>
             )
