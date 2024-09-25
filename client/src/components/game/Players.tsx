@@ -1,6 +1,6 @@
 import { Box, Grid2, Typography } from "@mui/material"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { MonetizationOn, QuestionMark } from "@mui/icons-material"
+import { HelpOutline, MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 
@@ -37,7 +37,9 @@ function Players() {
                 >
                   <OverflowTooltip>{name}</OverflowTooltip>
                 </Typography>
-                <Typography variant="h6"><MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}</Typography>
+                <Typography variant="h6">
+                  <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
+                </Typography>
                 <Grid2
                   container mt={0.5}
                   spacing={1}
@@ -53,7 +55,7 @@ function Players() {
                       <Grid2 key={index}>
                         {influence
                           ? <InfluenceIcon sx={iconSx} influence={influence} />
-                          : <QuestionMark sx={iconSx} />}
+                          : <HelpOutline sx={iconSx} />}
                       </Grid2>
                     )
                   })}
