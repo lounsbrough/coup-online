@@ -1,7 +1,7 @@
 import { Box, Grid2, Typography } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { MonetizationOn } from "@mui/icons-material"
+import { MonetizationOn, QuestionMark } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 
@@ -29,12 +29,13 @@ function Players() {
                   width: '6rem'
                 }}>
                 <Typography variant="h6" sx={{
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
+                  color: colord(color).darken(0.4).toHex()
                 }}
                 >
                   <OverflowTooltip>{name}</OverflowTooltip>
                 </Typography>
-                <Typography variant="h6">
+                <Typography variant="h6" sx={{ color: colord(color).darken(0.4).toHex() }}>
                   <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                 </Typography>
                 <Grid2
@@ -54,13 +55,13 @@ function Players() {
                           alignContent: 'center',
                           height: '46px',
                           width: '46px',
-                          background: colord(color).darken(0.2).toHex(),
+                          background: colord(color).darken(0.25).toHex(),
                           padding: 0.5,
                           borderRadius: 2
                         }}>
                         {influence
-                          ? <InfluenceIcon sx={{ fontSize: '32px' }} influence={influence} />
-                          : null}
+                          ? <InfluenceIcon sx={{ fontSize: '32px', color: colord(color).lighten(0.2).toHex() }} influence={influence} />
+                          : <QuestionMark sx={{ fontSize: "32px", color: colord(color).lighten(0.2).toHex() }} />}
                       </Grid2>
                     )
                   })}
