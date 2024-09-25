@@ -7,7 +7,6 @@ import SnarkyDeadComment from "./SnarkyDeadComment"
 import Victory from "./Victory"
 import PlayAgain from "./PlayAgain"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import DeadCards from "./DeadCards"
 
 function GameBoard() {
   const { gameState } = useGameStateContext()
@@ -79,7 +78,6 @@ function GameBoard() {
         size={{ xs: 12, sm: 12, md: 3 }}
         sx={{ p: 2, textAlign: theme.isSmallScreen ? 'center' : 'right' }}
       >
-        <DeadCards />
         <EventLog />
       </Grid2>
     </Grid2>

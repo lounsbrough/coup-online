@@ -311,6 +311,7 @@ io.on('connection', (socket) => {
                         await emitGameStateChanged(socket)
                     }
                 } catch (error) {
+                    console.error(error)
                     if (error instanceof GameMutationInputError) {
                         socket.emit('error', error.message)
                     } else {

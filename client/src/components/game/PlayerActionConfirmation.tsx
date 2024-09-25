@@ -19,8 +19,8 @@ function PlayerActionConfirmation({
   variables: object,
   onCancel: () => void
 }) {
-  const [error, setError] = useState<string>()
-  const [autoSubmitProgress, setAutoSubmitProgress] = useState<number>(0)
+  const [error, setError] = useState('')
+  const [autoSubmitProgress, setAutoSubmitProgress] = useState(0)
   const autoSubmitInterval = useRef<NodeJS.Timer>()
   const { socket } = useWebSocketContext()
   const { gameState, setGameState } = useGameStateContext()
@@ -66,12 +66,14 @@ function PlayerActionConfirmation({
 
     return () => {
       clearInterval(autoSubmitInterval.current)
+      autoSubmitInterval.current = undefined
     }
   }, [skipConfirmation, trigger, variables])
 
   useEffect(() => {
-    if (autoSubmitProgress === 100) {
+    if (autoSubmitInterval.current && autoSubmitProgress === 100) {
       clearInterval(autoSubmitInterval.current)
+      autoSubmitInterval.current = undefined
       trigger(variables)
     }
   }, [autoSubmitProgress, trigger, variables])
@@ -91,6 +93,7 @@ function PlayerActionConfirmation({
             variant="contained"
             onClick={() => {
               clearInterval(autoSubmitInterval.current)
+              autoSubmitInterval.current = undefined
               setAutoSubmitProgress(100)
               onCancel()
             }}
@@ -116,6 +119,8 @@ function PlayerActionConfirmation({
             variant="contained"
             onClick={() => {
               clearInterval(autoSubmitInterval.current)
+              autoSubmitInterval.current = undefined
+              setAutoSubmitProgress(100)
               trigger(variables)
             }}
             disabled={isMutating}

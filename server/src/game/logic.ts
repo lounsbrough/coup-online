@@ -1,6 +1,6 @@
 import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, GameState, Influences } from "../../../shared/types/game"
-import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState } from "../utilities/gameState"
+import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
 
 
 export const promptPlayerToLoseInfluence = (
@@ -18,7 +18,7 @@ export const promptPlayerToLoseInfluence = (
   ]
 }
 
-export const processPendingAction = async (state: GameState) => {
+export const processPendingAction = (state: GameState) => {
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer)
   if (state.pendingAction.action === Actions.Assassinate) {
@@ -56,19 +56,19 @@ const getNewGameState = (roomId: string): GameState => ({
   roomId,
   players: [],
   deck: shuffle(buildGameDeck()),
-  deadCards: [],
   pendingInfluenceLoss: {},
   isStarted: false,
   eventLogs: []
 })
 
-export const addPlayerToGame = async (state: GameState, playerId: string, playerName: string) => {
+export const addPlayerToGame = (state: GameState, playerId: string, playerName: string) => {
   state.players.push({
     id: playerId,
     name: playerName,
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
-    color: ['#13B363', '#0068FF', '#FD6C33', '#CC55CC', '#FFC303', '#FA0088'][state.players.length]
+    deadInfluences: [],
+    color: ['#13CC63', '#0068FF', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088'][state.players.length]
   })
 }
 
@@ -93,19 +93,31 @@ export const resetGame = async (roomId: string) => {
   newGameState.players = shuffle(oldGameState.players.map((player) => ({
     ...player,
     coins: 2,
-    influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState))
+    influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
+    deadInfluences: []
   })))
   await createGameState(roomId, newGameState)
 }
 
-export const killPlayerInfluence = async (state: GameState, playerName: string, influence: Influences) => {
+export const revealAndReplaceInfluence = (state: GameState, playerName: string, influence: Influences) => {
+  const player = state.players.find(({ name }) => name === playerName)
+  state.deck.push(player.influences.splice(
+    player.influences.findIndex((i) => i === influence),
+    1
+  )[0])
+  shuffleDeck(state)
+  player.influences.push(drawCardFromDeck(state))
+  logEvent(state, `${playerName} revealed and replaced ${influence}`)
+}
+
+export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
   const player = state.players.find(({ name }) => name === playerName)
   player.influences.splice(
     player.influences.findIndex((i) => i === influence),
     1
   )
+  player.deadInfluences.push(influence)
   logEvent(state, `${player.name} lost their ${influence}`)
-  state.deadCards.push(influence)
 }
 
 export const moveTurnToNextPlayer = (state: GameState) => {

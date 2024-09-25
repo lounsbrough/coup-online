@@ -1,9 +1,10 @@
 import { useState } from "react"
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Divider, Typography, useTheme } from "@mui/material"
 import { Gavel } from "@mui/icons-material"
-import { ActionAttributes, InfluenceAttributes } from '@shared'
+import { ActionAttributes, InfluenceAttributes, Influences } from '@shared'
 import { useColorModeContext } from "../contexts/MaterialThemeContext"
 import './Rules.css'
+import InfluenceIcon from "./icons/InfluenceIcon"
 
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -99,35 +100,50 @@ function Rules() {
                   <tr style={{
                     background: InfluenceAttributes.Duke.color[colorMode]
                   }}>
-                    <td>Duke</td>
+                    <td>
+                      <InfluenceIcon influence={Influences.Duke} />
+                      <span style={{ verticalAlign: 'middle' }}>{' Duke'}</span>
+                    </td>
                     <td>Tax</td>
                     <td>Foreign Aid</td>
                   </tr>
                   <tr style={{
                     background: InfluenceAttributes.Assassin.color[colorMode]
                   }}>
-                    <td>Assassin</td>
+                    <td>
+                      <InfluenceIcon influence={Influences.Assassin} />
+                      <span style={{ verticalAlign: 'middle' }}>{' Assassin'}</span>
+                    </td>
                     <td>Assassinate</td>
                     <td></td>
                   </tr>
                   <tr style={{
                     background: InfluenceAttributes.Ambassador.color[colorMode]
                   }}>
-                    <td>Ambassador</td>
+                    <td>
+                      <InfluenceIcon influence={Influences.Ambassador} />
+                      <span style={{ verticalAlign: 'middle' }}>{' Ambassador'}</span>
+                    </td>
                     <td>Exchange</td>
                     <td>Stealing</td>
                   </tr>
                   <tr style={{
                     background: InfluenceAttributes.Captain.color[colorMode]
                   }}>
-                    <td>Captain</td>
+                    <td>
+                      <InfluenceIcon influence={Influences.Captain} />
+                      <span style={{ verticalAlign: 'middle' }}>{' Captain'}</span>
+                    </td>
                     <td>Steal</td>
                     <td>Stealing</td>
                   </tr>
                   <tr style={{
                     background: InfluenceAttributes.Contessa.color[colorMode]
                   }}>
-                    <td>Contessa</td>
+                    <td>
+                      <InfluenceIcon influence={Influences.Contessa} />
+                      <span style={{ verticalAlign: 'middle' }}>{' Contessa'}</span>
+                    </td>
                     <td></td>
                     <td>Assassination</td>
                   </tr>
