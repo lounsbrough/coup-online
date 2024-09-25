@@ -21,7 +21,7 @@ function InfluenceCard({ influence }: {
     }}>
       <Grid2 container flexWrap="nowrap" spacing={1} justifyContent="center" alignItems="center">
         <Grid2>
-          <InfluenceIcon sx={{ height: '20px' }} influence={influence} />
+          <InfluenceIcon influence={influence} />
         </Grid2>
         <Grid2>
           <Typography
