@@ -5,6 +5,7 @@ import Duke from "./Duke"
 import Contessa from "./Contessa"
 import Captain from "./Captain"
 import { SvgIcon, SxProps } from "@mui/material"
+import { QuestionMark } from "@mui/icons-material"
 
 const iconMap = {
   [Influences.Ambassador]: Ambassador,
@@ -14,8 +15,8 @@ const iconMap = {
   [Influences.Duke]: Duke
 }
 
-function InfluenceIcon({ influence, sx }: { influence: Influences, sx?: SxProps }) {
-  const Icon = iconMap[influence]
+function InfluenceIcon({ influence, sx }: { influence?: Influences, sx?: SxProps }) {
+  const Icon = influence ? iconMap[influence] : QuestionMark
 
   return (
     <SvgIcon sx={{

@@ -1,7 +1,7 @@
 import { Box, Grid2, Typography } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { MonetizationOn, QuestionMark } from "@mui/icons-material"
+import { MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 
@@ -59,9 +59,7 @@ function Players() {
                           padding: 0.5,
                           borderRadius: 2
                         }}>
-                        {influence
-                          ? <InfluenceIcon sx={{ fontSize: '32px', color: colord(color).lighten(0.2).toHex() }} influence={influence} />
-                          : <QuestionMark sx={{ fontSize: "32px", color: colord(color).lighten(0.2).toHex() }} />}
+                        <InfluenceIcon sx={{ fontSize: '32px', color: colord(color).lighten(0.2).toHex() }} influence={influence} />
                       </Grid2>
                     )
                   })}
