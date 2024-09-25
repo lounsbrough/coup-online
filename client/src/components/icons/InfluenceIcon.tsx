@@ -18,7 +18,10 @@ function InfluenceIcon({ influence, sx }: { influence: Influences, sx?: SxProps 
   const Icon = iconMap[influence]
 
   return (
-    <SvgIcon sx={sx}>
+    <SvgIcon sx={{
+      verticalAlign: 'middle',
+      ...sx
+    }}>
       <Icon />
     </SvgIcon>
   )

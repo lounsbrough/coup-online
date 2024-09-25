@@ -1,6 +1,7 @@
 import { Box, Grid2, Typography } from "@mui/material"
+import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { HelpOutline, MonetizationOn } from "@mui/icons-material"
+import { MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 
@@ -26,9 +27,9 @@ function Players() {
                   alignContent: 'center',
                   background: color,
                   borderRadius: 3,
-                  borderStyle: isSelf ? 'solid' : undefined,
-                  borderWidth: isSelf ? '3px' : undefined,
-                  p: 1,
+                  outlineStyle: isSelf ? 'solid' : undefined,
+                  outlineWidth: isSelf ? '3px' : undefined,
+                  p: 0.5,
                   width: '6rem'
                 }}>
                 <Typography variant="h6" sx={{
@@ -42,20 +43,28 @@ function Players() {
                 </Typography>
                 <Grid2
                   container mt={0.5}
-                  spacing={1}
+                  spacing={0.4}
                   justifyContent='center'
                 >
                   {[
                     ...Array.from({ length: influenceCount }, () => undefined),
                     ...deadInfluences
                   ].map((influence, index) => {
-                    const iconSx = { fontSize: '32px' }
-
                     return (
-                      <Grid2 key={index}>
+                      <Grid2
+                        key={index}
+                        sx={{
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          height: '46px',
+                          width: '46px',
+                          background: colord(color).darken(0.2).toHex(),
+                          padding: 0.5,
+                          borderRadius: 2
+                        }}>
                         {influence
-                          ? <InfluenceIcon sx={iconSx} influence={influence} />
-                          : <HelpOutline sx={iconSx} />}
+                          ? <InfluenceIcon sx={{ fontSize: '32px' }} influence={influence} />
+                          : null}
                       </Grid2>
                     )
                   })}

@@ -217,10 +217,6 @@ describe('index', () => {
                         await postApi('joinGame', { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) })
                     }
 
-                    // TODO: handle race condition for state mutations. i.e., this should pass:
-                    // await Promise.all(Array.from({ length: 6 }, () =>
-                    //     postApi('joinGame', { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) })))
-
                     return { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) }
                 },
                 error: /Room .+ is full/,

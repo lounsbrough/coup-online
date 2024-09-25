@@ -178,6 +178,10 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     }
   } else {
     await mutateGameState(roomId, (state) => {
+      if (state.pendingAction) {
+        throw new GameMutationInputError('There is already a pending action')
+      }
+
       state.pendingAction = {
         action: action,
         pendingPlayers: state.players.reduce((agg: string[], cur) => {
