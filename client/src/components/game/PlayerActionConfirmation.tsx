@@ -88,7 +88,6 @@ function PlayerActionConfirmation({
       <Grid2 container spacing={2} justifyContent="center">
         <Grid2>
           <Button
-            color="error"
             startIcon={<Cancel />}
             variant="contained"
             onClick={() => {
@@ -105,12 +104,11 @@ function PlayerActionConfirmation({
             startIcon={(
               <Check />
             )}
-            color="success"
             sx={{
               background: `
                 linear-gradient(
                   to right,
-                  ${theme.palette.success.main}
+                  ${theme.palette.primary.main}
                   ${autoSubmitProgress}%,
                   ${theme.palette.mode === LIGHT_COLOR_MODE ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.24)'}
                   ${autoSubmitProgress}%
