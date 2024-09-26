@@ -28,39 +28,39 @@ export const InfluenceAttributes: {
   [Influences.Assassin]: {
     legalAction: Actions.Assassinate,
     color: {
-      light: '#777777',
-      dark: '#777777'
+      light: '#7A0000',
+      dark: '#B23535'
     }
   },
   [Influences.Contessa]: {
     legalBlock: Actions.Assassinate,
     color: {
-      light: '#E35646',
-      dark: '#E35646'
+      light: '#9B6000',
+      dark: '#C38E3A'
     }
   },
   [Influences.Captain]: {
     legalAction: Actions.Steal,
     legalBlock: Actions.Steal,
     color: {
-      light: '#60A6C5',
-      dark: '#60A6C5'
+      light: '#00338A',
+      dark: '#3868BA'
     }
   },
   [Influences.Ambassador]: {
     legalAction: Actions.Exchange,
     legalBlock: Actions.Steal,
     color: {
-      light: '#B4CA1F',
-      dark: '#B4CA1F'
+      light: '#3D6600',
+      dark: '#78A831'
     }
   },
   [Influences.Duke]: {
     legalAction: Actions.Tax,
     legalBlock: Actions.ForeignAid,
     color: {
-      light: '#D55DC7',
-      dark: '#D55DC7'
+      light: '#73007B',
+      dark: '#AA35B2'
     }
   }
 }
@@ -92,8 +92,8 @@ export const ActionAttributes: {
     challengeable: false,
     coinsRequired: 7,
     color: {
-      light: '#8811ff',
-      dark: '#8811ff'
+      light: undefined,
+      dark: undefined
     },
     requiresTarget: true
   },
@@ -107,8 +107,8 @@ export const ActionAttributes: {
     blockable: true,
     challengeable: false,
     color: {
-      light: '#33aa33',
-      dark: '#33aa33'
+      light: undefined,
+      dark: undefined
     },
     requiresTarget: false
   },
@@ -116,8 +116,8 @@ export const ActionAttributes: {
     blockable: false,
     challengeable: false,
     color: {
-      light: '#ffa900',
-      dark: '#ffa900'
+      light: undefined,
+      dark: undefined
     },
     requiresTarget: false
   },
@@ -142,20 +142,20 @@ export const ResponseAttributes: {
 } = {
   [Responses.Pass]: {
     color: {
-      light: '#007700',
-      dark: '#77ee77'
+      light: undefined,
+      dark: undefined
     }
   },
   [Responses.Challenge]: {
     color: {
-      light: '#ff7700',
-      dark: '#ffaa55'
+      light: undefined,
+      dark: undefined
     }
   },
   [Responses.Block]: {
     color: {
-      light: '#770000',
-      dark: '#ff6666'
+      light: undefined,
+      dark: undefined
     }
   }
 }
