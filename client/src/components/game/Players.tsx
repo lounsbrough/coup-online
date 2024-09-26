@@ -4,13 +4,17 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import { MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
+import { LIGHT_COLOR_MODE, useColorModeContext } from "../../contexts/MaterialThemeContext"
 
 function Players() {
   const { gameState } = useGameStateContext()
+  const { colorMode } = useColorModeContext()
 
   if (!gameState) {
     return null
   }
+
+  const colorModeFactor = colorMode === LIGHT_COLOR_MODE ? -1 : 1
 
   return (
     <>
@@ -25,22 +29,22 @@ function Players() {
                   alignContent: 'center',
                   background: color,
                   borderRadius: 3,
-                  p: 0.5,
+                  p: 1,
                   width: '6rem'
                 }}>
                 <Typography variant="h6" sx={{
                   fontWeight: 'bold',
-                  color: colord(color).darken(0.4).toHex()
+                  color: colord(color).darken(colorModeFactor * 0.4).toHex()
                 }}
                 >
                   <OverflowTooltip>{name}</OverflowTooltip>
                 </Typography>
-                <Typography variant="h6" sx={{ color: colord(color).darken(0.4).toHex() }}>
+                <Typography variant="h6" sx={{ color: colord(color).darken(colorModeFactor * 0.4).toHex() }}>
                   <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                 </Typography>
                 <Grid2
                   container mt={0.5}
-                  spacing={0.4}
+                  spacing={1}
                   justifyContent='center'
                 >
                   {[
@@ -53,13 +57,13 @@ function Players() {
                         sx={{
                           justifyContent: 'center',
                           alignContent: 'center',
-                          height: '46px',
-                          width: '46px',
-                          background: colord(color).darken(0.25).toHex(),
+                          height: '44px',
+                          width: '44px',
+                          background: colord(color).darken(colorModeFactor * 0.25).toHex(),
                           padding: 0.5,
                           borderRadius: 2
                         }}>
-                        <InfluenceIcon sx={{ fontSize: '32px', color: colord(color).lighten(0.2).toHex() }} influence={influence} />
+                        <InfluenceIcon sx={{ fontSize: '32px', color: colord(color).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
                       </Grid2>
                     )
                   })}
