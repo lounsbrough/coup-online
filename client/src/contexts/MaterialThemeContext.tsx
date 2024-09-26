@@ -1,6 +1,6 @@
 import { useState, useMemo, createContext, useEffect, useContext, ReactNode } from 'react'
 import { createTheme, ThemeProvider, GlobalStyles, useMediaQuery, PaletteMode } from '@mui/material'
-import { grey, blueGrey } from '@mui/material/colors'
+import { grey } from '@mui/material/colors'
 import { activeColorModeStorageKey } from '../helpers/localStorageKeys'
 
 declare module '@mui/material/styles' {
@@ -15,14 +15,6 @@ declare module '@mui/material/styles' {
 export const LIGHT_COLOR_MODE = 'light'
 export const DARK_COLOR_MODE = 'dark'
 export const SYSTEM_COLOR_MODE = 'system'
-export const primaryColor = {
-  [LIGHT_COLOR_MODE]: '#0464c4',
-  [DARK_COLOR_MODE]: '#41A5F6'
-}
-export const secondaryColor = {
-  [LIGHT_COLOR_MODE]: '#293E87',
-  [DARK_COLOR_MODE]: blueGrey[200]
-}
 
 export type AppColorMode = PaletteMode | typeof SYSTEM_COLOR_MODE;
 
@@ -76,10 +68,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
       mode: activeColorMode,
       background: (isLightMode ? {} : { default: grey[800] }),
       primary: {
-        main: primaryColor[activeColorMode]
-      },
-      secondary: {
-        main: secondaryColor[activeColorMode]
+        main: isLightMode ? grey['700'] : grey['500']
       }
     },
     spacing: isSmallScreen ? 4 : 8,

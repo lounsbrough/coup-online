@@ -9,7 +9,7 @@ import InfluenceIcon from "./icons/InfluenceIcon"
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const { colorMode } = useColorModeContext()
-  const { isSmallScreen } = useTheme()
+  const { palette, isSmallScreen } = useTheme()
 
   return (
     <>
@@ -43,13 +43,13 @@ function Rules() {
                 </thead>
                 <tbody>
                   <tr style={{
-                    background: ActionAttributes.Income.color[colorMode]
+                    background: ActionAttributes.Income.color[colorMode] ?? palette.primary.main
                   }}>
                     <td>Income</td>
                     <td>Collect 1 coin</td>
                   </tr>
                   <tr style={{
-                    background: ActionAttributes["Foreign Aid"].color[colorMode]
+                    background: ActionAttributes["Foreign Aid"].color[colorMode] ?? palette.primary.main
                   }}>
                     <td>Foreign Aid</td>
                     <td>Collect 2 coins</td>
@@ -67,7 +67,7 @@ function Rules() {
                     <td>Pay 3 coins - Kill an influence</td>
                   </tr>
                   <tr style={{
-                    background: ActionAttributes.Coup.color[colorMode]
+                    background: ActionAttributes.Coup.color[colorMode] ?? palette.primary.main
                   }}>
                     <td>Coup</td>
                     <td>Pay 7 coins - Kill an influence</td>
