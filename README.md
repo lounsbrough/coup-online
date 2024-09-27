@@ -1,5 +1,7 @@
 # Coup Online
 
+[Play Game](https://coup-game-online.vercel.app)
+
 ## Overview
 The frontend is a `React` web application. The app talks to the backend `Express` server via the `WebSockets` protocol, falling back to the `HTTPS` protocol if the socket connection fails. The game state is stored in a cloud `Redis` database.
 
