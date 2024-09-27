@@ -166,8 +166,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     if (action === Actions.Coup) {
       await mutateGameState(roomId, (state) => {
         state.players.find(({ id }) => id === playerId).coins -= ActionAttributes.Coup.coinsRequired
-        promptPlayerToLoseInfluence(state, targetPlayer)
         logEvent(state, `${player.name} used ${action} on ${targetPlayer}`)
+        promptPlayerToLoseInfluence(state, targetPlayer)
       })
     } else if (action === Actions.Income) {
       await mutateGameState(roomId, (state) => {
@@ -310,7 +310,6 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
   if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
     await mutateGameState(roomId, (state) => {
       const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer)
-      promptPlayerToLoseInfluence(state, challengePlayer.name)
       revealAndReplaceInfluence(state, state.turnPlayer, influence)
       logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`)
       delete state.pendingActionChallenge
@@ -332,6 +331,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       } else {
         processPendingAction(state)
       }
+      promptPlayerToLoseInfluence(state, challengePlayer.name)
     })
   } else {
     await mutateGameState(roomId, (state) => {
@@ -431,7 +431,6 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
   if (influence === gameState.pendingBlock.claimedInfluence) {
     await mutateGameState(roomId, (state) => {
       const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge.sourcePlayer)
-      promptPlayerToLoseInfluence(state, challengePlayer.name)
       revealAndReplaceInfluence(state, state.pendingBlock.sourcePlayer, influence)
       logEvent(state, `${state.pendingBlock.sourcePlayer} successfully blocked ${state.turnPlayer}`)
       if (state.pendingAction.action === Actions.Assassinate) {
@@ -442,6 +441,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
       delete state.pendingBlock
       delete state.pendingActionChallenge
       delete state.pendingAction
+      promptPlayerToLoseInfluence(state, challengePlayer.name)
     })
   } else {
     await mutateGameState(roomId, (state) => {
@@ -481,8 +481,16 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
 
   await mutateGameState(roomId, (state) => {
     const losingPlayer = state.players.find(({ id }) => id === playerId)
+    const putBackInDeck = state.pendingInfluenceLoss[losingPlayer.name][0].putBackInDeck
+
+    if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
+      state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
+    } else {
+      delete state.pendingInfluenceLoss[losingPlayer.name]
+    }
+
     influences.forEach((influence) => {
-      if (state.pendingInfluenceLoss[losingPlayer.name][0].putBackInDeck) {
+      if (putBackInDeck) {
         const removedInfluence = losingPlayer.influences.splice(
           losingPlayer.influences.findIndex((i) => i === influence),
           1
@@ -490,21 +498,6 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
         state.deck.unshift(removedInfluence)
       } else {
         killPlayerInfluence(state, losingPlayer.name, influence)
-      }
-
-      if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
-        state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
-      } else {
-        delete state.pendingInfluenceLoss[losingPlayer.name]
-      }
-
-      if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
-        moveTurnToNextPlayer(state)
-      }
-
-      if (!losingPlayer.influences.length) {
-        logEvent(state, `${losingPlayer.name} is out!`)
-        delete state.pendingInfluenceLoss[losingPlayer.name]
       }
     })
   })
