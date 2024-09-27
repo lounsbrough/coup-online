@@ -2,13 +2,29 @@ import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, GameState, Influences } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
 
+export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
+  const player = state.players.find(({ name }) => name === playerName)
+  player.influences.splice(
+    player.influences.findIndex((i) => i === influence),
+    1
+  )
+  player.deadInfluences.push(influence)
+  logEvent(state, `${player.name} lost their ${influence}`)
+}
 
 export const promptPlayerToLoseInfluence = (
   state: GameState,
   playerName: string,
   putBackInDeck: boolean = false
 ) => {
-  if (state.players.find(({ name }) => name === playerName).influences.length <= (state.pendingInfluenceLoss[playerName]?.length ?? 0)) {
+  const player = state.players.find(({ name }) => name === playerName)
+
+  if (player.influences.length <= (state.pendingInfluenceLoss[playerName]?.length ?? 0)) {
+    return
+  }
+
+  if (player.influences.length === 1) {
+    killPlayerInfluence(state, playerName, player.influences[0])
     return
   }
 
@@ -108,16 +124,6 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
   shuffleDeck(state)
   player.influences.push(drawCardFromDeck(state))
   logEvent(state, `${playerName} revealed and replaced ${influence}`)
-}
-
-export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
-  const player = state.players.find(({ name }) => name === playerName)
-  player.influences.splice(
-    player.influences.findIndex((i) => i === influence),
-    1
-  )
-  player.deadInfluences.push(influence)
-  logEvent(state, `${player.name} lost their ${influence}`)
 }
 
 export const moveTurnToNextPlayer = (state: GameState) => {
