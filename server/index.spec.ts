@@ -349,9 +349,7 @@ describe('index', () => {
                     await postApi('loseInfluences', { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, influences: [gameState.selfPlayer.influences[0]] })
                     await postApi('action', { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, action: Actions.Income })
                     await postApi('action', { roomId, playerId: privatePlayers[(firstPlayerIndex + 6) % privatePlayers.length].id, action: Actions.Assassinate, targetPlayer: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].name })
-                    response = await postApi('actionResponse', { roomId, playerId: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].id, response: Responses.Pass })
-                    gameState = await response.json() as PublicGameState
-                    await postApi('loseInfluences', { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, influences: [gameState.selfPlayer.influences[0]] })
+                    await postApi('actionResponse', { roomId, playerId: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].id, response: Responses.Pass })
 
                     return { roomId, playerId: players[0].id }
                 },
