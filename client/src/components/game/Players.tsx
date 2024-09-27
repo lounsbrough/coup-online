@@ -37,7 +37,9 @@ function Players() {
                   color: colord(color).darken(colorModeFactor * 0.4).toHex()
                 }}
                 >
-                  <OverflowTooltip>{name}</OverflowTooltip>
+                  <OverflowTooltip sx={{
+                    textDecoration: influenceCount ? undefined : 'line-through',
+                  }}>{name}</OverflowTooltip>
                 </Typography>
                 <Typography variant="h6" sx={{ color: colord(color).darken(colorModeFactor * 0.4).toHex() }}>
                   <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
