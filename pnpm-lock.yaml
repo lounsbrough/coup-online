@@ -90,6 +90,9 @@ importers:
       chance:
         specifier: ^1.1.12
         version: 1.1.12
+      eslint:
+        specifier: '8'
+        version: 8.57.1
       globals:
         specifier: ^15.9.0
         version: 15.9.0
