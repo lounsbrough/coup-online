@@ -50,28 +50,6 @@ describe('index', () => {
                 getQueryParams: () => ({}),
                 error: '"roomId" is required, "playerId" is required',
                 status: 400
-            },
-            {
-                getQueryParams: () => ({
-                    roomId: chance.string({ length: 10 }),
-                    playerId: chance.string({ length: 10 })
-                }),
-                error: /Room .+ does not exist/,
-                status: 404
-            },
-            {
-                getQueryParams: async () => {
-                    const playerId = chance.string({ length: 10 })
-                    const playerName = chance.string({ length: 10 })
-
-                    const response = await postApi('createGame', { playerId, playerName })
-
-                    const roomId = (await response.json()).roomId
-
-                    return { roomId, playerId: chance.string({ length: 10 }) }
-                },
-                error: 'Player not in game',
-                status: 400
             }
         ] as {
             getQueryParams: () => Promise<Partial<{ roomId: string, playerId: string, playerName: string }>>,

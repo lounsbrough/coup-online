@@ -78,10 +78,6 @@ const eventHandlers: {
 } = {
     gameState: {
         handler: getGameStateHandler,
-        joiSchema: Joi.object().keys({
-            roomId: Joi.string().required(),
-            playerId: Joi.string().required()
-        }),
         express: {
             method: 'get',
             parseParams: (req) => {
@@ -90,7 +86,11 @@ const eventHandlers: {
                 return { roomId, playerId }
             },
             validator: validateExpressQuery
-        }
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required()
+        })
     },
     createGame: {
         handler: createGameHandler,

@@ -115,12 +115,12 @@ export const startGame = async (roomId: string) => {
 export const resetGame = async (roomId: string) => {
   const oldGameState = await getGameState(roomId)
   const newGameState = getNewGameState(roomId)
-  newGameState.players = shuffle(oldGameState.players.map((player) => ({
+  newGameState.players = oldGameState.players.map((player) => ({
     ...player,
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
     deadInfluences: []
-  })))
+  }))
   await createGameState(roomId, newGameState)
 }
 

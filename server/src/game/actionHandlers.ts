@@ -122,7 +122,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
   roomId: string
   playerId: string
   action: Actions,
-  targetPlayer: string
+  targetPlayer?: string
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -204,7 +204,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
   roomId: string
   playerId: string
   response: Responses,
-  claimedInfluence: Influences
+  claimedInfluence?: Influences
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -214,14 +214,12 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
-    return
   }
 
   if (!gameState.pendingAction
     || gameState.pendingActionChallenge
     || !gameState.pendingAction.pendingPlayers.includes(player.name)) {
     throw new GameMutationInputError('You can\'t choose an action response right now')
-    return
   }
 
   if (response === Responses.Pass) {
@@ -238,7 +236,6 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
   } else if (response === Responses.Challenge) {
     if (gameState.pendingAction.claimConfirmed) {
       throw new GameMutationInputError(`${gameState.turnPlayer} has already confirmed their claim`)
-      return
     }
 
     await mutateGameState(roomId, (state) => {
@@ -250,19 +247,16 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
   } else if (response === Responses.Block) {
     if (!claimedInfluence) {
       throw new GameMutationInputError('claimedInfluence is required when blocking')
-      return
     }
 
     if (InfluenceAttributes[claimedInfluence as Influences].legalBlock !== gameState.pendingAction.action) {
-      throw new GameMutationInputError('claimedInfluence can not block this action')
-      return
+      throw new GameMutationInputError('claimedInfluence can\'t block this action')
     }
 
     if (gameState.pendingAction.targetPlayer &&
       player.name !== gameState.pendingAction.targetPlayer
     ) {
       throw new GameMutationInputError(`You are not the target of the pending action`)
-      return
     }
 
     await mutateGameState(roomId, (state) => {
@@ -299,7 +293,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingActionChallenge) {
+  if (!gameState.pendingActionChallenge || gameState.turnPlayer !== player.name) {
     throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
@@ -420,7 +414,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingBlockChallenge) {
+  if (!gameState.pendingBlockChallenge || gameState.pendingBlock.sourcePlayer !== player.name) {
     throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
@@ -472,6 +466,15 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
+  }
+
+  const influenceCounts = influences.reduce((agg, cur) => {
+    agg[cur] = (agg[cur] ?? 0) + 1
+    return agg
+  }, {} as { [key in Influences]: number })
+
+  if (Object.entries(influenceCounts).some(([i, count]) => player.influences.filter((pi) => pi === i).length < count)) {
+    throw new GameMutationInputError('You don\'t have those influences')
   }
 
   const pendingInfluenceLossCount = gameState.pendingInfluenceLoss[player.name]?.length ?? 0
