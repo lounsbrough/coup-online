@@ -10,6 +10,15 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
   )
   player.deadInfluences.push(influence)
   logEvent(state, `${player.name} lost their ${influence}`)
+
+  if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
+    moveTurnToNextPlayer(state)
+  }
+
+  if (!player.influences.length) {
+    logEvent(state, `${player.name} is out!`)
+    delete state.pendingInfluenceLoss[player.name]
+  }
 }
 
 export const promptPlayerToLoseInfluence = (
@@ -106,12 +115,12 @@ export const startGame = async (roomId: string) => {
 export const resetGame = async (roomId: string) => {
   const oldGameState = await getGameState(roomId)
   const newGameState = getNewGameState(roomId)
-  newGameState.players = shuffle(oldGameState.players.map((player) => ({
+  newGameState.players = oldGameState.players.map((player) => ({
     ...player,
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
     deadInfluences: []
-  })))
+  }))
   await createGameState(roomId, newGameState)
 }
 
