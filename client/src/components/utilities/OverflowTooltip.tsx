@@ -1,7 +1,7 @@
-import { Tooltip } from '@mui/material'
+import { Box, SxProps, Tooltip } from '@mui/material'
 import { useRef, useEffect, useState } from 'react'
 
-function OverflowTooltip({ children }: { children: string }) {
+function OverflowTooltip({ children, sx }: { children: string, sx?: SxProps }) {
 
   const textElementRef = useRef<HTMLInputElement | null>(null)
 
@@ -27,16 +27,17 @@ function OverflowTooltip({ children }: { children: string }) {
       title={children}
       disableHoverListener={!hoverStatus}
     >
-      <div
+      <Box
         ref={textElementRef}
-        style={{
+        sx={{
+          ...sx,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
-          textOverflow: 'ellipsis',
+          textOverflow: 'ellipsis'
         }}
       >
         {children}
-      </div>
+      </Box>
     </Tooltip>
   )
 }
