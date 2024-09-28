@@ -50,9 +50,14 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
 
-    - run: |
-        ssh pi@lounsbrough.com -p 8222 -i raspberrypi -t 'pwd'
-      shell: bash
+    - uses: appleboy/ssh-action@1.0.3
+      with:
+        host: lounsbrough.com
+        username: pi
+        key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
+        port: 8222
+        script: |
+          whoami
 
   # deploy-client:
   #   needs: verify
