@@ -57,7 +57,9 @@ jobs:
         key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
         port: 8222
         script: |
-          whoami
+          cd /var/www/html/coup-online/server
+          pnpm build
+          pm2 restart coup-online
 
   # deploy-client:
   #   needs: verify
