@@ -57,7 +57,8 @@ jobs:
         ssh-add /home/runner/.ssh/github_actions
       shell: bash
 
-    - env:
+    - if: always()
+      env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
         ssh pi@lounsbrough.com -p 8222 -t 'pwd'
