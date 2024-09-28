@@ -51,7 +51,7 @@ jobs:
       run: |
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         ssh-add - <<< "${{ secrets.SOCKET_SERVER_SSH_KEY }}"
-        ssh-keyscan lounsbrough.com >> /home/runner/.ssh/known_hosts
+        ssh-keyscan lounsbrough.com > /home/runner/.ssh/known_hosts
       shell: bash
 
     - env:
