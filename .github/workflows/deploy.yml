@@ -36,6 +36,20 @@ jobs:
         fi
         vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
+  deploy-socket-server:
+    needs: verify
+    runs-on: ubuntu-latest
+    concurrency: deploy-socket-server-${{ inputs.environment }}
+    if: ${{ inputs.environment == 'production' }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-node
+
+    - run: |
+      ssh-add - <<< "${{ secrets.SOCKET_SERVER_SSH_KEY }}"
+      ssh pi@lounsbrough.com -p 8222 -t 'pwd'
+
   deploy-client:
     needs: verify
     runs-on: ubuntu-latest
