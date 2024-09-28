@@ -51,7 +51,7 @@ jobs:
         ssh-private-key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
 
     - run: |
-        ssh pi@lounsbrough.com -p 8222 -t 'pwd'
+        ssh pi@lounsbrough.com -p 8222 -i raspberrypi -t 'pwd'
       shell: bash
 
   # deploy-client:
