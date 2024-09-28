@@ -58,8 +58,8 @@ jobs:
         port: 8222
         script: |
           cd /var/www/html/coup-online/server
-          pnpm build
-          pm2 restart coup-online
+          /home/pi/.nvm/versions/node/v18.19.1/bin/pnpm build
+          /home/pi/.local/share/pnpm/pm2 restart coup-online
 
   # deploy-client:
   #   needs: verify
