@@ -46,8 +46,16 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-node
 
-    - run: |
+    - env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         ssh-add - <<< "${{ secrets.SOCKET_SERVER_SSH_KEY }}"
+      shell: bash
+
+    - env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
         ssh pi@lounsbrough.com -p 8222 -t 'pwd'
       shell: bash
 
