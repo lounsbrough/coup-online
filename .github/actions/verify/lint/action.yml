@@ -12,5 +12,6 @@ runs:
       pnpm --prefix client lint
     shell: bash
   - run: |
-    ssh-add - <<< "${{ secrets.SOCKET_SERVER_SSH_KEY }}"
-    ssh pi@lounsbrough.com -p 8222 -t 'pwd'
+      ssh-add - <<< "${{ secrets.SOCKET_SERVER_SSH_KEY }}"
+      ssh pi@lounsbrough.com -p 8222 -t 'pwd'
+    shell: bash
