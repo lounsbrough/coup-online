@@ -310,7 +310,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       state.pendingAction.claimConfirmed = true
       if (state.pendingAction.targetPlayer) {
         const targetPlayer = gameState.players.find(({ name }) => name === state.pendingAction.targetPlayer)
-        if (targetPlayer.influences.length > (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)) {
+        if (targetPlayer.influences.length > 1 - (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)) {
           state.pendingAction.pendingPlayers = [state.pendingAction.targetPlayer]
         } else {
           processPendingAction(state)
