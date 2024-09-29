@@ -6,8 +6,10 @@ runs:
   - uses: actions/checkout@v4
   - uses: ./.github/actions/setup-node
   - run: |
-      pnpm --prefix server lint
+      cd server
+      pnpm lint
     shell: bash
   - run: |
-      pnpm --prefix client lint
+      cd client
+      pnpm lint
     shell: bash
