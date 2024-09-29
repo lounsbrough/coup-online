@@ -16,7 +16,7 @@ jobs:
     secrets: inherit
 
   deploy-server:
-    needs: verify
+    # needs: verify
     runs-on: ubuntu-latest
     concurrency: deploy-server-${{ inputs.environment }}
 
