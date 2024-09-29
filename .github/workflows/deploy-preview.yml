@@ -2,7 +2,7 @@ name: Deploy Preview
 
 on:
   push:
-    branches: [main]
+    branches: [fix-vercel-server]
 
 jobs:
   call-deploy:
