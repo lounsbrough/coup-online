@@ -11,13 +11,13 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
   player.deadInfluences.push(influence)
   logEvent(state, `${player.name} lost their ${influence}`)
 
-  if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
-    moveTurnToNextPlayer(state)
-  }
-
   if (!player.influences.length) {
     logEvent(state, `${player.name} is out!`)
     delete state.pendingInfluenceLoss[player.name]
+  }
+
+  if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
+    moveTurnToNextPlayer(state)
   }
 }
 

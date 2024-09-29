@@ -499,6 +499,10 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
           1
         )[0]
         state.deck.unshift(removedInfluence)
+
+        if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
+          moveTurnToNextPlayer(state)
+        }
       } else {
         killPlayerInfluence(state, losingPlayer.name, influence)
       }
