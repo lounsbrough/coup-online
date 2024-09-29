@@ -1,15 +1,17 @@
 import { useState } from "react"
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, Switch, Typography } from "@mui/material"
-import { Settings } from "@mui/icons-material"
+import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
 import './Rules.css'
 import ColorModeToggle from "./ColorModeToggle"
 import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
+import { useWebSocketContext } from "../contexts/WebSocketContext"
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [confirmActions, setConfirmActions] = useState<boolean>(
     JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
   )
+  const { isConnected } = useWebSocketContext()
 
   return (
     <>
@@ -42,6 +44,12 @@ function UserSettings() {
                 }}
                 inputProps={{ 'aria-label': 'controlled' }}
               />
+            </Grid2>
+            <Grid2 justifyContent="center" alignContent="center">
+              {'WebSockets connection: '}
+              {isConnected
+                ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
+                : <CancelOutlined color="error" sx={{ verticalAlign: 'middle' }} />}
             </Grid2>
           </Grid2>
         </DialogContent>
