@@ -28,6 +28,7 @@ jobs:
         cd server
         vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
         vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+        pnpm i
         pnpm build
         if [ "${{ inputs.environment }}" = "production" ]; then
           vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
