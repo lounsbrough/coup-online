@@ -486,13 +486,13 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
     const losingPlayer = state.players.find(({ id }) => id === playerId)
     const putBackInDeck = state.pendingInfluenceLoss[losingPlayer.name][0].putBackInDeck
 
-    if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
-      state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
-    } else {
-      delete state.pendingInfluenceLoss[losingPlayer.name]
-    }
-
     influences.forEach((influence) => {
+      if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
+        state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
+      } else {
+        delete state.pendingInfluenceLoss[losingPlayer.name]
+      }
+      
       if (putBackInDeck) {
         const removedInfluence = losingPlayer.influences.splice(
           losingPlayer.influences.findIndex((i) => i === influence),
