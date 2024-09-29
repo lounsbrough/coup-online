@@ -478,8 +478,8 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
   }
 
   const pendingInfluenceLossCount = gameState.pendingInfluenceLoss[player.name]?.length ?? 0
-  if (influences.length > gameState.pendingInfluenceLoss[player.name]?.length) {
-    throw new GameMutationInputError(`You can't lose ${pendingInfluenceLossCount} influence${pendingInfluenceLossCount === 1 ? '' : 's'} right now`)
+  if (influences.length > pendingInfluenceLossCount) {
+    throw new GameMutationInputError(`You can't lose ${influences.length} influence${influences.length === 1 ? '' : 's'} right now`)
   }
 
   await mutateGameState(roomId, (state) => {

@@ -351,5 +351,49 @@ describe('actionHandlers', () => {
       expect(gameState.players[1].coins).toBe(2)
       expect(gameState.players[2].coins).toBe(2)
     })
+
+    it('coup', async () => {
+      const { roomId } = await createGameHandler(david)
+
+      await joinGameHandler({ roomId, ...harper })
+      await joinGameHandler({ roomId, ...hailey })
+      await startGameHandler({ roomId, playerId: harper.playerId })
+
+      await mutateGameState(roomId, (state) => {
+        state.players = [
+          state.players.find(({ name }) => david.playerName === name),
+          state.players.find(({ name }) => harper.playerName === name),
+          state.players.find(({ name }) => hailey.playerName === name)
+        ]
+        state.turnPlayer = david.playerName
+        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
+        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
+        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
+        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
+        state.players[2].coins = 7
+
+        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
+        influencesUsed.forEach((influence: Influences) => {
+          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
+        })
+      })
+
+      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
+      await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
+
+      await actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Coup, targetPlayer: david.playerName })
+
+      await loseInfluencesHandler({roomId, playerId: david.playerId, influences: [Influences.Ambassador]})
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(david.playerName)
+      expect(gameState.players[0].influences).toHaveLength(1)
+      expect(gameState.players[1].influences).toHaveLength(2)
+      expect(gameState.players[2].influences).toHaveLength(2)
+      expect(gameState.players[0].coins).toBe(3)
+      expect(gameState.players[1].coins).toBe(3)
+      expect(gameState.players[2].coins).toBe(0)
+    })
   })
 })
