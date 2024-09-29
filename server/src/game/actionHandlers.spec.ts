@@ -343,7 +343,7 @@ describe('actionHandlers', () => {
 
       const gameState = await getGameState(roomId)
 
-      expect(gameState.turnPlayer).toBe(david.playerName)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
       expect(gameState.players[0].influences).toHaveLength(2)
       expect(gameState.players[1].influences).toHaveLength(2)
       expect(gameState.players[2].influences).toHaveLength(2)
