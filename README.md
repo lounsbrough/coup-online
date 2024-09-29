@@ -19,7 +19,7 @@ Deployments are mostly automated, with the exception of the socket server which 
 
 ### Install packages
 ```sh
-pnpm i
+pnpn i
 ```
 
 ### Run Server
