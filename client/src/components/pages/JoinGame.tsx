@@ -16,7 +16,7 @@ function JoinGame() {
   const [searchParams] = useSearchParams()
   const [roomId, setRoomId] = useState(searchParams.get('roomId') ?? '')
   const [playerName, setPlayerName] = useState('')
-  const [error, setError] = useState<string>()
+  const [error, setError] = useState('')
   const navigate = useNavigate()
   const { socket } = useWebSocketContext()
   const { setGameState } = useGameStateContext()
@@ -27,7 +27,7 @@ function JoinGame() {
   }
 
   const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${joinGameEvent}`, (async (url: string, { arg }: { arg: JoinGameParams }) => {
-    setError(undefined)
+    setError('')
     return fetch(url, {
       method: 'POST',
       headers: {
