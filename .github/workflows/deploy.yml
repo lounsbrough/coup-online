@@ -11,36 +11,36 @@ permissions:
   contents: read
 
 jobs:
-  # verify:
-  #   uses: ./.github/workflows/verify.yml
-  #   secrets: inherit
+  verify:
+    uses: ./.github/workflows/verify.yml
+    secrets: inherit
 
-  # deploy-server:
-  #   needs: verify
-  #   runs-on: ubuntu-latest
-  #   concurrency: deploy-server-${{ inputs.environment }}
+  deploy-server:
+    needs: verify
+    runs-on: ubuntu-latest
+    concurrency: deploy-server-${{ inputs.environment }}
 
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - uses: ./.github/actions/setup-node
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-node
 
-  #   - run: |
-  #       cd server
-  #       vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
-  #       vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
-  #       pnpm build
-  #       if [ "${{ inputs.environment }}" = "production" ]; then
-  #         vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-  #       else
-  #         vercel build --token=${{ secrets.VERCEL_TOKEN }}
-  #       fi
-  #       vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+    - run: |
+        cd server
+        vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
+        vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+        pnpm build
+        if [ "${{ inputs.environment }}" = "production" ]; then
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        else
+          vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        fi
+        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
   deploy-socket-server:
-    # needs: verify
+    needs: verify
     runs-on: ubuntu-latest
     concurrency: deploy-socket-server-${{ inputs.environment }}
-    # if: ${{ inputs.environment == 'production' }}
+    if: ${{ inputs.environment == 'production' }}
 
     steps:
     - uses: actions/checkout@v4
@@ -63,22 +63,22 @@ jobs:
           pnpm build
           /home/pi/.local/share/pnpm/pm2 restart coup-online
 
-  # deploy-client:
-  #   needs: verify
-  #   runs-on: ubuntu-latest
-  #   concurrency: deploy-client-${{ inputs.environment }}
+  deploy-client:
+    needs: verify
+    runs-on: ubuntu-latest
+    concurrency: deploy-client-${{ inputs.environment }}
 
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - uses: ./.github/actions/setup-node
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-node
 
-  #   - run: |
-  #       cd client
-  #       vercel link --yes --project coup-client --token=${{ secrets.VERCEL_TOKEN }}
-  #       vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
-  #       if [ "${{ inputs.environment }}" = "production" ]; then
-  #         vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-  #       else
-  #         vercel build --token=${{ secrets.VERCEL_TOKEN }}
-  #       fi
-  #       vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+    - run: |
+        cd client
+        vercel link --yes --project coup-client --token=${{ secrets.VERCEL_TOKEN }}
+        vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+        if [ "${{ inputs.environment }}" = "production" ]; then
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        else
+          vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        fi
+        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
