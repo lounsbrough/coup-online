@@ -6,7 +6,7 @@
 The frontend is a `React` web application. The app talks to the backend `Express` server via the `WebSockets` protocol, falling back to the `HTTPS` protocol if the socket connection fails. The game state is stored in a cloud `Redis` database.
 
 ## Deployments
-Deployments are mostly automated, with the exception of the socket server which needs to be manually restarted as of when this documentation was written.
+Deployments are automated. To deploy a new version of the game, simply create a new [Release](https://github.com/lounsbrough/coup-online/releases).
 
 ## Environment Variables
 - EXPRESS_PORT
