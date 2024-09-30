@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/verify.yml
     secrets: inherit
 
-  deploy-server:
+  deploy-server-vercel:
     needs: verify
     runs-on: ubuntu-latest
     concurrency: deploy-server-${{ inputs.environment }}
@@ -36,7 +36,34 @@ jobs:
         fi
         vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
-  deploy-client:
+  deploy-server-raspberry-pi:
+    needs: verify
+    runs-on: ubuntu-latest
+    concurrency: deploy-socket-server-${{ inputs.environment }}
+    if: ${{ inputs.environment == 'production' }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-node
+
+    - uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
+
+    - uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: lounsbrough.com
+        username: pi
+        key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
+        port: 8222
+        script: |
+          cd /var/www/html/coup-online/server
+          git pull
+          sudo npm i -g pnpm
+          pnpm build
+          /home/pi/.local/share/pnpm/pm2 restart coup-online
+
+  deploy-client-vercel:
     needs: verify
     runs-on: ubuntu-latest
     concurrency: deploy-client-${{ inputs.environment }}
