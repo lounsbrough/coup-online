@@ -60,7 +60,7 @@ jobs:
           cd /var/www/html/coup-online/server
           git pull
           sudo npm i -g pnpm
-          # pnpm build
+          pnpm build
           /home/pi/.local/share/pnpm/pm2 restart coup-online
 
   # deploy-client:
