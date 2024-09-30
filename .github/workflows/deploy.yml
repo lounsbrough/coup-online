@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/verify.yml
     secrets: inherit
 
-  deploy-server:
+  deploy-server-vercel:
     needs: verify
     runs-on: ubuntu-latest
     concurrency: deploy-server-${{ inputs.environment }}
@@ -36,7 +36,7 @@ jobs:
         fi
         vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
-  deploy-socket-server:
+  deploy-server-raspberry-pi:
     needs: verify
     runs-on: ubuntu-latest
     concurrency: deploy-socket-server-${{ inputs.environment }}
@@ -63,7 +63,7 @@ jobs:
           pnpm build
           /home/pi/.local/share/pnpm/pm2 restart coup-online
 
-  deploy-client:
+  deploy-client-vercel:
     needs: verify
     runs-on: ubuntu-latest
     concurrency: deploy-client-${{ inputs.environment }}
