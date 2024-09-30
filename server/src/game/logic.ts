@@ -46,6 +46,8 @@ export const promptPlayerToLoseInfluence = (
 export const processPendingAction = (state: GameState) => {
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer)
+  logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
+
   if (state.pendingAction.action === Actions.Assassinate) {
     actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired
     promptPlayerToLoseInfluence(state, targetPlayer.name)
@@ -68,7 +70,6 @@ export const processPendingAction = (state: GameState) => {
     moveTurnToNextPlayer(state)
   }
 
-  logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
   delete state.pendingAction
 }
 
