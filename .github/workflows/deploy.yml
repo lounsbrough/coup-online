@@ -58,11 +58,12 @@ jobs:
         port: 8222
         script: |
           cd /var/www/html/coup-online/server
+          git pull
           node -v
           nvm use 20
-          npm i -g pnpm
+          sudo npm i -g pnpm
           pnpm build
-          pnpm i -g pm2
+          sudo pnpm i -g pm2
           pm2 restart coup-online
 
   # deploy-client:
