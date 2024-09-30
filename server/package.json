@@ -34,7 +34,6 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.7.3",
-    "@types/redis": "^4.0.11",
     "chance": "^1.1.12",
     "eslint": "^9.9.1",
     "globals": "^15.9.0",
