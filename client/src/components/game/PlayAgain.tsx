@@ -10,7 +10,7 @@ type ResetGameParams = { roomId: string, playerId: string }
 const resetGameEvent = 'resetGame'
 
 function PlayAgain() {
-  const [error, setError] = useState<string>()
+  const [error, setError] = useState('')
   const { socket } = useWebSocketContext()
   const { gameState, setGameState } = useGameStateContext()
 

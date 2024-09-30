@@ -16,7 +16,7 @@ export const GameStateContext = createContext<GameStateContextType>({
 })
 
 export function GameStateContextProvider({ children }: { children: ReactNode }) {
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState('')
   const [gameState, setGameState] = useState<PublicGameState>()
   const [searchParams] = useSearchParams()
   const { socket, isConnected } = useWebSocketContext()

@@ -15,7 +15,7 @@ const createGameEvent = 'createGame'
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
-  const [error, setError] = useState<string>()
+  const [error, setError] = useState('')
   const navigate = useNavigate()
   const { socket } = useWebSocketContext()
   const { setGameState } = useGameStateContext()
@@ -28,7 +28,7 @@ function CreateGame() {
   const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${createGameEvent}`, (async (url: string, { arg }: {
     arg: CreateGameParams;
   }) => {
-    setError(undefined)
+    setError('')
     return fetch(url, {
       method: 'POST',
       headers: {
