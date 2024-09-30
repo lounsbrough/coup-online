@@ -102,12 +102,17 @@ export const createGameState = async (roomId: string, gameState: GameState) => {
 }
 
 export const mutateGameState = async (
-  roomId: string,
+  validatedState: GameState,
   mutation: (state: GameState) => void
 ) => {
-  const gameState = await getGameState(roomId)
+  const gameState = await getGameState(validatedState.roomId)
+
+  if (JSON.stringify(gameState) !== JSON.stringify(validatedState)) {
+    throw new GameMutationInputError('State has changed since validation, rejecting mutation')
+  }
+
   mutation(gameState)
-  await setGameState(roomId, gameState)
+  await setGameState(validatedState.roomId, gameState)
 }
 
 export const shuffleDeck = (state: GameState) => {

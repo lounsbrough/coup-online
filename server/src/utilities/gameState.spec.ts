@@ -93,7 +93,7 @@ describe('gameState', () => {
       const gameState = getRandomGameState()
       getValueMock.mockResolvedValue(JSON.stringify(gameState))
 
-      await expect(mutateGameState(gameState.roomId, (state) => {
+      await expect(mutateGameState(gameState, (state) => {
         state.players[0].influences = []
         state.turnPlayer = state.players[0].name
       })).rejects.toThrow()
@@ -105,7 +105,7 @@ describe('gameState', () => {
       const gameState = getRandomGameState()
       getValueMock.mockResolvedValue(JSON.stringify(gameState))
 
-      await mutateGameState(gameState.roomId, (state) => {
+      await mutateGameState(gameState, (state) => {
         state.players[0].coins -= 1
       })
 
