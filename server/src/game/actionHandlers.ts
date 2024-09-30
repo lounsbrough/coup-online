@@ -306,6 +306,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge.sourcePlayer)
       revealAndReplaceInfluence(state, state.turnPlayer, influence)
       logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`)
+      promptPlayerToLoseInfluence(state, challengePlayer.name)
       delete state.pendingActionChallenge
       state.pendingAction.claimConfirmed = true
       if (state.pendingAction.targetPlayer) {
@@ -325,7 +326,6 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       } else {
         processPendingAction(state)
       }
-      promptPlayerToLoseInfluence(state, challengePlayer.name)
     })
   } else {
     await mutateGameState(roomId, (state) => {
@@ -492,7 +492,7 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
       } else {
         delete state.pendingInfluenceLoss[losingPlayer.name]
       }
-      
+
       if (putBackInDeck) {
         const removedInfluence = losingPlayer.influences.splice(
           losingPlayer.influences.findIndex((i) => i === influence),
