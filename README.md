@@ -17,28 +17,29 @@ Deployments are mostly automated, with the exception of the socket server which 
 
 ## Running Locally
 
-### Install packages
-```sh
-pnpm i
-```
-
 ### Run Server
 ```sh
-pnpm --prefix server dev
+cd server
+pnpm i
+pnpm dev
 ```
 
 ### Run Client
 ```sh
-pnpm --prefix client start
+cd client
+pnpm i
+pnpm start
 ```
 
 ### Run Server Tests
 *Server needs to be running for integration tests*
 ```sh
-pnpm --prefix server test
+cd server
+pnpm test
 ```
 
 ### Run Client Tests
 ```sh
-pnpm --prefix client test
+cd client
+pnpm test
 ```

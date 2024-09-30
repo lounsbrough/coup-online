@@ -310,7 +310,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       state.pendingAction.claimConfirmed = true
       if (state.pendingAction.targetPlayer) {
         const targetPlayer = gameState.players.find(({ name }) => name === state.pendingAction.targetPlayer)
-        if (targetPlayer.influences.length > (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)) {
+        if (targetPlayer.influences.length > 1 - (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)) {
           state.pendingAction.pendingPlayers = [state.pendingAction.targetPlayer]
         } else {
           processPendingAction(state)
@@ -478,27 +478,31 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
   }
 
   const pendingInfluenceLossCount = gameState.pendingInfluenceLoss[player.name]?.length ?? 0
-  if (influences.length > gameState.pendingInfluenceLoss[player.name]?.length) {
-    throw new GameMutationInputError(`You can't lose ${pendingInfluenceLossCount} influence${pendingInfluenceLossCount === 1 ? '' : 's'} right now`)
+  if (influences.length > pendingInfluenceLossCount) {
+    throw new GameMutationInputError(`You can't lose ${influences.length} influence${influences.length === 1 ? '' : 's'} right now`)
   }
 
   await mutateGameState(roomId, (state) => {
     const losingPlayer = state.players.find(({ id }) => id === playerId)
     const putBackInDeck = state.pendingInfluenceLoss[losingPlayer.name][0].putBackInDeck
 
-    if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
-      state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
-    } else {
-      delete state.pendingInfluenceLoss[losingPlayer.name]
-    }
-
     influences.forEach((influence) => {
+      if (state.pendingInfluenceLoss[losingPlayer.name].length > 1) {
+        state.pendingInfluenceLoss[losingPlayer.name].splice(0, 1)
+      } else {
+        delete state.pendingInfluenceLoss[losingPlayer.name]
+      }
+      
       if (putBackInDeck) {
         const removedInfluence = losingPlayer.influences.splice(
           losingPlayer.influences.findIndex((i) => i === influence),
           1
         )[0]
         state.deck.unshift(removedInfluence)
+
+        if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
+          moveTurnToNextPlayer(state)
+        }
       } else {
         killPlayerInfluence(state, losingPlayer.name, influence)
       }
