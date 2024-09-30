@@ -103,8 +103,8 @@ export const createNewGame = async (roomId: string, playerId: string, playerName
   await createGameState(roomId, newGameState)
 }
 
-export const startGame = async (roomId: string) => {
-  await mutateGameState(roomId, (state) => {
+export const startGame = async (gameState: GameState) => {
+  await mutateGameState(gameState, (state) => {
     state.isStarted = true
     state.players = shuffle(state.players)
     state.turnPlayer = state.players[0].name
