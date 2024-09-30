@@ -60,8 +60,8 @@ jobs:
           cd /var/www/html/coup-online/server
           git pull
           node -v
-          nvm use 20
           sudo npm i -g pnpm
+          pnpm setup
           pnpm build
           sudo pnpm i -g pm2
           pm2 restart coup-online
