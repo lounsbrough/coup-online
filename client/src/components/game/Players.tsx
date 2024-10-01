@@ -21,27 +21,29 @@ function Players() {
       <Grid2 container justifyContent="center" spacing={2}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
+            const playerColor = influenceCount
+              ? color
+              : colord(color).grayscale().toHex()
+
             return (
               <Box
                 key={index}
                 sx={{
                   color: 'white',
                   alignContent: 'center',
-                  background: color,
+                  background: playerColor,
                   borderRadius: 3,
                   p: 1,
                   width: '6rem'
                 }}>
                 <Typography variant="h6" sx={{
                   fontWeight: 'bold',
-                  color: colord(color).darken(colorModeFactor * 0.4).toHex()
+                  color: colord(playerColor).darken(colorModeFactor * 0.4).toHex()
                 }}
                 >
-                  <OverflowTooltip sx={{
-                    textDecoration: influenceCount ? undefined : 'line-through',
-                  }}>{name}</OverflowTooltip>
+                  <OverflowTooltip>{name}</OverflowTooltip>
                 </Typography>
-                <Typography variant="h6" sx={{ color: colord(color).darken(colorModeFactor * 0.4).toHex() }}>
+                <Typography variant="h6" sx={{ color: colord(playerColor).darken(colorModeFactor * 0.4).toHex() }}>
                   <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                 </Typography>
                 <Grid2
@@ -61,11 +63,11 @@ function Players() {
                           alignContent: 'center',
                           height: '44px',
                           width: '44px',
-                          background: colord(color).darken(colorModeFactor * 0.25).toHex(),
+                          background: colord(playerColor).darken(colorModeFactor * 0.25).toHex(),
                           padding: 0.5,
                           borderRadius: 2
                         }}>
-                        <InfluenceIcon sx={{ fontSize: '32px', color: colord(color).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
+                        <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
                       </Grid2>
                     )
                   })}
