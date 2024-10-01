@@ -21,9 +21,7 @@ function Players() {
       <Grid2 container justifyContent="center" spacing={2}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
-            const playerColor = influenceCount
-              ? color
-              : colord(color).grayscale().toHex()
+            const playerColor = influenceCount ? color : '#777777'
 
             return (
               <Box
