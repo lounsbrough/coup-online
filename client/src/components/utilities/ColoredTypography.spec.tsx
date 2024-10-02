@@ -1,6 +1,5 @@
 import ColoredTypography from "./ColoredTypography"
 import { render, getRandomGameState, getCurrentColorMode } from '../../../tests/utilities/render'
-import { ActionAttributes, Actions, InfluenceAttributes, Influences } from '@shared'
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 
 describe('ColoredTypography', () => {
