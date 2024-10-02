@@ -2,7 +2,7 @@ import { useState, useMemo, createContext, useEffect, useContext, ReactNode } fr
 import { createTheme, useMediaQuery, PaletteMode, GlobalStyles, ThemeProvider } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { activeColorModeStorageKey } from '../helpers/localStorageKeys'
-import { Actions, Influences } from '@shared/dist'
+import { Actions, Influences } from '@shared'
 
 declare module '@mui/material/styles' {
   interface Theme {
