@@ -4,7 +4,7 @@ import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, PublicGameState } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
@@ -14,6 +14,7 @@ enum PlayerActions {
     gameState = 'gameState',
     createGame = 'createGame',
     joinGame = 'joinGame',
+    removeFromGame = 'removeFromGame',
     startGame = 'startGame',
     resetGame = 'resetGame',
     action = 'action',
@@ -110,6 +111,24 @@ const eventHandlers: {
     },
     joinGame: {
         handler: joinGameHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const playerName: string = req.body.playerName.trim()
+                return { roomId, playerId, playerName }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            playerName: playerNameRule
+        })
+    },
+    removeFromGame: {
+        handler: removeFromGameHandler,
         express: {
             method: 'post',
             parseParams: (req) => {
