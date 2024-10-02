@@ -265,7 +265,7 @@ describe('actionHandlers', () => {
 
       let gameState = await getGameState(roomId)
 
-      await loseInfluencesHandler({ roomId, playerId: david.playerId, influences: [chance.pickone(gameState.players[0].influences), chance.pickone(gameState.players[0].influences)] })
+      await loseInfluencesHandler({ roomId, playerId: david.playerId, influences: chance.pickset(gameState.players[0].influences, 2) })
 
       gameState = await getGameState(roomId)
 
