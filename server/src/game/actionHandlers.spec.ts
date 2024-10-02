@@ -33,6 +33,48 @@ describe('actionHandlers', () => {
         playerId: chance.string({ length: 10 })
       }))
 
+    const setupTestGame = async (players: {
+      playerId: string,
+      playerName: string,
+      coins?: number,
+      influences?: Influences[],
+      deadInfluences?: Influences[]
+    }[]) => {
+      const { roomId } = await createGameHandler(players[0])
+
+      for (const player of players) {
+        await joinGameHandler({ roomId, ...player })
+      }
+      await startGameHandler({ roomId, playerId: chance.pickone(players).playerId })
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        const influencesUsed: Influences[] = []
+        state.players = players.map((player) => {
+          const statePlayer = state.players.find(({ name }) => player.playerName === name)
+          if (player.influences) {
+            state.deck.push(...statePlayer.influences.splice(0))
+            statePlayer.influences.push(...player.influences)
+            influencesUsed.push(...player.influences)
+          }
+          if (player.deadInfluences) {
+            statePlayer.deadInfluences.push(...player.deadInfluences)
+            influencesUsed.push(...player.deadInfluences)
+          }
+          return ({
+            ...statePlayer,
+            coins: player.coins ?? statePlayer.coins
+          })
+        })
+        influencesUsed.forEach((influence: Influences) => {
+          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
+        })
+
+        state.turnPlayer = players[0].playerName
+      })
+
+      return roomId
+    }
+
     it('creating, joining, resetting game', async () => {
       const { roomId } = await createGameHandler(harper)
 
@@ -59,29 +101,7 @@ describe('actionHandlers', () => {
     })
 
     it('everyone passes on action', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: hailey.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
-        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-
-        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      const roomId = await setupTestGame([david, harper, hailey])
 
       await expect(actionHandler({ roomId, playerId: harper.playerId, action: Actions.Tax })).rejects.toThrow('You can\'t choose an action right now')
       await expect(actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Tax })).rejects.toThrow('You can\'t choose an action right now')
@@ -104,29 +124,11 @@ describe('actionHandlers', () => {
     })
 
     it('successful action challenge', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: hailey.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
-        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-
-        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Ambassador] }
+      ])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Tax })
 
@@ -150,29 +152,11 @@ describe('actionHandlers', () => {
     })
 
     it('failed action challenge', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: hailey.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
-        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-
-        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Ambassador] }
+      ])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
 
@@ -210,29 +194,11 @@ describe('actionHandlers', () => {
     })
 
     it('successful challenged block', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: hailey.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
-        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-
-        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Ambassador] }
+      ])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
       await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
@@ -262,29 +228,7 @@ describe('actionHandlers', () => {
     })
 
     it('successful bluffing block', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: hailey.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
-        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-
-        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      const roomId = await setupTestGame([david, harper, hailey])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
       await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
@@ -312,38 +256,18 @@ describe('actionHandlers', () => {
     })
 
     it('exchanging influences', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: david.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
-        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-
-        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      const roomId = await setupTestGame([david, harper, hailey])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Exchange })
 
       await actionResponseHandler({ roomId, playerId: harper.playerId, response: Responses.Pass })
       await actionResponseHandler({ roomId, playerId: hailey.playerId, response: Responses.Pass })
 
-      await loseInfluencesHandler({ roomId, playerId: david.playerId, influences: [Influences.Captain, Influences.Ambassador] })
+      let gameState = await getGameState(roomId)
 
-      const gameState = await getGameState(roomId)
+      await loseInfluencesHandler({ roomId, playerId: david.playerId, influences: [chance.pickone(gameState.players[0].influences), chance.pickone(gameState.players[0].influences)] })
+
+      gameState = await getGameState(roomId)
 
       expect(gameState.turnPlayer).toBe(harper.playerName)
       expect(gameState.players[0].influences).toHaveLength(2)
@@ -355,39 +279,18 @@ describe('actionHandlers', () => {
     })
 
     it('coup', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: harper.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
-        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-        state.players[2].coins = 7
-
-        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      const roomId = await setupTestGame([david, harper, { ...hailey, coins: 7 }])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
       await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
 
       await actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Coup, targetPlayer: david.playerName })
 
-      await loseInfluencesHandler({ roomId, playerId: david.playerId, influences: [Influences.Ambassador] })
+      let gameState = await getGameState(roomId)
 
-      const gameState = await getGameState(roomId)
+      await loseInfluencesHandler({ roomId, playerId: david.playerId, influences: [chance.pickone(gameState.players[0].influences)] })
+
+      gameState = await getGameState(roomId)
 
       expect(gameState.turnPlayer).toBe(david.playerName)
       expect(gameState.players[0].influences).toHaveLength(1)
@@ -398,32 +301,38 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(0)
     })
 
-    it('challenged, successful assassination', async () => {
-      const { roomId } = await createGameHandler(david)
+    it('challenged, successful assassination killing last influence', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...harper, influences: [Influences.Captain], deadInfluences: [Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Assassin], coins: 3 }
+      ])
 
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: david.playerId })
+      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
+      await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
+      await actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Assassinate, targetPlayer: harper.playerName })
 
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Ambassador)
-        state.players[1].influences.push(Influences.Captain)
-        state.players[1].deadInfluences.push(Influences.Contessa)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-        state.players[2].coins = 3
+      await actionResponseHandler({ roomId, playerId: harper.playerId, response: Responses.Challenge })
 
-        const influencesUsed = [Influences.Captain, Influences.Ambassador, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      await actionChallengeResponseHandler({ roomId, playerId: hailey.playerId, influence: Influences.Assassin })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(david.playerName)
+      expect(gameState.players[0].influences).toHaveLength(2)
+      expect(gameState.players[1].influences).toHaveLength(0)
+      expect(gameState.players[2].influences).toHaveLength(2)
+      expect(gameState.players[0].coins).toBe(3)
+      expect(gameState.players[1].coins).toBe(3)
+      expect(gameState.players[2].coins).toBe(0)
+    })
+
+    it('challenged, successful assassination killing both influences', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Assassin], coins: 3 }
+      ])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
       await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
@@ -445,29 +354,11 @@ describe('actionHandlers', () => {
     })
 
     it('failed challenge on tax', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: hailey.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Duke)
-        state.players[1].influences.push(Influences.Contessa, Influences.Captain)
-        state.players[2].influences.push(Influences.Assassin, Influences.Ambassador)
-
-        const influencesUsed = [Influences.Captain, Influences.Duke, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Duke] },
+        { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Ambassador] }
+      ])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Tax })
 
@@ -488,33 +379,8 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(2)
     })
 
-    it('race conditions', async () => {
-      const { roomId } = await createGameHandler(david)
-
-      await joinGameHandler({ roomId, ...harper })
-      await joinGameHandler({ roomId, ...hailey })
-      await startGameHandler({ roomId, playerId: hailey.playerId })
-
-      await mutateGameState(await getGameState(roomId), (state) => {
-        state.players = [
-          state.players.find(({ name }) => david.playerName === name),
-          state.players.find(({ name }) => harper.playerName === name),
-          state.players.find(({ name }) => hailey.playerName === name)
-        ]
-        state.turnPlayer = david.playerName
-        state.players.forEach((player) => state.deck.push(...player.influences.splice(0)))
-        state.players[0].influences.push(Influences.Captain, Influences.Duke)
-        state.players[1].influences.push(Influences.Captain)
-        state.players[1].deadInfluences.push(Influences.Contessa)
-        state.players[2].influences.push(Influences.Assassin)
-        state.players[2].deadInfluences.push(Influences.Ambassador)
-        state.players[0].coins = 11
-
-        const influencesUsed = [Influences.Captain, Influences.Duke, Influences.Contessa, Influences.Captain, Influences.Assassin, Influences.Ambassador]
-        influencesUsed.forEach((influence: Influences) => {
-          state.deck.splice(state.deck.findIndex((i) => i === influence), 1)
-        })
-      })
+    it('multiple coups sent to server in rapid succession', async () => {
+      const roomId = await setupTestGame([{ ...david, coins: 11 }, harper, hailey])
 
       const results = await Promise.allSettled(Array.from({ length: 10 }, () =>
         actionHandler({ roomId, playerId: david.playerId, action: Actions.Coup, targetPlayer: harper.playerName })
@@ -525,6 +391,58 @@ describe('actionHandlers', () => {
       const gameState = await getGameState(roomId)
 
       expect(gameState.players[0].coins).toBe(4)
+    })
+
+    it('failed challenge, lost influence before new action response', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Assassin] }
+      ])
+
+      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Steal, targetPlayer: harper.playerName })
+
+      await actionResponseHandler({ roomId, playerId: hailey.playerId, response: Responses.Challenge })
+
+      await actionChallengeResponseHandler({ roomId, playerId: david.playerId, influence: Influences.Captain })
+
+      await loseInfluencesHandler({ roomId, playerId: hailey.playerId, influences: [Influences.Assassin] })
+
+      let gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(david.playerName)
+
+      await actionResponseHandler({ roomId, playerId: harper.playerId, response: Responses.Pass })
+
+      gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('failed challenge, lost influence after new action response', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Assassin] }
+      ])
+
+      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Steal, targetPlayer: harper.playerName })
+
+      await actionResponseHandler({ roomId, playerId: hailey.playerId, response: Responses.Challenge })
+
+      await actionChallengeResponseHandler({ roomId, playerId: david.playerId, influence: Influences.Captain })
+
+      await actionResponseHandler({ roomId, playerId: harper.playerId, response: Responses.Pass })
+
+      let gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(david.playerName)
+
+      await loseInfluencesHandler({ roomId, playerId: hailey.playerId, influences: [Influences.Assassin] })
+
+      gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(harper.playerName)
     })
   })
 })
