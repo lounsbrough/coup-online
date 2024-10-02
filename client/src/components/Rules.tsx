@@ -1,15 +1,13 @@
 import { useState } from "react"
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Divider, Typography, useTheme } from "@mui/material"
 import { Gavel } from "@mui/icons-material"
-import { ActionAttributes, InfluenceAttributes, Influences } from '@shared'
-import { useColorModeContext } from "../contexts/MaterialThemeContext"
+import { Actions, Influences } from '@shared'
 import './Rules.css'
 import InfluenceIcon from "./icons/InfluenceIcon"
 
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const { colorMode } = useColorModeContext()
-  const { palette, isSmallScreen } = useTheme()
+  const { palette, isSmallScreen, actionColors, influenceColors } = useTheme()
 
   return (
     <>
@@ -43,43 +41,43 @@ function Rules() {
                 </thead>
                 <tbody>
                   <tr style={{
-                    background: ActionAttributes.Income.color[colorMode] ?? palette.primary.main
+                    background: actionColors[Actions.Income] ?? palette.primary.main
                   }}>
                     <td>Income</td>
                     <td>Collect 1 coin</td>
                   </tr>
                   <tr style={{
-                    background: ActionAttributes["Foreign Aid"].color[colorMode] ?? palette.primary.main
+                    background: actionColors[Actions.ForeignAid] ?? palette.primary.main
                   }}>
                     <td>Foreign Aid</td>
                     <td>Collect 2 coins</td>
                   </tr>
                   <tr style={{
-                    background: ActionAttributes.Tax.color[colorMode]
+                    background: actionColors[Actions.Tax]
                   }}>
                     <td>Tax</td>
                     <td>Collect 3 coins</td>
                   </tr>
                   <tr style={{
-                    background: ActionAttributes.Assassinate.color[colorMode]
+                    background: actionColors[Actions.Assassinate]
                   }}>
                     <td>Assassinate</td>
                     <td>Pay 3 coins - Kill an influence</td>
                   </tr>
                   <tr style={{
-                    background: ActionAttributes.Coup.color[colorMode] ?? palette.primary.main
+                    background: actionColors[Actions.Coup] ?? palette.primary.main
                   }}>
                     <td>Coup</td>
                     <td>Pay 7 coins - Kill an influence</td>
                   </tr>
                   <tr style={{
-                    background: ActionAttributes.Exchange.color[colorMode]
+                    background: actionColors[Actions.Exchange]
                   }}>
                     <td>Exchange</td>
                     <td>Draw 2 influences - Discard 2</td>
                   </tr>
                   <tr style={{
-                    background: ActionAttributes.Steal.color[colorMode]
+                    background: actionColors[Actions.Steal]
                   }}>
                     <td>Steal</td>
                     <td>Steal 2 coins from someone</td>
@@ -98,7 +96,7 @@ function Rules() {
                 </thead>
                 <tbody>
                   <tr style={{
-                    background: InfluenceAttributes.Duke.color[colorMode]
+                    background: influenceColors[Influences.Duke]
                   }}>
                     <td>
                       <InfluenceIcon influence={Influences.Duke} />
@@ -108,7 +106,7 @@ function Rules() {
                     <td>Foreign Aid</td>
                   </tr>
                   <tr style={{
-                    background: InfluenceAttributes.Assassin.color[colorMode]
+                    background: influenceColors[Influences.Assassin]
                   }}>
                     <td>
                       <InfluenceIcon influence={Influences.Assassin} />
@@ -118,7 +116,7 @@ function Rules() {
                     <td></td>
                   </tr>
                   <tr style={{
-                    background: InfluenceAttributes.Ambassador.color[colorMode]
+                    background: influenceColors[Influences.Ambassador]
                   }}>
                     <td>
                       <InfluenceIcon influence={Influences.Ambassador} />
@@ -128,7 +126,7 @@ function Rules() {
                     <td>Stealing</td>
                   </tr>
                   <tr style={{
-                    background: InfluenceAttributes.Captain.color[colorMode]
+                    background: influenceColors[Influences.Captain]
                   }}>
                     <td>
                       <InfluenceIcon influence={Influences.Captain} />
@@ -138,7 +136,7 @@ function Rules() {
                     <td>Stealing</td>
                   </tr>
                   <tr style={{
-                    background: InfluenceAttributes.Contessa.color[colorMode]
+                    background: influenceColors[Influences.Contessa]
                   }}>
                     <td>
                       <InfluenceIcon influence={Influences.Contessa} />

@@ -1,15 +1,13 @@
 import { useState } from "react"
-import { Button, Checkbox, Grid2, Typography } from "@mui/material"
-import { InfluenceAttributes } from '@shared'
+import { Button, Checkbox, Grid2, Typography, useTheme } from "@mui/material"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
 function ChooseInfluenceToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
   const { gameState } = useGameStateContext()
-  const { colorMode } = useColorModeContext()
+  const { influenceColors } = useTheme()
 
   if (!gameState) {
     return null
@@ -58,7 +56,7 @@ function ChooseInfluenceToKeep() {
                 }
               }}
               sx={{
-                background: InfluenceAttributes[influence].color[colorMode]
+                background: influenceColors[influence]
               }} variant="contained"
             >
               <Checkbox

@@ -1,16 +1,15 @@
-import { Button, Grid2, Tooltip, Typography } from "@mui/material"
+import { Button, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
 import { ActionAttributes, Actions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
 function ChooseAction() {
   const [selectedAction, setSelectedAction] = useState<Actions>()
   const [selectedTargetPlayer, setSelectedTargetPlayer] = useState<string>()
   const { gameState } = useGameStateContext()
-  const { colorMode } = useColorModeContext()
+  const { actionColors } = useTheme()
 
   if (!gameState) {
     return null
@@ -90,7 +89,7 @@ function ChooseAction() {
                           setSelectedAction(action as Actions)
                         }}
                         sx={{
-                          background: actionAttributes.color[colorMode]
+                          background: actionColors[action as Actions]
                         }} variant="contained"
                       >
                         {action}
