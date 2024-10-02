@@ -1,16 +1,15 @@
-import { Button, Grid2, Typography } from "@mui/material"
-import { InfluenceAttributes, Influences } from '@shared'
+import { Button, Grid2, Typography, useTheme } from "@mui/material"
+import { Influences } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
 function ChooseChallengeResponse() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
-  const { colorMode } = useColorModeContext()
+  const { influenceColors } = useTheme()
 
   if (!gameState?.pendingActionChallenge && !gameState?.pendingBlockChallenge) {
     return null
@@ -57,7 +56,7 @@ function ChooseChallengeResponse() {
                 setSelectedInfluence(influence as Influences)
               }}
               sx={{
-                background: InfluenceAttributes[influence].color[colorMode]
+                background: influenceColors[influence]
               }} variant="contained"
             >
               {influence}

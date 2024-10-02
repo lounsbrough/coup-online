@@ -1,19 +1,18 @@
-import { Box, Grid2, Typography } from "@mui/material"
-import { InfluenceAttributes, Influences } from '@shared'
-import { useColorModeContext } from "../../contexts/MaterialThemeContext"
+import { Box, Grid2, Typography, useTheme } from "@mui/material"
+import { Influences } from '@shared'
 import InfluenceIcon from "../icons/InfluenceIcon"
 
 function InfluenceCard({ influence }: {
   influence: Influences
 }) {
-  const { colorMode } = useColorModeContext()
+  const { influenceColors } = useTheme()
 
   return (
     <Box sx={{
       color: 'white',
       textAlign: 'center',
       alignContent: 'center',
-      background: influence ? InfluenceAttributes[influence].color[colorMode] : 'rgba(120, 120, 120, 0.5)',
+      background: influence ? influenceColors[influence] : 'rgba(120, 120, 120, 0.5)',
       borderRadius: '0.5rem',
       p: 2,
       width: '9rem',
