@@ -112,6 +112,7 @@ export type GameState = {
   deck: Influences[]
   eventLogs: string[]
   isStarted: boolean
+  availablePlayerColors: string[]
   players: Player[]
   pendingAction?: {
     targetPlayer?: string

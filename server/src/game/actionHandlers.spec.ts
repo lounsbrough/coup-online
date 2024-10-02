@@ -78,8 +78,8 @@ describe('actionHandlers', () => {
     it('creating, joining, resetting game', async () => {
       const { roomId } = await createGameHandler(harper)
 
-      await joinGameHandler({ roomId, ...hailey })
-      await expect(joinGameHandler({ roomId, ...hailey, playerName: 'not hailey' })).rejects.toThrow(`Previously joined Room ${roomId} as ${hailey.playerName}`)
+      await joinGameHandler({ roomId, ...hailey, playerName: 'not hailey' })
+      await joinGameHandler({ roomId: roomId.toLowerCase(), ...hailey })
 
       await startGameHandler({ roomId, playerId: harper.playerId })
       await expect(startGameHandler({ roomId, playerId: harper.playerId })).rejects.toThrow('Game has already started')

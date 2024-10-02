@@ -179,8 +179,8 @@ describe('index', () => {
 
           return { roomId, playerId, playerName: chance.string({ length: 10 }) }
         },
-        error: /Previously joined Room .+ as .+/,
-        status: 400
+        error: '',
+        status: 200
       },
       {
         getBody: async () => {

@@ -2,7 +2,7 @@ import { GameMutationInputError } from "../utilities/errors"
 import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
 import { getGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 
 const validateRoomId = (gameState: GameState, roomId: string) => {
   if (!gameState) {
@@ -51,11 +51,17 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
 
   validateRoomId(gameState, roomId)
 
-  const existingPlayer = gameState.players.find((player) => player.id === playerId)
+  const player = gameState.players.find((player) => player.id === playerId)
 
-  if (existingPlayer) {
-    if (existingPlayer.name.toUpperCase() !== playerName.toUpperCase()) {
-      throw new GameMutationInputError(`Previously joined Room ${roomId} as ${existingPlayer.name}`)
+  if (player) {
+    if (player.name.toUpperCase() !== playerName.toUpperCase()) {
+      await mutateGameState(gameState, (state) => {
+        const oldPlayer = gameState.players.find((player) => player.id === playerId)
+        state.players = [
+          ...state.players.filter(({ id }) => id !== playerId),
+          { ...oldPlayer, name: playerName }
+        ]
+      })
     }
   } else {
     if (gameState.players.length >= 6) {
@@ -76,6 +82,32 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
       addPlayerToGame(state, playerId, playerName)
     })
   }
+
+  return { roomId, playerId }
+}
+
+export const removeFromGameHandler = async ({ roomId, playerId, playerName }: {
+  roomId: string
+  playerId: string
+  playerName: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  validateRoomIdAndPlayerId(gameState, roomId, playerId)
+
+  if (gameState.isStarted) {
+    throw new GameMutationInputError('Game has already started')
+  }
+
+  const playerToRemove = gameState.players.find((player) => player.name === playerName)
+
+  if (!playerToRemove) {
+    throw new GameMutationInputError('Player is not in the room')
+  }
+
+  await mutateGameState(gameState, (state) => {
+    removePlayerFromGame(state, playerName)
+  })
 
   return { roomId, playerId }
 }
