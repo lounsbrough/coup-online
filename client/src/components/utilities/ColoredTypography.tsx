@@ -1,33 +1,32 @@
 import { useMemo } from 'react'
-import { Typography, TypographyProps } from "@mui/material"
+import { Typography, TypographyProps, useTheme } from "@mui/material"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { useColorModeContext } from "../../contexts/MaterialThemeContext"
-import { ActionAttributes, InfluenceAttributes } from '@shared'
+import { Actions, Influences } from '@shared'
 
 function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'children'> & {
   children: string
 }) {
   const { gameState } = useGameStateContext()
-  const { colorMode } = useColorModeContext()
+  const { actionColors, influenceColors } = useTheme()
 
-  const colorsMap: [string, string][] = useMemo(() => {
+  const colorsMap: [string, string | undefined][] = useMemo(() => {
     if (!gameState?.players) {
       return []
     }
 
     return [
-      ...Object.entries(ActionAttributes)
-        .filter(([action]) => children.includes(action))
-        .map<[string, string]>(([action, attributes]) => [action, attributes.color[colorMode]]),
-      ...Object.entries(InfluenceAttributes)
-        .filter(([influence]) => children.includes(influence))
-        .map<[string, string]>(([influence, attributes]) => [influence, attributes.color[colorMode]]),
+      ...Object.values(Actions)
+        .filter((action) => children.includes(action))
+        .map<[string, string | undefined]>((action) => [action, actionColors[action]]),
+      ...Object.values(Influences)
+        .filter((influence) => children.includes(influence))
+        .map<[string, string]>((influence) => [influence, influenceColors[influence]]),
       ...gameState.players
         .filter(({ name }) => children.includes(name))
         .sort((a, b) => a.name.length - b.name.length)
         .map<[string, string]>(({ name, color }) => [name, color])
     ]
-  }, [children, gameState?.players, colorMode])
+  }, [children, gameState?.players, actionColors, influenceColors])
 
   type Segment = { text: string, position: number, color?: string, fontWeight?: string }
 

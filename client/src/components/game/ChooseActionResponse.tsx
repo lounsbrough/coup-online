@@ -1,9 +1,8 @@
-import { Button, Grid2, Typography } from "@mui/material"
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, ResponseAttributes, Responses } from '@shared'
+import { Button, Grid2, Typography, useTheme } from "@mui/material"
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { getPresentProgressiveResponse as presentProgressiveResponse } from "../../helpers/grammar"
@@ -12,7 +11,7 @@ function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
-  const { colorMode } = useColorModeContext()
+  const { influenceColors } = useTheme()
 
   if (!gameState?.pendingAction) {
     return null
@@ -54,7 +53,7 @@ function ChooseActionResponse() {
                   key={influence}
                   onClick={() => {
                     setSelectedInfluence(influence as Influences)
-                  }} sx={{ background: influenceAttributes.color[colorMode] }}
+                  }} sx={{ background: influenceColors[influence as Influences] }}
                   variant="contained"
                 >{influence}</Button>
               })}
@@ -68,9 +67,9 @@ function ChooseActionResponse() {
               : ''}`}
           </ColoredTypography>
           <Grid2 container spacing={2} justifyContent="center">
-            {Object.entries(ResponseAttributes)
+            {Object.values(Responses)
               .sort((a, b) => a[0].localeCompare(b[0]))
-              .map(([response, responseAttributes], index) => {
+              .map((response, index) => {
                 if (response === Responses.Challenge &&
                   (!ActionAttributes[gameState.pendingAction?.action as Actions].challengeable
                     || gameState.pendingActionChallenge
@@ -90,9 +89,6 @@ function ChooseActionResponse() {
                   key={index}
                   onClick={() => {
                     setSelectedResponse(response as Responses)
-                  }}
-                  sx={{
-                    background: responseAttributes.color[colorMode]
                   }} variant="contained"
                 >
                   {response}
