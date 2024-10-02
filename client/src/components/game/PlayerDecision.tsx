@@ -69,9 +69,8 @@ function PlayerDecision() {
   }
 
   const waitingForColors = new Set<string>()
-  if (!gameState.pendingAction) {
-    waitingForColors.add(gameState.players.find(({ name }) => gameState.turnPlayer === name)!.color)
-  } else if (gameState.pendingBlockChallenge) {
+
+  if (gameState.pendingBlockChallenge) {
     waitingForColors.add(gameState.players.find(({ name }) => gameState.pendingBlock?.sourcePlayer === name)!.color)
   } else if (gameState.pendingBlock) {
     gameState.players
@@ -83,6 +82,17 @@ function PlayerDecision() {
     gameState.players
       .filter(({ name }) => gameState.pendingAction?.pendingPlayers.includes(name))
       .forEach(({ color }) => waitingForColors.add(color))
+  }
+
+  const pendingInfluenceLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
+  if (pendingInfluenceLossPlayers.length) {
+    pendingInfluenceLossPlayers.forEach((pendingInfluenceLossPlayer) => {
+      waitingForColors.add(gameState.players.find(({ name }) => pendingInfluenceLossPlayer === name)!.color)
+    })
+  }
+
+  if (!waitingForColors.size) {
+    waitingForColors.add(gameState.players.find(({ name }) => gameState.turnPlayer === name)!.color)
   }
 
   return (

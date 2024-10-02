@@ -28,12 +28,14 @@ export const promptPlayerToLoseInfluence = (
 ) => {
   const player = state.players.find(({ name }) => name === playerName)
 
-  if (player.influences.length <= (state.pendingInfluenceLoss[playerName]?.length ?? 0)) {
-    return
-  }
+  const pendingInfluencesToKill = state.pendingInfluenceLoss[playerName]
+    ?.filter(({ putBackInDeck }) => !putBackInDeck).length ?? 0
 
-  if (player.influences.length === 1) {
-    killPlayerInfluence(state, playerName, player.influences[0])
+  if (player.influences.length - pendingInfluencesToKill <= 1) {
+    player.influences.forEach((influence) => {
+      killPlayerInfluence(state, playerName, influence)
+    })
+    delete state.pendingInfluenceLoss[playerName]
     return
   }
 
