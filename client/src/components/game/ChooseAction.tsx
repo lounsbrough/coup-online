@@ -9,7 +9,7 @@ function ChooseAction() {
   const [selectedAction, setSelectedAction] = useState<Actions>()
   const [selectedTargetPlayer, setSelectedTargetPlayer] = useState<string>()
   const { gameState } = useGameStateContext()
-  const { actionColors } = useTheme()
+  const theme = useTheme()
 
   if (!gameState) {
     return null
@@ -45,11 +45,23 @@ function ChooseAction() {
               ) {
                 return null
               }
+
+              const paletteColor = theme.palette.augmentColor({
+                color: { main: player.color }
+              })
+
               return <Button
                 key={player.name}
                 onClick={() => {
                   setSelectedTargetPlayer(player.name)
-                }} sx={{ background: player.color }}
+                }}
+                sx={{
+                  color: paletteColor.contrastText,
+                  background: paletteColor.main,
+                  '&:hover': {
+                    background: paletteColor.dark
+                  }
+                }}
                 variant="contained"
               >{player.name}</Button>
             })}
@@ -88,9 +100,8 @@ function ChooseAction() {
                         onClick={() => {
                           setSelectedAction(action as Actions)
                         }}
-                        sx={{
-                          background: actionColors[action as Actions]
-                        }} variant="contained"
+                        color={action as Actions}
+                        variant="contained"
                       >
                         {action}
                       </Button>

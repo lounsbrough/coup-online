@@ -6,7 +6,7 @@ import ChooseInfluenceToLose from "./ChooseInfluenceToLose"
 import ChooseBlockResponse from "./ChooseBlockResponse"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Circle } from "@mui/icons-material"
-import ChooseInfluenceToKeep from "./ChooseInfluencesToKeep"
+import ChooseInfluencesToKeep from "./ChooseInfluencesToKeep"
 
 function PlayerDecision() {
   const { gameState } = useGameStateContext()
@@ -24,7 +24,7 @@ function PlayerDecision() {
   const pendingInfluenceLoss = gameState.pendingInfluenceLoss[gameState.selfPlayer.name]
   if (pendingInfluenceLoss) {
     if (pendingInfluenceLoss[0].putBackInDeck) {
-      return <ChooseInfluenceToKeep />
+      return <ChooseInfluencesToKeep />
     } else {
       return <ChooseInfluenceToLose />
     }

@@ -1,4 +1,4 @@
-import { Button, Grid2, Typography, useTheme } from "@mui/material"
+import { Button, Grid2, Typography } from "@mui/material"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
@@ -11,7 +11,6 @@ function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
-  const { influenceColors } = useTheme()
 
   if (!gameState?.pendingAction) {
     return null
@@ -53,7 +52,8 @@ function ChooseActionResponse() {
                   key={influence}
                   onClick={() => {
                     setSelectedInfluence(influence as Influences)
-                  }} sx={{ background: influenceColors[influence as Influences] }}
+                  }}
+                  color={influence as Influences}
                   variant="contained"
                 >{influence}</Button>
               })}

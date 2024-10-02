@@ -1,4 +1,4 @@
-import { Button, Grid2, Typography, useTheme } from "@mui/material"
+import { Button, Grid2, Typography } from "@mui/material"
 import { Influences } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
@@ -9,7 +9,6 @@ import PlayerActionConfirmation from "./PlayerActionConfirmation"
 function ChooseChallengeResponse() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
-  const { influenceColors } = useTheme()
 
   if (!gameState?.pendingActionChallenge && !gameState?.pendingBlockChallenge) {
     return null
@@ -55,9 +54,8 @@ function ChooseChallengeResponse() {
               onClick={() => {
                 setSelectedInfluence(influence as Influences)
               }}
-              sx={{
-                background: influenceColors[influence]
-              }} variant="contained"
+              color={influence as Influences}
+              variant="contained"
             >
               {influence}
             </Button>

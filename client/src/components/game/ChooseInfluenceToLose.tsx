@@ -1,4 +1,4 @@
-import { Button, Grid2, Typography, useTheme } from "@mui/material"
+import { Button, Grid2, Typography } from "@mui/material"
 import { Influences } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
@@ -8,7 +8,6 @@ import PlayerActionConfirmation from "./PlayerActionConfirmation"
 function ChooseInfluenceToLose() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
-  const { influenceColors } = useTheme()
 
   if (!gameState) {
     return null
@@ -43,9 +42,8 @@ function ChooseInfluenceToLose() {
               onClick={() => {
                 setSelectedInfluence(influence)
               }}
-              sx={{
-                background: influenceColors[influence]
-              }} variant="contained"
+              color={influence}
+              variant="contained"
             >
               {influence}
             </Button>
