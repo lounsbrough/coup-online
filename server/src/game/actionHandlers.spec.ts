@@ -342,6 +342,12 @@ describe('actionHandlers', () => {
 
       await actionChallengeResponseHandler({ roomId, playerId: hailey.playerId, influence: Influences.Assassin })
 
+      await actionResponseHandler({ roomId, playerId: harper.playerId, response: Responses.Block, claimedInfluence: Influences.Contessa })
+
+      await blockResponseHandler({ roomId, playerId: hailey.playerId, response: Responses.Challenge })
+
+      await blockChallengeResponseHandler({ roomId, playerId: harper.playerId, influence: Influences.Ambassador })
+
       const gameState = await getGameState(roomId)
 
       expect(gameState.turnPlayer).toBe(david.playerName)
