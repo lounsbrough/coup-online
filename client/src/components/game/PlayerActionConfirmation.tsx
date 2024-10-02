@@ -105,6 +105,7 @@ function PlayerActionConfirmation({
               <Check />
             )}
             sx={{
+              color: theme.palette.primary.contrastText,
               background: `
                 linear-gradient(
                   to right,

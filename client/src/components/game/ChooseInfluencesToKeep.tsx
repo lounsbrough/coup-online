@@ -1,13 +1,12 @@
 import { useState } from "react"
-import { Button, Checkbox, Grid2, Typography, useTheme } from "@mui/material"
+import { Button, Checkbox, Grid2, Typography } from "@mui/material"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
-function ChooseInfluenceToKeep() {
+function ChooseInfluencesToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
   const { gameState } = useGameStateContext()
-  const { influenceColors } = useTheme()
 
   if (!gameState) {
     return null
@@ -55,9 +54,8 @@ function ChooseInfluenceToKeep() {
                   ])
                 }
               }}
-              sx={{
-                background: influenceColors[influence]
-              }} variant="contained"
+              color={influence}
+              variant="contained"
             >
               <Checkbox
                 color="default"
@@ -72,4 +70,4 @@ function ChooseInfluenceToKeep() {
   )
 }
 
-export default ChooseInfluenceToKeep
+export default ChooseInfluencesToKeep
