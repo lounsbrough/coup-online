@@ -1,5 +1,5 @@
 import { useState, useMemo, createContext, useEffect, useContext, ReactNode } from 'react'
-import { createTheme, useMediaQuery, PaletteMode, GlobalStyles, ThemeProvider } from '@mui/material'
+import { createTheme, useMediaQuery, PaletteMode, GlobalStyles, ThemeProvider, PaletteColor } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { activeColorModeStorageKey } from '../helpers/localStorageKeys'
 import { Actions, Influences } from '@shared'
@@ -7,14 +7,26 @@ import { Actions, Influences } from '@shared'
 declare module '@mui/material/styles' {
   interface Theme {
     isSmallScreen: boolean
-    actionColors: { [Action in Actions]: string | undefined }
+    actionColors: { [Action in Actions]: string }
     influenceColors: { [influence in Influences]: string }
   }
   interface ThemeOptions {
     isSmallScreen: boolean
-    actionColors: { [Action in Actions]: string | undefined }
+    actionColors: { [Action in Actions]: string }
     influenceColors: { [influence in Influences]: string }
   }
+
+  type CustomPalette = Record<Influences, PaletteColor> & Record<Actions, PaletteColor>;
+  type CustomPaletteOptions = Partial<Record<Influences, PaletteColor>> & Partial<Record<Actions, PaletteColor>>;
+
+  interface Palette extends CustomPalette { }
+  interface PaletteOptions extends CustomPaletteOptions { }
+}
+
+declare module '@mui/material/Button' {
+  type CustomButtonOverrides = Record<Influences, true> & Record<Actions, true>;
+
+  interface ButtonPropsColorOverrides extends CustomButtonOverrides { }
 }
 
 export const LIGHT_COLOR_MODE = 'light'
@@ -64,10 +76,11 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
   }, [mode])
 
   const isLightMode = activeColorMode === LIGHT_COLOR_MODE
-  const white = '#ffffff'
-  const defaultBackgroundColor = isLightMode ? white : '#212121'
+  const defaultBackgroundColor = isLightMode ? '#ffffff' : '#212121'
 
   const materialTheme = useMemo(() => {
+    const primaryColor = isLightMode ? grey['700'] : grey['500']
+
     const influenceColors = {
       [Influences.Assassin]: isLightMode ? '#7A0000' : '#B23535',
       [Influences.Contessa]: isLightMode ? '#9B6000' : '#C38E3A',
@@ -78,21 +91,21 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
 
     const actionColors = {
       [Actions.Assassinate]: influenceColors[Influences.Assassin],
-      [Actions.Coup]: undefined,
+      [Actions.Coup]: primaryColor,
       [Actions.Exchange]: influenceColors[Influences.Ambassador],
-      [Actions.ForeignAid]: undefined,
-      [Actions.Income]: undefined,
+      [Actions.ForeignAid]: primaryColor,
+      [Actions.Income]: primaryColor,
       [Actions.Steal]: influenceColors[Influences.Captain],
       [Actions.Tax]: influenceColors[Influences.Duke]
     }
 
-    return createTheme({
+    let theme = createTheme({
       isSmallScreen,
       palette: {
         mode: activeColorMode,
         background: (isLightMode ? {} : { default: grey[800] }),
         primary: {
-          main: isLightMode ? grey['700'] : grey['500']
+          main: primaryColor
         }
       },
       actionColors,
@@ -129,6 +142,35 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
         }
       }
     })
+
+    const customPaletteColors = Object.fromEntries([
+      ...Object.values(Influences)
+        .map((influence) => [
+          influence,
+          theme.palette.augmentColor({
+            color: {
+              main: theme.influenceColors[influence],
+            },
+            name: influence,
+          })
+        ]),
+      ...Object.values(Actions)
+        .map((action) => [
+          action,
+          theme.palette.augmentColor({
+            color: {
+              main: theme.actionColors[action],
+            },
+            name: action,
+          })
+        ])
+    ])
+
+    theme = createTheme(theme, {
+      palette: customPaletteColors
+    })
+
+    return theme
   }, [isLightMode, activeColorMode, isSmallScreen])
 
   return (
