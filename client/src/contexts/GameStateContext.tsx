@@ -33,18 +33,17 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
         if (res.ok) {
           setError('')
+          const newState = await res.json()
+
+          if (JSON.stringify(newState) !== JSON.stringify(gameState)) {
+            setGameState(newState)
+          }
         } else {
           if (res.status === 404) {
             setError('Game not found, please return home')
           } else if (res.status === 400) {
             setError((await res.json() as { error: string }).error)
           }
-        }
-
-        const newState = await res.json()
-
-        if (JSON.stringify(newState) !== JSON.stringify(gameState)) {
-          setGameState(newState)
         }
       } catch (error) {
         console.error(error)
