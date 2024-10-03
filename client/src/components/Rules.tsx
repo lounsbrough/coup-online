@@ -7,7 +7,7 @@ import InfluenceIcon from "./icons/InfluenceIcon"
 
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const { palette, isSmallScreen, actionColors, influenceColors } = useTheme()
+  const { palette, breakpoints, actionColors, influenceColors } = useTheme()
 
   return (
     <>
@@ -25,7 +25,11 @@ function Rules() {
         open={modalOpen}
         onClose={() => { setModalOpen(false) }}
       >
-        <DialogContent sx={{ px: isSmallScreen ? 2 : undefined, textAlign: 'center' }}>
+        <DialogContent sx={{
+          px: 2,
+          [breakpoints.up('md')]: { px: undefined },
+          textAlign: 'center'
+        }}>
           <DialogContentText component='div'>
             <Typography
               variant="h3"
