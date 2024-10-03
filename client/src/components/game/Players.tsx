@@ -9,10 +9,9 @@ import { LIGHT_COLOR_MODE, useColorModeContext } from "../../contexts/MaterialTh
 import { useState } from "react"
 import { useWebSocketContext } from "../../contexts/WebSocketContext"
 import { getPlayerId } from "../../helpers/playerId"
+import { PlayerActions, ServerEvents } from "@shared"
 
 type RemoveFromGameParams = { roomId: string, playerId: string, playerName: string }
-
-const removeFromGameEvent = 'removeFromGame'
 
 function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   const [error, setError] = useState('')
@@ -20,7 +19,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   const { colorMode } = useColorModeContext()
   const { socket } = useWebSocketContext()
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${removeFromGameEvent}`, (async (url: string, { arg }: { arg: RemoveFromGameParams }) => {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${PlayerActions.removeFromGame}`, (async (url: string, { arg }: { arg: RemoveFromGameParams }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -38,8 +37,8 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
 
   const trigger = socket?.connected
     ? (params: RemoveFromGameParams) => {
-      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
-      socket.emit(removeFromGameEvent, params)
+      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
+      socket.emit(PlayerActions.removeFromGame, params)
     }
     : triggerSwr
 

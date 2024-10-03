@@ -7,11 +7,9 @@ import { getPlayerId } from "../../helpers/playerId"
 import { Link } from "react-router-dom"
 import { useWebSocketContext } from "../../contexts/WebSocketContext"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { PublicGameState } from '@shared'
+import { PlayerActions, PublicGameState, ServerEvents } from '@shared'
 
 type CreateGameParams = { playerId: string, playerName: string }
-
-const createGameEvent = 'createGame'
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
@@ -25,7 +23,7 @@ function CreateGame() {
     navigate(`/game?roomId=${gameState.roomId}`)
   }
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${createGameEvent}`, (async (url: string, { arg }: {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${PlayerActions.createGame}`, (async (url: string, { arg }: {
     arg: CreateGameParams;
   }) => {
     setError('')
@@ -51,11 +49,11 @@ function CreateGame() {
 
   const trigger = socket?.connected
     ? (params: CreateGameParams) => {
-      socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
+      socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
         updateGameStateAndNavigate(gameState)
       })
-      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
-      socket.emit(createGameEvent, params)
+      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
+      socket.emit(PlayerActions.createGame, params)
     }
     : triggerSwr
 

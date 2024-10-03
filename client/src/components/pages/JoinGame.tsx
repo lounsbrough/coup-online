@@ -6,11 +6,9 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { getPlayerId } from "../../helpers/playerId"
 import { useWebSocketContext } from "../../contexts/WebSocketContext"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { PublicGameState } from '@shared'
+import { PlayerActions, PublicGameState, ServerEvents } from '@shared'
 
 type JoinGameParams = { roomId: string, playerId: string, playerName: string }
-
-const joinGameEvent = 'joinGame'
 
 function JoinGame() {
   const [searchParams] = useSearchParams()
@@ -26,7 +24,7 @@ function JoinGame() {
     navigate(`/game?roomId=${gameState.roomId}`)
   }
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${joinGameEvent}`, (async (url: string, { arg }: { arg: JoinGameParams }) => {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${PlayerActions.joinGame}`, (async (url: string, { arg }: { arg: JoinGameParams }) => {
     setError('')
     return fetch(url, {
       method: 'POST',
@@ -52,11 +50,11 @@ function JoinGame() {
 
   const trigger = socket?.connected
     ? (params: JoinGameParams) => {
-      socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
+      socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
         updateGameStateAndNavigate(gameState)
       })
-      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
-      socket.emit(joinGameEvent, params)
+      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
+      socket.emit(PlayerActions.joinGame, params)
     }
     : triggerSwr
 
