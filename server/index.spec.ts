@@ -279,6 +279,64 @@ describe('index', () => {
     })
   })
 
+  describe('removeFromGame', () => {
+    it.each([
+      {
+        testSetup: async () => {
+          const removingPlayer = {
+            id: chance.string({ length: 10 }),
+            name: chance.string({ length: 10 }),
+          }
+          const removedPlayer = {
+            id: chance.string({ length: 10 }),
+            name: chance.string({ length: 10 }),
+          }
+
+          const response = await postApi('createGame', { playerId: removingPlayer.id, playerName: removingPlayer.name })
+
+          const roomId = (await response.json()).roomId
+
+          await postApi('joinGame', { roomId, playerId: removedPlayer.id, playerName: removedPlayer.name })
+
+          return { roomId, removingPlayer, removedPlayer }
+        },
+        error: '',
+        status: 200
+      },
+      {
+        testSetup: () => ({}),
+        error: '"roomId" is required, "playerId" is required, "playerName" is required',
+        status: 400
+      }
+    ] as {
+      testSetup: () => Promise<Partial<{ roomId: string, removingPlayer: { id: string, name: string }, removedPlayer: { id: string, name: string } }>>,
+      error: string,
+      status: number
+    }[])('should return $status $error', async ({ testSetup, error, status }) => {
+      const { roomId, removedPlayer, removingPlayer } = await testSetup()
+      const response = await postApi('removeFromGame', {
+        roomId,
+        playerId: removingPlayer?.id,
+        playerName: removedPlayer?.name
+      })
+
+      expect(response.status).toBe(status)
+      const responseJson = await response.json()
+      if (error) {
+        expect(responseJson).toEqual({ error: expect.stringMatching(error) })
+      } else {
+        validatePublicState(responseJson)
+        expect(responseJson.players).toHaveLength(1)
+        expect(responseJson.players).toContainEqual(expect.objectContaining({
+          name: removingPlayer.name
+        }))
+        expect(responseJson.players).not.toContainEqual(expect.objectContaining({
+          name: removedPlayer.name
+        }))
+      }
+    })
+  })
+
   describe('resetGame', () => {
     it.each([
       {
