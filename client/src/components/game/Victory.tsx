@@ -5,7 +5,7 @@ import ColoredTypography from "../utilities/ColoredTypography"
 function Victory({ player }: { player: PublicPlayer }) {
   return (
     <Box>
-      <ColoredTypography variant="h1">{`${player.name} Wins!`}</ColoredTypography>
+      <ColoredTypography variant="h3">{`${player.name} Wins!`}</ColoredTypography>
     </Box>
   )
 }
