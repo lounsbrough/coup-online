@@ -66,7 +66,8 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                       height: '28px',
                       width: '28px',
                       minWidth: 'unset',
-                      borderRadius: '28px'
+                      borderRadius: '28px',
+                      background: color
                     }}
                     disabled={isMutating}
                     variant="contained"

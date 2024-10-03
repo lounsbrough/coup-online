@@ -5,6 +5,7 @@ import './Rules.css'
 import ColorModeToggle from "./ColorModeToggle"
 import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
+import { useSearchParams } from "react-router-dom"
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -12,6 +13,9 @@ function UserSettings() {
     JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
   )
   const { isConnected } = useWebSocketContext()
+  const [searchParams] = useSearchParams()
+
+  const roomId = searchParams.get('roomId')
 
   return (
     <>
@@ -29,7 +33,12 @@ function UserSettings() {
       >
         <DialogTitle>Settings</DialogTitle>
         <DialogContent>
-          <Grid2 container spacing={2} direction="column">
+          <Grid2 container spacing={3} direction="column">
+            {roomId && <Grid2>
+              <Typography component="span" sx={{ mr: 1 }}>
+                {'Room: '}<strong>{roomId}</strong>
+              </Typography>
+            </Grid2>}
             <Grid2>
               <Typography component="span" sx={{ mr: 1 }}>Color Mode:</Typography>
               <ColorModeToggle />

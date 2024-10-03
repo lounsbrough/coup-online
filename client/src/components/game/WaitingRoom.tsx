@@ -50,12 +50,12 @@ function WaitingRoom() {
 
   return (
     <>
-      <Typography variant="h5" mt={3}>Room: <strong>{gameState.roomId}</strong></Typography>
       <Grid2 container direction='column' justifyContent="center">
-        <Grid2 sx={{ p: 2 }}>
+        <Grid2 sx={{ p: 2, mt: 4 }}>
           <Players inWaitingRoom />
         </Grid2>
       </Grid2>
+      <Typography variant="h5" m={3}>Room: <strong>{gameState.roomId}</strong></Typography>
       <Grid2 container direction='column' spacing={2}>
         <Grid2>
           <QRCodeSVG
