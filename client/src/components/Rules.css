@@ -21,21 +21,24 @@
   padding: 0 8px;
 }
 
-.cheat-sheet-table tr th,td {
+.cheat-sheet-table tr th,
+td {
   border-left-style: solid;
   border-right-style: solid;
   border-width: 1px;
 }
 
-.cheat-sheet-table tr th:first-of-type,td:first-of-type {
+.cheat-sheet-table tr th:first-of-type,
+td:first-of-type {
   border-left-style: none;
 }
 
-.cheat-sheet-table tr th:last-of-type,td:last-of-type {
+.cheat-sheet-table tr th:last-of-type,
+td:last-of-type {
   border-right-style: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 899px) {
   .cheat-sheet-table th {
     font-size: 1.2rem;
   }

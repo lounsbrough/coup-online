@@ -24,10 +24,10 @@ function GameBoard() {
 
   return (
     <Grid2 container>
-      <Grid2 size={{ xs: 12, sm: 12, md: 3 }} />
+      <Grid2 size={{ xs: 12, sm: 12, md: 0, lg: 3 }} />
       <Grid2
         p={2}
-        size={{ xs: 12, sm: 12, md: 6 }}
+        size={{ xs: 12, sm: 12, md: 9, lg: 6 }}
       >
         {gameIsOver && (
           <Grid2 sx={{ m: 5 }}>
@@ -76,7 +76,11 @@ function GameBoard() {
       </Grid2>
       <Grid2
         size={{ xs: 12, sm: 12, md: 3 }}
-        sx={{ p: 2, textAlign: theme.isSmallScreen ? 'center' : 'right' }}
+        sx={{
+          p: 2,
+          textAlign: 'center',
+          [theme.breakpoints.up('md')]: { textAlign: 'right' }
+        }}
       >
         <EventLog />
       </Grid2>

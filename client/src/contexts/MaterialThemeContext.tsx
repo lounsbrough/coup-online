@@ -6,12 +6,10 @@ import { Actions, Influences } from '@shared'
 
 declare module '@mui/material/styles' {
   interface Theme {
-    isSmallScreen: boolean
     actionColors: { [Action in Actions]: string }
     influenceColors: { [influence in Influences]: string }
   }
   interface ThemeOptions {
-    isSmallScreen: boolean
     actionColors: { [Action in Actions]: string }
     influenceColors: { [influence in Influences]: string }
   }
@@ -53,7 +51,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
   )
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-  const isSmallScreen = useMediaQuery('screen and (max-width: 768px)')
+  const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
 
   let activeColorMode: PaletteMode
   if (mode === SYSTEM_COLOR_MODE) {
@@ -100,7 +98,6 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
     }
 
     let theme = createTheme({
-      isSmallScreen,
       palette: {
         mode: activeColorMode,
         background: (isLightMode ? {} : { default: grey[800] }),
