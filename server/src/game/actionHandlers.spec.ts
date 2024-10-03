@@ -1,6 +1,6 @@
 import Chance from 'chance'
 import { Actions, Influences, Responses } from '../../../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, joinGameHandler, loseInfluencesHandler, resetGameHandler, startGameHandler } from './actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, startGameHandler } from './actionHandlers'
 import { getValue, setValue } from '../utilities/storage'
 import { getGameState, mutateGameState } from '../utilities/gameState'
 
@@ -78,12 +78,12 @@ describe('actionHandlers', () => {
     it('creating, joining, resetting game', async () => {
       const { roomId } = await createGameHandler(harper)
 
-      await joinGameHandler({ roomId, ...hailey })
-      await expect(joinGameHandler({ roomId, ...hailey, playerName: 'not hailey' })).rejects.toThrow(`Previously joined Room ${roomId} as ${hailey.playerName}`)
+      await joinGameHandler({ roomId, ...hailey, playerName: 'not hailey' })
+      await joinGameHandler({ roomId: roomId.toLowerCase(), ...hailey })
 
       await startGameHandler({ roomId, playerId: harper.playerId })
       await expect(startGameHandler({ roomId, playerId: harper.playerId })).rejects.toThrow('Game has already started')
-
+      await expect(removeFromGameHandler({ roomId, playerId: hailey.playerId, playerName: david.playerName })).rejects.toThrow('Game has already started')
       await expect(joinGameHandler({ roomId, ...david })).rejects.toThrow('Game has already started')
       await expect(resetGameHandler({ roomId, playerId: hailey.playerId })).rejects.toThrow('Current game is in progress')
 
@@ -95,6 +95,8 @@ describe('actionHandlers', () => {
       await resetGameHandler({ roomId, playerId: hailey.playerId })
 
       await joinGameHandler({ roomId, ...david })
+      await removeFromGameHandler({ roomId, playerId: hailey.playerId, playerName: david.playerName })
+      await expect(removeFromGameHandler({ roomId, playerId: hailey.playerId, playerName: david.playerName })).rejects.toThrow('Player is not in the room')
 
       await startGameHandler({ roomId, playerId: hailey.playerId })
       await expect(startGameHandler({ roomId, playerId: harper.playerId })).rejects.toThrow('Game has already started')

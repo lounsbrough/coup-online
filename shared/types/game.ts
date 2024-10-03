@@ -16,6 +16,26 @@ export enum Actions {
   Exchange = 'Exchange'
 }
 
+export enum PlayerActions {
+  gameState = 'gameState',
+  createGame = 'createGame',
+  joinGame = 'joinGame',
+  removeFromGame = 'removeFromGame',
+  startGame = 'startGame',
+  resetGame = 'resetGame',
+  action = 'action',
+  actionResponse = 'actionResponse',
+  actionChallengeResponse = 'actionChallengeResponse',
+  blockResponse = 'blockResponse',
+  blockChallengeResponse = 'blockChallengeResponse',
+  loseInfluences = 'loseInfluences'
+}
+
+export enum ServerEvents {
+  gameStateChanged = 'gameStateChanged',
+  error = 'error'
+}
+
 export const InfluenceAttributes: {
   [influence in Influences]: {
     legalAction?: Actions
@@ -112,6 +132,7 @@ export type GameState = {
   deck: Influences[]
   eventLogs: string[]
   isStarted: boolean
+  availablePlayerColors: string[]
   players: Player[]
   pendingAction?: {
     targetPlayer?: string

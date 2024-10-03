@@ -6,7 +6,7 @@ import { getValue, setValue } from './storage'
 export const getGameState = async (
   roomId: string
 ): Promise<GameState | null> => {
-  const state = JSON.parse(await getValue(roomId))
+  const state = JSON.parse(await getValue(roomId.toUpperCase()))
   return state ? { ...state } : null
 }
 
@@ -94,7 +94,7 @@ export const validateGameState = (state: GameState) => {
 const setGameState = async (roomId: string, newState: GameState) => {
   const oneDay = 86400
   validateGameState(newState)
-  await setValue(roomId, JSON.stringify(newState), oneDay)
+  await setValue(roomId.toUpperCase(), JSON.stringify(newState), oneDay)
 }
 
 export const createGameState = async (roomId: string, gameState: GameState) => {

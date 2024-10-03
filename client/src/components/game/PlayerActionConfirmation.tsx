@@ -7,6 +7,7 @@ import { Cancel, Check } from "@mui/icons-material"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
 import { useWebSocketContext } from "../../contexts/WebSocketContext"
+import { ServerEvents } from "@shared"
 
 function PlayerActionConfirmation({
   message,
@@ -48,7 +49,7 @@ function PlayerActionConfirmation({
 
   const trigger = useMemo(() => socket?.connected
     ? (params: object) => {
-      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
+      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
       socket.emit(endpoint, params)
     }
     : triggerSwr, [endpoint, socket, triggerSwr])
