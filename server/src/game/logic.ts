@@ -107,6 +107,7 @@ export const removePlayerFromGame = (state: GameState, playerName: string) => {
     1
   )[0]
   state.availablePlayerColors.push(player.color)
+  state.deck.push(...player.influences, ...player.deadInfluences)
 }
 
 export const createNewGame = async (roomId: string, playerId: string, playerName: string) => {

@@ -1,14 +1,47 @@
 import { Badge, Box, Button, Grid2, Typography } from "@mui/material"
+import useSWRMutation from 'swr/mutation'
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Close, MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE, useColorModeContext } from "../../contexts/MaterialThemeContext"
+import { useState } from "react"
+import { useWebSocketContext } from "../../contexts/WebSocketContext"
+import { getPlayerId } from "../../helpers/playerId"
+
+type RemoveFromGameParams = { roomId: string, playerId: string, playerName: string }
+
+const removeFromGameEvent = 'removeFromGame'
 
 function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
-  const { gameState } = useGameStateContext()
+  const [error, setError] = useState('')
+  const { gameState, setGameState } = useGameStateContext()
   const { colorMode } = useColorModeContext()
+  const { socket } = useWebSocketContext()
+
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${removeFromGameEvent}`, (async (url: string, { arg }: { arg: RemoveFromGameParams }) => {
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(arg)
+    }).then(async (res) => {
+      if (res.ok) {
+        setGameState(await res.json())
+      } else {
+        setError('Error starting new game')
+      }
+    })
+  }))
+
+  const trigger = socket?.connected
+    ? (params: RemoveFromGameParams) => {
+      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
+      socket.emit(removeFromGameEvent, params)
+    }
+    : triggerSwr
 
   if (!gameState) {
     return null
@@ -27,18 +60,28 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
               <Badge
                 key={index}
                 invisible={!inWaitingRoom}
-                badgeContent={<Button
-                  sx={{
-                    p: 0,
-                    height: '28px',
-                    width: '28px',
-                    minWidth: 'unset',
-                    borderRadius: '28px'
-                  }}
-                  variant="contained"
-                >
-                  <Close />
-                </Button>}
+                badgeContent={
+                  <Button
+                    sx={{
+                      p: 0,
+                      height: '28px',
+                      width: '28px',
+                      minWidth: 'unset',
+                      borderRadius: '28px'
+                    }}
+                    disabled={isMutating}
+                    variant="contained"
+                    onClick={() => {
+                      trigger({
+                        roomId: gameState.roomId,
+                        playerId: getPlayerId(),
+                        playerName: name
+                      })
+                    }}
+                  >
+                    <Close />
+                  </Button>
+                }
               >
                 <Box
                   sx={{
@@ -88,9 +131,9 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                 </Box>
               </Badge>
             )
-          }
-          )}
+          })}
       </Grid2>
+      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
   )
 }
