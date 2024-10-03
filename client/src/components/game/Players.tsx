@@ -1,12 +1,12 @@
-import { Box, Grid2, Typography } from "@mui/material"
+import { Badge, Box, Button, Grid2, Typography } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { MonetizationOn } from "@mui/icons-material"
+import { Close, MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE, useColorModeContext } from "../../contexts/MaterialThemeContext"
 
-function Players() {
+function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   const { gameState } = useGameStateContext()
   const { colorMode } = useColorModeContext()
 
@@ -24,53 +24,69 @@ function Players() {
             const playerColor = influenceCount ? color : '#777777'
 
             return (
-              <Box
+              <Badge
                 key={index}
-                sx={{
-                  color: 'white',
-                  alignContent: 'center',
-                  background: playerColor,
-                  borderRadius: 3,
-                  p: 1,
-                  width: '6rem'
-                }}>
-                <Typography variant="h6" sx={{
-                  fontWeight: 'bold',
-                  color: colord(playerColor).darken(colorModeFactor * 0.4).toHex()
-                }}
+                invisible={!inWaitingRoom}
+                badgeContent={<Button
+                  sx={{
+                    p: 0,
+                    height: '28px',
+                    width: '28px',
+                    minWidth: 'unset',
+                    borderRadius: '28px'
+                  }}
+                  variant="contained"
                 >
-                  <OverflowTooltip>{name}</OverflowTooltip>
-                </Typography>
-                <Typography variant="h6" sx={{ color: colord(playerColor).darken(colorModeFactor * 0.4).toHex() }}>
-                  <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
-                </Typography>
-                <Grid2
-                  container mt={0.5}
-                  spacing={1}
-                  justifyContent='center'
-                >
-                  {[
-                    ...Array.from({ length: influenceCount }, () => undefined),
-                    ...deadInfluences
-                  ].map((influence, index) => {
-                    return (
-                      <Grid2
-                        key={index}
-                        sx={{
-                          justifyContent: 'center',
-                          alignContent: 'center',
-                          height: '44px',
-                          width: '44px',
-                          background: colord(playerColor).darken(colorModeFactor * 0.25).toHex(),
-                          padding: 0.5,
-                          borderRadius: 2
-                        }}>
-                        <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
-                      </Grid2>
-                    )
-                  })}
-                </Grid2>
-              </Box>
+                  <Close />
+                </Button>}
+              >
+                <Box
+                  sx={{
+                    color: 'white',
+                    alignContent: 'center',
+                    background: playerColor,
+                    borderRadius: 3,
+                    p: 1,
+                    width: '6rem'
+                  }}>
+                  <Typography variant="h6" sx={{
+                    fontWeight: 'bold',
+                    color: colord(playerColor).darken(colorModeFactor * 0.4).toHex()
+                  }}
+                  >
+                    <OverflowTooltip>{name}</OverflowTooltip>
+                  </Typography>
+                  <Typography variant="h6" sx={{ color: colord(playerColor).darken(colorModeFactor * 0.4).toHex() }}>
+                    <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
+                  </Typography>
+                  <Grid2
+                    container mt={0.5}
+                    spacing={1}
+                    justifyContent='center'
+                  >
+                    {[
+                      ...Array.from({ length: influenceCount }, () => undefined),
+                      ...deadInfluences
+                    ].map((influence, index) => {
+                      return (
+                        <Grid2
+                          key={index}
+                          sx={{
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            height: '44px',
+                            width: '44px',
+                            background: colord(playerColor).darken(colorModeFactor * 0.25).toHex(),
+                            padding: 0.5,
+                            borderRadius: 2
+                          }}>
+                          <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
+                        </Grid2>
+                      )
+                    })}
+                  </Grid2>
+                </Box>
+              </Badge>
             )
           }
           )}
