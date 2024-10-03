@@ -27,6 +27,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
     isStarted: chance.bool(),
+    availablePlayerColors: chance.n(chance.color, 6),
     players: [],
     pendingAction: undefined,
     pendingActionChallenge: undefined,
@@ -53,7 +54,7 @@ describe('gameState', () => {
 
       expect(await getGameState(roomId)).toEqual(gameState)
       expect(getValueMock).toHaveBeenCalledTimes(1)
-      expect(getValueMock).toHaveBeenCalledWith(roomId)
+      expect(getValueMock).toHaveBeenCalledWith(roomId.toUpperCase())
     })
   })
 
@@ -81,6 +82,7 @@ describe('gameState', () => {
           deadInfluences: player.deadInfluences
         }))
       }
+      delete publicGameState.availablePlayerColors
       delete publicGameState.deck
 
       expect(await getPublicGameState({ gameState, playerId: selfPlayer.id }))
@@ -110,7 +112,7 @@ describe('gameState', () => {
       })
 
       expect(setValueMock).toHaveBeenCalledTimes(1)
-      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId, JSON.stringify({
+      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), JSON.stringify({
         ...gameState,
         players: [
           { ...gameState.players[0], coins: gameState.players[0].coins - 1 },

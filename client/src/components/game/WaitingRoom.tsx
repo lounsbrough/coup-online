@@ -8,10 +8,9 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useState } from "react"
 import { useWebSocketContext } from "../../contexts/WebSocketContext"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
+import { PlayerActions, ServerEvents } from "@shared"
 
 type StartGameParams = { roomId: string, playerId: string }
-
-const startGameEvent = 'startGame'
 
 function WaitingRoom() {
   const [error, setError] = useState('')
@@ -20,7 +19,7 @@ function WaitingRoom() {
   const { gameState, setGameState } = useGameStateContext()
   const theme = useTheme()
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${startGameEvent}`, (async (url: string, { arg }: { arg: StartGameParams }) => {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${PlayerActions.startGame}`, (async (url: string, { arg }: { arg: StartGameParams }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -38,8 +37,8 @@ function WaitingRoom() {
 
   const trigger = socket?.connected
     ? (params: StartGameParams) => {
-      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
-      socket.emit(startGameEvent, params)
+      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
+      socket.emit(PlayerActions.startGame, params)
     }
     : triggerSwr
 
@@ -51,12 +50,12 @@ function WaitingRoom() {
 
   return (
     <>
-      <Typography variant="h5" mt={3}>Room: <strong>{gameState.roomId}</strong></Typography>
       <Grid2 container direction='column' justifyContent="center">
-        <Grid2 sx={{ p: 2 }}>
-          <Players />
+        <Grid2 sx={{ p: 2, mt: 4 }}>
+          <Players inWaitingRoom />
         </Grid2>
       </Grid2>
+      <Typography variant="h5" m={3}>Room: <strong>{gameState.roomId}</strong></Typography>
       <Grid2 container direction='column' spacing={2}>
         <Grid2>
           <QRCodeSVG

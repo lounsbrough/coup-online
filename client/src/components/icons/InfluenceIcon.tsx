@@ -1,4 +1,4 @@
-import { Influences } from "@shared/dist"
+import { Influences } from "@shared"
 import Ambassador from "./Ambassador"
 import Assassin from "./Assassin"
 import Duke from "./Duke"

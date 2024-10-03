@@ -1,5 +1,5 @@
 import Chance from 'chance'
-import { Actions, GameState, Influences, Player, PublicGameState, PublicPlayer, Responses } from '../shared/types/game'
+import { Actions, GameState, Influences, Player, PlayerActions, PublicGameState, PublicPlayer, Responses } from '../shared/types/game'
 
 const chance = new Chance()
 
@@ -30,14 +30,14 @@ const validatePublicState = (gameState: GameState & PublicGameState) => {
 }
 
 describe('index', () => {
-  describe('gameState', () => {
+  describe(PlayerActions.gameState, () => {
     it.each([
       {
         getQueryParams: async () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
@@ -73,7 +73,7 @@ describe('index', () => {
     })
   })
 
-  describe('createGame', () => {
+  describe(PlayerActions.createGame, () => {
     it.each([
       {
         body: {
@@ -117,7 +117,7 @@ describe('index', () => {
       error: string,
       status: number
     }[])('should return $status $error', async ({ body, error, status }) => {
-      const response = await postApi('createGame', body)
+      const response = await postApi(PlayerActions.createGame, body)
 
       expect(response.status).toBe(status)
       const responseJson = await response.json()
@@ -129,14 +129,14 @@ describe('index', () => {
     })
   })
 
-  describe('joinGame', () => {
+  describe(PlayerActions.joinGame, () => {
     it.each([
       {
         getBody: async () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
@@ -173,26 +173,26 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
           return { roomId, playerId, playerName: chance.string({ length: 10 }) }
         },
-        error: /Previously joined Room .+ as .+/,
-        status: 400
+        error: '',
+        status: 200
       },
       {
         getBody: async () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
           for (let i = 0; i < 5; i++) {
-            await postApi('joinGame', { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) })
+            await postApi(PlayerActions.joinGame, { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) })
           }
 
           return { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) }
@@ -205,11 +205,11 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
-          await postApi('joinGame', { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) })
-          await postApi('startGame', { roomId, playerId })
+          await postApi(PlayerActions.joinGame, { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) })
+          await postApi(PlayerActions.startGame, { roomId, playerId })
 
           return { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) }
         },
@@ -221,7 +221,7 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
@@ -235,7 +235,7 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
@@ -249,7 +249,7 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
@@ -264,7 +264,7 @@ describe('index', () => {
       status: number
     }[])('should return $status $error', async ({ getBody, error, status }) => {
       const body = await getBody()
-      const response = await postApi('joinGame', body)
+      const response = await postApi(PlayerActions.joinGame, body)
 
       expect(response.status).toBe(status)
       const responseJson = await response.json()
@@ -279,7 +279,65 @@ describe('index', () => {
     })
   })
 
-  describe('resetGame', () => {
+  describe(PlayerActions.removeFromGame, () => {
+    it.each([
+      {
+        testSetup: async () => {
+          const removingPlayer = {
+            id: chance.string({ length: 10 }),
+            name: chance.string({ length: 10 }),
+          }
+          const removedPlayer = {
+            id: chance.string({ length: 10 }),
+            name: chance.string({ length: 10 }),
+          }
+
+          const response = await postApi(PlayerActions.createGame, { playerId: removingPlayer.id, playerName: removingPlayer.name })
+
+          const roomId = (await response.json()).roomId
+
+          await postApi(PlayerActions.joinGame, { roomId, playerId: removedPlayer.id, playerName: removedPlayer.name })
+
+          return { roomId, removingPlayer, removedPlayer }
+        },
+        error: '',
+        status: 200
+      },
+      {
+        testSetup: () => ({}),
+        error: '"roomId" is required, "playerId" is required, "playerName" is required',
+        status: 400
+      }
+    ] as {
+      testSetup: () => Promise<Partial<{ roomId: string, removingPlayer: { id: string, name: string }, removedPlayer: { id: string, name: string } }>>,
+      error: string,
+      status: number
+    }[])('should return $status $error', async ({ testSetup, error, status }) => {
+      const { roomId, removedPlayer, removingPlayer } = await testSetup()
+      const response = await postApi(PlayerActions.removeFromGame, {
+        roomId,
+        playerId: removingPlayer?.id,
+        playerName: removedPlayer?.name
+      })
+
+      expect(response.status).toBe(status)
+      const responseJson = await response.json()
+      if (error) {
+        expect(responseJson).toEqual({ error: expect.stringMatching(error) })
+      } else {
+        validatePublicState(responseJson)
+        expect(responseJson.players).toHaveLength(1)
+        expect(responseJson.players).toContainEqual(expect.objectContaining({
+          name: removingPlayer.name
+        }))
+        expect(responseJson.players).not.toContainEqual(expect.objectContaining({
+          name: removedPlayer.name
+        }))
+      }
+    })
+  })
+
+  describe(PlayerActions.resetGame, () => {
     it.each([
       {
         getBody: async () => {
@@ -291,20 +349,20 @@ describe('index', () => {
             name: chance.string({ length: 10 })
           }]
 
-          let response = await postApi('createGame', {
+          let response = await postApi(PlayerActions.createGame, {
             playerId: players[0].id,
             playerName: players[0].name
           })
 
           const roomId = (await response.json()).roomId
 
-          await postApi('joinGame', {
+          await postApi(PlayerActions.joinGame, {
             roomId,
             playerId: players[1].id,
             playerName: players[1].name
           })
 
-          response = await postApi('startGame', { roomId, playerId: players[0].id })
+          response = await postApi(PlayerActions.startGame, { roomId, playerId: players[0].id })
 
           let gameState = await response.json() as PublicGameState
           const turnPlayerName = gameState.turnPlayer
@@ -315,19 +373,19 @@ describe('index', () => {
             name
           }))
 
-          await postApi('action', { roomId, playerId: privatePlayers[firstPlayerIndex].id, action: Actions.Tax })
-          await postApi('actionResponse', { roomId, playerId: privatePlayers[(firstPlayerIndex + 1) % privatePlayers.length].id, response: Responses.Pass })
-          await postApi('action', { roomId, playerId: privatePlayers[(firstPlayerIndex + 1) % privatePlayers.length].id, action: Actions.Income })
-          await postApi('action', { roomId, playerId: privatePlayers[(firstPlayerIndex + 2) % privatePlayers.length].id, action: Actions.Tax })
-          await postApi('actionResponse', { roomId, playerId: privatePlayers[(firstPlayerIndex + 3) % privatePlayers.length].id, response: Responses.Pass })
-          await postApi('action', { roomId, playerId: privatePlayers[(firstPlayerIndex + 3) % privatePlayers.length].id, action: Actions.Income })
-          await postApi('action', { roomId, playerId: privatePlayers[(firstPlayerIndex + 4) % privatePlayers.length].id, action: Actions.Assassinate, targetPlayer: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].name })
-          response = await postApi('actionResponse', { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, response: Responses.Pass })
+          await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[firstPlayerIndex].id, action: Actions.Tax })
+          await postApi(PlayerActions.actionResponse, { roomId, playerId: privatePlayers[(firstPlayerIndex + 1) % privatePlayers.length].id, response: Responses.Pass })
+          await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 1) % privatePlayers.length].id, action: Actions.Income })
+          await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 2) % privatePlayers.length].id, action: Actions.Tax })
+          await postApi(PlayerActions.actionResponse, { roomId, playerId: privatePlayers[(firstPlayerIndex + 3) % privatePlayers.length].id, response: Responses.Pass })
+          await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 3) % privatePlayers.length].id, action: Actions.Income })
+          await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 4) % privatePlayers.length].id, action: Actions.Assassinate, targetPlayer: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].name })
+          response = await postApi(PlayerActions.actionResponse, { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, response: Responses.Pass })
           gameState = await response.json() as PublicGameState
-          await postApi('loseInfluences', { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, influences: [gameState.selfPlayer.influences[0]] })
-          await postApi('action', { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, action: Actions.Income })
-          await postApi('action', { roomId, playerId: privatePlayers[(firstPlayerIndex + 6) % privatePlayers.length].id, action: Actions.Assassinate, targetPlayer: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].name })
-          await postApi('actionResponse', { roomId, playerId: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].id, response: Responses.Pass })
+          await postApi(PlayerActions.loseInfluences, { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, influences: [gameState.selfPlayer.influences[0]] })
+          await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, action: Actions.Income })
+          await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 6) % privatePlayers.length].id, action: Actions.Assassinate, targetPlayer: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].name })
+          await postApi(PlayerActions.actionResponse, { roomId, playerId: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].id, response: Responses.Pass })
 
           return { roomId, playerId: players[0].id }
         },
@@ -352,7 +410,7 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
@@ -366,16 +424,16 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
-          await postApi('joinGame', {
+          await postApi(PlayerActions.joinGame, {
             roomId,
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 10 })
           })
-          await postApi('startGame', { roomId, playerId })
+          await postApi(PlayerActions.startGame, { roomId, playerId })
 
           return { roomId, playerId }
         },
@@ -387,11 +445,11 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
-          await postApi('joinGame', {
+          await postApi(PlayerActions.joinGame, {
             roomId,
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 10 })
@@ -407,7 +465,7 @@ describe('index', () => {
       error: string,
       status: number
     }[])('should return $status $error', async ({ getBody, error, status }) => {
-      const response = await postApi('resetGame', await getBody())
+      const response = await postApi(PlayerActions.resetGame, await getBody())
 
       expect(response.status).toBe(status)
       const responseJson = await response.json()
@@ -421,7 +479,7 @@ describe('index', () => {
     })
   })
 
-  describe('startGame', () => {
+  describe(PlayerActions.startGame, () => {
     it.each([
       {
         getBody: async () => {
@@ -433,14 +491,14 @@ describe('index', () => {
             name: chance.string({ length: 10 })
           }]
 
-          const response = await postApi('createGame', {
+          const response = await postApi(PlayerActions.createGame, {
             playerId: players[0].id,
             playerName: players[0].name
           })
 
           const roomId = (await response.json()).roomId
 
-          await postApi('joinGame', {
+          await postApi(PlayerActions.joinGame, {
             roomId,
             playerId: players[1].id,
             playerName: players[1].name
@@ -469,7 +527,7 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
@@ -483,7 +541,7 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
@@ -497,17 +555,17 @@ describe('index', () => {
           const playerId = chance.string({ length: 10 })
           const playerName = chance.string({ length: 10 })
 
-          const response = await postApi('createGame', { playerId, playerName })
+          const response = await postApi(PlayerActions.createGame, { playerId, playerName })
 
           const roomId = (await response.json()).roomId
 
-          await postApi('joinGame', {
+          await postApi(PlayerActions.joinGame, {
             roomId,
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 10 })
           })
 
-          await postApi('startGame', { roomId, playerId })
+          await postApi(PlayerActions.startGame, { roomId, playerId })
 
           return { roomId, playerId }
         },
@@ -519,7 +577,7 @@ describe('index', () => {
       error: string,
       status: number
     }[])('should return $status $error', async ({ getBody, error, status }) => {
-      const response = await postApi('startGame', await getBody())
+      const response = await postApi(PlayerActions.startGame, await getBody())
 
       expect(response.status).toBe(status)
       const responseJson = await response.json()

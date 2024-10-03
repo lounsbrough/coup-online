@@ -82,6 +82,7 @@ const buildGameDeck = () => {
 
 const getNewGameState = (roomId: string): GameState => ({
   roomId,
+  availablePlayerColors: ['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088'],
   players: [],
   deck: shuffle(buildGameDeck()),
   pendingInfluenceLoss: {},
@@ -96,8 +97,17 @@ export const addPlayerToGame = (state: GameState, playerId: string, playerName: 
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
     deadInfluences: [],
-    color: ['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088'][state.players.length]
+    color: state.availablePlayerColors.shift()
   })
+}
+
+export const removePlayerFromGame = (state: GameState, playerName: string) => {
+  const player = state.players.splice(
+    state.players.findIndex(({ name }) => name === playerName),
+    1
+  )[0]
+  state.availablePlayerColors.push(player.color)
+  state.deck.push(...player.influences, ...player.deadInfluences)
 }
 
 export const createNewGame = async (roomId: string, playerId: string, playerName: string) => {
@@ -124,6 +134,7 @@ export const resetGame = async (roomId: string) => {
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
     deadInfluences: []
   }))
+  newGameState.availablePlayerColors = oldGameState.availablePlayerColors
   await createGameState(roomId, newGameState)
 }
 

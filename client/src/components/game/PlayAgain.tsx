@@ -4,17 +4,16 @@ import useSWRMutation from "swr/mutation"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useWebSocketContext } from "../../contexts/WebSocketContext"
+import { PlayerActions, ServerEvents } from "@shared"
 
 type ResetGameParams = { roomId: string, playerId: string }
-
-const resetGameEvent = 'resetGame'
 
 function PlayAgain() {
   const [error, setError] = useState('')
   const { socket } = useWebSocketContext()
   const { gameState, setGameState } = useGameStateContext()
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${resetGameEvent}`, (async (url: string, { arg }: { arg: ResetGameParams }) => {
+  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${PlayerActions.resetGame}`, (async (url: string, { arg }: { arg: ResetGameParams }) => {
     return fetch(url, {
       method: 'POST',
       headers: {
@@ -32,8 +31,8 @@ function PlayAgain() {
 
   const trigger = socket?.connected
     ? (params: ResetGameParams) => {
-      socket.removeAllListeners('error').on('error', (error) => { setError(error) })
-      socket.emit(resetGameEvent, params)
+      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
+      socket.emit(PlayerActions.resetGame, params)
     }
     : triggerSwr
 

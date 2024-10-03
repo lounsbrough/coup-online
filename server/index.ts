@@ -3,30 +3,16 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
-import { Actions, Influences, Responses, PublicGameState } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
+import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents } from '../shared/types/game'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
 
-enum PlayerActions {
-    gameState = 'gameState',
-    createGame = 'createGame',
-    joinGame = 'joinGame',
-    startGame = 'startGame',
-    resetGame = 'resetGame',
-    action = 'action',
-    actionResponse = 'actionResponse',
-    actionChallengeResponse = 'actionChallengeResponse',
-    blockResponse = 'blockResponse',
-    blockChallengeResponse = 'blockChallengeResponse',
-    loseInfluences = 'loseInfluences'
-}
-
 type ServerToClientEvents = {
-    error: (error: string) => void
-    gameStateChanged: (gameState: PublicGameState) => void
+    [ServerEvents.gameStateChanged]: (gameState: PublicGameState) => void
+    [ServerEvents.error]: (error: string) => void
 }
 
 type ClientToServerEvents = {
@@ -110,6 +96,24 @@ const eventHandlers: {
     },
     joinGame: {
         handler: joinGameHandler,
+        express: {
+            method: 'post',
+            parseParams: (req) => {
+                const roomId: string = req.body.roomId
+                const playerId: string = req.body.playerId
+                const playerName: string = req.body.playerName.trim()
+                return { roomId, playerId, playerName }
+            },
+            validator: validateExpressBody
+        },
+        joiSchema: Joi.object().keys({
+            roomId: Joi.string().required(),
+            playerId: Joi.string().required(),
+            playerName: playerNameRule
+        })
+    },
+    removeFromGame: {
+        handler: removeFromGameHandler,
         express: {
             method: 'post',
             parseParams: (req) => {
@@ -280,7 +284,7 @@ io.on('connection', (socket) => {
             const result = joiSchema.validate(params)
 
             if (result.error) {
-                socket.emit('error', result.error.details.map(({ message }) => message).join(', '))
+                socket.emit(ServerEvents.error, result.error.details.map(({ message }) => message).join(', '))
             } else {
                 try {
                     const { roomId, playerId } = await handler(params)
@@ -298,7 +302,7 @@ io.on('connection', (socket) => {
                         emit: (event: string, gameState: PublicGameState) => void;
                         data: { playerId: string }
                     }) => {
-                        pushToSocket.emit('gameStateChanged', await getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
+                        pushToSocket.emit(ServerEvents.gameStateChanged, await getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
                     }
                     if (event !== 'gameState') {
                         socket.rooms.forEach(async (room) => {
@@ -313,9 +317,9 @@ io.on('connection', (socket) => {
                 } catch (error) {
                     console.error(error)
                     if (error instanceof GameMutationInputError) {
-                        socket.emit('error', error.message)
+                        socket.emit(ServerEvents.error, error.message)
                     } else {
-                        socket.emit('error', 'Unexpected error processing request')
+                        socket.emit(ServerEvents.error, 'Unexpected error processing request')
                     }
                 }
             }

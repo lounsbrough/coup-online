@@ -1,6 +1,6 @@
 import { useState, createContext, useContext, ReactNode, useEffect } from 'react'
 import useSWR from 'swr'
-import { PublicGameState } from '@shared'
+import { PlayerActions, PublicGameState, ServerEvents } from '@shared'
 import { getPlayerId } from '../helpers/playerId'
 import { Typography } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'
@@ -33,18 +33,17 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
         if (res.ok) {
           setError('')
+          const newState = await res.json()
+
+          if (JSON.stringify(newState) !== JSON.stringify(gameState)) {
+            setGameState(newState)
+          }
         } else {
           if (res.status === 404) {
             setError('Game not found, please return home')
           } else if (res.status === 400) {
             setError((await res.json() as { error: string }).error)
           }
-        }
-
-        const newState = await res.json()
-
-        if (JSON.stringify(newState) !== JSON.stringify(gameState)) {
-          setGameState(newState)
         }
       } catch (error) {
         console.error(error)
@@ -58,12 +57,12 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     console.log(`socket connected: ${isConnected}`)
     if (socket && isConnected) {
       setError('')
-      socket.on('error', (error) => { setError(error) })
-      socket.removeAllListeners('gameStateChanged').on('gameStateChanged', (gameState) => {
+      socket.on(ServerEvents.error, (error) => { setError(error) })
+      socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
         setError('')
         setGameState(gameState)
       })
-      socket.emit('gameState', { roomId, playerId: getPlayerId() })
+      socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
     }
   }, [roomId, socket, isConnected])
 
