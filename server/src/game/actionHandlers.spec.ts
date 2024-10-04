@@ -125,7 +125,7 @@ describe('actionHandlers', () => {
       expect(gameState.players[0].coins).toBe(5)
     })
 
-    it('successful action challenge', async () => {
+    it('tax -> successful challenge -> tax and lost influence', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Ambassador] },
         { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
@@ -153,7 +153,7 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(2)
     })
 
-    it('failed action challenge', async () => {
+    it('steal -> failed challenge -> block -> failed challenge -> steal and 2 lost influences', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Ambassador] },
         { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
@@ -195,7 +195,7 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(2)
     })
 
-    it('successful challenged block', async () => {
+    it('steal -> block -> failed challenge -> no steal and lost influence', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Ambassador] },
         { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
@@ -229,12 +229,9 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(2)
     })
 
-    it('successful bluffing block', async () => {
-      const roomId = await setupTestGame([david, harper, hailey])
+    it('assassinate -> block -> pass -> coins spent and no influences lost', async () => {
+      const roomId = await setupTestGame([david, harper, { ...hailey, coins: 3 }])
 
-      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
-      await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
-      await actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Income })
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
       await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
 
@@ -252,12 +249,12 @@ describe('actionHandlers', () => {
       expect(gameState.players[0].influences).toHaveLength(2)
       expect(gameState.players[1].influences).toHaveLength(2)
       expect(gameState.players[2].influences).toHaveLength(2)
-      expect(gameState.players[0].coins).toBe(4)
-      expect(gameState.players[1].coins).toBe(4)
+      expect(gameState.players[0].coins).toBe(3)
+      expect(gameState.players[1].coins).toBe(3)
       expect(gameState.players[2].coins).toBe(0)
     })
 
-    it('exchanging influences', async () => {
+    it('exchange -> pass -> influences replaced', async () => {
       const roomId = await setupTestGame([david, harper, hailey])
 
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Exchange })
@@ -303,7 +300,7 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(0)
     })
 
-    it('challenged, successful assassination killing last influence', async () => {
+    it('assassination -> failed challenge -> last influence killed', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Ambassador] },
         { ...harper, influences: [Influences.Captain], deadInfluences: [Influences.Ambassador] },
@@ -329,7 +326,7 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(0)
     })
 
-    it('challenged, successful assassination killing both influences', async () => {
+    it('assassination -> failed challenge -> both influences killed', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Ambassador] },
         { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
@@ -361,7 +358,35 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(0)
     })
 
-    it('failed challenge on tax', async () => {
+    it('assassination -> block -> successful challenge -> both influences killed', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, influences: [Influences.Captain, Influences.Assassin], coins: 3 }
+      ])
+
+      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
+      await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
+      await actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Assassinate, targetPlayer: david.playerName })
+
+      await actionResponseHandler({ roomId, playerId: david.playerId, response: Responses.Block, claimedInfluence: Influences.Contessa })
+
+      await blockResponseHandler({ roomId, playerId: hailey.playerId, response: Responses.Challenge })
+
+      await blockChallengeResponseHandler({ roomId, playerId: david.playerId, influence: Influences.Captain })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+      expect(gameState.players[0].influences).toHaveLength(0)
+      expect(gameState.players[1].influences).toHaveLength(2)
+      expect(gameState.players[2].influences).toHaveLength(2)
+      expect(gameState.players[0].coins).toBe(3)
+      expect(gameState.players[1].coins).toBe(3)
+      expect(gameState.players[2].coins).toBe(0)
+    })
+
+    it('tax -> failed challenge -> tax and lost influence', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Duke] },
         { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
@@ -401,7 +426,7 @@ describe('actionHandlers', () => {
       expect(gameState.players[0].coins).toBe(4)
     })
 
-    it('failed challenge, lost influence before new action response', async () => {
+    it('steal -> failed challenge -> lost influence before new action response', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Ambassador] },
         { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
@@ -427,7 +452,7 @@ describe('actionHandlers', () => {
       expect(gameState.turnPlayer).toBe(harper.playerName)
     })
 
-    it('failed challenge, lost influence after new action response', async () => {
+    it('steal -> failed challenge -> lost influence after new action response', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Ambassador] },
         { ...harper, influences: [Influences.Captain, Influences.Ambassador] },
