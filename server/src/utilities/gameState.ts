@@ -2,12 +2,16 @@ import { GameState, Influences, Player, PublicGameState, PublicPlayer } from '..
 import { shuffle } from './array'
 import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
+import { compressString, decompressString } from './compression'
 
 export const getGameState = async (
   roomId: string
 ): Promise<GameState | null> => {
-  const state = JSON.parse(await getValue(roomId.toUpperCase()))
-  return state ? { ...state } : null
+  const compressed = await getValue(roomId.toUpperCase())
+
+  if (!compressed) return null
+
+  return JSON.parse(decompressString(compressed))
 }
 
 export const getPublicGameState = async ({ roomId, gameState, playerId }: {
@@ -94,7 +98,8 @@ export const validateGameState = (state: GameState) => {
 const setGameState = async (roomId: string, newState: GameState) => {
   const oneDay = 86400
   validateGameState(newState)
-  await setValue(roomId.toUpperCase(), JSON.stringify(newState), oneDay)
+  const compressed = compressString(JSON.stringify(newState))
+  await setValue(roomId.toUpperCase(), compressed, oneDay)
 }
 
 export const createGameState = async (roomId: string, gameState: GameState) => {
