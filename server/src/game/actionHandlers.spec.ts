@@ -390,7 +390,7 @@ describe('actionHandlers', () => {
     it('multiple coups sent to server in rapid succession', async () => {
       const roomId = await setupTestGame([{ ...david, coins: 11 }, harper, hailey])
 
-      const results = await Promise.allSettled(Array.from({ length: 10 }, () =>
+      const results = await Promise.allSettled(Array.from({ length: 100 }, () =>
         actionHandler({ roomId, playerId: david.playerId, action: Actions.Coup, targetPlayer: harper.playerName })
       ))
 

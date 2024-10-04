@@ -3,10 +3,14 @@ import { drawCardFromDeck, getGameState, getPublicGameState, mutateGameState, va
 import { Actions, GameState, Influences } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
+import { compressString, decompressString } from "./compression"
 
 jest.mock("./storage")
+jest.mock("./compression")
 const getValueMock = jest.mocked(getValue)
 const setValueMock = jest.mocked(setValue)
+const compressStringMock = jest.mocked(compressString)
+const decompressStringMock = jest.mocked(decompressString)
 
 const chance = new Chance()
 const oneDay = 86400
@@ -44,15 +48,23 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
 }
 
 describe('gameState', () => {
-  afterEach(jest.clearAllMocks)
+  beforeEach(() => {
+    jest.clearAllMocks()
+    compressStringMock.mockImplementation((string) => string)
+    decompressStringMock.mockImplementation((string) => string)
+  })
 
   describe('getGameState', () => {
     it('should get game state object from storage by room id key', async () => {
       const roomId = 'some room'
       const gameState = getRandomGameState()
-      getValueMock.mockResolvedValue(JSON.stringify(gameState))
+      const compressedStateString = 'some compressed base64'
+      getValueMock.mockResolvedValue(compressedStateString)
+      decompressStringMock.mockReturnValue(JSON.stringify(gameState))
 
       expect(await getGameState(roomId)).toEqual(gameState)
+      expect(decompressString).toHaveBeenCalledTimes(1)
+      expect(decompressString).toHaveBeenCalledWith(compressedStateString)
       expect(getValueMock).toHaveBeenCalledTimes(1)
       expect(getValueMock).toHaveBeenCalledWith(roomId.toUpperCase())
     })
@@ -105,20 +117,26 @@ describe('gameState', () => {
 
     it('should update storage with new state', async () => {
       const gameState = getRandomGameState()
+      const compressedStateString = 'some compressed base64'
       getValueMock.mockResolvedValue(JSON.stringify(gameState))
+      compressStringMock.mockReturnValue(compressedStateString)
 
       await mutateGameState(gameState, (state) => {
         state.players[0].coins -= 1
       })
 
-      expect(setValueMock).toHaveBeenCalledTimes(1)
-      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), JSON.stringify({
+      const expectedState = JSON.stringify({
         ...gameState,
         players: [
           { ...gameState.players[0], coins: gameState.players[0].coins - 1 },
           ...gameState.players.slice(1)
         ]
-      }), oneDay)
+      })
+
+      expect(compressString).toHaveBeenCalledTimes(1)
+      expect(compressString).toHaveBeenCalledWith(expectedState)
+      expect(setValueMock).toHaveBeenCalledTimes(1)
+      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), compressedStateString, oneDay)
     })
   })
 
