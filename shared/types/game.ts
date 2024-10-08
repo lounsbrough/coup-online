@@ -68,44 +68,79 @@ export const ActionAttributes: {
     challengeable: boolean
     coinsRequired?: number
     requiresTarget: boolean
+    wordVariations?: string[]
+    messageTemplates: {
+      pending?: string
+      complete: string
+    }
   }
 } = {
   [Actions.Assassinate]: {
     blockable: true,
     challengeable: true,
     coinsRequired: 3,
-    requiresTarget: true
+    requiresTarget: true,
+    wordVariations: ['Assassinated'],
+    messageTemplates: {
+      pending: `<actionPlayer> is trying to Assassinate <targetPlayer>`,
+      complete: `<actionPlayer> Assassinated <targetPlayer>`
+    }
   },
   [Actions.Steal]: {
     blockable: true,
     challengeable: true,
-    requiresTarget: true
+    requiresTarget: true,
+    wordVariations: ['Stole'],
+    messageTemplates: {
+      pending: `<actionPlayer> is trying to Steal from <targetPlayer>`,
+      complete: `<actionPlayer> Stole from <targetPlayer>`
+    }
   },
   [Actions.Coup]: {
     blockable: false,
     challengeable: false,
     coinsRequired: 7,
-    requiresTarget: true
+    requiresTarget: true,
+    wordVariations: ['Couped'],
+    messageTemplates: {
+      complete: `<actionPlayer> Couped <targetPlayer>`
+    }
   },
   [Actions.Tax]: {
     blockable: false,
     challengeable: true,
-    requiresTarget: false
+    requiresTarget: false,
+    messageTemplates: {
+      pending: `<actionPlayer> is trying to collect Tax`,
+      complete: `<actionPlayer> collected Tax`
+    }
   },
   [Actions.ForeignAid]: {
     blockable: true,
     challengeable: false,
-    requiresTarget: false
+    requiresTarget: false,
+    messageTemplates: {
+      pending: `<actionPlayer> is trying to collect Foreign Aid`,
+      complete: `<actionPlayer> collected Foreign Aid`
+    }
   },
   [Actions.Income]: {
     blockable: false,
     challengeable: false,
-    requiresTarget: false
+    requiresTarget: false,
+    messageTemplates: {
+      complete: `<actionPlayer> collected Income`
+    }
   },
   [Actions.Exchange]: {
     blockable: false,
     challengeable: true,
-    requiresTarget: false
+    requiresTarget: false,
+    wordVariations: ['Exchanged'],
+    messageTemplates: {
+      pending: `<actionPlayer> is trying to Exchange influences`,
+      complete: `<actionPlayer> Exchanged influences`
+    }
   }
 }
 

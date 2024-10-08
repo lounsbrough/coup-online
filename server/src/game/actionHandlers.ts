@@ -1,5 +1,6 @@
 import { GameMutationInputError } from "../utilities/errors"
 import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
+import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
@@ -204,7 +205,12 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         }
 
         coupingPlayer.coins -= ActionAttributes.Coup.coinsRequired
-        logEvent(state, `${player.name} used ${action} on ${targetPlayer}`)
+        logEvent(state, getActionMessage({
+          action,
+          pending: false,
+          actionPlayer: player.name,
+          targetPlayer
+        }))
         promptPlayerToLoseInfluence(state, targetPlayer)
       })
     } else if (action === Actions.Income) {
@@ -217,7 +223,11 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
 
         incomePlayer.coins += 1
         moveTurnToNextPlayer(state)
-        logEvent(state, `${player.name} used ${action}`)
+        logEvent(state, getActionMessage({
+          action,
+          pending: false,
+          actionPlayer: player.name
+        }))
       })
     }
   } else {
@@ -237,7 +247,12 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         targetPlayer,
         claimConfirmed: false
       }
-      logEvent(state, `${player.name} is trying to use ${action}${targetPlayer ? ` on ${targetPlayer}` : ''}`)
+      logEvent(state, getActionMessage({
+        action,
+        pending: true,
+        actionPlayer: player.name,
+        targetPlayer
+      }))
     })
   }
 
