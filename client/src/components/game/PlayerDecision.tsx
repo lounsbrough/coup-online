@@ -97,7 +97,7 @@ function PlayerDecision() {
 
   return (
     <>
-      <Typography my={1} fontWeight="bold">Waiting for other players</Typography>
+      <Typography variant="h6" my={1} fontWeight="bold">Waiting for other players</Typography>
       <Typography>
         {[...waitingForColors].map((color) =>
           <Circle key={color} sx={{ color }} />

@@ -32,7 +32,7 @@ function ChooseBlockResponse() {
 
   return (
     <>
-      <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
+      <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
         {`${gameState.pendingBlock.sourcePlayer} is trying to block ${gameState.turnPlayer} as ${gameState.pendingBlock.claimedInfluence}`}
       </ColoredTypography>
       <Grid2 container spacing={2} justifyContent="center">

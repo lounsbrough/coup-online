@@ -37,7 +37,7 @@ function ChooseActionResponse() {
     <>
       {selectedResponse ? (
         <>
-          <Typography sx={{ my: 1, fontWeight: 'bold' }}>
+          <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
             Claim an Influence
           </Typography>
           <Grid2 container spacing={2} justifyContent="center">
@@ -61,7 +61,7 @@ function ChooseActionResponse() {
         </>
       ) : (
         <>
-          <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
+          <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
             {getActionMessage({
               action: gameState.pendingAction.action,
               pending: true,
