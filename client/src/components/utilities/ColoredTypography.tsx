@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Typography, TypographyProps, useTheme } from "@mui/material"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Actions, Influences } from '@shared'
+import { ActionAttributes, Actions, Influences } from '@shared'
 
 function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'children'> & {
   children: string
@@ -15,12 +15,16 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
     }
 
     return [
-      ...Object.values(Actions)
-        .filter((action) => children.includes(action))
-        .map<[string, string | undefined]>((action) => [action, actionColors[action]]),
       ...Object.values(Influences)
         .filter((influence) => children.includes(influence))
         .map<[string, string]>((influence) => [influence, influenceColors[influence]]),
+      ...Object.values(Actions)
+        .filter((action) => children.includes(action))
+        .map<[string, string | undefined]>((action) => [action, actionColors[action]]),
+      ...Object.entries(ActionAttributes)
+        .flatMap<[string, string]>(([action, attributes]) =>
+          attributes.wordVariations?.map((variation) => [variation, actionColors[action as Actions]]) as [string, string][] ?? [])
+        .filter(([variation]) => children.includes(variation)),
       ...gameState.players
         .filter(({ name }) => children.includes(name))
         .sort((a, b) => a.name.length - b.name.length)

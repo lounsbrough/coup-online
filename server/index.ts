@@ -3,7 +3,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
-import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents } from '../shared/types/game'
+import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, ActionAttributes } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer } from 'socket.io'
@@ -33,7 +33,8 @@ const io = new ioServer<ClientToServerEvents, ServerToClientEvents, SocketData>(
 
 const playerNameRule = Joi.string().min(1).max(10).disallow(
     ...Object.values(Influences),
-    ...Object.values(Actions)
+    ...Object.values(Actions),
+    ...Object.values(ActionAttributes).flatMap(({ wordVariations }) => wordVariations ?? [])
 ).required()
 
 const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {

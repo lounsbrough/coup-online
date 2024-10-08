@@ -1,5 +1,5 @@
 import { Button, Grid2, Typography } from "@mui/material"
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses } from '@shared'
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses, getActionMessage } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -62,9 +62,12 @@ function ChooseActionResponse() {
       ) : (
         <>
           <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
-            {`${gameState.turnPlayer} is trying to use ${gameState.pendingAction.action}${gameState.pendingAction.targetPlayer
-              ? ` on ${gameState.pendingAction.targetPlayer}`
-              : ''}`}
+            {getActionMessage({
+              action: gameState.pendingAction.action,
+              pending: true,
+              actionPlayer: gameState.turnPlayer!,
+              targetPlayer: gameState.pendingAction.targetPlayer
+            })}
           </ColoredTypography>
           <Grid2 container spacing={2} justifyContent="center">
             {Object.values(Responses)
