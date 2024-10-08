@@ -1,6 +1,7 @@
 import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, GameState, Influences } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
+import { getActionMessage } from "../../../shared/utilities/message"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
   const player = state.players.find(({ name }) => name === playerName)
@@ -48,7 +49,12 @@ export const promptPlayerToLoseInfluence = (
 export const processPendingAction = (state: GameState) => {
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer)
-  logEvent(state, `${actionPlayer.name} used ${state.pendingAction.action}${targetPlayer ? ` on ${targetPlayer.name}` : ''}`)
+  logEvent(state, getActionMessage({
+    action: state.pendingAction.action,
+    pending: false,
+    actionPlayer: actionPlayer.name,
+    targetPlayer: targetPlayer?.name
+  }))
 
   if (state.pendingAction.action === Actions.Assassinate) {
     actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired
