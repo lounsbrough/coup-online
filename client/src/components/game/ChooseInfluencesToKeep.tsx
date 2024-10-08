@@ -34,7 +34,7 @@ function ChooseInfluencesToKeep() {
 
   return (
     <>
-      <Typography sx={{ my: 1, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
         {`Choose ${influenceCountToKeep} Influence${influenceCountToKeep === 1 ? '' : 's'} to Keep`}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
