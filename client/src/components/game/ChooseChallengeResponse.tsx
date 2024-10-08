@@ -34,14 +34,14 @@ function ChooseChallengeResponse() {
 
   return (
     <>
-      <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
+      <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
         {`${challengingPlayer} is challenging ${challengedPlayer}`}
       </ColoredTypography>
-      <Typography sx={{ my: 1, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
         Choose an Influence to Reveal
       </Typography>
       {gameState.pendingBlock?.claimedInfluence && (
-        <ColoredTypography sx={{ my: 1, fontWeight: 'bold' }}>
+        <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
           {`${gameState.pendingBlock?.claimedInfluence} was claimed`}
         </ColoredTypography>
       )}

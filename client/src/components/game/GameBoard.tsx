@@ -45,26 +45,20 @@ function GameBoard() {
           </Grid2>
         )}
         {turnPlayer && !gameIsOver && (
-          <Box mb={2}>
-            <Typography component="span" variant="h5" sx={{
+          <Box my={2}>
+            <Typography component="span" variant="h4" sx={{
               fontWeight: 'bold', color: turnPlayer.color
             }}>{gameState.turnPlayer}</Typography>
-            <Typography component="span" variant="h5">'s Turn</Typography>
+            <Typography component="span" variant="h4">'s Turn</Typography>
           </Box>
         )}
         {!!gameState?.selfPlayer?.influences?.length && (
-          <Grid2 container justifyContent="center">
-            <Box sx={{ background: 'rgba(120, 120, 120, 0.25)', p: 2, borderRadius: 3 }}>
-              <Typography mb={1} variant="body1">Your Influences</Typography>
-              <PlayerInfluences />
-            </Box>
+          <Grid2 container justifyContent="center" my={4}>
+            <PlayerInfluences />
           </Grid2>
         )}
         <Grid2 container justifyContent="center" sx={{ my: 2 }}>
-          <Box sx={{ background: 'rgba(120, 120, 120, 0.25)', p: 2, borderRadius: 3 }}>
-            <Typography mb={1} variant="body1">Players</Typography>
-            <Players />
-          </Box>
+          <Players />
         </Grid2>
         {!gameIsOver && (
           <Grid2 container justifyContent="center">

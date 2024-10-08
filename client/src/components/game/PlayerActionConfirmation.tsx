@@ -85,7 +85,7 @@ function PlayerActionConfirmation({
 
   return (
     <>
-      <ColoredTypography my={1} fontWeight="bold">{message}</ColoredTypography>
+      <ColoredTypography variant="h6" my={1} fontWeight="bold">{message}</ColoredTypography>
       <Grid2 container spacing={2} justifyContent="center">
         <Grid2>
           <Button
