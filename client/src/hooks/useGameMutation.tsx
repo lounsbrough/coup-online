@@ -10,7 +10,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
   callback?: (gameState: PublicGameState) => void
 }) {
   const [error, setError] = useState('')
-  const { socket } = useWebSocketContext()
+  const { socket, isConnected } = useWebSocketContext()
   const { setGameState } = useGameStateContext()
 
   const { trigger: triggerSwr, isMutating } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
@@ -29,7 +29,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
     })
   }))
 
-  const trigger = useMemo(() => socket?.connected
+  const trigger = useMemo(() => socket && isConnected
     ? (params: ParamsType) => {
       socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => {
         setError(error)
@@ -41,7 +41,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
       }
       socket.emit(action, params)
     }
-    : triggerSwr, [socket, action, callback, triggerSwr])
+    : triggerSwr, [socket, isConnected, action, callback, triggerSwr])
 
   return { trigger, error, isMutating }
 }

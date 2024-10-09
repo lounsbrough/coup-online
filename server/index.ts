@@ -305,7 +305,7 @@ io.on('connection', (socket) => {
           }) => {
             pushToSocket.emit(ServerEvents.gameStateChanged, await getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
           }
-          if (event !== 'gameState') {
+          if (event !== PlayerActions.gameState) {
             socket.rooms.forEach(async (room) => {
               if (room.startsWith(roomPrefix)) {
                 const roomSockets = await io.in(room).fetchSockets()
