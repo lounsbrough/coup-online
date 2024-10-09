@@ -15,7 +15,7 @@ function ChooseInfluenceToLose() {
 
   if (selectedInfluence) {
     return <PlayerActionConfirmation
-      message={`Losing ${selectedInfluence}`}
+      message={`Lose ${selectedInfluence}`}
       endpoint="loseInfluences"
       variables={{
         roomId: gameState.roomId,

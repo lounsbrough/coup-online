@@ -51,7 +51,7 @@ export const processPendingAction = (state: GameState) => {
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer)
   logEvent(state, getActionMessage({
     action: state.pendingAction.action,
-    pending: false,
+    tense: 'complete',
     actionPlayer: actionPlayer.name,
     targetPlayer: targetPlayer?.name
   }))
