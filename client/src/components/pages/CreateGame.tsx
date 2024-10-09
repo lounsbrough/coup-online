@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
 import { AccountCircle } from "@mui/icons-material"
 import { useNavigate } from "react-router-dom"
@@ -11,9 +11,9 @@ function CreateGame() {
   const [playerName, setPlayerName] = useState('')
   const navigate = useNavigate()
 
-  const navigateToRoom = (gameState: PublicGameState) => {
+  const navigateToRoom = useCallback((gameState: PublicGameState) => {
     navigate(`/game?roomId=${gameState.roomId}`)
-  }
+  }, [navigate])
 
   const { trigger, isMutating, error } = useGameMutation<{
     playerId: string, playerName: string

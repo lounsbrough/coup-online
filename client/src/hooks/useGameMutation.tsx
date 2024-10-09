@@ -1,5 +1,5 @@
 import { PlayerActions, PublicGameState, ServerEvents } from "@shared"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useGameStateContext } from "../contexts/GameStateContext"
 import useSWRMutation from "swr/mutation"
@@ -34,7 +34,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
     })
   }))
 
-  const trigger = socket?.connected
+  const trigger = useMemo(() => socket?.connected
     ? (params: ParamsType) => {
       socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
       if (callback) {
@@ -44,7 +44,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
       }
       socket.emit(action, params)
     }
-    : triggerSwr
+    : triggerSwr, [socket, action, callback, triggerSwr])
 
   return { trigger, error, isMutating }
 }

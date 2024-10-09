@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
 import { AccountCircle, Group } from "@mui/icons-material"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
@@ -12,9 +12,9 @@ function JoinGame() {
   const [playerName, setPlayerName] = useState('')
   const navigate = useNavigate()
 
-  const navigateToRoom = (gameState: PublicGameState) => {
+  const navigateToRoom = useCallback((gameState: PublicGameState) => {
     navigate(`/game?roomId=${gameState.roomId}`)
-  }
+  }, [navigate])
 
   const { trigger, isMutating, error } = useGameMutation<{
     roomId: string, playerId: string, playerName: string
