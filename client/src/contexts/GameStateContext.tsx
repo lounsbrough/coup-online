@@ -5,6 +5,7 @@ import { getPlayerId } from '../helpers/playerId'
 import { Typography } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'
 import { useWebSocketContext } from './WebSocketContext'
+import { getBaseUrl } from '../helpers/api'
 
 type GameStateContextType = {
   gameState?: PublicGameState,
@@ -25,7 +26,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
   useSWR<void, Error>(
     roomId
-      ? `${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/gameState?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`
+      ? `${getBaseUrl()}/${PlayerActions.gameState}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`
       : null,
     async function (input: RequestInfo, init?: RequestInit) {
       try {
@@ -39,15 +40,11 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
             setGameState(newState)
           }
         } else {
-          if (res.status === 404) {
-            setError('Game not found, please return home')
-          } else if (res.status === 400) {
-            setError((await res.json() as { error: string }).error)
-          }
+          setError((await res.json()).error)
         }
       } catch (error) {
         console.error(error)
-        setError('Unexpected error loading game state')
+        setError('Unexpected error processing request')
       }
     },
     { refreshInterval: 2000, isPaused: () => socket?.connected ?? false }

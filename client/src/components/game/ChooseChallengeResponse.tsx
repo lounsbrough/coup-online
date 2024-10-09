@@ -1,5 +1,5 @@
 import { Button, Grid2, Typography } from "@mui/material"
-import { Influences } from '@shared'
+import { Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -17,7 +17,7 @@ function ChooseChallengeResponse() {
   if (selectedInfluence) {
     return <PlayerActionConfirmation
       message={`Reveal ${selectedInfluence}`}
-      endpoint={gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}
+      action={gameState?.pendingActionChallenge ? PlayerActions.actionChallengeResponse : PlayerActions.blockChallengeResponse}
       variables={{
         roomId: gameState.roomId,
         playerId: getPlayerId(),

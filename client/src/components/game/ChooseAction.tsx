@@ -1,5 +1,5 @@
 import { Button, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
-import { ActionAttributes, Actions, getActionMessage } from '@shared'
+import { ActionAttributes, Actions, getActionMessage, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -23,7 +23,7 @@ function ChooseAction() {
         actionPlayer: gameState.turnPlayer!,
         targetPlayer: selectedTargetPlayer
       })}
-      endpoint="action"
+      action={PlayerActions.action}
       variables={{
         roomId: gameState.roomId,
         playerId: getPlayerId(),
