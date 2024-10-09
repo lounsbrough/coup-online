@@ -1,46 +1,21 @@
 import { Badge, Box, Button, Grid2, Typography } from "@mui/material"
-import useSWRMutation from 'swr/mutation'
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Close, MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE, useColorModeContext } from "../../contexts/MaterialThemeContext"
-import { useState } from "react"
-import { useWebSocketContext } from "../../contexts/WebSocketContext"
 import { getPlayerId } from "../../helpers/playerId"
-import { PlayerActions, ServerEvents } from "@shared"
-
-type RemoveFromGameParams = { roomId: string, playerId: string, playerName: string }
+import { PlayerActions } from "@shared"
+import useGameMutation from "../../hooks/useGameMutation"
 
 function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
-  const [error, setError] = useState('')
-  const { gameState, setGameState } = useGameStateContext()
+  const { gameState } = useGameStateContext()
   const { colorMode } = useColorModeContext()
-  const { socket } = useWebSocketContext()
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${PlayerActions.removeFromGame}`, (async (url: string, { arg }: { arg: RemoveFromGameParams }) => {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(arg)
-    }).then(async (res) => {
-      if (res.ok) {
-        setGameState(await res.json())
-      } else {
-        setError('Error starting new game')
-      }
-    })
-  }))
-
-  const trigger = socket?.connected
-    ? (params: RemoveFromGameParams) => {
-      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
-      socket.emit(PlayerActions.removeFromGame, params)
-    }
-    : triggerSwr
+  const { trigger, isMutating, error } = useGameMutation<{
+    roomId: string, playerId: string, playerName: string
+  }>({ action: PlayerActions.removeFromGame })
 
   if (!gameState) {
     return null

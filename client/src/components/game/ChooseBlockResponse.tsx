@@ -1,5 +1,5 @@
 import { Button, Grid2 } from "@mui/material"
-import { Responses } from '@shared'
+import { PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -17,7 +17,7 @@ function ChooseBlockResponse() {
   if (selectedResponse) {
     return <PlayerActionConfirmation
       message={selectedResponse}
-      endpoint="blockResponse"
+      action={PlayerActions.blockResponse}
       variables={{
         roomId: gameState.roomId,
         playerId: getPlayerId(),

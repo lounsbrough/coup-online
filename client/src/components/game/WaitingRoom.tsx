@@ -1,46 +1,22 @@
 import { Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
-import useSWRMutation from "swr/mutation"
 import { QRCodeSVG } from 'qrcode.react'
 import { ContentCopy } from "@mui/icons-material"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useState } from "react"
-import { useWebSocketContext } from "../../contexts/WebSocketContext"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
-import { PlayerActions, ServerEvents } from "@shared"
-
-type StartGameParams = { roomId: string, playerId: string }
+import { PlayerActions } from "@shared"
+import useGameMutation from "../../hooks/useGameMutation"
 
 function WaitingRoom() {
-  const [error, setError] = useState('')
   const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
-  const { socket } = useWebSocketContext()
-  const { gameState, setGameState } = useGameStateContext()
+  const { gameState } = useGameStateContext()
   const theme = useTheme()
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${PlayerActions.startGame}`, (async (url: string, { arg }: { arg: StartGameParams }) => {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(arg)
-    }).then(async (res) => {
-      if (res.ok) {
-        setGameState(await res.json())
-      } else {
-        setError('Error starting new game')
-      }
-    })
-  }))
-
-  const trigger = socket?.connected
-    ? (params: StartGameParams) => {
-      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
-      socket.emit(PlayerActions.startGame, params)
-    }
-    : triggerSwr
+  const { trigger, isMutating, error } = useGameMutation<{
+    roomId: string, playerId: string
+  }>({ action: PlayerActions.startGame })
 
   if (!gameState) {
     return null
