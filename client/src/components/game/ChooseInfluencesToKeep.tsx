@@ -3,6 +3,7 @@ import { Button, Checkbox, Grid2, Typography } from "@mui/material"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import { PlayerActions } from "@shared/dist"
 
 function ChooseInfluencesToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
@@ -19,7 +20,7 @@ function ChooseInfluencesToKeep() {
   if (checkedIndexes.length === influenceCountToKeep) {
     return <PlayerActionConfirmation
       message={`Keep ${gameState.selfPlayer.influences.filter((_i, index) => checkedIndexes.includes(index)).join(' and ')}`}
-      endpoint="loseInfluences"
+      action={PlayerActions.loseInfluences}
       variables={{
         roomId: gameState.roomId,
         playerId: getPlayerId(),

@@ -1,5 +1,5 @@
 import { Button, Grid2, Typography } from "@mui/material"
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, Responses, getActionMessage } from '@shared'
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, PlayerActions, Responses, getActionMessage } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -18,7 +18,7 @@ function ChooseActionResponse() {
   if (selectedResponse && (selectedResponse !== Responses.Block || selectedInfluence)) {
     return <PlayerActionConfirmation
       message={`${selectedResponse}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
-      endpoint="actionResponse"
+      action={PlayerActions.actionResponse}
       variables={{
         roomId: gameState.roomId,
         playerId: getPlayerId(),

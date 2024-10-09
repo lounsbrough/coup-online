@@ -1,62 +1,24 @@
 import { useState } from "react"
 import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
 import { AccountCircle, Group } from "@mui/icons-material"
-import useSWRMutation from "swr/mutation"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { getPlayerId } from "../../helpers/playerId"
-import { useWebSocketContext } from "../../contexts/WebSocketContext"
-import { useGameStateContext } from "../../contexts/GameStateContext"
-import { PlayerActions, PublicGameState, ServerEvents } from '@shared'
-
-type JoinGameParams = { roomId: string, playerId: string, playerName: string }
+import { PlayerActions, PublicGameState } from '@shared'
+import useGameMutation from "../../hooks/useGameMutation"
 
 function JoinGame() {
   const [searchParams] = useSearchParams()
   const [roomId, setRoomId] = useState(searchParams.get('roomId') ?? '')
   const [playerName, setPlayerName] = useState('')
-  const [error, setError] = useState('')
   const navigate = useNavigate()
-  const { socket } = useWebSocketContext()
-  const { setGameState } = useGameStateContext()
 
-  const updateGameStateAndNavigate = (gameState: PublicGameState) => {
-    setGameState(gameState)
+  const navigateToRoom = (gameState: PublicGameState) => {
     navigate(`/game?roomId=${gameState.roomId}`)
   }
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${PlayerActions.joinGame}`, (async (url: string, { arg }: { arg: JoinGameParams }) => {
-    setError('')
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(arg)
-    }).then(async (res) => {
-      if (res.ok) {
-        const gameState = await res.json()
-        updateGameStateAndNavigate(gameState)
-      } else {
-        if (res.status === 404) {
-          setError('Room not found')
-        } else if (res.status === 400) {
-          setError(await res.text())
-        } else {
-          setError('Error joining game')
-        }
-      }
-    })
-  }))
-
-  const trigger = socket?.connected
-    ? (params: JoinGameParams) => {
-      socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
-        updateGameStateAndNavigate(gameState)
-      })
-      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
-      socket.emit(PlayerActions.joinGame, params)
-    }
-    : triggerSwr
+  const { trigger, isMutating, error } = useGameMutation<{
+    roomId: string, playerId: string, playerName: string
+  }>({ action: PlayerActions.joinGame, callback: navigateToRoom })
 
   return (
     <>

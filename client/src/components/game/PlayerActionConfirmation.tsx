@@ -1,58 +1,30 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import useSWRMutation from "swr/mutation"
 import { Button, Grid2, Typography, useTheme } from "@mui/material"
 import ColoredTypography from "../utilities/ColoredTypography"
 import { Cancel, Check } from "@mui/icons-material"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
-import { useWebSocketContext } from "../../contexts/WebSocketContext"
-import { ServerEvents } from "@shared"
+import { PlayerActions } from "@shared"
+import useGameMutation from "../../hooks/useGameMutation"
 
 function PlayerActionConfirmation({
   message,
-  endpoint,
+  action,
   variables,
   onCancel
 }: {
   message: string,
-  endpoint: string,
+  action: PlayerActions,
   variables: object,
   onCancel: () => void
 }) {
-  const [error, setError] = useState('')
   const [autoSubmitProgress, setAutoSubmitProgress] = useState(0)
   const autoSubmitInterval = useRef<NodeJS.Timer>()
-  const { socket } = useWebSocketContext()
-  const { gameState, setGameState } = useGameStateContext()
+  const { gameState } = useGameStateContext()
   const theme = useTheme()
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${process.env.REACT_APP_API_BASE_URL ?? 'http://localhost:8008'}/${endpoint}`, (async (url: string, { arg }: { arg: object }) => {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(arg)
-    }).then(async (res) => {
-      if (res.ok) {
-        setGameState(await res.json())
-      } else {
-        if (res.status === 400) {
-          setError(await res.text())
-        } else {
-          setError('Error performing action')
-        }
-      }
-    })
-  }))
-
-  const trigger = useMemo(() => socket?.connected
-    ? (params: object) => {
-      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
-      socket.emit(endpoint, params)
-    }
-    : triggerSwr, [endpoint, socket, triggerSwr])
+  const { trigger, isMutating, error } = useGameMutation<object>({ action })
 
   const skipConfirmation = !JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
 

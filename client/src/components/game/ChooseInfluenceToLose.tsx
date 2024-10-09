@@ -1,5 +1,5 @@
 import { Button, Grid2, Typography } from "@mui/material"
-import { Influences } from '@shared'
+import { Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -16,7 +16,7 @@ function ChooseInfluenceToLose() {
   if (selectedInfluence) {
     return <PlayerActionConfirmation
       message={`Lose ${selectedInfluence}`}
-      endpoint="loseInfluences"
+      action={PlayerActions.loseInfluences}
       variables={{
         roomId: gameState.roomId,
         playerId: getPlayerId(),
