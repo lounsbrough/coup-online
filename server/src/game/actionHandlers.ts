@@ -207,7 +207,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         coupingPlayer.coins -= ActionAttributes.Coup.coinsRequired
         logEvent(state, getActionMessage({
           action,
-          pending: false,
+          tense: 'complete',
           actionPlayer: player.name,
           targetPlayer
         }))
@@ -225,7 +225,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         moveTurnToNextPlayer(state)
         logEvent(state, getActionMessage({
           action,
-          pending: false,
+          tense: 'complete',
           actionPlayer: player.name
         }))
       })
@@ -249,7 +249,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
       }
       logEvent(state, getActionMessage({
         action,
-        pending: true,
+        tense: 'pending',
         actionPlayer: player.name,
         targetPlayer
       }))
