@@ -18,7 +18,7 @@ function ChooseInfluencesToKeep() {
 
   if (checkedIndexes.length === influenceCountToKeep) {
     return <PlayerActionConfirmation
-      message={`Keeping ${gameState.selfPlayer.influences.filter((_i, index) => checkedIndexes.includes(index)).join(' and ')}`}
+      message={`Keep ${gameState.selfPlayer.influences.filter((_i, index) => checkedIndexes.includes(index)).join(' and ')}`}
       endpoint="loseInfluences"
       variables={{
         roomId: gameState.roomId,

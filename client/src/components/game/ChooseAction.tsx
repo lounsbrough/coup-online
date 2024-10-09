@@ -1,5 +1,5 @@
 import { Button, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
-import { ActionAttributes, Actions } from '@shared'
+import { ActionAttributes, Actions, getActionMessage } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -17,7 +17,12 @@ function ChooseAction() {
 
   if (selectedAction && (!ActionAttributes[selectedAction].requiresTarget || selectedTargetPlayer)) {
     return <PlayerActionConfirmation
-      message={`Using ${selectedAction}${selectedTargetPlayer ? ` on ${selectedTargetPlayer}` : ''}`}
+      message={getActionMessage({
+        action: selectedAction,
+        tense: 'confirm',
+        actionPlayer: gameState.turnPlayer!,
+        targetPlayer: selectedTargetPlayer
+      })}
       endpoint="action"
       variables={{
         roomId: gameState.roomId,

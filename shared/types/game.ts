@@ -70,6 +70,7 @@ export const ActionAttributes: {
     requiresTarget: boolean
     wordVariations?: string[]
     messageTemplates: {
+      confirm: string
       pending?: string
       complete: string
     }
@@ -82,6 +83,7 @@ export const ActionAttributes: {
     requiresTarget: true,
     wordVariations: ['Assassinated'],
     messageTemplates: {
+      confirm: 'Assassinate <targetPlayer>',
       pending: `<actionPlayer> is trying to Assassinate <targetPlayer>`,
       complete: `<actionPlayer> Assassinated <targetPlayer>`
     }
@@ -92,6 +94,7 @@ export const ActionAttributes: {
     requiresTarget: true,
     wordVariations: ['Stole'],
     messageTemplates: {
+      confirm: 'Steal from <targetPlayer>',
       pending: `<actionPlayer> is trying to Steal from <targetPlayer>`,
       complete: `<actionPlayer> Stole from <targetPlayer>`
     }
@@ -103,6 +106,7 @@ export const ActionAttributes: {
     requiresTarget: true,
     wordVariations: ['Couped'],
     messageTemplates: {
+      confirm: 'Coup <targetPlayer>',
       complete: `<actionPlayer> Couped <targetPlayer>`
     }
   },
@@ -111,6 +115,7 @@ export const ActionAttributes: {
     challengeable: true,
     requiresTarget: false,
     messageTemplates: {
+      confirm: 'Collect Tax',
       pending: `<actionPlayer> is trying to collect Tax`,
       complete: `<actionPlayer> collected Tax`
     }
@@ -120,6 +125,7 @@ export const ActionAttributes: {
     challengeable: false,
     requiresTarget: false,
     messageTemplates: {
+      confirm: 'Collect Foreign Aid',
       pending: `<actionPlayer> is trying to collect Foreign Aid`,
       complete: `<actionPlayer> collected Foreign Aid`
     }
@@ -129,6 +135,7 @@ export const ActionAttributes: {
     challengeable: false,
     requiresTarget: false,
     messageTemplates: {
+      confirm: 'Collect Income',
       complete: `<actionPlayer> collected Income`
     }
   },
@@ -138,6 +145,7 @@ export const ActionAttributes: {
     requiresTarget: false,
     wordVariations: ['Exchanged'],
     messageTemplates: {
+      confirm: 'Exchange influences',
       pending: `<actionPlayer> is trying to Exchange influences`,
       complete: `<actionPlayer> Exchanged influences`
     }

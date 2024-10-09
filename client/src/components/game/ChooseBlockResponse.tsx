@@ -5,7 +5,6 @@ import { getPlayerId } from "../../helpers/playerId"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
-import { getPresentProgressiveResponse } from "../../helpers/grammar"
 
 function ChooseBlockResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
@@ -17,7 +16,7 @@ function ChooseBlockResponse() {
 
   if (selectedResponse) {
     return <PlayerActionConfirmation
-      message={getPresentProgressiveResponse(selectedResponse)}
+      message={selectedResponse}
       endpoint="blockResponse"
       variables={{
         roomId: gameState.roomId,

@@ -1,11 +1,11 @@
 import { ActionAttributes, Actions } from "../types/game";
 
-export const getActionMessage = ({ action, pending, actionPlayer, targetPlayer }: {
+export const getActionMessage = ({ action, tense, actionPlayer, targetPlayer }: {
   action: Actions
-  pending?: boolean
+  tense: 'confirm' | 'pending' | 'complete'
   actionPlayer: string
   targetPlayer?: string
 }) =>
-  ActionAttributes[action].messageTemplates[pending ? 'pending' : 'complete']
+  ActionAttributes[action].messageTemplates[tense]
     .replaceAll('<actionPlayer>', actionPlayer)
     .replaceAll('<targetPlayer>', targetPlayer)

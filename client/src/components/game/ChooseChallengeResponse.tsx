@@ -16,7 +16,7 @@ function ChooseChallengeResponse() {
 
   if (selectedInfluence) {
     return <PlayerActionConfirmation
-      message={`Revealing ${selectedInfluence}`}
+      message={`Reveal ${selectedInfluence}`}
       endpoint={gameState?.pendingActionChallenge ? 'actionChallengeResponse' : 'blockChallengeResponse'}
       variables={{
         roomId: gameState.roomId,
