@@ -282,7 +282,7 @@ const eventHandlers: {
 io.on('connection', (socket) => {
   getObjectEntries(eventHandlers).forEach(([event, { handler, joiSchema }]) => {
     socket.on(event, async (params) => {
-      const result = joiSchema.validate(params)
+      const result = joiSchema.validate(params, { abortEarly: false })
 
       if (result.error) {
         socket.emit(ServerEvents.error, result.error.details.map(({ message }) => message).join(', '))
@@ -295,7 +295,6 @@ io.on('connection', (socket) => {
           const roomPrefix = 'coup-game-'
           const socketRoom = `${roomPrefix}${roomId}`
           if (![...socket.rooms].some((room) => room.startsWith(roomPrefix)) && roomId) {
-            console.log(`socket ${socket.id} joined room ${socketRoom}`)
             await socket.join(socketRoom)
           }
           const fullGameState = await getGameState(roomId)
@@ -316,10 +315,13 @@ io.on('connection', (socket) => {
             await emitGameStateChanged(socket)
           }
         } catch (error) {
-          console.error(error)
           if (error instanceof GameMutationInputError) {
+            if (error.httpCode >= 500 && error.httpCode <= 599) {
+              console.error(error)
+            }
             socket.emit(ServerEvents.error, error.message)
           } else {
+            console.error(error)
             socket.emit(ServerEvents.error, 'Unexpected error processing request')
           }
         }
