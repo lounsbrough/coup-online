@@ -1,0 +1,182 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: 'Muli', sans-serif;
+}
+
+p, b, h1,h2,h3{
+  font-family: 'Muli', sans-serif;
+}
+
+input {
+  font-size: 20px;
+  padding-left: 2px;
+  border: 2px solid #BCBCBC;
+  border-radius: 5px;
+  outline: none;
+  transition: 0.5s;
+}
+input[type=text]:focus {
+  border: 2px solid #555;
+}
+button{
+  cursor: pointer;
+}
+
+.version-number {
+  color: #BCBCBC;
+  font-size: 10px;
+  position: absolute;
+  bottom: 0px;
+  right: 10px;
+}
+
+.website-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: #000000;
+  font-weight: 600;
+  background-color: #F2F2F2;
+  border-radius: 5px;
+  padding: 5px;
+  transition-duration: 0.3s;
+}
+.website-link:hover{
+  color: #FFFFFF;
+  background-color: #2B2B2B;
+}
+
+.createGameContainer, .joinGameContainer {
+  position: absolute;
+  top:20VH;
+  margin-left: 12%;
+  width: 76%;
+}
+
+.footer{
+  position: absolute;
+  width: 90VW;
+  margin-left: 5VW;
+  bottom: 20px;
+}
+
+.homeContainer{
+  position: absolute;
+  width: 90VW;
+  margin-left: 5VW;
+  top: 8VH;
+}
+
+.homeModalContainer {
+  margin: auto;
+  margin-top: 10px;
+  display: block;
+  width: 54px;
+}
+
+.homeContainer img{
+  width: 100px;
+  height: 100px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.home{
+  padding: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  min-width: 100px;
+  border-radius: 5px;
+  font-family: 'Muli', sans-serif;
+  background-color: #73C373;
+  border: none;
+  color: white;
+  margin: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.RoomCode {
+  background-color: #F2F2F2;
+  border: 2px solid #707070;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.createButton, .joinButton{
+  min-width: 100px;
+  height: 30px;
+  border-radius: 5px;
+  font-family: 'Muli', sans-serif;
+  background-color: #73C373;
+  border: none;
+  color: white;
+  margin: 20px;
+  margin-bottom: 0px;
+  text-align: left;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.createButton:disabled, .joinButton:disabled{
+  background-color: #2B2B2B;
+}
+
+.startGameButton{
+  /* min-width: 100px; */
+  /* height: 30px; */
+  border-radius: 5px;
+  font-family: 'Muli', sans-serif;
+  background-color: #5FC15F;
+  border: none;
+  color: white;
+  margin: 20px;
+  margin-bottom: 0px;
+  text-align: left;
+  text-decoration: none;
+  display: inline-block;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+.readyUnitContainer {
+  width: 205px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.readyUnit {
+  /* min-width: 150px;
+  max-width: 200px; */
+  width: 200px;
+  border-radius: 5px;
+  font-family: 'Muli', sans-serif;
+  background-color: #73C373;
+  border: none;
+  padding-left: 5px;
+  color: white;
+  text-align: left;
+  text-decoration: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+.readyUnit b{
+  text-align: right;
+}
+
+.readyUnit p, .readyUnit b{
+  color: #ffffff
+}

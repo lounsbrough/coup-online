@@ -1,0 +1,381 @@
+.PlayerInfo {
+    text-align: left;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    border: 2px solid #707070;
+    border-radius: 5px;
+    line-height: 40%;
+    width: fit-content;
+    padding-left: 10px;
+    padding-right: 20px;
+}
+
+.Rules, .CheatSheet {
+  cursor: pointer;
+  text-align: left;
+  position: absolute;
+  left: 10px;
+  top: 80px;
+  /* border: 2px solid #707070; */
+  border-radius: 5px;
+  line-height: 40%;
+  width: fit-content;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #F2F2F2;
+  display: flex;
+  align-items: center;
+}
+
+.HomeRules {
+  cursor: pointer;
+  text-align: center;
+  /* border: 2px solid #707070; */
+  border-radius: 5px;
+  line-height: 40%;
+  width: fit-content;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #F2F2F2;
+  display: flex;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+}
+
+.CheatSheet {
+  top: 110px;
+}
+
+.CheatSheetModal {
+  outline: none;
+  position: absolute;
+  top: 100px;
+  left: 5px;
+  right: 5px;
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right:5px;
+  background-color: #FFFFFF;
+}
+
+.CheatSheetContainer img {
+    margin-top: 5px;
+    width: 100%;
+    height: auto;
+}
+
+.Rules p, .HomeRules p, .CheatSheet p{
+  font-size: 12px;
+  margin: 8px;
+  /* margin: 0; */
+  /* padding-bottom: 5px; */
+  margin-left: 0px;
+  margin-right: 2px;
+  display: inline-block;
+}
+
+.RulesContent h1, h3 {
+  line-height: 5px;
+}
+
+.RulesContent h2 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.RulesContent h3 {
+  text-decoration: underline;
+}
+
+.RulesContainer {
+  overflow: hidden;
+  /* padding-bottom: 10px; */
+  /* height: 100%; */
+}
+
+.RulesContent {
+  /* line-height: 12px; */
+  /* height: fit-content; */
+  overflow-y: hidden;
+}
+
+.InfoIcon {
+  /* margin: 5 auto; */
+  /* margin-top: 5px; */
+  display: inline-block;
+}
+
+.CloseModalButtonContainer {
+}
+
+.CloseModalButton {
+  top: 10px;
+  left: 10px;
+  padding: 0;
+  background-color: #FFFFFF;
+  border: 0px;
+}
+
+.cls-1, .cls-4 {
+  fill: none;
+}
+
+.cls-1 {
+  stroke: #2c2c2c;
+}
+
+.cls-2 {
+  fill: #2c2c2c;
+  font-size: 16px;
+  font-family: MalayalamSangamMN, Malayalam Sangam MN;
+}
+
+.cls-3 {
+  stroke: none;
+}
+
+
+.cls-5, .cls-8 {
+  fill: none;
+}
+
+.cls-5 {
+  stroke: #707070;
+}
+
+.cls-6 {
+  fill: #767676;
+  font-size: 16px;
+  font-family: MalayalamSangamMN, Malayalam Sangam MN;
+}
+
+.cls-7 {
+  stroke: none;
+}
+
+.InfluenceSection {
+    background-color: #F2F2F2;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    /* width: 300px; */
+    display: inline-block;
+}
+
+.InfluenceSection p{
+    text-align: center;
+}
+
+.InfluenceSection h3{
+    text-align: center;
+}
+
+.InfluenceUnitContainer {
+    width: 110px;
+    text-align: center;
+    margin-left: 15px;
+    margin-right: 15px;
+    line-height: 30%;
+    display: inline-block;
+}
+
+.CurrentPlayer {
+    text-align: right;
+    position: absolute;
+    right: 15px;
+    top: 5px;
+}
+
+.EventLogContainer {
+    border-right: 2px solid #707070;
+    /* border-left: 0px; */
+    padding-right: 5px;
+    padding-left: 5px;
+    position: absolute;
+    font-size: 12px;
+    right: 15px;
+    top: 60px;
+    text-align: right;
+    line-height: 40%;
+}
+.EventLogBody {
+    overflow-y: scroll;
+    height: 9VH;
+    padding-right: 3px;
+}
+.EventLogTitle {
+    margin: 0;
+    margin-bottom: 5px;
+}
+.bold {
+    font-weight: bold;
+}
+.new {
+    animation: fadeIn ease 1s;
+    -webkit-animation: fadeIn ease 1s;
+    -moz-animation: fadeIn ease 1s;
+    -o-animation: fadeIn ease 1s;
+    -ms-animation: fadeIn ease 1s;
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-moz-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-o-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-ms-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+  }
+}
+
+.GameHeader {
+    position: relative;
+    height: 22VH;
+}
+
+.GameContainer {
+    text-align: center;
+}
+
+.circle {
+    height: 30px;
+    width: 30px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+.DecisionsSection button {
+    min-width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    font-family: 'Muli', sans-serif;
+    background-color: #BCBCBC;
+    border: none;
+    color: white;
+    margin: 20px;
+    margin-bottom: 0px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+}
+#captain {
+    background-color: #80C6E5;
+}
+#duke {
+    background-color: #D55DC7;
+}
+#assassin {
+    background-color: #2B2B2B;
+}
+#contessa {
+    background-color: #E35646;
+}
+#ambassador {
+    background-color: #B4CA1F;
+}
+#captain-color {
+  color: #80C6E5;
+}
+#duke-color {
+  color: #D55DC7;
+}
+#assassin-color {
+  color: #2B2B2B;
+}
+#contessa-color {
+  color: #E35646;
+}
+#ambassador-color {
+  color: #B4CA1F;
+}
+.DecisionTitle {
+    text-align: left;
+    margin-left: 22px;
+}
+
+@media only screen and (min-width: 1024px) {
+    .ReactModal__Content {
+      width: 60%;
+      margin: auto;
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+    .PlayerInfo {
+      left: 10VW;
+      top: 5VH;
+    }
+    .CurrentPlayer {
+        text-align: right;
+        position: absolute;
+        right: 10VW;
+        top: 5VH;
+    }
+    .Rules{
+      left: 10VW;
+      top: 17VH;
+    }
+    .CheatSheet{
+      left: 10VW;
+      top: 22VH;
+    }
+    .CheatSheetModal {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      right: 40px;
+      background-color: #FFFFFF;
+    }
+    .EventLogContainer {
+        text-align: right;
+        position: absolute;
+        right: 10VW;
+        top: 10VH;
+    }
+    .GameHeader {
+        height: 15VH;
+    }
+    .DecisionTitle {
+        margin-left: 10VW;
+    }
+    .DecisionButtonsContainer  {
+        text-align: center;
+        width: 80%;
+        margin-left: 10%;
+    }
+  }
