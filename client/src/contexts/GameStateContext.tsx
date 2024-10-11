@@ -1,7 +1,7 @@
 import { useState, createContext, useContext, ReactNode, useEffect } from 'react'
 import useSWR from 'swr'
 import { PlayerActions, PublicGameState, ServerEvents } from '@shared'
-import { getPlayerId } from '../helpers/playerId'
+import { getPlayerId } from '../helpers/players'
 import { Typography } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'
 import { useWebSocketContext } from './WebSocketContext'

@@ -7,6 +7,7 @@ import ChooseBlockResponse from "./ChooseBlockResponse"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Circle } from "@mui/icons-material"
 import ChooseInfluencesToKeep from "./ChooseInfluencesToKeep"
+import { getWaitingOnPlayers } from "../../helpers/players"
 
 function PlayerDecision() {
   const { gameState } = useGameStateContext()
@@ -68,38 +69,11 @@ function PlayerDecision() {
     return <ChooseChallengeResponse />
   }
 
-  const waitingForColors = new Set<string>()
-
-  if (gameState.pendingBlockChallenge) {
-    waitingForColors.add(gameState.players.find(({ name }) => gameState.pendingBlock?.sourcePlayer === name)!.color)
-  } else if (gameState.pendingBlock) {
-    gameState.players
-      .filter(({ name }) => gameState.pendingBlock?.pendingPlayers.includes(name))
-      .forEach(({ color }) => waitingForColors.add(color))
-  } else if (gameState.pendingActionChallenge) {
-    waitingForColors.add(gameState.players.find(({ name }) => gameState.turnPlayer === name)!.color)
-  } else if (gameState.pendingAction) {
-    gameState.players
-      .filter(({ name }) => gameState.pendingAction?.pendingPlayers.includes(name))
-      .forEach(({ color }) => waitingForColors.add(color))
-  }
-
-  const pendingInfluenceLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
-  if (pendingInfluenceLossPlayers.length) {
-    pendingInfluenceLossPlayers.forEach((pendingInfluenceLossPlayer) => {
-      waitingForColors.add(gameState.players.find(({ name }) => pendingInfluenceLossPlayer === name)!.color)
-    })
-  }
-
-  if (!waitingForColors.size) {
-    waitingForColors.add(gameState.players.find(({ name }) => gameState.turnPlayer === name)!.color)
-  }
-
   return (
     <>
       <Typography variant="h6" my={1} fontWeight="bold">Waiting for other players</Typography>
       <Typography>
-        {[...waitingForColors].map((color) =>
+        {getWaitingOnPlayers(gameState).map(({ color }) =>
           <Circle key={color} sx={{ color }} />
         )}
       </Typography>

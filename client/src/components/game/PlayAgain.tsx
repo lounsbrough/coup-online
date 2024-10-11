@@ -1,5 +1,5 @@
 import { Button, Typography } from "@mui/material"
-import { getPlayerId } from "../../helpers/playerId"
+import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"

@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { Button, Checkbox, Grid2, Typography } from "@mui/material"
-import { getPlayerId } from "../../helpers/playerId"
+import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
-import { PlayerActions } from "@shared/dist"
+import { PlayerActions } from "@shared"
 
 function ChooseInfluencesToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])

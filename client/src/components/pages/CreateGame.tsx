@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
 import { AccountCircle } from "@mui/icons-material"
 import { useNavigate } from "react-router-dom"
-import { getPlayerId } from "../../helpers/playerId"
+import { getPlayerId } from "../../helpers/players"
 import { Link } from "react-router-dom"
 import { PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
