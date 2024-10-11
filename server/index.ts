@@ -292,6 +292,9 @@ io.on('connection', (socket) => {
           if (!socket.data.playerId && playerId) {
             socket.data.playerId = playerId
           }
+          if (playerId !== socket.data.playerId) {
+            throw new GameMutationInputError('playerId does not match socket')
+          }
           const roomPrefix = 'coup-game-'
           const socketRoom = `${roomPrefix}${roomId}`
           if (![...socket.rooms].some((room) => room.startsWith(roomPrefix)) && roomId) {
