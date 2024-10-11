@@ -1,11 +1,11 @@
-import { Badge, Box, Button, Grid2, Typography } from "@mui/material"
+import { Badge, Button, Grid2, Paper, Typography } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Close, MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE, useColorModeContext } from "../../contexts/MaterialThemeContext"
-import { getPlayerId } from "../../helpers/playerId"
+import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 
@@ -23,12 +23,15 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
 
   const colorModeFactor = colorMode === LIGHT_COLOR_MODE ? -1 : 1
 
+  const waitingOnPlayers = getWaitingOnPlayers(gameState)
+
   return (
     <>
       <Grid2 container justifyContent="center" spacing={2}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
             const playerColor = influenceCount ? color : '#777777'
+            const cardTextColor = colorMode === LIGHT_COLOR_MODE ? 'white' : 'black'
 
             return (
               <Badge
@@ -58,23 +61,26 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                   </Button>
                 }
               >
-                <Box
+                <Paper
                   sx={{
                     color: 'white',
                     alignContent: 'center',
                     background: playerColor,
                     borderRadius: 3,
                     p: 1,
-                    width: '6rem'
+                    width: '6rem',
+                    outline: waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
+                      ? `3px solid ${colord(playerColor).lighten(colorModeFactor * 0.1).toHex()}`
+                      : undefined
                   }}>
                   <Typography variant="h6" sx={{
                     fontWeight: 'bold',
-                    color: colord(playerColor).darken(colorModeFactor * 0.4).toHex()
+                    color: cardTextColor
                   }}
                   >
                     <OverflowTooltip>{name}</OverflowTooltip>
                   </Typography>
-                  <Typography variant="h6" sx={{ color: colord(playerColor).darken(colorModeFactor * 0.4).toHex() }}>
+                  <Typography variant="h6" sx={{ color: cardTextColor }}>
                     <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                   </Typography>
                   <Grid2
@@ -103,7 +109,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                       )
                     })}
                   </Grid2>
-                </Box>
+                </Paper>
               </Badge>
             )
           })}

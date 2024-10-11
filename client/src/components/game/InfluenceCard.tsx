@@ -1,4 +1,4 @@
-import { Box, Grid2, Typography, useTheme } from "@mui/material"
+import { Grid2, Paper, Typography, useTheme } from "@mui/material"
 import { Influences } from '@shared'
 import InfluenceIcon from "../icons/InfluenceIcon"
 
@@ -8,7 +8,7 @@ function InfluenceCard({ influence }: {
   const { influenceColors } = useTheme()
 
   return (
-    <Box sx={{
+    <Paper sx={{
       color: 'white',
       textAlign: 'center',
       alignContent: 'center',
@@ -31,7 +31,7 @@ function InfluenceCard({ influence }: {
           </Typography>
         </Grid2>
       </Grid2>
-    </Box>
+    </Paper>
   )
 }
 

@@ -1,7 +1,7 @@
 import { Button, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
 import { ActionAttributes, Actions, getActionMessage, PlayerActions } from '@shared'
 import { useState } from "react"
-import { getPlayerId } from "../../helpers/playerId"
+import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 
