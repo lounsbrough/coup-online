@@ -616,20 +616,22 @@ describe('index', () => {
       return socket
     }
 
-    const getGameStatePromise = async (socket: Socket) => {
-      let resolver: (value?: unknown) => void
-      let rejector: (error: Error) => void
-      const promise = new Promise<PublicGameState>((resolve, reject) => {
-        resolver = resolve
-        rejector = reject
+    const getGameStatePromises = (sockets: Socket[]) => {
+      return sockets.map((socket) => {
+        let resolver: (value?: unknown) => void
+        let rejector: (error: Error) => void
+        const promise = new Promise<PublicGameState>((resolve, reject) => {
+          resolver = resolve
+          rejector = reject
+        })
+        socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState: PublicGameState) => {
+          resolver(gameState)
+        })
+        socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error: string) => {
+          rejector(new Error(error))
+        })
+        return promise
       })
-      socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState: PublicGameState) => {
-        resolver(gameState)
-      })
-      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error: string) => {
-        rejector(new Error(error))
-      })
-      return promise
     }
 
     it('should be able to establish a connection to the socket server', async () => {
@@ -653,33 +655,41 @@ describe('index', () => {
         playerName: chance.string({ length: 10 })
       }
 
-      let gameStatePromise = getGameStatePromise(socket1)
+      let gameStatePromises = getGameStatePromises([socket1])
       socket1.emit(PlayerActions.createGame, {})
-      await expect(gameStatePromise).rejects.toThrow('"playerId" is required, "playerName" is required')
+      await expect(gameStatePromises[0]).rejects.toThrow('"playerId" is required, "playerName" is required')
 
-      gameStatePromise = getGameStatePromise(socket1)
+      gameStatePromises = getGameStatePromises([socket1])
       socket1.emit(PlayerActions.createGame, player1)
-      let gameState = await gameStatePromise
+      const { roomId } = await gameStatePromises[0]
 
-      gameStatePromise = getGameStatePromise(socket1)
-      socket2.emit(PlayerActions.joinGame, { roomId: gameState.roomId, ...player2 })
-      await gameStatePromise
+      gameStatePromises = getGameStatePromises([socket1, socket2])
+      socket2.emit(PlayerActions.joinGame, { roomId, ...player2 })
+      await Promise.all(gameStatePromises)
 
-      gameStatePromise = getGameStatePromise(socket1)
+      gameStatePromises = getGameStatePromises([socket1])
       socket1.emit(PlayerActions.joinGame, {})
-      await expect(gameStatePromise).rejects.toThrow('"roomId" is required, "playerId" is required, "playerName" is required')
+      await expect(gameStatePromises[0]).rejects.toThrow('"roomId" is required, "playerId" is required, "playerName" is required')
 
-      gameStatePromise = getGameStatePromise(socket2)
+      gameStatePromises = getGameStatePromises([socket2])
       socket2.emit(PlayerActions.joinGame, {
         roomId: chance.string({ length: 10 }),
         playerId: chance.string({ length: 10 }),
         playerName: chance.string({ length: 10 })
       })
-      await expect(gameStatePromise).rejects.toThrow(/Room .+ does not exist/)
+      await expect(gameStatePromises[0]).rejects.toThrow(/Room .+ does not exist/)
 
-      gameStatePromise = getGameStatePromise(socket1)
-      socket1.emit(PlayerActions.startGame, { roomId: gameState.roomId, playerId: player2.playerId })
-      gameState = await gameStatePromise
+      gameStatePromises = getGameStatePromises([socket1, socket2])
+      socket1.emit(PlayerActions.startGame, { roomId, playerId: player1.playerId })
+      await Promise.all(gameStatePromises)
+
+      gameStatePromises = getGameStatePromises([socket1])
+      socket1.emit(PlayerActions.gameState, { roomId, playerId: player2.playerId })
+      await expect(gameStatePromises[0]).rejects.toThrow('playerId does not match socket')
+
+      gameStatePromises = getGameStatePromises([socket1])
+      socket1.emit(PlayerActions.gameState, { roomId, playerId: player1.playerId })
+      const gameState = await gameStatePromises[0]
 
       validatePublicState(gameState)
 
