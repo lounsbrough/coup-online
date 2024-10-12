@@ -12,6 +12,7 @@ function Rules() {
   return (
     <>
       <Button
+        size="large"
         startIcon={<Gavel />}
         onClick={() => {
           setModalOpen(true)

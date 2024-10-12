@@ -1,17 +1,17 @@
-import { Badge, Button, Grid2, Paper, Typography } from "@mui/material"
+import { Badge, Button, Grid2, Paper, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Close, MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
-import { LIGHT_COLOR_MODE, useColorModeContext } from "../../contexts/MaterialThemeContext"
+import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 
 function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   const { gameState } = useGameStateContext()
-  const { colorMode } = useColorModeContext()
+  const theme = useTheme()
 
   const { trigger, isMutating, error } = useGameMutation<{
     roomId: string, playerId: string, playerName: string
@@ -21,17 +21,18 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
     return null
   }
 
-  const colorModeFactor = colorMode === LIGHT_COLOR_MODE ? -1 : 1
+  const colorModeFactor = theme.palette.mode === LIGHT_COLOR_MODE ? -1 : 1
 
   const waitingOnPlayers = getWaitingOnPlayers(gameState)
 
   return (
     <>
-      <Grid2 container justifyContent="center" spacing={2}>
+      <Grid2 container justifyContent="center" spacing={3}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
             const playerColor = influenceCount ? color : '#777777'
-            const cardTextColor = colorMode === LIGHT_COLOR_MODE ? 'white' : 'black'
+            const cardTextColor = theme.palette.mode === LIGHT_COLOR_MODE ? 'white' : 'black'
+            const isWaitingOnPlayer = waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
 
             return (
               <Badge
@@ -62,6 +63,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                 }
               >
                 <Paper
+                  elevation={isWaitingOnPlayer ? 5 : undefined}
                   sx={{
                     color: 'white',
                     alignContent: 'center',
@@ -69,9 +71,8 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     borderRadius: 3,
                     p: 1,
                     width: '6rem',
-                    outline: waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
-                      ? `3px solid ${colord(playerColor).lighten(colorModeFactor * 0.1).toHex()}`
-                      : undefined
+                    transition: theme.transitions.create(['transform', 'box-shadow']),
+                    transform: isWaitingOnPlayer ? 'scale(1.06)' : undefined
                   }}>
                   <Typography variant="h6" sx={{
                     fontWeight: 'bold',
