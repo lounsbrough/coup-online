@@ -20,6 +20,7 @@ function UserSettings() {
   return (
     <>
       <Button
+        size="large"
         startIcon={<Settings />}
         onClick={() => {
           setModalOpen(true)

@@ -25,7 +25,8 @@ function App() {
             <Link color='primary'
               href={'/'}
             ><Typography variant="h4" style={{
-              fontWeight: 500
+              fontWeight: 500,
+              fontSize: '2rem'
             }}>Coup</Typography></Link>
             <UserSettings />
           </header>
