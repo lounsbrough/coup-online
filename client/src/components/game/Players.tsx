@@ -27,7 +27,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
 
   return (
     <>
-      <Grid2 container justifyContent="center" spacing={2}>
+      <Grid2 container justifyContent="center" spacing={3}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
             const playerColor = influenceCount ? color : '#777777'
@@ -69,8 +69,9 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     borderRadius: 3,
                     p: 1,
                     width: '6rem',
-                    outline: waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
-                      ? `3px solid ${colord(playerColor).lighten(colorModeFactor * 0.1).toHex()}`
+                    transition: 'transform 0.3s ease',
+                    transform: waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
+                      ? 'scale(1.06)'
                       : undefined
                   }}>
                   <Typography variant="h6" sx={{

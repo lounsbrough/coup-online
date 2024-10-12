@@ -11,7 +11,7 @@ function PlayerInfluences() {
 
   return (
     <>
-      <Grid2 container justifyContent="center" spacing={2}>
+      <Grid2 container justifyContent="center" spacing={3}>
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) =>
