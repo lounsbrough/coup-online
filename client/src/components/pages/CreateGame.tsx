@@ -4,6 +4,7 @@ import { AccountCircle } from "@mui/icons-material"
 import { useNavigate } from "react-router-dom"
 import { getPlayerId } from "../../helpers/players"
 import { Link } from "react-router-dom"
+import { Analytics } from '@vercel/analytics/react'
 import { PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
 
@@ -21,6 +22,7 @@ function CreateGame() {
 
   return (
     <>
+      <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
         <Link to='/'>Home</Link>
         <Typography>Create Game</Typography>

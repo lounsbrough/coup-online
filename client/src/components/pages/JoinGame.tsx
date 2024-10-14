@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react"
+import { Analytics } from '@vercel/analytics/react'
 import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
 import { AccountCircle, Group } from "@mui/icons-material"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
@@ -22,6 +23,7 @@ function JoinGame() {
 
   return (
     <>
+      <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
         <Link to='/'>Home</Link>
         <Typography>Join Game</Typography>
