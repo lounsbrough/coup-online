@@ -9,7 +9,7 @@ function ChooseInfluencesToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
   const { gameState } = useGameStateContext()
 
-  if (!gameState) {
+  if (!gameState?.selfPlayer) {
     return null
   }
 

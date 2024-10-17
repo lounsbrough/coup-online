@@ -6,10 +6,12 @@ import { compressString, decompressString } from './compression'
 
 export const getGameState = async (
   roomId: string
-): Promise<GameState | null> => {
+): Promise<GameState> => {
   const compressed = await getValue(roomId.toUpperCase())
 
-  if (!compressed) return null
+  if (!compressed) {
+    throw new GameMutationInputError(`Room ${roomId} does not exist`, 404)
+  }
 
   return JSON.parse(decompressString(compressed))
 }
@@ -18,18 +20,14 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
   roomId?: string
   gameState?: GameState
   playerId: string
-}): Promise<PublicGameState | null> => {
+}): Promise<PublicGameState> => {
   if ([roomId, gameState].filter(Boolean).length !== 1) {
-    throw new Error('Please provide roomId or gameState')
+    throw new GameMutationInputError('Please provide roomId or gameState')
   }
 
-  const fullGameState = gameState ?? await getGameState(roomId)
+  const fullGameState = gameState || await getGameState(roomId!)
 
-  if (fullGameState === null) {
-    return null
-  }
-
-  let selfPlayer: Player
+  let selfPlayer: Player | undefined
   const publicPlayers: PublicPlayer[] = []
   fullGameState.players.forEach((player) => {
     const pendingInfluenceCountToPutBack = fullGameState.pendingInfluenceLoss[player.name]
@@ -39,7 +37,8 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
       coins: player.coins,
       influenceCount: player.influences.length - pendingInfluenceCountToPutBack,
       deadInfluences: player.deadInfluences,
-      color: player.color
+      color: player.color,
+      ai: player.ai
     })
     if (player.id === playerId) {
       selfPlayer = player
@@ -49,15 +48,15 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
   return {
     eventLogs: fullGameState.eventLogs,
     isStarted: fullGameState.isStarted,
-    pendingAction: fullGameState.pendingAction,
-    pendingActionChallenge: fullGameState.pendingActionChallenge,
-    pendingBlock: fullGameState.pendingBlock,
-    pendingBlockChallenge: fullGameState.pendingBlockChallenge,
     pendingInfluenceLoss: fullGameState.pendingInfluenceLoss,
     players: publicPlayers,
     roomId: fullGameState.roomId,
-    selfPlayer,
-    turnPlayer: fullGameState.turnPlayer
+    ...(selfPlayer && { selfPlayer }),
+    ...(fullGameState.pendingAction && { pendingAction: fullGameState.pendingAction }),
+    ...(fullGameState.pendingActionChallenge && { pendingActionChallenge: fullGameState.pendingActionChallenge }),
+    ...(fullGameState.pendingBlock && { pendingBlock: fullGameState.pendingBlock }),
+    ...(fullGameState.pendingBlockChallenge && { pendingBlockChallenge: fullGameState.pendingBlockChallenge }),
+    ...(fullGameState.turnPlayer && { turnPlayer: fullGameState.turnPlayer })
   }
 }
 
@@ -124,8 +123,12 @@ export const shuffleDeck = (state: GameState) => {
   state.deck = shuffle(state.deck)
 }
 
-export const drawCardFromDeck = (state: GameState) => {
-  return state.deck.pop()
+export const drawCardFromDeck = (state: GameState): Influences => {
+  if (!state.deck.length) {
+    throw new GameMutationInputError('Deck is empty')
+  }
+
+  return state.deck.pop()!
 }
 
 export const logEvent = (state: GameState, log: string) => {

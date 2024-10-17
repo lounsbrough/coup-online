@@ -15,7 +15,8 @@ const getRandomPlayers = (count?: number) =>
     color: chance.color(),
     coins: 2,
     influences: [],
-    deadInfluences: []
+    deadInfluences: [],
+    ai: false
   }), count ?? chance.natural({ min: 2, max: 6 }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
@@ -28,10 +29,6 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, 6),
     players,
-    pendingAction: undefined,
-    pendingActionChallenge: undefined,
-    pendingBlock: undefined,
-    pendingBlockChallenge: undefined,
     pendingInfluenceLoss: {},
     roomId: chance.string(),
     turnPlayer: chance.pickone(players).name

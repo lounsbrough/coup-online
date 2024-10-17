@@ -11,7 +11,7 @@ function ChooseActionResponse() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
 
-  if (!gameState?.pendingAction) {
+  if (!gameState?.selfPlayer || !gameState?.pendingAction) {
     return null
   }
 
@@ -32,73 +32,73 @@ function ChooseActionResponse() {
     />
   }
 
+  if (selectedResponse) {
+    return (
+      <>
+        <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+          Claim an Influence
+        </Typography>
+        <Grid2 container spacing={2} justifyContent="center">
+          {Object.entries(InfluenceAttributes)
+            .sort((a, b) => a[0].localeCompare(b[0]))
+            .map(([influence, influenceAttributes]) => {
+              if (influenceAttributes.legalBlock !== gameState.pendingAction?.action) {
+                return null
+              }
+
+              return <Button
+                key={influence}
+                onClick={() => {
+                  setSelectedInfluence(influence as Influences)
+                }}
+                color={influence as Influences}
+                variant="contained"
+              >{influence}</Button>
+            })}
+        </Grid2>
+      </>
+    )
+  }
+
   return (
     <>
-      {selectedResponse ? (
-        <>
-          <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-            Claim an Influence
-          </Typography>
-          <Grid2 container spacing={2} justifyContent="center">
-            {Object.entries(InfluenceAttributes)
-              .sort((a, b) => a[0].localeCompare(b[0]))
-              .map(([influence, influenceAttributes]) => {
-                if (influenceAttributes.legalBlock !== gameState.pendingAction?.action) {
-                  return null
-                }
+      <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+        {getActionMessage({
+          action: gameState.pendingAction.action,
+          tense: 'pending',
+          actionPlayer: gameState.turnPlayer!,
+          targetPlayer: gameState.pendingAction.targetPlayer
+        })}
+      </ColoredTypography>
+      <Grid2 container spacing={2} justifyContent="center">
+        {Object.values(Responses)
+          .sort((a, b) => a[0].localeCompare(b[0]))
+          .map((response, index) => {
+            if (response === Responses.Challenge &&
+              (!ActionAttributes[gameState.pendingAction?.action as Actions].challengeable
+                || gameState.pendingActionChallenge
+                || gameState.pendingAction?.claimConfirmed)) {
+              return null
+            }
 
-                return <Button
-                  key={influence}
-                  onClick={() => {
-                    setSelectedInfluence(influence as Influences)
-                  }}
-                  color={influence as Influences}
-                  variant="contained"
-                >{influence}</Button>
-              })}
-          </Grid2>
-        </>
-      ) : (
-        <>
-          <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-            {getActionMessage({
-              action: gameState.pendingAction.action,
-              tense: 'pending',
-              actionPlayer: gameState.turnPlayer!,
-              targetPlayer: gameState.pendingAction.targetPlayer
-            })}
-          </ColoredTypography>
-          <Grid2 container spacing={2} justifyContent="center">
-            {Object.values(Responses)
-              .sort((a, b) => a[0].localeCompare(b[0]))
-              .map((response, index) => {
-                if (response === Responses.Challenge &&
-                  (!ActionAttributes[gameState.pendingAction?.action as Actions].challengeable
-                    || gameState.pendingActionChallenge
-                    || gameState.pendingAction?.claimConfirmed)) {
-                  return null
-                }
+            if (response === Responses.Block &&
+              (!ActionAttributes[gameState.pendingAction?.action as Actions].blockable ||
+                (gameState.pendingAction?.targetPlayer &&
+                  gameState.selfPlayer!.name !== gameState.pendingAction?.targetPlayer
+                ))) {
+              return null
+            }
 
-                if (response === Responses.Block &&
-                  (!ActionAttributes[gameState.pendingAction?.action as Actions].blockable ||
-                    (gameState.pendingAction?.targetPlayer &&
-                      gameState.selfPlayer.name !== gameState.pendingAction?.targetPlayer
-                    ))) {
-                  return null
-                }
-
-                return <Button
-                  key={index}
-                  onClick={() => {
-                    setSelectedResponse(response as Responses)
-                  }} variant="contained"
-                >
-                  {response}
-                </Button>
-              })}
-          </Grid2>
-        </>
-      )}
+            return <Button
+              key={index}
+              onClick={() => {
+                setSelectedResponse(response as Responses)
+              }} variant="contained"
+            >
+              {response}
+            </Button>
+          })}
+      </Grid2>
     </>
   )
 }

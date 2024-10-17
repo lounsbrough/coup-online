@@ -2,9 +2,15 @@ import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, GameState, Influences } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
 import { getActionMessage } from "../../../shared/utilities/message"
+import { GameMutationInputError } from "../utilities/errors"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
   const player = state.players.find(({ name }) => name === playerName)
+
+  if (!player) {
+    throw new GameMutationInputError('Player not found')
+  }
+
   player.influences.splice(
     player.influences.findIndex((i) => i === influence),
     1
@@ -29,6 +35,10 @@ export const promptPlayerToLoseInfluence = (
 ) => {
   const player = state.players.find(({ name }) => name === playerName)
 
+  if (!player) {
+    throw new GameMutationInputError('Player not found')
+  }
+
   const pendingInfluencesToKill = state.pendingInfluenceLoss[playerName]
     ?.filter(({ putBackInDeck }) => !putBackInDeck).length ?? 0
 
@@ -47,17 +57,31 @@ export const promptPlayerToLoseInfluence = (
 }
 
 export const processPendingAction = (state: GameState) => {
+  if (!state.pendingAction) {
+    throw new GameMutationInputError('Pending Action not found')
+  }
+
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
-  const targetPlayer = state.players.find(({ name }) => name === state.pendingAction.targetPlayer)
+  const targetPlayer = state.players.find(({ name }) => name === state.pendingAction!.targetPlayer)
+
+  if (!actionPlayer) {
+    throw new GameMutationInputError('Action Player not found')
+  }
+
   logEvent(state, getActionMessage({
-    action: state.pendingAction.action,
+    action: state.pendingAction!.action,
     tense: 'complete',
-    actionPlayer: actionPlayer.name,
+    actionPlayer: actionPlayer!.name,
     targetPlayer: targetPlayer?.name
   }))
 
   if (state.pendingAction.action === Actions.Assassinate) {
-    actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired
+    actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired!
+
+    if (!targetPlayer) {
+      throw new GameMutationInputError('Target Player not found')
+    }
+
     promptPlayerToLoseInfluence(state, targetPlayer.name)
   } else if (state.pendingAction.action === Actions.Exchange) {
     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state))
@@ -67,6 +91,10 @@ export const processPendingAction = (state: GameState) => {
   } else if (state.pendingAction.action === Actions.ForeignAid) {
     actionPlayer.coins += 2
   } else if (state.pendingAction.action === Actions.Steal) {
+    if (!targetPlayer) {
+      throw new GameMutationInputError('Target Player not found')
+    }
+
     const coinsAvailable = Math.min(2, targetPlayer.coins)
     actionPlayer.coins += coinsAvailable
     targetPlayer.coins -= coinsAvailable
@@ -103,7 +131,8 @@ export const addPlayerToGame = (state: GameState, playerId: string, playerName: 
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
     deadInfluences: [],
-    color: state.availablePlayerColors.shift()
+    color: state.availablePlayerColors.shift()!,
+    ai: false
   })
 }
 
@@ -146,6 +175,11 @@ export const resetGame = async (roomId: string) => {
 
 export const revealAndReplaceInfluence = (state: GameState, playerName: string, influence: Influences) => {
   const player = state.players.find(({ name }) => name === playerName)
+
+  if (!player) {
+    throw new GameMutationInputError('Player not found')
+  }
+
   state.deck.push(player.influences.splice(
     player.influences.findIndex((i) => i === influence),
     1
@@ -161,7 +195,7 @@ export const moveTurnToNextPlayer = (state: GameState) => {
   let nextIndex = currentIndex + 1
   while (!state.players[nextIndex % state.players.length].influences.length) {
     if (nextIndex % state.players.length === currentIndex) {
-      throw new Error('Unable to determine next player turn')
+      throw new GameMutationInputError('Unable to determine next player turn')
     }
 
     nextIndex++

@@ -16,7 +16,9 @@ describe('storage', () => {
   mockRedisClient.get = jest.fn().mockImplementation((key: string) => Promise.resolve(expectedRedisStorage[key]))
   mockRedisClient.set = jest.fn().mockImplementation((key: string, value: string, options: redis.SetOptions) => {
     expectedRedisStorage[key] = value
-    setTimeout(() => { delete expectedRedisStorage[key] }, options.EX * 1000)
+    if (options.EX) {
+      setTimeout(() => { delete expectedRedisStorage[key] }, options.EX * 1000)
+    }
     return Promise.resolve()
   })
   mockRedis.createClient.mockReturnValue(mockRedisClient)

@@ -9,7 +9,7 @@ function ChooseInfluenceToLose() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
 
-  if (!gameState) {
+  if (!gameState?.selfPlayer) {
     return null
   }
 

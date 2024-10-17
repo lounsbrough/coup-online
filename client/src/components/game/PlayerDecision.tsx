@@ -12,15 +12,11 @@ import { getWaitingOnPlayers } from "../../helpers/players"
 function PlayerDecision() {
   const { gameState } = useGameStateContext()
 
-  if (!gameState) {
+  if (!gameState?.selfPlayer?.influences.length) {
     return null
   }
 
   const isMyTurn = gameState.turnPlayer === gameState.selfPlayer.name
-
-  if (!gameState.selfPlayer.influences.length) {
-    return null
-  }
 
   const pendingInfluenceLoss = gameState.pendingInfluenceLoss[gameState.selfPlayer.name]
   if (pendingInfluenceLoss) {

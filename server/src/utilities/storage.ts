@@ -1,7 +1,11 @@
 import { createClient, RedisClientType } from "redis"
 
 const createRedisClient = () =>
-  createClient({ url: process.env.REDIS_CONNECTION_STRING })
+  createClient(
+    process.env.REDIS_CONNECTION_STRING
+      ? { url: process.env.REDIS_CONNECTION_STRING }
+      : undefined
+  )
     .on('error', (error: Error) => console.log('Redis Client Error', error))
     .connect()
 

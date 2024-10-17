@@ -9,6 +9,8 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "strictNullChecks": true,
+    "exactOptionalPropertyTypes": true,
     "paths": {
       "*": [
         "node_modules/*",
