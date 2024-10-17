@@ -1,0 +1,16 @@
+name: Run Cypress Client Tests
+
+runs:
+  using: composite
+  steps:
+  - uses: actions/checkout@v4
+  - uses: ./.github/actions/setup-node
+  - run: sudo apt-get install -y redis-tools redis-server
+    shell: bash
+  - run: redis-cli ping
+    shell: bash
+  - run: |
+      cd client
+      pnpm add -g concurrently wait-on
+      pnpm concurrently --kill-others --success first "pnpm --prefix ../server dev" "pnpm wait-on tcp:8008 && pnpm cypress run
+    shell: bash
