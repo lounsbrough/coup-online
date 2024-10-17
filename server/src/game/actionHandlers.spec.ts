@@ -50,7 +50,7 @@ describe('actionHandlers', () => {
       await mutateGameState(await getGameState(roomId), (state) => {
         const influencesUsed: Influences[] = []
         state.players = players.map((player) => {
-          const statePlayer = state.players.find(({ name }) => player.playerName === name)
+          const statePlayer = state.players.find(({ name }) => player.playerName === name)!
           if (player.influences) {
             state.deck.push(...statePlayer.influences.splice(0))
             statePlayer.influences.push(...player.influences)

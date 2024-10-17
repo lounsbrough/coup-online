@@ -165,6 +165,7 @@ export type Player = {
   influences: Influences[]
   deadInfluences: Influences[]
   name: string
+  ai: boolean
 }
 
 export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
@@ -206,14 +207,15 @@ export type GameState = {
 export type PublicGameState = Pick<GameState,
   'eventLogs' |
   'isStarted' |
+  'pendingInfluenceLoss' |
+  'roomId'
+> & Partial<Pick<GameState,
   'pendingAction' |
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
-  'pendingInfluenceLoss' |
-  'roomId' |
   'turnPlayer'
-> & {
+>> & {
   players: PublicPlayer[]
-  selfPlayer: Player
+  selfPlayer?: Player
 }

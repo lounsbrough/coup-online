@@ -63,7 +63,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                 }
               >
                 <Paper
-                  elevation={isWaitingOnPlayer ? 5 : undefined}
+                  elevation={isWaitingOnPlayer ? 5 : 1}
                   sx={{
                     color: 'white',
                     alignContent: 'center',

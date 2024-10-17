@@ -8,7 +8,7 @@ import { useWebSocketContext } from './WebSocketContext'
 import { getBaseUrl } from '../helpers/api'
 
 type GameStateContextType = {
-  gameState?: PublicGameState,
+  gameState?: PublicGameState | undefined,
   setGameState: (newGameState: PublicGameState) => void
 }
 

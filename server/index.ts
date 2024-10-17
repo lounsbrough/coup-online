@@ -6,7 +6,7 @@ import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, ActionAttributes } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
-import { Server as ioServer } from 'socket.io'
+import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
 
@@ -19,6 +19,8 @@ type ClientToServerEvents = {
   [action in PlayerActions]: (params: unknown) => Promise<void>
 }
 
+type InterServerEvents = object
+
 type SocketData = { playerId: string }
 
 const port = process.env.EXPRESS_PORT || 8008
@@ -27,7 +29,7 @@ const app = express()
 app.use(cors())
 app.use(json())
 const server = http.createServer(app)
-const io = new ioServer<ClientToServerEvents, ServerToClientEvents, SocketData>(server, {
+const io = new ioServer<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, {
   cors: { origin: "*" }
 })
 
@@ -301,19 +303,28 @@ io.on('connection', (socket) => {
             await socket.join(socketRoom)
           }
           const fullGameState = await getGameState(roomId)
-          const emitGameStateChanged = async (pushToSocket: {
-            emit: (event: string, gameState: PublicGameState) => void;
-            data: { playerId: string }
-          }) => {
-            pushToSocket.emit(ServerEvents.gameStateChanged, await getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
+          const emitGameStateChanged = async (pushToSocket: Socket) => {
+            try {
+              const publicGameState = await getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId })
+              pushToSocket.emit(ServerEvents.gameStateChanged, publicGameState)
+            } catch (error) {
+              if (error instanceof GameMutationInputError) {
+                if (error.httpCode >= 500 && error.httpCode <= 599) {
+                  console.error(error)
+                }
+                pushToSocket.emit(ServerEvents.error, error.message)
+              } else {
+                console.error(error)
+                pushToSocket.emit(ServerEvents.error, 'Unexpected error processing request')
+              }
+            }
           }
           if (event !== PlayerActions.gameState) {
-            socket.rooms.forEach(async (room) => {
-              if (room.startsWith(roomPrefix)) {
-                const roomSockets = await io.in(room).fetchSockets()
-                roomSockets.forEach(emitGameStateChanged)
-              }
-            })
+            const roomSocketIds = io.of('/').adapter.rooms.get(socketRoom)
+            if (roomSocketIds) {
+              const roomSockets = [...roomSocketIds].map((socketId) => io.sockets.sockets.get(socketId))
+              roomSockets.forEach(emitGameStateChanged)
+            }
           } else {
             await emitGameStateChanged(socket)
           }
@@ -338,7 +349,8 @@ type PublicGameStateOrError = PublicGameState | { error: string }
 const responseHandler = <T>(handler: (props: T) =>
   Promise<{ roomId: string, playerId: string }>) => async (res: Response<PublicGameStateOrError>, props: T) => {
     try {
-      res.status(200).json(await getPublicGameState(await handler(props)))
+      const publicGameState = await getPublicGameState(await handler(props))
+      res.status(200).json(publicGameState)
     } catch (error) {
       if (error instanceof GameMutationInputError) {
         res.status(error.httpCode).send({ error: error.message })

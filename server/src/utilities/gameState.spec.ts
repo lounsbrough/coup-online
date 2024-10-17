@@ -1,6 +1,6 @@
 import { Chance } from "chance"
 import { drawCardFromDeck, getGameState, getPublicGameState, mutateGameState, validateGameState } from "./gameState"
-import { Actions, GameState, Influences } from '../../../shared/types/game'
+import { Actions, GameState, Influences, PublicGameState } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 import { compressString, decompressString } from "./compression"
@@ -22,7 +22,8 @@ const getRandomPlayers = (state: GameState, count?: number) =>
     color: chance.color(),
     coins: 2,
     influences: [...Array.from({ length: 2 }, () => drawCardFromDeck(state))],
-    deadInfluences: []
+    deadInfluences: [],
+    ai: false
   }), count ?? chance.natural({ min: 2, max: 6 }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
@@ -33,10 +34,6 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, 6),
     players: [],
-    pendingAction: undefined,
-    pendingActionChallenge: undefined,
-    pendingBlock: undefined,
-    pendingBlockChallenge: undefined,
     pendingInfluenceLoss: {},
     roomId: chance.string()
   }
@@ -76,26 +73,34 @@ describe('gameState', () => {
       const selfPlayer = chance.pickone(gameState.players)
       getValueMock.mockResolvedValue(JSON.stringify(gameState))
 
-      const publicGameState = {
-        ...gameState,
+      const publicGameState: PublicGameState = {
+        eventLogs: gameState.eventLogs,
+        isStarted: gameState.isStarted,
+        pendingInfluenceLoss: gameState.pendingInfluenceLoss,
+        roomId: gameState.roomId,
         selfPlayer: {
           id: selfPlayer.id,
           name: selfPlayer.name,
           color: selfPlayer.color,
           coins: selfPlayer.coins,
           influences: selfPlayer.influences,
-          deadInfluences: selfPlayer.deadInfluences
+          deadInfluences: selfPlayer.deadInfluences,
+          ai: selfPlayer.ai
         },
         players: gameState.players.map((player) => ({
           name: player.name,
           color: player.color,
           coins: player.coins,
           influenceCount: player.influences.length,
-          deadInfluences: player.deadInfluences
-        }))
+          deadInfluences: player.deadInfluences,
+          ai: player.ai
+        })),
+        ...(gameState.pendingAction && { pendingAction: gameState.pendingAction }),
+        ...(gameState.pendingActionChallenge && { pendingActionChallenge: gameState.pendingActionChallenge }),
+        ...(gameState.pendingBlock && { pendingBlock: gameState.pendingBlock }),
+        ...(gameState.pendingBlockChallenge && { pendingBlockChallenge: gameState.pendingBlockChallenge }),
+        ...(gameState.turnPlayer && { turnPlayer: gameState.turnPlayer })
       }
-      delete publicGameState.availablePlayerColors
-      delete publicGameState.deck
 
       expect(await getPublicGameState({ gameState, playerId: selfPlayer.id }))
         .toStrictEqual(publicGameState)
@@ -167,7 +172,7 @@ describe('gameState', () => {
         error: "Game state must always have 1 to 6 players"
       },
       {
-        mutation: (state: GameState) => { state.players = getRandomPlayers(state, 7) },
+        mutation: (state: GameState) => { state.players.push(...getRandomPlayers(state, 7 - state.players.length)) },
         error: "Game state must always have 1 to 6 players"
       },
       {

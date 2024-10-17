@@ -10,7 +10,9 @@ function ChooseChallengeResponse() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
 
-  if (!gameState?.pendingActionChallenge && !gameState?.pendingBlockChallenge) {
+  if (!gameState?.selfPlayer ||
+    (!gameState?.pendingActionChallenge && !gameState?.pendingBlockChallenge)
+  ) {
     return null
   }
 

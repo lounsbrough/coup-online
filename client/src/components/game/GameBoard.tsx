@@ -12,7 +12,7 @@ function GameBoard() {
   const { gameState } = useGameStateContext()
   const theme = useTheme()
 
-  if (!gameState) {
+  if (!gameState?.selfPlayer) {
     return null
   }
 

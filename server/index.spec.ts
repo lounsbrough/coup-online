@@ -343,10 +343,10 @@ describe('index', () => {
           validatePublicState(responseJson)
           expect(responseJson.players).toHaveLength(1)
           expect(responseJson.players).toContainEqual(expect.objectContaining({
-            name: removingPlayer.name
+            name: removingPlayer!.name
           }))
           expect(responseJson.players).not.toContainEqual(expect.objectContaining({
-            name: removedPlayer.name
+            name: removedPlayer!.name
           }))
         }
       })
@@ -384,7 +384,7 @@ describe('index', () => {
             const firstPlayerIndex = gameState.players.findIndex(({ name }) => name === turnPlayerName)
 
             const privatePlayers = gameState.players.map(({ name }) => ({
-              id: players.find((player) => player.name === name).id,
+              id: players.find((player) => player.name === name)!.id,
               name
             }))
 
@@ -397,7 +397,7 @@ describe('index', () => {
             await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 4) % privatePlayers.length].id, action: Actions.Assassinate, targetPlayer: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].name })
             response = await postApi(PlayerActions.actionResponse, { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, response: Responses.Pass })
             gameState = await response.json() as PublicGameState
-            await postApi(PlayerActions.loseInfluences, { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, influences: [gameState.selfPlayer.influences[0]] })
+            await postApi(PlayerActions.loseInfluences, { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, influences: [gameState.selfPlayer?.influences[0]] })
             await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 5) % privatePlayers.length].id, action: Actions.Income })
             await postApi(PlayerActions.action, { roomId, playerId: privatePlayers[(firstPlayerIndex + 6) % privatePlayers.length].id, action: Actions.Assassinate, targetPlayer: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].name })
             await postApi(PlayerActions.actionResponse, { roomId, playerId: privatePlayers[(firstPlayerIndex + 7) % privatePlayers.length].id, response: Responses.Pass })
@@ -609,9 +609,9 @@ describe('index', () => {
   describe('socket messages', () => {
     const getConnectedSocket = async () => {
       const socket = io(baseUrl)
-      let resolver: (value?: unknown) => void
-      const promise = new Promise((resolve) => { resolver = resolve })
-      socket.on('connect', resolver)
+      const promise = new Promise((resolve) => {
+        socket.on('connect', () => { resolve(undefined) })
+      })
       await promise
       return socket
     }

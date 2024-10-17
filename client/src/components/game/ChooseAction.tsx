@@ -11,7 +11,7 @@ function ChooseAction() {
   const { gameState } = useGameStateContext()
   const theme = useTheme()
 
-  if (!gameState) {
+  if (!gameState?.selfPlayer) {
     return null
   }
 
@@ -37,86 +37,86 @@ function ChooseAction() {
     />
   }
 
+  if (selectedAction) {
+    return (
+      <>
+        <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+          Choose a Target
+        </Typography>
+        <Grid2 container spacing={2} justifyContent="center">
+          {gameState.players.map((player) => {
+            if (player.name === gameState.selfPlayer?.name || !player.influenceCount
+            ) {
+              return null
+            }
+
+            const paletteColor = theme.palette.augmentColor({
+              color: { main: player.color }
+            })
+
+            return <Button
+              key={player.name}
+              onClick={() => {
+                setSelectedTargetPlayer(player.name)
+              }}
+              sx={{
+                color: paletteColor.contrastText,
+                background: paletteColor.main,
+                '&:hover': {
+                  background: paletteColor.dark
+                }
+              }}
+              variant="contained"
+            >{player.name}</Button>
+          })}
+        </Grid2>
+      </>
+    )
+  }
+
   return (
     <>
-      {selectedAction ? (
-        <>
-          <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-            Choose a Target
-          </Typography>
-          <Grid2 container spacing={2} justifyContent="center">
-            {gameState.players.map((player) => {
-              if (player.name === gameState.selfPlayer.name || !player.influenceCount
-              ) {
-                return null
-              }
+      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+        Choose an Action
+      </Typography>
+      <Grid2 container spacing={2} justifyContent="center">
+        {Object.entries(ActionAttributes)
+          .sort((a, b) => a[0].localeCompare(b[0]))
+          .map(([action, actionAttributes], index) => {
+            const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer!.coins < actionAttributes.coinsRequired
 
-              const paletteColor = theme.palette.augmentColor({
-                color: { main: player.color }
-              })
+            if (gameState.selfPlayer!.coins >= 10 && action !== Actions.Coup) {
+              return null
+            }
 
-              return <Button
-                key={player.name}
-                onClick={() => {
-                  setSelectedTargetPlayer(player.name)
-                }}
-                sx={{
-                  color: paletteColor.contrastText,
-                  background: paletteColor.main,
-                  '&:hover': {
-                    background: paletteColor.dark
-                  }
-                }}
-                variant="contained"
-              >{player.name}</Button>
-            })}
-          </Grid2>
-        </>
-      ) : (
-        <>
-          <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-            Choose an Action
-          </Typography>
-          <Grid2 container spacing={2} justifyContent="center">
-            {Object.entries(ActionAttributes)
-              .sort((a, b) => a[0].localeCompare(b[0]))
-              .map(([action, actionAttributes], index) => {
-                const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer.coins < actionAttributes.coinsRequired
-
-                if (gameState.selfPlayer.coins >= 10 && action !== Actions.Coup) {
-                  return null
-                }
-
-                return (
-                  <Grid2 key={index}>
-                    {lackingCoins ? (
-                      <Tooltip title="Not enough coins">
-                        <span>
-                          <Button
-                            variant="contained"
-                            disabled
-                          >
-                            {action}
-                          </Button>
-                        </span>
-                      </Tooltip>
-                    ) : (
+            return (
+              <Grid2 key={index}>
+                {lackingCoins ? (
+                  <Tooltip title="Not enough coins">
+                    <span>
                       <Button
-                        onClick={() => {
-                          setSelectedAction(action as Actions)
-                        }}
-                        color={action as Actions}
                         variant="contained"
+                        disabled
                       >
                         {action}
                       </Button>
-                    )}
-                  </Grid2>
-                )
-              })}
-          </Grid2>
-        </>
-      )}
+                    </span>
+                  </Tooltip>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setSelectedAction(action as Actions)
+                    }}
+                    color={action as Actions}
+                    variant="contained"
+                  >
+                    {action}
+                  </Button>
+                )}
+              </Grid2>
+            )
+          })}
+      </Grid2>
     </>
   )
 }

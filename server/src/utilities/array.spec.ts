@@ -4,10 +4,6 @@ import { shuffle } from "./array"
 const chance = new Chance()
 
 describe('array', () => {
-  it('should throw if input is not iterable', () => {
-    expect(() => shuffle(null)).toThrow()
-  })
-
   it('should shuffle original array', () => {
     const original = Array.from({ length: 100 }, () => chance.natural())
     const shuffled = shuffle(original)

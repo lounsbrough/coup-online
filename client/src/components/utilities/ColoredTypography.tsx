@@ -56,7 +56,7 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
       coloredSegments.push({
         text: matchedSpecialWord.word,
         position: matchedSpecialWord.position!,
-        color: colorsMap.find(([match]) => match === matchedSpecialWord.word)?.[1],
+        color: colorsMap.find(([match]) => match === matchedSpecialWord.word)?.[1] ?? '',
         fontWeight: 'bold'
       })
       const nonColoredPosition = matchedSpecialWord.position! + matchedSpecialWord.word.length
@@ -83,7 +83,7 @@ function ColoredTypography({ children, ...props }: Omit<TypographyProps, 'childr
           key={index}
           component='span'
           fontWeight={fontWeight ?? 'inherit'}
-          sx={{ color }}
+          sx={color ? { color } : {}}
         >{text}</Typography>)}
     </Typography>
   )
