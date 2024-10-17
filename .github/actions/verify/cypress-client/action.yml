@@ -12,5 +12,6 @@ runs:
   - run: |
       cd client
       pnpm add -g concurrently wait-on
+      pnpm cypress install
       pnpm concurrently --kill-others --success first "pnpm --prefix ../server dev" "pnpm wait-on tcp:8008 && pnpm cypress run"
     shell: bash
