@@ -86,6 +86,7 @@ describe('actionHandlers', () => {
       await expect(removeFromGameHandler({ roomId, playerId: hailey.playerId, playerName: david.playerName })).rejects.toThrow('Game has already started')
       await expect(joinGameHandler({ roomId, ...david })).rejects.toThrow('Game has already started')
       await expect(resetGameHandler({ roomId, playerId: hailey.playerId })).rejects.toThrow('Current game is in progress')
+      await expect(joinGameHandler({ roomId, ...hailey, playerName: 'new hailey' })).rejects.toThrow(`You can join the game as "${hailey.playerName}"`)
 
       await mutateGameState(await getGameState(roomId), (state) => {
         state.players.slice(1).forEach((player) => player.deadInfluences.push(...player.influences.splice(0)))

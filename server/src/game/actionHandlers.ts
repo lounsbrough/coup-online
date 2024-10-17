@@ -44,6 +44,10 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
 
   if (player) {
     if (player.name.toUpperCase() !== playerName.toUpperCase()) {
+      if (gameState.isStarted) {
+        throw new GameMutationInputError(`You can join the game as "${player.name}"`)
+      }
+
       await mutateGameState(gameState, (state) => {
         const oldPlayer = gameState.players.find((player) => player.id === playerId)
         if (!oldPlayer) {
