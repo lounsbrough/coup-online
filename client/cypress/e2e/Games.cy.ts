@@ -38,48 +38,50 @@ describe('Games', () => {
       }
     })
 
-    cy.loadPlayer(gameState.roomId, harper)
+    const gameUrl = `/game?roomId=${encodeURIComponent(gameState.roomId)}`
+
+    cy.loadPlayer(gameUrl, harper)
     cy.contains('button', Actions.Tax).click()
 
-    cy.loadPlayer(gameState.roomId, david)
+    cy.loadPlayer(gameUrl, david)
     cy.contains('button', Responses.Pass).click()
     cy.contains('button', Actions.Steal).click()
     cy.contains('button', harper).click()
 
-    cy.loadPlayer(gameState.roomId, harper)
+    cy.loadPlayer(gameUrl, harper)
     cy.contains('button', Responses.Pass).click()
     cy.contains('button', Actions.Income).click()
 
-    cy.loadPlayer(gameState.roomId, david)
+    cy.loadPlayer(gameUrl, david)
     cy.contains('button', Actions.ForeignAid).click()
 
-    cy.loadPlayer(gameState.roomId, harper)
+    cy.loadPlayer(gameUrl, harper)
     cy.contains('button', Responses.Block).click()
     cy.contains('button', Influences.Duke).click()
 
-    cy.loadPlayer(gameState.roomId, david)
+    cy.loadPlayer(gameUrl, david)
     cy.contains('button', Responses.Challenge).click()
 
-    cy.loadPlayer(gameState.roomId, harper)
+    cy.loadPlayer(gameUrl, harper)
     cy.contains('button', Influences.Contessa).click()
     cy.contains('button', Actions.Assassinate).click()
     cy.contains('button', david).click()
 
-    cy.loadPlayer(gameState.roomId, david)
+    cy.loadPlayer(gameUrl, david)
     cy.contains('button', Responses.Pass).click()
     cy.contains('button', Influences.Duke).click()
     cy.contains('button', Actions.Income).click()
 
-    cy.loadPlayer(gameState.roomId, harper)
+    cy.loadPlayer(gameUrl, harper)
     cy.contains('button', Actions.Exchange).click()
 
-    cy.loadPlayer(gameState.roomId, david)
+    cy.loadPlayer(gameUrl, david)
     cy.contains('button', Responses.Pass).click()
 
-    cy.loadPlayer(gameState.roomId, harper)
+    cy.loadPlayer(gameUrl, harper)
     cy.get('input[type="checkbox"]').eq(1).click()
 
-    cy.loadPlayer(gameState.roomId, david)
+    cy.loadPlayer(gameUrl, david)
     cy.contains('button', Actions.Coup).click()
     cy.contains('button', harper).click()
 

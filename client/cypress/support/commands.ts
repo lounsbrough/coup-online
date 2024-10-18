@@ -10,14 +10,14 @@ import { confirmActionsStorageKey, playerIdStorageKey } from "../../src/helpers/
 declare global {
   namespace Cypress {
     interface Chainable {
-      loadPlayer(roomId: string, playerId: string): Chainable<void>
+      loadPlayer(url: string, playerId: string): Chainable<void>
     }
   }
 }
 
 
-Cypress.Commands.add('loadPlayer', (roomId: string, playerId: string) => {
-  cy.visit(`/game?roomId=${encodeURIComponent(roomId)}`, {
+Cypress.Commands.add('loadPlayer', (url: string, playerId: string) => {
+  cy.visit(url, {
     onBeforeLoad({ localStorage }) {
       localStorage.setItem(playerIdStorageKey, playerId)
       localStorage.setItem(confirmActionsStorageKey, JSON.stringify(false))

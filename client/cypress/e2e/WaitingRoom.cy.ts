@@ -1,12 +1,6 @@
-import { playerIdStorageKey } from '../../src/helpers/localStorageKeys'
-
 describe('Waiting Room', () => {
   it('should allow players to create, join, leave, and start games', () => {
-    cy.visit('/', {
-      onBeforeLoad({ localStorage }) {
-        localStorage.setItem(playerIdStorageKey, 'player1')
-      }
-    })
+    cy.loadPlayer('/', 'player1')
     cy.contains('button', 'Create New Game').click()
     cy.get('input').should('not.be.disabled').type('Player 1')
     cy.contains('button', 'Create Game').click()
@@ -15,11 +9,7 @@ describe('Waiting Room', () => {
       cy.setCookie('cypressRoomId', el.text().replace('Room: ', ''))
     })
 
-    cy.visit('/', {
-      onBeforeLoad({ localStorage }) {
-        localStorage.setItem(playerIdStorageKey, 'player2')
-      }
-    })
+    cy.loadPlayer('/', 'player2')
     cy.contains('button', 'Join Existing Game').click()
 
     cy.getCookie('cypressRoomId').then((cookie) => {
@@ -33,11 +23,7 @@ describe('Waiting Room', () => {
 
     cy.contains('Add at least one more player to start game')
 
-    cy.visit('/', {
-      onBeforeLoad({ localStorage }) {
-        localStorage.setItem(playerIdStorageKey, 'player1')
-      }
-    })
+    cy.loadPlayer('/', 'player1')
     cy.contains('button', 'Join Existing Game').click()
 
     cy.getCookie('cypressRoomId').then((cookie) => {
