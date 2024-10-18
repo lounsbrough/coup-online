@@ -10,14 +10,12 @@ function PlayerInfluences() {
   }
 
   return (
-    <>
-      <Grid2 container justifyContent="center" spacing={3}>
-        {gameState.selfPlayer.influences
-          .sort((a, b) => a.localeCompare(b))
-          .map((influence, index) =>
-            <InfluenceCard key={index} influence={influence} />)}
-      </Grid2>
-    </>
+    <Grid2 container justifyContent="center" spacing={3}>
+      {gameState.selfPlayer.influences
+        .sort((a, b) => a.localeCompare(b))
+        .map((influence, index) =>
+          <InfluenceCard key={`${influence}-${index}`} influence={influence} />)}
+    </Grid2>
   )
 }
 
