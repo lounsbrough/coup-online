@@ -1,27 +1,30 @@
-import { Influences } from '../../../shared/types/game'
+import { Actions, Influences, Responses } from '../../../shared/types/game'
 import { getGameState } from '../helpers/gameState'
 
 describe('Games', () => {
-  it('should tax -> pass', () => {
+  it('should play game using all actions', () => {
+    const david = 'David'
+    const harper = 'Harper'
+
     const gameState = getGameState({
       players: [
         {
-          name: 'Harper',
-          influences: [Influences.Ambassador, Influences.Contessa],
-          deadInfluences: [],
-          ai: false,
-          coins: 2,
-          color: '#0000ff',
-          id: 'harper'
-        },
-        {
-          name: 'David',
+          name: david,
           influences: [Influences.Duke, Influences.Captain],
           deadInfluences: [],
           ai: false,
           coins: 2,
-          color: '#00ff00',
-          id: 'david'
+          color: '#00cc00',
+          id: david
+        },
+        {
+          name: harper,
+          influences: [Influences.Ambassador, Influences.Contessa],
+          deadInfluences: [],
+          ai: false,
+          coins: 2,
+          color: '#33aaff',
+          id: harper
         }
       ]
     })
@@ -30,17 +33,56 @@ describe('Games', () => {
       state: {
         ...gameState,
         isStarted: true,
-        turnPlayer: 'Harper',
+        turnPlayer: harper,
         eventLogs: []
       }
     })
 
-    cy.loadPlayer(gameState.roomId, 'harper')
+    cy.loadPlayer(gameState.roomId, harper)
+    cy.contains('button', Actions.Tax).click()
 
-    cy.contains('Tax').click()
+    cy.loadPlayer(gameState.roomId, david)
+    cy.contains('button', Responses.Pass).click()
+    cy.contains('button', Actions.Steal).click()
+    cy.contains('button', harper).click()
 
-    cy.loadPlayer(gameState.roomId, 'david')
+    cy.loadPlayer(gameState.roomId, harper)
+    cy.contains('button', Responses.Pass).click()
+    cy.contains('button', Actions.Income).click()
 
-    cy.contains('Pass').click()
+    cy.loadPlayer(gameState.roomId, david)
+    cy.contains('button', Actions.ForeignAid).click()
+
+    cy.loadPlayer(gameState.roomId, harper)
+    cy.contains('button', Responses.Block).click()
+    cy.contains('button', Influences.Duke).click()
+
+    cy.loadPlayer(gameState.roomId, david)
+    cy.contains('button', Responses.Challenge).click()
+
+    cy.loadPlayer(gameState.roomId, harper)
+    cy.contains('button', Influences.Contessa).click()
+    cy.contains('button', Actions.Assassinate).click()
+    cy.contains('button', david).click()
+
+    cy.loadPlayer(gameState.roomId, david)
+    cy.contains('button', Responses.Pass).click()
+    cy.contains('button', Influences.Duke).click()
+    cy.contains('button', Actions.Income).click()
+
+    cy.loadPlayer(gameState.roomId, harper)
+    cy.contains('button', Actions.Exchange).click()
+
+    cy.loadPlayer(gameState.roomId, david)
+    cy.contains('button', Responses.Pass).click()
+
+    cy.loadPlayer(gameState.roomId, harper)
+    cy.get('input[type="checkbox"]').eq(1).click()
+
+    cy.loadPlayer(gameState.roomId, david)
+    cy.contains('button', Actions.Coup).click()
+    cy.contains('button', harper).click()
+
+    cy.contains(`${david} Wins!`)
   })
 })
