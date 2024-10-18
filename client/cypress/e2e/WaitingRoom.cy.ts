@@ -8,7 +8,7 @@ describe('Waiting Room', () => {
       }
     })
     cy.contains('button', 'Create New Game').click()
-    cy.get('input').type('Player 1')
+    cy.get('input').should('not.be.disabled').type('Player 1')
     cy.contains('button', 'Create Game').click()
 
     cy.contains(/Room: .+/).then((el) => {
@@ -22,11 +22,13 @@ describe('Waiting Room', () => {
     })
     cy.contains('button', 'Join Existing Game').click()
 
-    cy.getCookie('cypressRoomId').then(({ value }) => {
-      cy.get('input').eq(0).type(value)
-      cy.get('input').eq(1).type('Player 2')
+    cy.getCookie('cypressRoomId').then((cookie) => {
+      cy.get('input').eq(0).should('not.be.disabled').type(cookie!.value)
+      cy.get('input').eq(1).should('not.be.disabled').type('Player 2')
     })
 
     cy.contains('button', 'Join Game').click()
+
+    cy.contains('button', 'Start Game').click()
   })
 })
