@@ -218,4 +218,5 @@ export type PublicGameState = Pick<GameState,
 >> & {
   players: PublicPlayer[]
   selfPlayer?: Player
+  deckCount: number
 }
