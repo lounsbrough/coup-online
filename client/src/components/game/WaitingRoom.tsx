@@ -8,6 +8,7 @@ import { useState } from "react"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
+import Footer from "../Footer"
 
 function WaitingRoom() {
   const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
@@ -77,6 +78,7 @@ function WaitingRoom() {
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </Grid2>
       </Grid2>
+      <Footer />
     </>
   )
 }

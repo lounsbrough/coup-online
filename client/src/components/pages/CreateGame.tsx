@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 import { Analytics } from '@vercel/analytics/react'
 import { PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
+import Footer from "../Footer"
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
@@ -61,6 +62,7 @@ function CreateGame() {
         </Grid2>
         {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>
+      <Footer />
     </>
   )
 }
