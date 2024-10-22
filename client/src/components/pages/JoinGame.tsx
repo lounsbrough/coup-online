@@ -6,7 +6,6 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { getPlayerId } from "../../helpers/players"
 import { PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
-import Footer from "../Footer"
 
 function JoinGame() {
   const [searchParams] = useSearchParams()
@@ -80,7 +79,6 @@ function JoinGame() {
         </Grid2>
         {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>
-      <Footer />
     </>
   )
 }
