@@ -27,7 +27,7 @@
     "socket.io": "^4.8.0"
   },
   "devDependencies": {
-    "@eslint/js": "^8.57.1",
+    "@eslint/js": "^9.13.0",
     "@types/body-parser": "^1.19.5",
     "@types/chance": "^1.1.6",
     "@types/cors": "^2.8.17",
