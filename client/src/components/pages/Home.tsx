@@ -1,6 +1,6 @@
 import { Button, Grid2, Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-import Footer from "../Footer"
+import GitHubLinks from "../GitHubLinks"
 
 function Home() {
   const navigate = useNavigate()
@@ -27,7 +27,7 @@ function Home() {
           onClick={() => { navigate(`/create-game`) }}
         >Create New Game</Button>
       </Grid2>
-      <Footer />
+      <GitHubLinks />
     </>
   )
 }
