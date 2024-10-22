@@ -43,7 +43,6 @@ function App() {
               <Route path="*" element={<div>Page not found 😱 - Go <Link href={'/'}>Home</Link></div>} />
             </Route>
           </Routes>
-
         </WebSocketContextProvider>
       </MaterialThemeContextProvider>
     </div>

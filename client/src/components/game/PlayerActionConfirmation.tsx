@@ -20,7 +20,7 @@ function PlayerActionConfirmation({
   onCancel: () => void
 }) {
   const [autoSubmitProgress, setAutoSubmitProgress] = useState(0)
-  const autoSubmitInterval = useRef<NodeJS.Timer>()
+  const autoSubmitInterval = useRef<ReturnType<typeof setInterval>>()
   const { gameState } = useGameStateContext()
   const theme = useTheme()
 

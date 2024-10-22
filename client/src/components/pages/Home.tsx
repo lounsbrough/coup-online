@@ -1,8 +1,9 @@
-import { Button, Grid2, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Button, Grid2, Typography } from "@mui/material"
+import { useNavigate } from "react-router-dom"
+import Footer from "../Footer"
 
 function Home() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <>
@@ -16,18 +17,19 @@ function Home() {
         <Button
           type="submit" sx={{ mt: 5 }}
           variant="contained"
-          onClick={() => { navigate(`/join-game`); }}
+          onClick={() => { navigate(`/join-game`) }}
         >Join Existing Game</Button>
       </Grid2>
       <Grid2>
         <Button
           type="submit" sx={{ mt: 5 }}
           variant="contained"
-          onClick={() => { navigate(`/create-game`); }}
+          onClick={() => { navigate(`/create-game`) }}
         >Create New Game</Button>
       </Grid2>
+      <Footer />
     </>
   )
 }
 
-export default Home;
+export default Home
