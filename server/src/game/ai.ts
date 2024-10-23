@@ -1,9 +1,8 @@
-import { countOfEachInfluenceDeck } from "../utilities/gameState"
+import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { Influences, PublicGameState } from "../../../shared/types/game"
 
 export const getProbabilityOfPlayerInfluence = (
   gameState: PublicGameState,
-  playerName: string,
   influence: Influences
 ) => {
   const knownInfluences = [
@@ -13,7 +12,7 @@ export const getProbabilityOfPlayerInfluence = (
 
   const knownMatchedInfluenceCount = knownInfluences.filter((i) => i === influence).length
 
-  if (knownMatchedInfluenceCount === countOfEachInfluenceDeck) {
+  if (knownMatchedInfluenceCount === countOfEachInfluenceInDeck) {
     return 0
   }
 
@@ -22,7 +21,5 @@ export const getProbabilityOfPlayerInfluence = (
     gameState.players.reduce((agg, { deadInfluences }) => agg + deadInfluences.length, 0) +
     gameState.deckCount
 
-  console.log({ countOfEachInfluenceDeck, knownMatchedInfluenceCount, totalInfluenceCount, knownInfluences })
-
-  return (countOfEachInfluenceDeck - knownMatchedInfluenceCount) / (totalInfluenceCount - knownInfluences.length)
+  return (countOfEachInfluenceInDeck - knownMatchedInfluenceCount) / (totalInfluenceCount - knownInfluences.length)
 }

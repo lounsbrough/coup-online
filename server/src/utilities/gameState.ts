@@ -4,7 +4,7 @@ import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 
-export const countOfEachInfluenceDeck = 3
+export const countOfEachInfluenceInDeck = 3
 
 export const getGameState = async (
   roomId: string
@@ -83,7 +83,7 @@ export const validateGameState = (state: GameState) => {
     influences.forEach((card) => cardCounts[card]++)
     deadInfluences.forEach((card) => cardCounts[card]++)
   })
-  if (Object.values(cardCounts).some((count) => count !== countOfEachInfluenceDeck)) {
+  if (Object.values(cardCounts).some((count) => count !== countOfEachInfluenceInDeck)) {
     throw new GameMutationInputError("Incorrect total card count in game")
   }
   if (state.pendingAction?.pendingPlayers?.length === 0
