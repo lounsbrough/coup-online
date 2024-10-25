@@ -79,7 +79,7 @@ function PlayerActionConfirmation({
             )}
             sx={{
               color: theme.palette.primary.contrastText,
-              background: `
+              background: isMutating ? undefined : `
                 linear-gradient(
                   to right,
                   ${theme.palette.primary.main}
