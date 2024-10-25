@@ -15,26 +15,26 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} appear={props.appear ?? false} />
 })
 
+const influenceText = Object.fromEntries(
+  Object.values(Influences).map((influence) =>
+    ([influence, <Typography component="span" fontSize="large" fontWeight='bold' color={influence}>{influence}</Typography>]))
+)
+
+const actionText = Object.fromEntries(
+  Object.values(Actions).map((action) => {
+    const relatedInfluence = Object.entries(InfluenceAttributes).find(([, attributes]) =>
+      attributes.legalAction === action)
+
+    return ([action, <Typography component="span" fontSize="large" fontWeight='bold' color={relatedInfluence?.[0] as Influences}>{action}</Typography>])
+  })
+)
+
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const { breakpoints, actionColors, influenceColors, isSmallScreen } = useTheme()
 
   const noneIndicator = <><Block sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{' None'}</span></>
   const anyIndicator = <><Group sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{' Anyone'}</span></>
-
-  const influenceText = Object.fromEntries(
-    Object.values(Influences).map((influence) =>
-      ([influence, <Typography component="span" fontSize="large" fontWeight='bold' color={influence}>{influence}</Typography>]))
-  )
-
-  const actionText = Object.fromEntries(
-    Object.values(Actions).map((action) => {
-      const relatedInfluence = Object.entries(InfluenceAttributes).find(([, attributes]) =>
-        attributes.legalAction === action)
-
-      return ([action, <Typography component="span" fontSize="large" fontWeight='bold' color={relatedInfluence?.[0] as Influences}>{action}</Typography>])
-    })
-  )
 
   return (
     <>
