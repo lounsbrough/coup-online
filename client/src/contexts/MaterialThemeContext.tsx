@@ -6,10 +6,12 @@ import { Actions, Influences } from '@shared'
 
 declare module '@mui/material/styles' {
   interface Theme {
+    isSmallScreen: boolean
     actionColors: { [Action in Actions]: string }
     influenceColors: { [influence in Influences]: string }
   }
   interface ThemeOptions {
+    isSmallScreen: boolean
     actionColors: { [Action in Actions]: string }
     influenceColors: { [influence in Influences]: string }
   }
@@ -105,6 +107,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
           main: primaryColor
         }
       },
+      isSmallScreen,
       actionColors,
       influenceColors,
       spacing: isSmallScreen ? 4 : 8,
