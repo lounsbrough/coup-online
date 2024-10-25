@@ -17,6 +17,8 @@ function UserSettings() {
 
   const roomId = searchParams.get('roomId')
 
+  const rowHeight = 36
+
   return (
     <>
       <Button
@@ -32,7 +34,7 @@ function UserSettings() {
         open={modalOpen}
         onClose={() => { setModalOpen(false) }}
       >
-        <DialogTitle>Settings</DialogTitle>
+        <DialogTitle mb={2}>Settings</DialogTitle>
         <DialogContent>
           <Grid2 container spacing={3} direction="column">
             {roomId && <Grid2>
@@ -40,11 +42,11 @@ function UserSettings() {
                 {'Room: '}<strong>{roomId}</strong>
               </Typography>
             </Grid2>}
-            <Grid2>
+            <Grid2 height={rowHeight}>
               <Typography component="span" sx={{ mr: 1 }}>Color Mode:</Typography>
               <ColorModeToggle />
             </Grid2>
-            <Grid2>
+            <Grid2 height={rowHeight}>
               <Typography component="span" sx={{ mr: 1 }}>Confirm Actions:</Typography>
               <Switch
                 checked={confirmActions}
@@ -55,7 +57,7 @@ function UserSettings() {
                 inputProps={{ 'aria-label': 'controlled' }}
               />
             </Grid2>
-            <Grid2 justifyContent="center" alignContent="center">
+            <Grid2 height={rowHeight} alignContent="center">
               {'WebSockets connection: '}
               {isConnected
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
