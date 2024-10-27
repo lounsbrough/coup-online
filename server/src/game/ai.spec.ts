@@ -19,7 +19,9 @@ describe('ai', () => {
       testCase: string
       gameState: PublicGameState,
       influence: Influences
+      playerName: string
       probability: number
+      anyPlayerProbability: number
     }[] = [
         {
           testCase: '2 hidden cards',
@@ -30,17 +32,20 @@ describe('ai', () => {
             players: [
               {
                 ...getRandomPlayer(),
+                name: 'david',
                 influenceCount: 1,
                 deadInfluences: [Influences.Contessa]
               },
               {
                 ...getRandomPlayer(),
+                name: 'harper',
                 influenceCount: 1,
                 deadInfluences: [Influences.Captain]
               }
             ],
             selfPlayer: {
               ...getRandomPlayer(),
+              name: 'david',
               id: chance.string(),
               influences: [Influences.Ambassador],
               deadInfluences: [Influences.Contessa]
@@ -49,7 +54,9 @@ describe('ai', () => {
             deckCount: 11
           },
           influence: Influences.Captain,
-          probability: 2 / 12
+          playerName: 'harper',
+          probability: 2 / 12,
+          anyPlayerProbability: 2 / 12
         },
         {
           testCase: '2 cards revealed and self holding last card',
@@ -60,16 +67,19 @@ describe('ai', () => {
             players: [
               {
                 ...getRandomPlayer(),
+                name: 'david',
                 influenceCount: 1,
                 deadInfluences: [Influences.Ambassador]
               },
               {
                 ...getRandomPlayer(),
+                name: 'harper',
                 influenceCount: 1,
                 deadInfluences: [Influences.Assassin]
               },
               {
                 ...getRandomPlayer(),
+                name: 'hailey',
                 influenceCount: 1,
                 deadInfluences: [Influences.Assassin]
               }
@@ -84,7 +94,9 @@ describe('ai', () => {
             deckCount: 9
           },
           influence: Influences.Assassin,
-          probability: 0
+          playerName: 'hailey',
+          probability: 0,
+          anyPlayerProbability: 0
         },
         {
           testCase: 'self holding 2 cards and last card hidden',
@@ -95,26 +107,37 @@ describe('ai', () => {
             players: [
               {
                 ...getRandomPlayer(),
+                name: 'david',
                 influenceCount: 2,
                 deadInfluences: []
               },
               {
                 ...getRandomPlayer(),
+                name: 'harper',
                 influenceCount: 2,
                 deadInfluences: []
               },
+              {
+                ...getRandomPlayer(),
+                name: 'hailey',
+                influenceCount: 2,
+                deadInfluences: []
+              }
             ],
             selfPlayer: {
               ...getRandomPlayer(),
+              name: 'david',
               id: chance.string(),
               influences: [Influences.Duke, Influences.Duke],
               deadInfluences: []
             },
             pendingInfluenceLoss: {},
-            deckCount: 11
+            deckCount: 9
           },
           influence: Influences.Duke,
-          probability: 1 / 13
+          playerName: 'harper',
+          probability: 2 / 13,
+          anyPlayerProbability: 4 / 13
         },
         {
           testCase: 'all cards revealed for influence',
@@ -125,22 +148,26 @@ describe('ai', () => {
             players: [
               {
                 ...getRandomPlayer(),
+                name: 'david',
                 influenceCount: 1,
                 deadInfluences: [Influences.Assassin]
               },
               {
                 ...getRandomPlayer(),
+                name: 'harper',
                 influenceCount: 1,
                 deadInfluences: [Influences.Assassin]
               },
               {
                 ...getRandomPlayer(),
+                name: 'hailey',
                 influenceCount: 1,
                 deadInfluences: [Influences.Assassin]
               }
             ],
             selfPlayer: {
               ...getRandomPlayer(),
+              name: 'david',
               id: chance.string(),
               influences: [Influences.Ambassador],
               deadInfluences: [Influences.Assassin]
@@ -149,21 +176,28 @@ describe('ai', () => {
             deckCount: 9
           },
           influence: Influences.Assassin,
-          probability: 0
+          playerName: 'harper',
+          probability: 0,
+          anyPlayerProbability: 0
         }
       ]
 
     it.each(testCases)('should return $probability for $testCase', ({
-      probability,
       gameState,
-      influence
+      influence,
+      playerName,
+      probability,
+      anyPlayerProbability
     }: {
       testCase: string
-      probability: number
       gameState: PublicGameState
       influence: Influences
+      playerName: string
+      probability: number
+      anyPlayerProbability: number
     }) => {
-      expect(getProbabilityOfPlayerInfluence(gameState, influence)).toBeCloseTo(probability)
+      expect(getProbabilityOfPlayerInfluence(gameState, influence, playerName)).toBeCloseTo(probability)
+      expect(getProbabilityOfPlayerInfluence(gameState, influence)).toBeCloseTo(anyPlayerProbability)
     })
   })
 
