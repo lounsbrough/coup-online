@@ -100,6 +100,7 @@ describe('actionHandlers', () => {
       await resetGameRequestHandler({ roomId, playerId: hailey.playerId })
       await expect(resetGameHandler({ roomId, playerId: david.playerId })).rejects.toThrow('Player not in game')
       await resetGameHandler({ roomId, playerId: harper.playerId })
+      await resetGameRequestHandler({ roomId, playerId: hailey.playerId })
 
       await joinGameHandler({ roomId, ...david })
       await removeFromGameHandler({ roomId, playerId: hailey.playerId, playerName: david.playerName })

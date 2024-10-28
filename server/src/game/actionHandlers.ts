@@ -116,7 +116,7 @@ export const resetGameRequestHandler = async ({ roomId, playerId }: {
 
   const player = getPlayerInRoom(gameState, roomId, playerId)
 
-  if (!gameState.resetGameRequest) {
+  if (gameState.isStarted && !gameState.resetGameRequest) {
     await mutateGameState(gameState, (state) => {
       state.resetGameRequest = { player: player.name }
     })
