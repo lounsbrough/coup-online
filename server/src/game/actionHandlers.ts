@@ -108,7 +108,24 @@ export const removeFromGameHandler = async ({ roomId, playerId, playerName }: {
   return { roomId, playerId }
 }
 
-export const resetGameHandler = async ({ roomId, playerId }: {
+export const resetGameRequestHandler = async ({ roomId, playerId }: {
+  roomId: string
+  playerId: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  const player = getPlayerInRoom(gameState, roomId, playerId)
+
+  if (gameState.isStarted && !gameState.resetGameRequest) {
+    await mutateGameState(gameState, (state) => {
+      state.resetGameRequest = { player: player.name }
+    })
+  }
+
+  return { roomId, playerId }
+}
+
+export const resetGameRequestCancelHandler = async ({ roomId, playerId }: {
   roomId: string
   playerId: string
 }) => {
@@ -116,7 +133,31 @@ export const resetGameHandler = async ({ roomId, playerId }: {
 
   getPlayerInRoom(gameState, roomId, playerId)
 
-  if (gameState.isStarted && gameState.players.filter(({ influences }) => influences.length).length > 1) {
+  if (gameState.isStarted && gameState.resetGameRequest) {
+    await mutateGameState(gameState, (state) => {
+      delete state.resetGameRequest
+    })
+  }
+
+  return { roomId, playerId }
+}
+
+export const resetGameHandler = async ({ roomId, playerId }: {
+  roomId: string
+  playerId: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  const resetPlayer = getPlayerInRoom(gameState, roomId, playerId)
+
+  const pendingResetFromOtherPlayer = gameState.resetGameRequest && gameState.resetGameRequest?.player !== resetPlayer.name
+
+  if (!gameState.isStarted && !pendingResetFromOtherPlayer) {
+    throw new GameMutationInputError('Game is not started')
+  }
+
+  const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
+  if (!gameIsOver && !pendingResetFromOtherPlayer) {
     throw new GameMutationInputError('Current game is in progress')
   }
 

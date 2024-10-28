@@ -352,6 +352,163 @@ describe('index', () => {
       })
     })
 
+    describe(PlayerActions.resetGameRequest, () => {
+      it.each([
+        {
+          getBody: async () => {
+            const players = [{
+              id: chance.string({ length: 10 }),
+              name: chance.string({ length: 10 })
+            }, {
+              id: chance.string({ length: 10 }),
+              name: chance.string({ length: 10 })
+            }]
+
+            const response = await postApi(PlayerActions.createGame, {
+              playerId: players[0].id,
+              playerName: players[0].name
+            })
+
+            const roomId = (await response.json()).roomId
+
+            await postApi(PlayerActions.joinGame, {
+              roomId,
+              playerId: players[1].id,
+              playerName: players[1].name
+            })
+
+            await postApi(PlayerActions.startGame, { roomId, playerId: players[0].id })
+
+            return { roomId, playerId: players[0].id }
+          },
+          error: '',
+          status: 200
+        },
+        {
+          getBody: () => ({}),
+          error: '"roomId" is required, "playerId" is required',
+          status: 400
+        },
+        {
+          getBody: () => ({
+            roomId: chance.string({ length: 10 }),
+            playerId: chance.string({ length: 10 })
+          }),
+          error: /Room .+ does not exist/,
+          status: 404
+        },
+        {
+          getBody: async () => {
+            const playerId = chance.string({ length: 10 })
+            const playerName = chance.string({ length: 10 })
+
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName })
+
+            const roomId = (await response.json()).roomId
+
+            return { roomId, playerId: chance.string({ length: 10 }) }
+          },
+          error: 'Player not in game',
+          status: 400
+        }
+      ] as {
+        getBody: () => Promise<Partial<{ roomId: string, playerId: string }>>,
+        error: string,
+        status: number
+      }[])('should return $status $error', async ({ getBody, error, status }) => {
+        const response = await postApi(PlayerActions.resetGameRequest, await getBody())
+
+        expect(response.status).toBe(status)
+        const responseJson = await response.json()
+        if (error) {
+          expect(responseJson).toEqual({ error: expect.stringMatching(error) })
+        } else {
+          validatePublicState(responseJson)
+          expect(responseJson.isStarted).toBe(true)
+          expect(responseJson.resetGameRequest).toBeTruthy()
+        }
+      })
+    })
+
+    describe(PlayerActions.resetGameRequestCancel, () => {
+      it.each([
+        {
+          getBody: async () => {
+            const players = [{
+              id: chance.string({ length: 10 }),
+              name: chance.string({ length: 10 })
+            }, {
+              id: chance.string({ length: 10 }),
+              name: chance.string({ length: 10 })
+            }]
+
+            const response = await postApi(PlayerActions.createGame, {
+              playerId: players[0].id,
+              playerName: players[0].name
+            })
+
+            const roomId = (await response.json()).roomId
+
+            await postApi(PlayerActions.joinGame, {
+              roomId,
+              playerId: players[1].id,
+              playerName: players[1].name
+            })
+
+            await postApi(PlayerActions.startGame, { roomId, playerId: players[0].id })
+            await postApi(PlayerActions.resetGameRequest, { roomId, playerId: players[0].id })
+
+            return { roomId, playerId: players[0].id }
+          },
+          error: '',
+          status: 200
+        },
+        {
+          getBody: () => ({}),
+          error: '"roomId" is required, "playerId" is required',
+          status: 400
+        },
+        {
+          getBody: () => ({
+            roomId: chance.string({ length: 10 }),
+            playerId: chance.string({ length: 10 })
+          }),
+          error: /Room .+ does not exist/,
+          status: 404
+        },
+        {
+          getBody: async () => {
+            const playerId = chance.string({ length: 10 })
+            const playerName = chance.string({ length: 10 })
+
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName })
+
+            const roomId = (await response.json()).roomId
+
+            return { roomId, playerId: chance.string({ length: 10 }) }
+          },
+          error: 'Player not in game',
+          status: 400
+        }
+      ] as {
+        getBody: () => Promise<Partial<{ roomId: string, playerId: string }>>,
+        error: string,
+        status: number
+      }[])('should return $status $error', async ({ getBody, error, status }) => {
+        const response = await postApi(PlayerActions.resetGameRequestCancel, await getBody())
+
+        expect(response.status).toBe(status)
+        const responseJson = await response.json()
+        if (error) {
+          expect(responseJson).toEqual({ error: expect.stringMatching(error) })
+        } else {
+          validatePublicState(responseJson)
+          expect(responseJson.isStarted).toBe(true)
+          expect(responseJson.resetGameRequest).toBeUndefined()
+        }
+      })
+    })
+
     describe(PlayerActions.resetGame, () => {
       it.each([
         {
@@ -454,26 +611,6 @@ describe('index', () => {
           },
           error: 'Current game is in progress',
           status: 400
-        },
-        {
-          getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
-
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName })
-
-            const roomId = (await response.json()).roomId
-
-            await postApi(PlayerActions.joinGame, {
-              roomId,
-              playerId: chance.string({ length: 10 }),
-              playerName: chance.string({ length: 10 })
-            })
-
-            return { roomId, playerId }
-          },
-          error: '',
-          status: 200
         }
       ] as {
         getBody: () => Promise<Partial<{ roomId: string, playerId: string }>>,

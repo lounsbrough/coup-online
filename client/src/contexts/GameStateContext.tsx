@@ -54,7 +54,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     console.log(`socket connected: ${isConnected}`)
     if (socket && isConnected) {
       setError('')
-      socket.on(ServerEvents.error, (error) => { setError(error) })
+      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
       socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
         setError('')
         setGameState(gameState)
