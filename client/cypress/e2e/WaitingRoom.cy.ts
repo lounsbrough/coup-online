@@ -32,7 +32,19 @@ describe('Waiting Room', () => {
     })
 
     cy.contains('button', 'Join Game').click()
+    cy.contains('button', 'Start Game').click()
+    cy.contains('button', 'Reset Game').click()
 
+    cy.loadPlayer('/', 'player2')
+    cy.contains('button', 'Join Existing Game').click()
+
+    cy.getCookie('cypressRoomId').then((cookie) => {
+      cy.get('input').eq(0).should('not.be.disabled').type(cookie!.value)
+      cy.get('input').eq(1).should('not.be.disabled').type('Player 2')
+    })
+
+    cy.contains('button', 'Join Game').click()
+    cy.contains('button', 'Reset').click()
     cy.contains('button', 'Start Game').click()
   })
 })
