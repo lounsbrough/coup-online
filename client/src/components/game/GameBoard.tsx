@@ -2,6 +2,7 @@ import { Box, Grid2, Typography, useTheme } from "@mui/material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
+import RequestReset from "./RequestReset"
 import PlayerDecision from "./PlayerDecision"
 import SnarkyDeadComment from "./SnarkyDeadComment"
 import Victory from "./Victory"
@@ -77,6 +78,7 @@ function GameBoard() {
         }}
       >
         <EventLog />
+        <RequestReset />
       </Grid2>
     </Grid2>
   )

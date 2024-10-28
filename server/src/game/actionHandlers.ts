@@ -125,6 +125,23 @@ export const resetGameRequestHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
+export const resetGameRequestCancelHandler = async ({ roomId, playerId }: {
+  roomId: string
+  playerId: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  getPlayerInRoom(gameState, roomId, playerId)
+
+  if (gameState.isStarted && gameState.resetGameRequest) {
+    await mutateGameState(gameState, (state) => {
+      delete state.resetGameRequest
+    })
+  }
+
+  return { roomId, playerId }
+}
+
 export const resetGameHandler = async ({ roomId, playerId }: {
   roomId: string
   playerId: string

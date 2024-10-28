@@ -24,6 +24,7 @@ export enum PlayerActions {
   startGame = 'startGame',
   resetGame = 'resetGame',
   resetGameRequest = 'resetGameRequest',
+  resetGameRequestCancel = "resetGameRequestCancel",
   action = 'action',
   actionResponse = 'actionResponse',
   actionChallengeResponse = 'actionChallengeResponse',
