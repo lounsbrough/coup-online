@@ -1,6 +1,6 @@
 import Chance from 'chance'
 import { Actions, Influences, Responses } from '../../../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, startGameHandler } from './actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestHandler, startGameHandler } from './actionHandlers'
 import { getValue, setValue } from '../utilities/storage'
 import { getGameState, mutateGameState } from '../utilities/gameState'
 
@@ -93,7 +93,13 @@ describe('actionHandlers', () => {
       })
 
       await resetGameHandler({ roomId, playerId: hailey.playerId })
-      await resetGameHandler({ roomId, playerId: hailey.playerId })
+      await expect(resetGameHandler({ roomId, playerId: hailey.playerId })).rejects.toThrow('Game is not started')
+
+      await startGameHandler({ roomId, playerId: harper.playerId })
+      await expect(resetGameRequestHandler({ roomId, playerId: david.playerId })).rejects.toThrow('Player not in game')
+      await resetGameRequestHandler({ roomId, playerId: hailey.playerId })
+      await expect(resetGameHandler({ roomId, playerId: david.playerId })).rejects.toThrow('Player not in game')
+      await resetGameHandler({ roomId, playerId: harper.playerId })
 
       await joinGameHandler({ roomId, ...david })
       await removeFromGameHandler({ roomId, playerId: hailey.playerId, playerName: david.playerName })
