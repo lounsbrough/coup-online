@@ -1,4 +1,4 @@
-import { Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
+import { Button, Grid2, Popover, Snackbar, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
 import { ContentCopy } from "@mui/icons-material"
@@ -9,6 +9,7 @@ import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Footer from "../Footer"
+import Bot from "../icons/Bot"
 
 function WaitingRoom() {
   const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
@@ -60,6 +61,18 @@ function WaitingRoom() {
           />
         </Grid2>
         <Grid2>
+          <Button
+            variant="contained"
+            startIcon={<Bot />}
+            onClick={() => {
+              navigator.clipboard.writeText(inviteLink)
+              setShowCopiedToClipboardMessage(true)
+            }}
+          >
+            Add AI Player
+          </Button>
+        </Grid2>
+        <Grid2>
           {gameState.players.length <= 1
             ? <Typography>Add at least one more player to start game</Typography>
             : (<Button
@@ -78,6 +91,7 @@ function WaitingRoom() {
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </Grid2>
       </Grid2>
+      <Popover />
       <Footer />
     </>
   )
