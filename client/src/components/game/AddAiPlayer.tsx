@@ -34,7 +34,10 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
     roomId: string, playerId: string, playerName: string
   }>({
     action: PlayerActions.addAiPlayer,
-    callback: () => { setAddAiPlayerDialogOpen(false) }
+    callback: () => {
+      setAddAiPlayerDialogOpen(false)
+      setBotName('')
+    }
   })
 
   if (!gameState) {
