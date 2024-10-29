@@ -14,6 +14,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
   const { setGameState } = useGameStateContext()
 
   const { trigger: triggerSwr, isMutating } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
+    setError('')
     return fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -39,6 +40,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
           callback(gameState)
         })
       }
+      setError('')
       socket.emit(action, params)
     }
     : triggerSwr, [socket, isConnected, action, callback, triggerSwr])
