@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, Switch, Typography } from "@mui/material"
 import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
-import './Rules.css'
 import ColorModeToggle from "./ColorModeToggle"
 import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
@@ -12,10 +11,11 @@ function UserSettings() {
   const [confirmActions, setConfirmActions] = useState<boolean>(
     JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
   )
-  const { isConnected } = useWebSocketContext()
   const [searchParams] = useSearchParams()
+  const { isConnected } = useWebSocketContext()
 
   const roomId = searchParams.get('roomId')
+  const rowHeight = 36
 
   return (
     <>
@@ -32,19 +32,21 @@ function UserSettings() {
         open={modalOpen}
         onClose={() => { setModalOpen(false) }}
       >
-        <DialogTitle>Settings</DialogTitle>
+        <DialogTitle mb={2}>Settings</DialogTitle>
         <DialogContent>
           <Grid2 container spacing={3} direction="column">
-            {roomId && <Grid2>
-              <Typography component="span" sx={{ mr: 1 }}>
-                {'Room: '}<strong>{roomId}</strong>
-              </Typography>
-            </Grid2>}
-            <Grid2>
-              <Typography component="span" sx={{ mr: 1 }}>Color Mode:</Typography>
+            {roomId && (
+              <Grid2>
+                <Typography component="span" sx={{ mr: 2 }}>
+                  {'Room: '}<strong>{roomId}</strong>
+                </Typography>
+              </Grid2>
+            )}
+            <Grid2 height={rowHeight}>
+              <Typography component="span" sx={{ mr: 2 }}>Color Mode:</Typography>
               <ColorModeToggle />
             </Grid2>
-            <Grid2>
+            <Grid2 height={rowHeight}>
               <Typography component="span" sx={{ mr: 1 }}>Confirm Actions:</Typography>
               <Switch
                 checked={confirmActions}
@@ -55,7 +57,7 @@ function UserSettings() {
                 inputProps={{ 'aria-label': 'controlled' }}
               />
             </Grid2>
-            <Grid2 justifyContent="center" alignContent="center">
+            <Grid2 height={rowHeight} alignContent="center">
               {'WebSockets connection: '}
               {isConnected
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />

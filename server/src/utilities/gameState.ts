@@ -59,7 +59,8 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
     ...(fullGameState.pendingActionChallenge && { pendingActionChallenge: fullGameState.pendingActionChallenge }),
     ...(fullGameState.pendingBlock && { pendingBlock: fullGameState.pendingBlock }),
     ...(fullGameState.pendingBlockChallenge && { pendingBlockChallenge: fullGameState.pendingBlockChallenge }),
-    ...(fullGameState.turnPlayer && { turnPlayer: fullGameState.turnPlayer })
+    ...(fullGameState.turnPlayer && { turnPlayer: fullGameState.turnPlayer }),
+    ...(fullGameState.resetGameRequest && { resetGameRequest: fullGameState.resetGameRequest })
   }
 }
 

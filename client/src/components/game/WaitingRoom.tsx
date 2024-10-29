@@ -8,7 +8,6 @@ import { useState } from "react"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
-import Footer from "../Footer"
 import Bot from "../icons/Bot"
 
 function WaitingRoom() {
@@ -92,7 +91,6 @@ function WaitingRoom() {
         </Grid2>
       </Grid2>
       <Popover />
-      <Footer />
     </>
   )
 }

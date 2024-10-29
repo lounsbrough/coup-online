@@ -2,6 +2,7 @@ import { Box, Grid2, Typography, useTheme } from "@mui/material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
+import RequestReset from "./RequestReset"
 import PlayerDecision from "./PlayerDecision"
 import SnarkyDeadComment from "./SnarkyDeadComment"
 import Victory from "./Victory"
@@ -70,13 +71,27 @@ function GameBoard() {
       </Grid2>
       <Grid2
         size={{ xs: 12, sm: 12, md: 3 }}
-        sx={{
-          p: 2,
-          textAlign: 'center',
-          [theme.breakpoints.up('md')]: { textAlign: 'right' }
-        }}
+        sx={{ p: 2 }}
       >
-        <EventLog />
+        <Grid2
+          container
+          p={1}
+          spacing={1}
+          sx={{
+            justifyContent: 'center',
+            textAlign: 'center',
+            [theme.breakpoints.up('md')]: {
+              justifyContent: 'flex-end',
+              textAlign: 'right'
+            },
+          }}>
+          <Grid2 size={12}>
+            <EventLog />
+          </Grid2>
+          <Grid2 size={12}>
+            <RequestReset />
+          </Grid2>
+        </Grid2>
       </Grid2>
     </Grid2>
   )

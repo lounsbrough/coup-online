@@ -23,6 +23,8 @@ export enum PlayerActions {
   removeFromGame = 'removeFromGame',
   startGame = 'startGame',
   resetGame = 'resetGame',
+  resetGameRequest = 'resetGameRequest',
+  resetGameRequestCancel = "resetGameRequestCancel",
   action = 'action',
   actionResponse = 'actionResponse',
   actionChallengeResponse = 'actionChallengeResponse',
@@ -202,6 +204,9 @@ export type GameState = {
   }
   roomId: string
   turnPlayer?: string
+  resetGameRequest?: {
+    player: string
+  }
 }
 
 export type PublicGameState = Pick<GameState,
@@ -214,7 +219,8 @@ export type PublicGameState = Pick<GameState,
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
-  'turnPlayer'
+  'turnPlayer' |
+  'resetGameRequest'
 >> & {
   players: PublicPlayer[]
   selfPlayer?: Player

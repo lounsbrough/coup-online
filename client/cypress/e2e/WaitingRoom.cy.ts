@@ -32,7 +32,14 @@ describe('Waiting Room', () => {
     })
 
     cy.contains('button', 'Join Game').click()
+    cy.contains('button', 'Start Game').click()
+    cy.contains('button', 'Reset Game').click()
 
+    cy.getCookie('cypressRoomId').then((cookie) => {
+      cy.loadPlayer(`/game?roomId=${cookie!.value}`, 'player2')
+    })
+
+    cy.contains('button', 'Reset').click()
     cy.contains('button', 'Start Game').click()
   })
 })
