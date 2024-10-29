@@ -116,11 +116,18 @@ export const resetGameRequestHandler = async ({ roomId, playerId }: {
 
   const player = getPlayerInRoom(gameState, roomId, playerId)
 
-  if (gameState.isStarted && !gameState.resetGameRequest) {
-    await mutateGameState(gameState, (state) => {
-      state.resetGameRequest = { player: player.name }
-    })
+  const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
+  const noHumanOpponents = gameState.players.filter(({ ai }) => !ai).length === 1
+
+  if (gameIsOver || noHumanOpponents) {
+    await resetGame(roomId)
   }
+
+  await mutateGameState(gameState, (state) => {
+    if (state.isStarted && !state.resetGameRequest) {
+      state.resetGameRequest = { player: player.name }
+    }
+  })
 
   return { roomId, playerId }
 }
@@ -133,11 +140,9 @@ export const resetGameRequestCancelHandler = async ({ roomId, playerId }: {
 
   getPlayerInRoom(gameState, roomId, playerId)
 
-  if (gameState.isStarted && gameState.resetGameRequest) {
-    await mutateGameState(gameState, (state) => {
-      delete state.resetGameRequest
-    })
-  }
+  await mutateGameState(gameState, (state) => {
+    delete state.resetGameRequest
+  })
 
   return { roomId, playerId }
 }
@@ -157,7 +162,8 @@ export const resetGameHandler = async ({ roomId, playerId }: {
   }
 
   const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
-  if (!gameIsOver && !pendingResetFromOtherPlayer) {
+  const allOpponentsAi = gameState.players.filter(({ ai }) => !ai).length === 1
+  if (!gameIsOver && !allOpponentsAi && !pendingResetFromOtherPlayer) {
     throw new GameMutationInputError('Current game is in progress')
   }
 
