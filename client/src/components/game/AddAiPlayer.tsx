@@ -74,7 +74,9 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               sx={{ ml: 1 }}
               startIcon={<Casino />}
               onClick={() => {
-                setBotName(botNameIdeas[Math.floor(Math.random() * botNameIdeas.length)])
+                const unusedIdeas = botNameIdeas.filter((idea) =>
+                  !gameState.players.some(({ name }) => name.toUpperCase() === idea.toUpperCase()))
+                setBotName(unusedIdeas[Math.floor(Math.random() * unusedIdeas.length)])
               }}
               disabled={isMutating}
             >
