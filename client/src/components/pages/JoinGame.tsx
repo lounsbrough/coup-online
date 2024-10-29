@@ -39,7 +39,8 @@ function JoinGame() {
             playerId: getPlayerId(),
             playerName: playerName.trim()
           })
-        }}>
+        }}
+      >
         <Grid2 container direction="column" alignContent='center'>
           <Grid2>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
@@ -72,7 +73,8 @@ function JoinGame() {
         </Grid2>
         <Grid2>
           <Button
-            type="submit" sx={{ mt: 5 }}
+            type="submit"
+            sx={{ mt: 5 }}
             variant="contained"
             disabled={isMutating}
           >Join Game</Button>

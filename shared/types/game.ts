@@ -20,6 +20,7 @@ export enum PlayerActions {
   gameState = 'gameState',
   createGame = 'createGame',
   joinGame = 'joinGame',
+  addAiPlayer = 'addAiPlayer',
   removeFromGame = 'removeFromGame',
   startGame = 'startGame',
   resetGame = 'resetGame',

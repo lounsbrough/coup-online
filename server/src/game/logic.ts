@@ -124,7 +124,7 @@ const getNewGameState = (roomId: string): GameState => ({
   eventLogs: []
 })
 
-export const addPlayerToGame = (state: GameState, playerId: string, playerName: string) => {
+export const addPlayerToGame = (state: GameState, playerId: string, playerName: string, ai: boolean = false) => {
   state.players.push({
     id: playerId,
     name: playerName,
@@ -132,7 +132,7 @@ export const addPlayerToGame = (state: GameState, playerId: string, playerName: 
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
     deadInfluences: [],
     color: state.availablePlayerColors.shift()!,
-    ai: false
+    ai
   })
 }
 

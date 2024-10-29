@@ -1,4 +1,4 @@
-import { Button, Grid2, Popover, Snackbar, Typography, useTheme } from "@mui/material"
+import { Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
 import { ContentCopy } from "@mui/icons-material"
@@ -9,9 +9,11 @@ import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
+import AddAiPlayer from "./AddAiPlayer"
 
 function WaitingRoom() {
   const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
+  const [addAiPlayerDialogOpen, setAddAiPlayerDialogOpen] = useState(false)
   const { gameState } = useGameStateContext()
   const theme = useTheme()
 
@@ -64,8 +66,7 @@ function WaitingRoom() {
             variant="contained"
             startIcon={<Bot />}
             onClick={() => {
-              navigator.clipboard.writeText(inviteLink)
-              setShowCopiedToClipboardMessage(true)
+              setAddAiPlayerDialogOpen(true)
             }}
           >
             Add AI Player
@@ -90,7 +91,10 @@ function WaitingRoom() {
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </Grid2>
       </Grid2>
-      <Popover />
+      <AddAiPlayer
+        addAiPlayerDialogOpen={addAiPlayerDialogOpen}
+        setAddAiPlayerDialogOpen={setAddAiPlayerDialogOpen}
+      />
     </>
   )
 }
