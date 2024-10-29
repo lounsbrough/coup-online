@@ -68,6 +68,7 @@ function WaitingRoom() {
             onClick={() => {
               setAddAiPlayerDialogOpen(true)
             }}
+            disabled={gameState.players.length === 6}
           >
             Add AI Player
           </Button>

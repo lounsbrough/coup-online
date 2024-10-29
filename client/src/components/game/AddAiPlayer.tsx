@@ -54,7 +54,11 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
       <form
         onSubmit={(event) => {
           event.preventDefault()
-          setAddAiPlayerDialogOpen(false)
+          trigger({
+            roomId: gameState.roomId.trim(),
+            playerId: getPlayerId(),
+            playerName: botName.trim()
+          })
         }}
       >
         <DialogContent>
@@ -96,14 +100,6 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
           <Button
             type="submit"
             variant="contained"
-            onClick={(event) => {
-              event.preventDefault()
-              trigger({
-                roomId: gameState.roomId.trim(),
-                playerId: getPlayerId(),
-                playerName: botName.trim()
-              })
-            }}
             disabled={isMutating}
           >
             Add
