@@ -17,15 +17,15 @@ function Home() {
         <Button
           type="submit" sx={{ mt: 5 }}
           variant="contained"
-          onClick={() => { navigate(`/join-game`) }}
-        >Join Existing Game</Button>
+          onClick={() => { navigate(`/create-game`) }}
+        >Create New Game</Button>
       </Grid2>
       <Grid2>
         <Button
           type="submit" sx={{ mt: 5 }}
           variant="contained"
-          onClick={() => { navigate(`/create-game`) }}
-        >Create New Game</Button>
+          onClick={() => { navigate(`/join-game`) }}
+        >Join Existing Game</Button>
       </Grid2>
       <GitHubLinks />
     </>
