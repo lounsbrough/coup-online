@@ -1,5 +1,5 @@
 import { Close, Delete } from "@mui/icons-material"
-import { Box, Button, Grid2, Typography } from "@mui/material"
+import { Box, Button, Grid2, Typography, useTheme } from "@mui/material"
 import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
@@ -22,6 +22,7 @@ function RequestReset() {
   }>({ action: PlayerActions.resetGame })
 
   const { gameState } = useGameStateContext()
+  const theme = useTheme()
 
   if (!gameState) {
     return null
@@ -56,9 +57,13 @@ function RequestReset() {
       {isResetPending && !isResetMine && (
         <>
           <ColoredTypography>
-            {`${gameState.resetGameRequest!.player} wants to reset this game`}
+            {`${gameState.resetGameRequest!.player} wants to reset the game`}
           </ColoredTypography>
-          <Grid2 mt={1} container spacing={1} alignItems="center" justifyContent="flex-end">
+          <Grid2 mt={1} container spacing={1}
+            sx={{
+              justifyContent: 'center',
+              [theme.breakpoints.up('md')]: { justifyContent: 'flex-end' }
+            }}>
             <Grid2>
               <Button
                 size="small"

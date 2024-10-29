@@ -21,11 +21,11 @@ function EventLog() {
 
   return (
     <>
-      <Typography sx={{ mt: 2, fontWeight: 700 }}>Event Log</Typography>
+      <Typography sx={{ fontWeight: 700 }}>Event Log</Typography>
       <Box ref={logBox} sx={{
         width: '100%',
         maxHeight: '25dvh',
-        [theme.breakpoints.up('md')]: { maxHeight: '80dvh' },
+        [theme.breakpoints.up('md')]: { maxHeight: '75dvh' },
         overflowY: 'auto'
       }}>
         {gameState?.eventLogs.map((log, logIndex) =>
