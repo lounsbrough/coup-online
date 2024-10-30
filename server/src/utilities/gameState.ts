@@ -117,6 +117,11 @@ export const mutateGameState = async (
   }
 
   mutation(gameState)
+
+  if (JSON.stringify(gameState) === JSON.stringify(validatedState)) {
+    return
+  }
+
   await setGameState(validatedState.roomId, gameState)
 }
 

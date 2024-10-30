@@ -143,6 +143,20 @@ describe('gameState', () => {
       expect(setValueMock).toHaveBeenCalledTimes(1)
       expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), compressedStateString, oneDay)
     })
+
+    it('should not update storage if state unchanged', async () => {
+      const gameState = getRandomGameState()
+      const compressedStateString = 'some compressed base64'
+      getValueMock.mockResolvedValue(JSON.stringify(gameState))
+      compressStringMock.mockReturnValue(compressedStateString)
+
+      await mutateGameState(gameState, (state) => {
+        state.players = JSON.parse(JSON.stringify(state.players))
+      })
+
+      expect(compressString).not.toHaveBeenCalled()
+      expect(setValueMock).not.toHaveBeenCalled()
+    })
   })
 
   describe('validateGameState', () => {
