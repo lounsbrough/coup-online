@@ -194,11 +194,11 @@ export const resetGameHandler = async ({ roomId, playerId }: {
 
   const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
   if (!gameIsOver) {
-    const allOpponentsAi = gameState.players.filter(({ ai }) => !ai).length === 1
+    const noHumanOpponents = gameState.players.filter(({ ai }) => !ai).length === 1
     const pendingResetFromOtherPlayer = resetPlayer.influences.length
       && gameState.resetGameRequest
       && gameState.resetGameRequest?.player !== resetPlayer.name
-    if (!allOpponentsAi && !pendingResetFromOtherPlayer) {
+    if (!noHumanOpponents && !pendingResetFromOtherPlayer) {
       throw new GameMutationInputError('Current game is in progress')
     }
   }
