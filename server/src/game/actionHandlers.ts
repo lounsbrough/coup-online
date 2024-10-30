@@ -154,13 +154,13 @@ export const resetGameRequestHandler = async ({ roomId, playerId }: {
 
   if (gameIsOver || noHumanOpponents) {
     await resetGame(roomId)
+  } else {
+    await mutateGameState(gameState, (state) => {
+      if (state.isStarted && !state.resetGameRequest) {
+        state.resetGameRequest = { player: player.name }
+      }
+    })
   }
-
-  await mutateGameState(gameState, (state) => {
-    if (state.isStarted && !state.resetGameRequest) {
-      state.resetGameRequest = { player: player.name }
-    }
-  })
 
   return { roomId, playerId }
 }
