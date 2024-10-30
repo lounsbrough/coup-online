@@ -4,7 +4,7 @@ import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, 
 import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addPlayerToGame, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 
 const getPlayerInRoom = (gameState: GameState, playerId: string) => {
   const player = gameState.players.find(({ id }) => id === playerId)
@@ -150,9 +150,8 @@ export const resetGameRequestHandler = async ({ roomId, playerId }: {
   const player = getPlayerInRoom(gameState, playerId)
 
   const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
-  const noHumanOpponents = gameState.players.filter(({ ai }) => !ai).length === 1
 
-  if (gameIsOver || noHumanOpponents) {
+  if (gameIsOver || !humanOpponentsRemain(gameState, player)) {
     await resetGame(roomId)
   } else {
     await mutateGameState(gameState, (state) => {
@@ -186,7 +185,7 @@ export const resetGameHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const resetPlayer = getPlayerInRoom(gameState, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!gameState.isStarted) {
     throw new GameMutationInputError('Game is not started')
@@ -194,11 +193,10 @@ export const resetGameHandler = async ({ roomId, playerId }: {
 
   const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
   if (!gameIsOver) {
-    const noHumanOpponents = gameState.players.filter(({ ai }) => !ai).length === 1
-    const pendingResetFromOtherPlayer = resetPlayer.influences.length
+    const pendingResetFromOtherPlayer = player.influences.length
       && gameState.resetGameRequest
-      && gameState.resetGameRequest?.player !== resetPlayer.name
-    if (!noHumanOpponents && !pendingResetFromOtherPlayer) {
+      && gameState.resetGameRequest?.player !== player.name
+    if (humanOpponentsRemain(gameState, player) && !pendingResetFromOtherPlayer) {
       throw new GameMutationInputError('Current game is in progress')
     }
   }

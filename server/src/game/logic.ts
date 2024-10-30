@@ -1,5 +1,5 @@
 import { shuffle } from "../utilities/array"
-import { ActionAttributes, Actions, GameState, Influences } from "../../../shared/types/game"
+import { ActionAttributes, Actions, GameState, Influences, Player } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
 import { getActionMessage } from "../../../shared/utilities/message"
 import { GameMutationInputError } from "../utilities/errors"
@@ -159,6 +159,9 @@ export const startGame = async (gameState: GameState) => {
     logEvent(state, 'Game has started')
   })
 }
+
+export const humanOpponentsRemain = (gameState: GameState, player: Player) =>
+  gameState.players.some(({ ai, name, influences }) => !ai && name !== player.name && influences.length)
 
 export const resetGame = async (roomId: string) => {
   const oldGameState = await getGameState(roomId)
