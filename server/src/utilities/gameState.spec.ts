@@ -78,6 +78,7 @@ describe('gameState', () => {
         isStarted: gameState.isStarted,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
         roomId: gameState.roomId,
+        deckCount: 15 - gameState.players.length * 2,
         selfPlayer: {
           id: selfPlayer.id,
           name: selfPlayer.name,

@@ -34,7 +34,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
         if (res.ok) {
           setError('')
-          const newState = await res.json()
+          const { gameState: newState } = await res.json()
 
           if (JSON.stringify(newState) !== JSON.stringify(gameState)) {
             setGameState(newState)

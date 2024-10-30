@@ -8,9 +8,12 @@ import { useState } from "react"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
+import Bot from "../icons/Bot"
+import AddAiPlayer from "./AddAiPlayer"
 
 function WaitingRoom() {
   const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
+  const [addAiPlayerDialogOpen, setAddAiPlayerDialogOpen] = useState(false)
   const { gameState } = useGameStateContext()
   const theme = useTheme()
 
@@ -59,6 +62,18 @@ function WaitingRoom() {
           />
         </Grid2>
         <Grid2>
+          <Button
+            variant="contained"
+            startIcon={<Bot />}
+            onClick={() => {
+              setAddAiPlayerDialogOpen(true)
+            }}
+            disabled // gameState.players.length === 6
+          >
+            Coming Soon{/* Add AI Player */}
+          </Button>
+        </Grid2>
+        <Grid2>
           {gameState.players.length <= 1
             ? <Typography>Add at least one more player to start game</Typography>
             : (<Button
@@ -77,6 +92,10 @@ function WaitingRoom() {
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </Grid2>
       </Grid2>
+      <AddAiPlayer
+        addAiPlayerDialogOpen={addAiPlayerDialogOpen}
+        setAddAiPlayerDialogOpen={setAddAiPlayerDialogOpen}
+      />
     </>
   )
 }

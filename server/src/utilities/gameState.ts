@@ -4,6 +4,8 @@ import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 
+export const countOfEachInfluenceInDeck = 3
+
 export const getGameState = async (
   roomId: string
 ): Promise<GameState> => {
@@ -51,6 +53,7 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
     pendingInfluenceLoss: fullGameState.pendingInfluenceLoss,
     players: publicPlayers,
     roomId: fullGameState.roomId,
+    deckCount: fullGameState.deck.length,
     ...(selfPlayer && { selfPlayer }),
     ...(fullGameState.pendingAction && { pendingAction: fullGameState.pendingAction }),
     ...(fullGameState.pendingActionChallenge && { pendingActionChallenge: fullGameState.pendingActionChallenge }),
@@ -81,7 +84,7 @@ export const validateGameState = (state: GameState) => {
     influences.forEach((card) => cardCounts[card]++)
     deadInfluences.forEach((card) => cardCounts[card]++)
   })
-  if (Object.values(cardCounts).some((count) => count !== 3)) {
+  if (Object.values(cardCounts).some((count) => count !== countOfEachInfluenceInDeck)) {
     throw new GameMutationInputError("Incorrect total card count in game")
   }
   if (state.pendingAction?.pendingPlayers?.length === 0

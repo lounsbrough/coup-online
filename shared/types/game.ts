@@ -20,6 +20,7 @@ export enum PlayerActions {
   gameState = 'gameState',
   createGame = 'createGame',
   joinGame = 'joinGame',
+  addAiPlayer = 'addAiPlayer',
   removeFromGame = 'removeFromGame',
   startGame = 'startGame',
   resetGame = 'resetGame',
@@ -224,4 +225,5 @@ export type PublicGameState = Pick<GameState,
 >> & {
   players: PublicPlayer[]
   selfPlayer?: Player
+  deckCount: number
 }

@@ -8,6 +8,7 @@ import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
+import Bot from "../icons/Bot"
 
 function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   const { gameState } = useGameStateContext()
@@ -29,7 +30,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
     <>
       <Grid2 container justifyContent="center" spacing={3}>
         {gameState.players
-          .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
+          .map(({ name, color, coins, influenceCount, deadInfluences, ai }, index) => {
             const playerColor = influenceCount ? color : '#777777'
             const cardTextColor = theme.palette.mode === LIGHT_COLOR_MODE ? 'white' : 'black'
             const isWaitingOnPlayer = waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
@@ -82,6 +83,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     <OverflowTooltip>{name}</OverflowTooltip>
                   </Typography>
                   <Typography variant="h6" sx={{ color: cardTextColor }}>
+                    {ai && <Bot sx={{ verticalAlign: 'text-bottom' }} />}
                     <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                   </Typography>
                   <Grid2
