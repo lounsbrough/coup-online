@@ -27,8 +27,8 @@ const chance = new Chance()
 
 describe('actionHandlers', () => {
   describe('game scenarios', () => {
-    const [david, harper, hailey] =
-      ['David', 'Harper', 'Hailey'].map((name) => ({
+    const [david, marissa, harper, hailey] =
+      ['David', 'Marissa', 'Harper', 'Hailey'].map((name) => ({
         playerName: name,
         playerId: chance.string({ length: 10 })
       }))
@@ -105,6 +105,19 @@ describe('actionHandlers', () => {
       await expect(resetGameHandler({ roomId, playerId: david.playerId })).rejects.toThrow('Player not in game')
       await resetGameHandler({ roomId, playerId: harper.playerId })
       await resetGameRequestHandler({ roomId, playerId: hailey.playerId })
+
+      await joinGameHandler({ roomId, ...marissa })
+      await startGameHandler({ roomId, playerId: harper.playerId })
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        const harperPlayer = state.players.find(({name}) => name === harper.playerName)
+        harperPlayer!.deadInfluences.push(...harperPlayer!.influences.splice(0))
+        state.turnPlayer = hailey.playerName
+      })
+
+      await resetGameRequestHandler({ roomId, playerId: hailey.playerId })
+      await expect(resetGameHandler({ roomId, playerId: harper.playerId })).rejects.toThrow('Current game is in progress')
+      await resetGameHandler({ roomId, playerId: marissa.playerId })
 
       await joinGameHandler({ roomId, ...david })
       await removeFromGameHandler({ roomId, playerId: hailey.playerId, playerName: david.playerName })

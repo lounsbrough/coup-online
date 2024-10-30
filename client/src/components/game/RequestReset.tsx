@@ -30,11 +30,12 @@ function RequestReset() {
 
   const isResetPending = !!gameState.resetGameRequest
   const isResetMine = isResetPending && gameState.resetGameRequest?.player === gameState.selfPlayer?.name
+  const playerIsDead = !gameState.selfPlayer?.influences.length
 
   return (
     <>
       <Box mt={1}>
-        {(!isResetPending || isResetMine) && (
+        {(!isResetPending || isResetMine || playerIsDead) && (
           <>
             <Button
               size="small"
@@ -54,7 +55,7 @@ function RequestReset() {
           </>
         )}
       </Box>
-      {isResetPending && !isResetMine && (
+      {isResetPending && !isResetMine && !playerIsDead && (
         <>
           <ColoredTypography>
             {`${gameState.resetGameRequest!.player} wants to reset the game`}

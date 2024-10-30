@@ -6,7 +6,7 @@ import { getGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 
-const getPlayerInRoom = (gameState: GameState, roomId: string, playerId: string) => {
+const getPlayerInRoom = (gameState: GameState, playerId: string) => {
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player) {
@@ -90,7 +90,7 @@ export const addAiPlayerHandler = async ({ roomId, playerId, playerName }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  getPlayerInRoom(gameState, roomId, playerId)
+  getPlayerInRoom(gameState, playerId)
 
   await mutateGameState(gameState, (state) => {
     if (state.players.length >= 6) {
@@ -122,7 +122,7 @@ export const removeFromGameHandler = async ({ roomId, playerId, playerName }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  getPlayerInRoom(gameState, roomId, playerId)
+  getPlayerInRoom(gameState, playerId)
 
   if (gameState.isStarted) {
     throw new GameMutationInputError('Game has already started')
@@ -147,7 +147,7 @@ export const resetGameRequestHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
   const noHumanOpponents = gameState.players.filter(({ ai }) => !ai).length === 1
@@ -171,7 +171,7 @@ export const resetGameRequestCancelHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  getPlayerInRoom(gameState, roomId, playerId)
+  getPlayerInRoom(gameState, playerId)
 
   await mutateGameState(gameState, (state) => {
     delete state.resetGameRequest
@@ -186,18 +186,21 @@ export const resetGameHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const resetPlayer = getPlayerInRoom(gameState, roomId, playerId)
+  const resetPlayer = getPlayerInRoom(gameState, playerId)
 
-  const pendingResetFromOtherPlayer = gameState.resetGameRequest && gameState.resetGameRequest?.player !== resetPlayer.name
-
-  if (!gameState.isStarted && !pendingResetFromOtherPlayer) {
+  if (!gameState.isStarted) {
     throw new GameMutationInputError('Game is not started')
   }
 
   const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
-  const allOpponentsAi = gameState.players.filter(({ ai }) => !ai).length === 1
-  if (!gameIsOver && !allOpponentsAi && !pendingResetFromOtherPlayer) {
-    throw new GameMutationInputError('Current game is in progress')
+  if (!gameIsOver) {
+    const allOpponentsAi = gameState.players.filter(({ ai }) => !ai).length === 1
+    const pendingResetFromOtherPlayer = resetPlayer.influences.length
+      && gameState.resetGameRequest
+      && gameState.resetGameRequest?.player !== resetPlayer.name
+    if (!allOpponentsAi && !pendingResetFromOtherPlayer) {
+      throw new GameMutationInputError('Current game is in progress')
+    }
   }
 
   await resetGame(roomId)
@@ -211,7 +214,7 @@ export const startGameHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  getPlayerInRoom(gameState, roomId, playerId)
+  getPlayerInRoom(gameState, playerId)
 
   if (gameState.players.length < 2) {
     throw new GameMutationInputError('Game must have at least 2 players to start')
@@ -234,7 +237,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
@@ -352,7 +355,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
@@ -435,7 +438,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
@@ -516,7 +519,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
@@ -590,7 +593,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
@@ -662,7 +665,7 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
