@@ -637,12 +637,18 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     })
   } else {
     await mutateGameState(gameState, (state) => {
+      const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge?.sourcePlayer)
       const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
+
+      if (!challengePlayer) {
+        throw new GameMutationInputError('Unable to find challenging player')
+      }
 
       if (!blockPlayer) {
         throw new GameMutationInputError('Unable to find blocking player')
       }
 
+      logEvent(state, `${challengePlayer.name} successfully challenged ${blockPlayer.name}`)
       logEvent(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`)
       killPlayerInfluence(state, blockPlayer.name, influence)
       processPendingAction(state)
