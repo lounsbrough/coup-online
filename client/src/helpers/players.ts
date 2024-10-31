@@ -19,39 +19,35 @@ export const getWaitingOnPlayers = (gameState: PublicGameState): PublicPlayer[] 
     return []
   }
 
-  const waitingForPlayers = []
+  const waitingForPlayerNames = new Set<string>()
 
   if (gameState.pendingBlockChallenge) {
-    const pendingBlockPlayer = gameState.players.find(({ name }) => gameState.pendingBlock?.sourcePlayer === name)
+    const pendingBlockPlayer = gameState.pendingBlock?.sourcePlayer
     if (pendingBlockPlayer) {
-      waitingForPlayers.push(pendingBlockPlayer)
+      waitingForPlayerNames.add(pendingBlockPlayer)
     }
   } else if (gameState.pendingBlock) {
-    waitingForPlayers.push(...gameState.players.filter(({ name }) =>
-      gameState.pendingBlock?.pendingPlayers.includes(name)))
+    gameState.pendingBlock?.pendingPlayers.forEach(waitingForPlayerNames.add, waitingForPlayerNames)
   } else if (gameState.pendingActionChallenge) {
-    const turnPlayer = gameState.players.find(({ name }) => gameState.turnPlayer === name)
-    if (turnPlayer) {
-      waitingForPlayers.push(turnPlayer)
+    if (gameState.turnPlayer) {
+      waitingForPlayerNames.add(gameState.turnPlayer)
     }
   } else if (gameState.pendingAction) {
-    waitingForPlayers.push(...gameState.players.filter(({ name }) =>
-      gameState.pendingAction?.pendingPlayers.includes(name)))
+    gameState.pendingAction?.pendingPlayers.forEach(waitingForPlayerNames.add, waitingForPlayerNames)
   }
 
   const pendingInfluenceLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
   if (pendingInfluenceLossPlayers.length) {
     pendingInfluenceLossPlayers.forEach((pendingInfluenceLossPlayer) => {
-      waitingForPlayers.push(gameState.players.find(({ name }) => pendingInfluenceLossPlayer === name))
+      waitingForPlayerNames.add(pendingInfluenceLossPlayer)
     })
   }
 
-  if (!waitingForPlayers.length) {
-    const turnPlayer = gameState.players.find(({ name }) => gameState.turnPlayer === name)
-    if (turnPlayer) {
-      waitingForPlayers.push(turnPlayer)
+  if (!waitingForPlayerNames.size) {
+    if (gameState.turnPlayer) {
+      waitingForPlayerNames.add(gameState.turnPlayer)
     }
   }
 
-  return waitingForPlayers
+  return gameState.players.filter(({name}) => waitingForPlayerNames.has(name))
 }
