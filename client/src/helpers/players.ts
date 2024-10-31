@@ -38,9 +38,7 @@ export const getWaitingOnPlayers = (gameState: PublicGameState): PublicPlayer[] 
 
   const pendingInfluenceLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
   if (pendingInfluenceLossPlayers.length) {
-    pendingInfluenceLossPlayers.forEach((pendingInfluenceLossPlayer) => {
-      waitingForPlayerNames.add(pendingInfluenceLossPlayer)
-    })
+    pendingInfluenceLossPlayers.forEach(waitingForPlayerNames.add, waitingForPlayerNames)
   }
 
   if (!waitingForPlayerNames.size) {
