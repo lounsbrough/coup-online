@@ -19,33 +19,33 @@ export const getWaitingOnPlayers = (gameState: PublicGameState): PublicPlayer[] 
     return []
   }
 
-  const waitingForNames = new Set<string>()
+  const waitingOnNames = new Set<string>()
 
   if (gameState.pendingBlockChallenge) {
     const pendingBlockPlayer = gameState.pendingBlock?.sourcePlayer
     if (pendingBlockPlayer) {
-      waitingForNames.add(pendingBlockPlayer)
+      waitingOnNames.add(pendingBlockPlayer)
     }
   } else if (gameState.pendingBlock) {
-    gameState.pendingBlock?.pendingPlayers.forEach(waitingForNames.add, waitingForNames)
+    gameState.pendingBlock?.pendingPlayers.forEach(waitingOnNames.add, waitingOnNames)
   } else if (gameState.pendingActionChallenge) {
     if (gameState.turnPlayer) {
-      waitingForNames.add(gameState.turnPlayer)
+      waitingOnNames.add(gameState.turnPlayer)
     }
   } else if (gameState.pendingAction) {
-    gameState.pendingAction?.pendingPlayers.forEach(waitingForNames.add, waitingForNames)
+    gameState.pendingAction?.pendingPlayers.forEach(waitingOnNames.add, waitingOnNames)
   }
 
   const pendingInfluenceLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
   if (pendingInfluenceLossPlayers.length) {
-    pendingInfluenceLossPlayers.forEach(waitingForNames.add, waitingForNames)
+    pendingInfluenceLossPlayers.forEach(waitingOnNames.add, waitingOnNames)
   }
 
-  if (!waitingForNames.size) {
+  if (!waitingOnNames.size) {
     if (gameState.turnPlayer) {
-      waitingForNames.add(gameState.turnPlayer)
+      waitingOnNames.add(gameState.turnPlayer)
     }
   }
 
-  return gameState.players.filter(({ name }) => waitingForNames.has(name))
+  return gameState.players.filter(({ name }) => waitingOnNames.has(name))
 }
