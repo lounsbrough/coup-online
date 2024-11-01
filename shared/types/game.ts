@@ -26,6 +26,7 @@ export enum PlayerActions {
   resetGame = 'resetGame',
   resetGameRequest = 'resetGameRequest',
   resetGameRequestCancel = "resetGameRequestCancel",
+  checkAiMove = "checkAiMove",
   action = 'action',
   actionResponse = 'actionResponse',
   actionChallengeResponse = 'actionChallengeResponse',
@@ -178,6 +179,7 @@ export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
 export type GameState = {
   deck: Influences[]
   eventLogs: string[]
+  lastEventTimestamp: Date
   isStarted: boolean
   availablePlayerColors: string[]
   players: Player[]
@@ -213,6 +215,7 @@ export type GameState = {
 export type PublicGameState = Pick<GameState,
   'eventLogs' |
   'isStarted' |
+  'lastEventTimestamp' |
   'pendingInfluenceLoss' |
   'roomId'
 > & Partial<Pick<GameState,
@@ -220,8 +223,8 @@ export type PublicGameState = Pick<GameState,
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
-  'turnPlayer' |
-  'resetGameRequest'
+  'resetGameRequest' |
+  'turnPlayer'
 >> & {
   players: PublicPlayer[]
   selfPlayer?: Player

@@ -4,13 +4,16 @@ import { Actions, GameState, Influences, PublicGameState } from '../../../shared
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 import { compressString, decompressString } from "./compression"
+import { getCurrentTimestamp } from "./time"
 
 jest.mock("./storage")
 jest.mock("./compression")
+jest.mock("./time")
 const getValueMock = jest.mocked(getValue)
 const setValueMock = jest.mocked(setValue)
 const compressStringMock = jest.mocked(compressString)
 const decompressStringMock = jest.mocked(decompressString)
+const getCurrentTimestampMock = jest.mocked(getCurrentTimestamp)
 
 const chance = new Chance()
 const oneDay = 86400
@@ -31,6 +34,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
+    lastEventTimestamp: chance.date(),
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, 6),
     players: [],
@@ -60,8 +64,8 @@ describe('gameState', () => {
       decompressStringMock.mockReturnValue(JSON.stringify(gameState))
 
       expect(await getGameState(roomId)).toEqual(gameState)
-      expect(decompressString).toHaveBeenCalledTimes(1)
-      expect(decompressString).toHaveBeenCalledWith(compressedStateString)
+      expect(decompressStringMock).toHaveBeenCalledTimes(1)
+      expect(decompressStringMock).toHaveBeenCalledWith(compressedStateString)
       expect(getValueMock).toHaveBeenCalledTimes(1)
       expect(getValueMock).toHaveBeenCalledWith(roomId.toUpperCase())
     })
@@ -75,6 +79,7 @@ describe('gameState', () => {
 
       const publicGameState: PublicGameState = {
         eventLogs: gameState.eventLogs,
+        lastEventTimestamp: gameState.lastEventTimestamp,
         isStarted: gameState.isStarted,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
         roomId: gameState.roomId,
@@ -127,20 +132,25 @@ describe('gameState', () => {
       getValueMock.mockResolvedValue(JSON.stringify(gameState))
       compressStringMock.mockReturnValue(compressedStateString)
 
+      getCurrentTimestampMock.mockReturnValue(new Date(1, 22, 2020))
+
       await mutateGameState(gameState, (state) => {
         state.players[0].coins -= 1
       })
 
-      const expectedState = JSON.stringify({
+      const expectedState = {
         ...gameState,
+        lastEventTimestamp: new Date(1, 22, 2020).toISOString(),
         players: [
           { ...gameState.players[0], coins: gameState.players[0].coins - 1 },
           ...gameState.players.slice(1)
         ]
-      })
+      }
 
-      expect(compressString).toHaveBeenCalledTimes(1)
-      expect(compressString).toHaveBeenCalledWith(expectedState)
+      const actualStateString = compressStringMock.mock.calls[0][0]
+
+      expect(compressStringMock).toHaveBeenCalledTimes(1)
+      expect(JSON.parse(actualStateString)).toEqual(expectedState)
       expect(setValueMock).toHaveBeenCalledTimes(1)
       expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), compressedStateString, oneDay)
     })
@@ -155,7 +165,7 @@ describe('gameState', () => {
         state.players = JSON.parse(JSON.stringify(state.players))
       })
 
-      expect(compressString).not.toHaveBeenCalled()
+      expect(compressStringMock).not.toHaveBeenCalled()
       expect(setValueMock).not.toHaveBeenCalled()
     })
   })

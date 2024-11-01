@@ -121,7 +121,8 @@ const getNewGameState = (roomId: string): GameState => ({
   deck: shuffle(buildGameDeck()),
   pendingInfluenceLoss: {},
   isStarted: false,
-  eventLogs: []
+  eventLogs: [],
+  lastEventTimestamp: new Date()
 })
 
 export const addPlayerToGame = (state: GameState, playerId: string, playerName: string, ai: boolean = false) => {

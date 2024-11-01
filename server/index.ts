@@ -70,7 +70,7 @@ const eventHandlers: {
     joiSchema: Joi.ObjectSchema
   }
 } = {
-  gameState: {
+  [PlayerActions.gameState]: {
     handler: getGameStateHandler,
     express: {
       method: 'get',
@@ -86,7 +86,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  createGame: {
+  [PlayerActions.createGame]: {
     handler: createGameHandler,
     express: {
       method: 'post',
@@ -102,7 +102,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  joinGame: {
+  [PlayerActions.joinGame]: {
     handler: joinGameHandler,
     express: {
       method: 'post',
@@ -120,7 +120,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  addAiPlayer: {
+  [PlayerActions.addAiPlayer]: {
     handler: addAiPlayerHandler,
     express: {
       method: 'post',
@@ -138,7 +138,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  removeFromGame: {
+  [PlayerActions.removeFromGame]: {
     handler: removeFromGameHandler,
     express: {
       method: 'post',
@@ -156,7 +156,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  startGame: {
+  [PlayerActions.startGame]: {
     handler: startGameHandler,
     express: {
       method: 'post',
@@ -172,7 +172,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGameRequest: {
+  [PlayerActions.resetGameRequest]: {
     handler: resetGameRequestHandler,
     express: {
       method: 'post',
@@ -188,7 +188,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGameRequestCancel: {
+  [PlayerActions.resetGameRequestCancel]: {
     handler: resetGameRequestCancelHandler,
     express: {
       method: 'post',
@@ -204,7 +204,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGame: {
+  [PlayerActions.resetGame]: {
     handler: resetGameHandler,
     express: {
       method: 'post',
@@ -220,7 +220,23 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  action: {
+  [PlayerActions.checkAiMove]: {
+    handler: actionHandler,
+    express: {
+      method: 'post',
+      parseParams: (req) => {
+        const roomId: string = req.body.roomId
+        const playerId: string = req.body.playerId
+        return { roomId, playerId }
+      },
+      validator: validateExpressBody
+    },
+    joiSchema: Joi.object().keys({
+      roomId: Joi.string().required(),
+      playerId: Joi.string().required()
+    })
+  },
+  [PlayerActions.action]: {
     handler: actionHandler,
     express: {
       method: 'post',
@@ -240,7 +256,7 @@ const eventHandlers: {
       targetPlayer: Joi.string()
     })
   },
-  actionResponse: {
+  [PlayerActions.actionResponse]: {
     handler: actionResponseHandler,
     express: {
       method: 'post',
@@ -260,7 +276,7 @@ const eventHandlers: {
       claimedInfluence: Joi.string().allow(...Object.values(Influences))
     })
   },
-  actionChallengeResponse: {
+  [PlayerActions.actionChallengeResponse]: {
     handler: actionChallengeResponseHandler,
     express: {
       method: 'post',
@@ -278,7 +294,7 @@ const eventHandlers: {
       influence: Joi.string().allow(...Object.values(Influences)).required()
     })
   },
-  blockResponse: {
+  [PlayerActions.blockResponse]: {
     handler: blockResponseHandler,
     express: {
       method: 'post',
@@ -296,7 +312,7 @@ const eventHandlers: {
       response: Joi.string().allow(...Object.values(Responses)).required()
     })
   },
-  blockChallengeResponse: {
+  [PlayerActions.blockChallengeResponse]: {
     handler: blockChallengeResponseHandler,
     express: {
       method: 'post',
@@ -314,7 +330,7 @@ const eventHandlers: {
       influence: Joi.string().allow(...Object.values(Influences)).required()
     })
   },
-  loseInfluences: {
+  [PlayerActions.loseInfluences]: {
     handler: loseInfluencesHandler,
     express: {
       method: 'post',

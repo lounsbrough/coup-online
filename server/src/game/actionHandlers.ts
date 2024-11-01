@@ -227,10 +227,19 @@ export const startGameHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
+export const checkAiMoveHandler = async ({ roomId, playerId }: {
+  roomId: string
+  playerId: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  getPlayerInRoom(gameState, playerId)
+}
+
 export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: {
   roomId: string
   playerId: string
-  action: Actions,
+  action: Actions
   targetPlayer?: string
 }) => {
   const gameState = await getGameState(roomId)
@@ -348,7 +357,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
 export const actionResponseHandler = async ({ roomId, playerId, response, claimedInfluence }: {
   roomId: string
   playerId: string
-  response: Responses,
+  response: Responses
   claimedInfluence?: Influences
 }) => {
   const gameState = await getGameState(roomId)

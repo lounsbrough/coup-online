@@ -68,9 +68,9 @@ function WaitingRoom() {
             onClick={() => {
               setAddAiPlayerDialogOpen(true)
             }}
-            disabled // gameState.players.length === 6
+            disabled={gameState.players.length === 6}
           >
-            Coming Soon{/* Add AI Player */}
+            Add AI Player
           </Button>
         </Grid2>
         <Grid2>
