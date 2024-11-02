@@ -5,7 +5,7 @@ import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { addPlayerToGame, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
-import { decideAction } from './ai'
+import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
 const getPlayerInRoom = (gameState: GameState, playerId: string) => {
   const player = gameState.players.find(({ id }) => id === playerId)
@@ -236,30 +236,111 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
 
   getPlayerInRoom(gameState, playerId)
 
+  const unchangedResponse = { roomId, playerId, stateUnchanged: true }
+  const changedResponse = { roomId, playerId }
+
   if (new Date() < new Date(gameState.lastEventTimestamp.getTime() + 1000 + Math.floor(Math.random() * 2000))) {
-    return { roomId, playerId, stateUnchanged: false }
+    return unchangedResponse
+  }
+
+  const pendingLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
+  const nextPendingLossAiPlayer = gameState.players.find(({ ai, name }) =>
+    ai && pendingLossPlayers.includes(name))
+  if (nextPendingLossAiPlayer) {
+    const { influences } = decideInfluencesToLose(
+      await getPublicGameState({ gameState, playerId: nextPendingLossAiPlayer.id })
+    )
+
+    await loseInfluencesHandler({
+      roomId,
+      playerId: nextPendingLossAiPlayer.id,
+      influences
+    })
+
+    return changedResponse
   }
 
   const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
 
-  let stateUnchanged = true
-
   if (turnPlayer?.ai && !gameState.pendingAction) {
-    const {action, targetPlayer} = decideAction(
-      await getPublicGameState({gameState, playerId: turnPlayer.id})
+    const { action, targetPlayer } = decideAction(
+      await getPublicGameState({ gameState, playerId: turnPlayer.id })
     )
 
     await actionHandler({
       roomId,
       playerId: turnPlayer.id,
       action,
-      ...(targetPlayer && {targetPlayer})
+      ...(targetPlayer && { targetPlayer })
     })
 
-    stateUnchanged = false
+    return changedResponse
   }
 
-  return { roomId, playerId, stateUnchanged }
+  let nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
+    ai && gameState.pendingAction?.pendingPlayers.includes(name))
+  if (nextPendingAiPlayer && !gameState.pendingActionChallenge) {
+    const { response, claimedInfluence } = decideActionResponse(
+      await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+    )
+
+    await actionResponseHandler({
+      roomId,
+      playerId: nextPendingAiPlayer.id,
+      response,
+      ...(claimedInfluence && { claimedInfluence })
+    })
+
+    return changedResponse
+  }
+
+  if (turnPlayer?.ai && gameState.pendingActionChallenge) {
+    const { influence } = decideActionChallengeResponse(
+      await getPublicGameState({ gameState, playerId: turnPlayer.id })
+    )
+
+    await actionChallengeResponseHandler({
+      roomId,
+      playerId: turnPlayer.id,
+      influence
+    })
+
+    return changedResponse
+  }
+
+  nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
+    ai && gameState.pendingBlock?.pendingPlayers.includes(name))
+  if (nextPendingAiPlayer) {
+    const { response } = decideBlockResponse(
+      await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+    )
+
+    await blockResponseHandler({
+      roomId,
+      playerId: nextPendingAiPlayer.id,
+      response
+    })
+
+    return changedResponse
+  }
+
+  nextPendingAiPlayer = gameState.pendingBlockChallenge && gameState.players.find(({ ai, name }) =>
+    ai && gameState.pendingBlock?.sourcePlayer === name)
+  if (nextPendingAiPlayer) {
+    const { influence } = decideBlockChallengeResponse(
+      await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+    )
+
+    await blockChallengeResponseHandler({
+      roomId,
+      playerId: nextPendingAiPlayer.id,
+      influence
+    })
+
+    return changedResponse
+  }
+
+  return unchangedResponse
 }
 
 export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: {
