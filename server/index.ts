@@ -4,7 +4,7 @@ import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, ActionAttributes } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
@@ -61,7 +61,7 @@ const validateExpressQuery = (schema: ObjectSchema) => validateExpressRequest(sc
 
 const eventHandlers: {
   [event in PlayerActions]: {
-    handler: (args: unknown) => Promise<{ roomId: string, playerId: string }>
+    handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean }>
     express: {
       method: 'post' | 'get'
       parseParams: (req: Request) => unknown
@@ -221,7 +221,7 @@ const eventHandlers: {
     })
   },
   [PlayerActions.checkAiMove]: {
-    handler: actionHandler,
+    handler: checkAiMoveHandler,
     express: {
       method: 'post',
       parseParams: (req) => {
@@ -364,7 +364,7 @@ io.on('connection', (socket) => {
         callback?.({ error })
       } else {
         try {
-          const { roomId, playerId } = await handler(params)
+          const { roomId, playerId, stateUnchanged } = await handler(params)
           if (!socket.data.playerId && playerId) {
             socket.data.playerId = playerId
           }
@@ -397,6 +397,11 @@ io.on('connection', (socket) => {
               }
             }
           }
+
+          if (stateUnchanged) {
+            return
+          }
+
           if (event !== PlayerActions.gameState) {
             const roomSocketIds = io.of('/').adapter.rooms.get(socketRoom)
             if (roomSocketIds) {

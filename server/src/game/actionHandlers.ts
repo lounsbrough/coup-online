@@ -2,9 +2,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { GameMutationInputError } from "../utilities/errors"
 import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
 import { getActionMessage } from '../../../shared/utilities/message'
-import { getGameState, logEvent, mutateGameState } from "../utilities/gameState"
+import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { addPlayerToGame, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { decideAction } from './ai'
 
 const getPlayerInRoom = (gameState: GameState, playerId: string) => {
   const player = gameState.players.find(({ id }) => id === playerId)
@@ -234,6 +235,27 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   const gameState = await getGameState(roomId)
 
   getPlayerInRoom(gameState, playerId)
+
+  const turnPlayer = gameState.players.find(({name}) => name === gameState.turnPlayer)
+
+  let stateUnchanged = true
+
+  if (turnPlayer?.ai) {
+    const {action, targetPlayer} = decideAction(
+      await getPublicGameState({gameState, playerId: turnPlayer.id})
+    )
+
+    await actionHandler({
+      roomId,
+      playerId: turnPlayer.id,
+      action,
+      ...(targetPlayer && {targetPlayer})
+    })
+
+    stateUnchanged = false
+  }
+
+  return { roomId, playerId, stateUnchanged }
 }
 
 export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: {
