@@ -29,6 +29,7 @@ describe('ai', () => {
             roomId: chance.string(),
             isStarted: chance.bool(),
             eventLogs: [],
+            lastEventTimestamp: chance.date(),
             players: [
               {
                 ...getRandomPlayer(),
@@ -64,6 +65,7 @@ describe('ai', () => {
             roomId: chance.string(),
             isStarted: chance.bool(),
             eventLogs: [],
+            lastEventTimestamp: chance.date(),
             players: [
               {
                 ...getRandomPlayer(),
@@ -104,6 +106,7 @@ describe('ai', () => {
             roomId: chance.string(),
             isStarted: chance.bool(),
             eventLogs: [],
+            lastEventTimestamp: chance.date(),
             players: [
               {
                 ...getRandomPlayer(),
@@ -145,6 +148,7 @@ describe('ai', () => {
             roomId: chance.string(),
             isStarted: chance.bool(),
             eventLogs: [],
+            lastEventTimestamp: chance.date(),
             players: [
               {
                 ...getRandomPlayer(),
@@ -265,6 +269,7 @@ describe('ai', () => {
         roomId: chance.string(),
         isStarted: chance.bool(),
         eventLogs: [],
+        lastEventTimestamp: chance.date(),
         players: [
           {
             ...getRandomPlayer(),
@@ -300,6 +305,7 @@ describe('ai', () => {
         roomId: chance.string(),
         isStarted: chance.bool(),
         eventLogs: [],
+        lastEventTimestamp: chance.date(),
         players: [
           {
             ...getRandomPlayer(),

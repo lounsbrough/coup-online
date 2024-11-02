@@ -47,21 +47,45 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
         setError('Unexpected error processing request')
       }
     },
-    { refreshInterval: 2000, isPaused: () => socket?.connected ?? false }
+    { refreshInterval: 2000, isPaused: () => !roomId || isConnected }
   )
 
   useEffect(() => {
-    console.log(`socket connected: ${isConnected}`)
-    if (socket && isConnected) {
-      setError('')
-      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
-      socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
-        setError('')
-        setGameState(gameState)
-      })
-      socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
+    if (!roomId || !socket || !isConnected) {
+      return
     }
+
+    setError('')
+    socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
+    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
+      setError('')
+      setGameState(gameState)
+    })
+    socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
   }, [roomId, socket, isConnected])
+
+  const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)
+  const gameIsOver = playersLeft?.length === 1
+  const aiPlayersActive = gameState?.isStarted && !gameIsOver && gameState?.players.some(({ ai, influenceCount }) =>
+    ai && influenceCount)
+
+  useEffect(() => {
+    if (!roomId || !aiPlayersActive) {
+      return
+    }
+
+    const interval = setInterval(() => {
+      if (socket && isConnected) {
+        socket.emit(PlayerActions.checkAiMove, { roomId, playerId: getPlayerId() })
+      } else {
+        fetch(`${getBaseUrl()}/${PlayerActions.checkAiMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
+      }
+    }, isConnected ? 1000 : 2000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [roomId, socket, isConnected, aiPlayersActive])
 
   const contextValue = { gameState, setGameState }
 

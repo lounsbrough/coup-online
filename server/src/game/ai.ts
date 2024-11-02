@@ -1,5 +1,5 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
-import { Actions, Influences, PublicGameState, PublicPlayer } from "../../../shared/types/game"
+import { Actions, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 
 export const getProbabilityOfHiddenCardBeingInfluence = (
   gameState: PublicGameState,
@@ -30,7 +30,7 @@ export const getProbabilityOfPlayerInfluence = (
   playerName?: string
 ) => {
   if (playerName) {
-    const player = gameState.players.find(({name}) => name === playerName)
+    const player = gameState.players.find(({ name }) => name === playerName)
     if (!player) {
       throw new Error('Player not found for probability function')
     }
@@ -119,4 +119,44 @@ export const decideAction = (gameState: PublicGameState): {
   }
 
   return { action: Actions.Income }
+}
+
+export const decideActionResponse = (gameState: PublicGameState): {
+  response: Responses
+  claimedInfluence?: Influences
+} => {
+  return Math.random() > 0.5 || gameState.pendingAction?.claimConfirmed
+    ? { response: Responses.Pass }
+    : { response: Responses.Challenge }
+}
+
+export const decideActionChallengeResponse = (gameState: PublicGameState): {
+  influence: Influences
+} => {
+  return { influence: gameState.selfPlayer!.influences[0] }
+}
+
+export const decideBlockResponse = (gameState: PublicGameState): {
+  response: Responses
+} => {
+  return Math.random() > 0.5 && gameState.pendingBlock?.claimedInfluence
+    ? { response: Responses.Pass }
+    : { response: Responses.Challenge }
+}
+
+export const decideBlockChallengeResponse = (gameState: PublicGameState): {
+  influence: Influences
+} => {
+  return { influence: gameState.selfPlayer!.influences[0] }
+}
+
+export const decideInfluencesToLose = (gameState: PublicGameState): {
+  influences: Influences[]
+} => {
+  return {
+    influences: gameState.selfPlayer!.influences.slice(
+      0,
+      gameState.pendingInfluenceLoss[gameState.selfPlayer!.name].length
+    )
+  }
 }

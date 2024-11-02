@@ -28,6 +28,10 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
     })
   }, [socket])
 
+  useEffect(() => {
+    console.log(`socket connected: ${isConnected}`)
+  }, [isConnected])
+
   return (
     <WebSocketContext.Provider value={{ socket, isConnected }}>
       {children}

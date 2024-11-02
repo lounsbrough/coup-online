@@ -4,7 +4,7 @@ import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, ActionAttributes } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
@@ -61,7 +61,7 @@ const validateExpressQuery = (schema: ObjectSchema) => validateExpressRequest(sc
 
 const eventHandlers: {
   [event in PlayerActions]: {
-    handler: (args: unknown) => Promise<{ roomId: string, playerId: string }>
+    handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean }>
     express: {
       method: 'post' | 'get'
       parseParams: (req: Request) => unknown
@@ -70,7 +70,7 @@ const eventHandlers: {
     joiSchema: Joi.ObjectSchema
   }
 } = {
-  gameState: {
+  [PlayerActions.gameState]: {
     handler: getGameStateHandler,
     express: {
       method: 'get',
@@ -86,7 +86,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  createGame: {
+  [PlayerActions.createGame]: {
     handler: createGameHandler,
     express: {
       method: 'post',
@@ -102,7 +102,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  joinGame: {
+  [PlayerActions.joinGame]: {
     handler: joinGameHandler,
     express: {
       method: 'post',
@@ -120,7 +120,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  addAiPlayer: {
+  [PlayerActions.addAiPlayer]: {
     handler: addAiPlayerHandler,
     express: {
       method: 'post',
@@ -138,7 +138,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  removeFromGame: {
+  [PlayerActions.removeFromGame]: {
     handler: removeFromGameHandler,
     express: {
       method: 'post',
@@ -156,7 +156,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  startGame: {
+  [PlayerActions.startGame]: {
     handler: startGameHandler,
     express: {
       method: 'post',
@@ -172,7 +172,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGameRequest: {
+  [PlayerActions.resetGameRequest]: {
     handler: resetGameRequestHandler,
     express: {
       method: 'post',
@@ -188,7 +188,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGameRequestCancel: {
+  [PlayerActions.resetGameRequestCancel]: {
     handler: resetGameRequestCancelHandler,
     express: {
       method: 'post',
@@ -204,7 +204,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGame: {
+  [PlayerActions.resetGame]: {
     handler: resetGameHandler,
     express: {
       method: 'post',
@@ -220,7 +220,23 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  action: {
+  [PlayerActions.checkAiMove]: {
+    handler: checkAiMoveHandler,
+    express: {
+      method: 'post',
+      parseParams: (req) => {
+        const roomId: string = req.body.roomId
+        const playerId: string = req.body.playerId
+        return { roomId, playerId }
+      },
+      validator: validateExpressBody
+    },
+    joiSchema: Joi.object().keys({
+      roomId: Joi.string().required(),
+      playerId: Joi.string().required()
+    })
+  },
+  [PlayerActions.action]: {
     handler: actionHandler,
     express: {
       method: 'post',
@@ -240,7 +256,7 @@ const eventHandlers: {
       targetPlayer: Joi.string()
     })
   },
-  actionResponse: {
+  [PlayerActions.actionResponse]: {
     handler: actionResponseHandler,
     express: {
       method: 'post',
@@ -260,7 +276,7 @@ const eventHandlers: {
       claimedInfluence: Joi.string().allow(...Object.values(Influences))
     })
   },
-  actionChallengeResponse: {
+  [PlayerActions.actionChallengeResponse]: {
     handler: actionChallengeResponseHandler,
     express: {
       method: 'post',
@@ -278,7 +294,7 @@ const eventHandlers: {
       influence: Joi.string().allow(...Object.values(Influences)).required()
     })
   },
-  blockResponse: {
+  [PlayerActions.blockResponse]: {
     handler: blockResponseHandler,
     express: {
       method: 'post',
@@ -296,7 +312,7 @@ const eventHandlers: {
       response: Joi.string().allow(...Object.values(Responses)).required()
     })
   },
-  blockChallengeResponse: {
+  [PlayerActions.blockChallengeResponse]: {
     handler: blockChallengeResponseHandler,
     express: {
       method: 'post',
@@ -314,7 +330,7 @@ const eventHandlers: {
       influence: Joi.string().allow(...Object.values(Influences)).required()
     })
   },
-  loseInfluences: {
+  [PlayerActions.loseInfluences]: {
     handler: loseInfluencesHandler,
     express: {
       method: 'post',
@@ -348,7 +364,7 @@ io.on('connection', (socket) => {
         callback?.({ error })
       } else {
         try {
-          const { roomId, playerId } = await handler(params)
+          const { roomId, playerId, stateUnchanged } = await handler(params)
           if (!socket.data.playerId && playerId) {
             socket.data.playerId = playerId
           }
@@ -381,6 +397,11 @@ io.on('connection', (socket) => {
               }
             }
           }
+
+          if (stateUnchanged) {
+            return
+          }
+
           if (event !== PlayerActions.gameState) {
             const roomSocketIds = io.of('/').adapter.rooms.get(socketRoom)
             if (roomSocketIds) {

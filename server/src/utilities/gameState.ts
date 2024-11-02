@@ -3,6 +3,7 @@ import { shuffle } from './array'
 import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
+import { getCurrentTimestamp } from './time'
 
 export const countOfEachInfluenceInDeck = 3
 
@@ -15,7 +16,11 @@ export const getGameState = async (
     throw new GameMutationInputError(`Room ${roomId} does not exist`, 404)
   }
 
-  return JSON.parse(decompressString(compressed))
+  const state = JSON.parse(decompressString(compressed))
+
+  state.lastEventTimestamp = new Date(state.lastEventTimestamp ?? null)
+
+  return state
 }
 
 export const getPublicGameState = async ({ roomId, gameState, playerId }: {
@@ -49,6 +54,7 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
 
   return {
     eventLogs: fullGameState.eventLogs,
+    lastEventTimestamp: fullGameState.lastEventTimestamp,
     isStarted: fullGameState.isStarted,
     pendingInfluenceLoss: fullGameState.pendingInfluenceLoss,
     players: publicPlayers,
@@ -124,6 +130,8 @@ export const mutateGameState = async (
   if (JSON.stringify(gameState) === JSON.stringify(validatedState)) {
     return
   }
+
+  gameState.lastEventTimestamp = getCurrentTimestamp()
 
   await setGameState(validatedState.roomId, gameState)
 }

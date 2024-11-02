@@ -185,7 +185,10 @@ describe('actionHandlers', () => {
         { ...hailey, influences: [Influences.Captain, Influences.Ambassador] }
       ])
 
-      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
+      await actionHandler({ roomId, playerId: david.playerId, action: Actions.ForeignAid })
+      await expect(actionResponseHandler({ roomId, playerId: harper.playerId, response: Responses.Challenge })).rejects.toThrow(`${Actions.ForeignAid} is not challengeable`)
+      await actionResponseHandler({ roomId, playerId: harper.playerId, response: Responses.Pass })
+      await actionResponseHandler({ roomId, playerId: hailey.playerId, response: Responses.Pass })
 
       await expect(actionHandler({ roomId, playerId: harper.playerId, action: Actions.Steal })).rejects.toThrow('Target player is required for this action')
       await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Steal, targetPlayer: hailey.playerName })
@@ -215,7 +218,7 @@ describe('actionHandlers', () => {
       expect(gameState.players[0].influences).toHaveLength(0)
       expect(gameState.players[1].influences).toHaveLength(2)
       expect(gameState.players[2].influences).toHaveLength(2)
-      expect(gameState.players[0].coins).toBe(3)
+      expect(gameState.players[0].coins).toBe(4)
       expect(gameState.players[1].coins).toBe(2)
       expect(gameState.players[2].coins).toBe(2)
     })
