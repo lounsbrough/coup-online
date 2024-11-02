@@ -239,6 +239,13 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   const unchangedResponse = { roomId, playerId, stateUnchanged: true }
   const changedResponse = { roomId, playerId }
 
+  const playersLeft = gameState.players.filter(({ influences }) => influences.length)
+  const gameIsOver = playersLeft.length === 1
+
+  if (gameIsOver) {
+    return  unchangedResponse
+  }
+
   if (new Date() < new Date(gameState.lastEventTimestamp.getTime() + 1000 + Math.floor(Math.random() * 2000))) {
     return unchangedResponse
   }
@@ -499,6 +506,10 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
   } else if (response === Responses.Challenge) {
     if (gameState.pendingAction.claimConfirmed) {
       throw new GameMutationInputError(`${gameState.turnPlayer} has already confirmed their claim`)
+    }
+
+    if (!ActionAttributes[gameState.pendingAction.action].challengeable) {
+      throw new GameMutationInputError(`${gameState.pendingAction.action} is not challengeable`)
     }
 
     await mutateGameState(gameState, (state) => {

@@ -64,10 +64,13 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
   }, [roomId, socket, isConnected])
 
-  const aiPlayersRemain = gameState?.players.some(({ ai, influenceCount }) =>
+  const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)
+  const gameIsOver = playersLeft?.length === 1
+  const aiPlayersActive = gameState?.isStarted && !gameIsOver && gameState?.players.some(({ ai, influenceCount }) =>
     ai && influenceCount)
+
   useEffect(() => {
-    if (!roomId) {
+    if (!roomId || !aiPlayersActive) {
       return
     }
 
@@ -82,7 +85,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     return () => {
       clearInterval(interval)
     }
-  }, [roomId, socket, isConnected, aiPlayersRemain])
+  }, [roomId, socket, isConnected, aiPlayersActive])
 
   const contextValue = { gameState, setGameState }
 
