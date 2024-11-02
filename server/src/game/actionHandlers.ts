@@ -4,7 +4,7 @@ import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, 
 import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addPlayerToGame, canPlayerTakeAction, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
 const getPlayerInRoom = (gameState: GameState, playerId: string) => {
@@ -269,7 +269,7 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
 
   const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
 
-  if (turnPlayer?.ai && !gameState.pendingAction) {
+  if (turnPlayer?.ai && canPlayerTakeAction(gameState, turnPlayer)) {
     const { action, targetPlayer } = decideAction(
       await getPublicGameState({ gameState, playerId: turnPlayer.id })
     )
@@ -364,14 +364,6 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (gameState.turnPlayer !== player.name
-    || gameState.pendingAction
-    || gameState.pendingActionChallenge
-    || gameState.pendingBlock
-    || gameState.pendingBlockChallenge) {
-    throw new GameMutationInputError('You can\'t choose an action right now')
-  }
-
   if ((ActionAttributes[action].coinsRequired ?? 0) > player.coins) {
     throw new GameMutationInputError('You don\'t have enough coins')
   }
@@ -409,6 +401,10 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unexpected player state, refusing mutation')
         }
 
+        if (!canPlayerTakeAction(state, coupingPlayer)) {
+          throw new GameMutationInputError('You can\'t choose an action right now')
+        }
+
         coupingPlayer.coins -= ActionAttributes.Coup.coinsRequired!
         logEvent(state, getActionMessage({
           action,
@@ -430,6 +426,10 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unexpected player state, refusing mutation')
         }
 
+        if (!canPlayerTakeAction(state, incomePlayer)) {
+          throw new GameMutationInputError('You can\'t choose an action right now')
+        }
+
         incomePlayer.coins += 1
         moveTurnToNextPlayer(state)
         logEvent(state, getActionMessage({
@@ -441,8 +441,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     }
   } else {
     await mutateGameState(gameState, (state) => {
-      if (state.pendingAction) {
-        throw new GameMutationInputError('There is already a pending action')
+      if (!canPlayerTakeAction(state, player)) {
+        throw new GameMutationInputError('You can\'t choose an action right now')
       }
 
       state.pendingAction = {
