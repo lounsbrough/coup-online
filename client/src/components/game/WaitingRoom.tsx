@@ -27,6 +27,8 @@ function WaitingRoom() {
 
   const inviteLink = `${window.location.origin}/join-game?roomId=${gameState.roomId}`
 
+  const addAiEnabled = gameState.players.some(({ name }) => name === 'gmbrnpat')
+
   return (
     <>
       <Grid2 container direction='column' justifyContent="center">
@@ -68,7 +70,7 @@ function WaitingRoom() {
             onClick={() => {
               setAddAiPlayerDialogOpen(true)
             }}
-            disabled // ={gameState.players.length === 6}
+            disabled={!addAiEnabled} // ={gameState.players.length === 6}
           >
             Coming Soon{/* Add AI Player */}
           </Button>
