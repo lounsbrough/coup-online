@@ -139,7 +139,7 @@ export const decideActionChallengeResponse = (gameState: PublicGameState): {
 export const decideBlockResponse = (gameState: PublicGameState): {
   response: Responses
 } => {
-  return Math.random() > 0.5
+  return Math.random() > 0.5 && gameState.pendingBlock?.claimedInfluence
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }
