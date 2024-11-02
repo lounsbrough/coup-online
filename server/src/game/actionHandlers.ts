@@ -236,11 +236,15 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
 
   getPlayerInRoom(gameState, playerId)
 
-  const turnPlayer = gameState.players.find(({name}) => name === gameState.turnPlayer)
+  if (new Date() < new Date(gameState.lastEventTimestamp.getTime() + 1000 + Math.floor(Math.random() * 2000))) {
+    return { roomId, playerId, stateUnchanged: false }
+  }
+
+  const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
 
   let stateUnchanged = true
 
-  if (turnPlayer?.ai) {
+  if (turnPlayer?.ai && !gameState.pendingAction) {
     const {action, targetPlayer} = decideAction(
       await getPublicGameState({gameState, playerId: turnPlayer.id})
     )
