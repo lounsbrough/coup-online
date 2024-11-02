@@ -58,7 +58,7 @@ function UserSettings() {
               />
             </Grid2>
             <Grid2 height={rowHeight} alignContent="center">
-              {'WebSockets connection: '}
+              {'WebSockets Connection: '}
               {isConnected
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
                 : <CancelOutlined color="error" sx={{ verticalAlign: 'middle' }} />}
