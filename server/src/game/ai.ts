@@ -92,7 +92,7 @@ export const decideAction = (gameState: PublicGameState): {
   }
 
   if (gameState.selfPlayer.influences.includes(Influences.Captain) || Math.random() > 0.95) {
-    if (getProbabilityOfPlayerInfluence(gameState, Influences.Captain) < 0.2 + Math.random() * 0.2) {
+    if (getProbabilityOfPlayerInfluence(gameState, Influences.Captain) < 0.4 + Math.random() * 0.4) {
       const targetPlayer = getTargetPlayer(gameState)
       return { action: Actions.Steal, targetPlayer: targetPlayer.name }
       // TODO: check for soft target, needs to track in state
