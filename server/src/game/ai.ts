@@ -1,5 +1,5 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
-import { Actions, InfluenceAttributes, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 
 export const getProbabilityOfHiddenCardBeingInfluence = (
   gameState: PublicGameState,
@@ -125,7 +125,22 @@ export const decideActionResponse = (gameState: PublicGameState): {
   response: Responses
   claimedInfluence?: Influences
 } => {
-  return Math.random() > 0.5 || gameState.pendingAction?.claimConfirmed
+  if (ActionAttributes[gameState.pendingAction!.action].blockable
+    && gameState.pendingAction?.targetPlayer === gameState.selfPlayer?.name) {
+    const requiredInfluence = Object.entries(InfluenceAttributes)
+      .find(([, { legalBlock }]) => legalBlock === gameState.pendingAction?.action)
+      ?.[0] as Influences | undefined
+
+    if (requiredInfluence
+      && (
+        gameState.selfPlayer?.influences.some((i) => i === requiredInfluence)
+        || (Math.random() > 0.2 && getProbabilityOfHiddenCardBeingInfluence(gameState, requiredInfluence) > 0)
+      )) {
+      return { response: Responses.Block, claimedInfluence: requiredInfluence }
+    }
+  }
+
+  return Math.random() > 0.15 || gameState.pendingAction?.claimConfirmed
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }
