@@ -243,7 +243,7 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   const gameIsOver = playersLeft.length === 1
 
   if (gameIsOver) {
-    return  unchangedResponse
+    return unchangedResponse
   }
 
   if (new Date() < new Date(gameState.lastEventTimestamp.getTime() + 1000 + Math.floor(Math.random() * 2000))) {
@@ -285,8 +285,10 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   }
 
   let nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
-    ai && gameState.pendingAction?.pendingPlayers.includes(name))
-  if (nextPendingAiPlayer && !gameState.pendingActionChallenge) {
+    ai
+    && !gameState.pendingActionChallenge
+    && gameState.pendingAction?.pendingPlayers.includes(name))
+  if (nextPendingAiPlayer) {
     const { response, claimedInfluence } = decideActionResponse(
       await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
     )
@@ -316,7 +318,9 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   }
 
   nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
-    ai && gameState.pendingBlock?.pendingPlayers.includes(name))
+    ai
+    && !gameState.pendingBlockChallenge
+    && gameState.pendingBlock?.pendingPlayers.includes(name))
   if (nextPendingAiPlayer) {
     const { response } = decideBlockResponse(
       await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })

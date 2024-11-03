@@ -1,5 +1,5 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
-import { Actions, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 
 export const getProbabilityOfHiddenCardBeingInfluence = (
   gameState: PublicGameState,
@@ -92,12 +92,10 @@ export const decideAction = (gameState: PublicGameState): {
   }
 
   if (gameState.selfPlayer.influences.includes(Influences.Captain) || Math.random() > 0.95) {
-    if (getProbabilityOfPlayerInfluence(gameState, Influences.Captain) < 0.1 + Math.random() * 0.1) {
+    if (getProbabilityOfPlayerInfluence(gameState, Influences.Captain) < 0.4 + Math.random() * 0.4) {
       const targetPlayer = getTargetPlayer(gameState)
       return { action: Actions.Steal, targetPlayer: targetPlayer.name }
-      // TODO: check for soft target, needs to track in state
-      // eslint-disable-next-line no-constant-condition, no-empty
-    } else if (false) { }
+    }
   }
 
   if (gameState.selfPlayer.influences.includes(Influences.Duke) || Math.random() > 0.95) {
@@ -125,7 +123,31 @@ export const decideActionResponse = (gameState: PublicGameState): {
   response: Responses
   claimedInfluence?: Influences
 } => {
-  return Math.random() > 0.5 || gameState.pendingAction?.claimConfirmed
+  if (ActionAttributes[gameState.pendingAction!.action].blockable
+    && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer?.name
+      || gameState.pendingAction!.action === Actions.ForeignAid
+  )) {
+    const requiredInfluenceForBlock = Object.entries(InfluenceAttributes)
+      .find(([, { legalBlock }]) => legalBlock === gameState.pendingAction?.action)
+      ?.[0] as Influences | undefined
+
+    if (requiredInfluenceForBlock
+      && (
+        gameState.selfPlayer?.influences.some((i) => i === requiredInfluenceForBlock)
+        || (Math.random() > 0.2 && getProbabilityOfHiddenCardBeingInfluence(gameState, requiredInfluenceForBlock) > 0)
+      )) {
+      return { response: Responses.Block, claimedInfluence: requiredInfluenceForBlock }
+    }
+  }
+
+  const requiredInfluenceForAction = Object.entries(InfluenceAttributes)
+    .find(([, { legalAction }]) => legalAction === gameState.pendingAction?.action)
+    ?.[0] as Influences | undefined
+  if (requiredInfluenceForAction && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) < (0.05 + Math.random() * 0.05)) {
+    return { response: Responses.Challenge }
+  }
+
+  return Math.random() > 0.1 || gameState.pendingAction?.claimConfirmed
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }
@@ -133,13 +155,25 @@ export const decideActionResponse = (gameState: PublicGameState): {
 export const decideActionChallengeResponse = (gameState: PublicGameState): {
   influence: Influences
 } => {
-  return { influence: gameState.selfPlayer!.influences[0] }
+  const requiredInfluence = Object.entries(InfluenceAttributes)
+    .find(([, { legalAction }]) => legalAction === gameState.pendingAction?.action)
+    ?.[0] as Influences | undefined
+
+  const revealedInfluence = requiredInfluence && gameState.selfPlayer?.influences.some((i) => i === requiredInfluence)
+    ? requiredInfluence
+    : gameState.selfPlayer!.influences[Math.floor(Math.random() * gameState.selfPlayer!.influences.length)]
+
+  return { influence: revealedInfluence }
 }
 
 export const decideBlockResponse = (gameState: PublicGameState): {
   response: Responses
 } => {
-  return Math.random() > 0.5 && gameState.pendingBlock?.claimedInfluence
+  if (getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer) < (0.05 + Math.random() * 0.05)) {
+    return { response: Responses.Challenge }
+  }
+
+  return Math.random() > 0.1
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }
@@ -147,16 +181,21 @@ export const decideBlockResponse = (gameState: PublicGameState): {
 export const decideBlockChallengeResponse = (gameState: PublicGameState): {
   influence: Influences
 } => {
-  return { influence: gameState.selfPlayer!.influences[0] }
+  const revealedInfluence = gameState.selfPlayer?.influences.some((i) => i === gameState.pendingBlock!.claimedInfluence)
+    ? gameState.pendingBlock!.claimedInfluence
+    : gameState.selfPlayer!.influences[Math.floor(Math.random() * gameState.selfPlayer!.influences.length)]
+
+  return { influence: revealedInfluence }
 }
 
 export const decideInfluencesToLose = (gameState: PublicGameState): {
   influences: Influences[]
 } => {
-  return {
-    influences: gameState.selfPlayer!.influences.slice(
-      0,
-      gameState.pendingInfluenceLoss[gameState.selfPlayer!.name].length
-    )
-  }
+  const currentInfluences = [...gameState.selfPlayer!.influences]
+
+  const lostInfluences = gameState.pendingInfluenceLoss[gameState.selfPlayer!.name].map(() =>
+    currentInfluences.splice(Math.floor(Math.random() * currentInfluences.length), 1)[0]
+  )
+
+  return { influences: lostInfluences }
 }
