@@ -55,6 +55,15 @@ export const getPlayerDangerFactor = (player: PublicPlayer) => {
   return dangerFactor
 }
 
+export const getPossibleTargetPlayers = (gameState: PublicGameState) =>
+  gameState.players
+    .reduce((targets, player) => {
+      if (player.influenceCount && player.name !== gameState.selfPlayer?.name) {
+        targets.push(player)
+      }
+      return targets
+    }, [] as PublicPlayer[])
+
 export const getTargetPlayer = (gameState: PublicGameState) => {
   const opponents = gameState.players.filter(({ influenceCount, name }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
@@ -99,11 +108,26 @@ export const decideAction = (gameState: PublicGameState): {
     const getProbabilityOfBlockingSteal = (playerName: string) =>
       getProbabilityOfPlayerInfluence(gameState, Influences.Captain, playerName)
       + getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador, playerName)
-    const leastProbableToBlockSteal = gameState.players
-      .filter(({ influenceCount }) => influenceCount)
-      .sort((a, b) => getProbabilityOfBlockingSteal(a.name) - getProbabilityOfBlockingSteal(b.name))[0]
-    if (getProbabilityOfBlockingSteal(leastProbableToBlockSteal.name) < 1) {
-      return { action: Actions.Steal, targetPlayer: leastProbableToBlockSteal.name }
+
+    const possibleTargets = getPossibleTargetPlayers(gameState)
+
+    let minProbabilityOfBlockingSteal = Infinity
+    const bestTargets: PublicPlayer[] = []
+    possibleTargets.forEach((possibleTarget) => {
+      const probability = getProbabilityOfBlockingSteal(possibleTarget.name)
+      if (probability < minProbabilityOfBlockingSteal) {
+        minProbabilityOfBlockingSteal = probability
+        bestTargets.length = 0
+      }
+
+      if (probability <= minProbabilityOfBlockingSteal) {
+        bestTargets.push(possibleTarget)
+      }
+    })
+
+    if (minProbabilityOfBlockingSteal < 1) {
+      const chosenTarget = bestTargets[Math.floor(Math.random() * bestTargets.length)]
+      return { action: Actions.Steal, targetPlayer: chosenTarget.name }
     }
   }
 
