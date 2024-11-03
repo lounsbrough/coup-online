@@ -131,8 +131,6 @@ export const mutateGameState = async (
     return
   }
 
-  console.log(gameState.players.map(({ name, influences }) => ({name, influences})))
-
   gameState.lastEventTimestamp = getCurrentTimestamp()
 
   await setGameState(validatedState.roomId, gameState)
