@@ -95,9 +95,7 @@ export const decideAction = (gameState: PublicGameState): {
     if (getProbabilityOfPlayerInfluence(gameState, Influences.Captain) < 0.4 + Math.random() * 0.4) {
       const targetPlayer = getTargetPlayer(gameState)
       return { action: Actions.Steal, targetPlayer: targetPlayer.name }
-      // TODO: check for soft target, needs to track in state
-      // eslint-disable-next-line no-constant-condition, no-empty
-    } else if (false) { }
+    }
   }
 
   if (gameState.selfPlayer.influences.includes(Influences.Duke) || Math.random() > 0.95) {
