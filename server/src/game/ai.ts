@@ -55,10 +55,16 @@ export const getPlayerDangerFactor = (player: PublicPlayer) => {
   return dangerFactor
 }
 
-export const getPossibleTargetPlayers = (gameState: PublicGameState) =>
+export const getPossibleTargetPlayers = (
+  gameState: PublicGameState,
+  condition?: (player: PublicPlayer) => boolean
+) =>
   gameState.players
     .reduce((targets, player) => {
-      if (player.influenceCount && player.name !== gameState.selfPlayer?.name) {
+      if (
+        player.influenceCount
+        && player.name !== gameState.selfPlayer?.name
+        && condition?.(player)) {
         targets.push(player)
       }
       return targets
@@ -109,7 +115,7 @@ export const decideAction = (gameState: PublicGameState): {
       getProbabilityOfPlayerInfluence(gameState, Influences.Captain, playerName)
       + getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador, playerName)
 
-    const possibleTargets = getPossibleTargetPlayers(gameState)
+    const possibleTargets = getPossibleTargetPlayers(gameState, ({ coins }) => coins > 0)
 
     let minProbabilityOfBlockingSteal = Infinity
     const bestTargets: PublicPlayer[] = []
@@ -125,7 +131,7 @@ export const decideAction = (gameState: PublicGameState): {
       }
     })
 
-    if (minProbabilityOfBlockingSteal < 1) {
+    if (bestTargets.length && minProbabilityOfBlockingSteal < 0.99) {
       const chosenTarget = bestTargets[Math.floor(Math.random() * bestTargets.length)]
       return { action: Actions.Steal, targetPlayer: chosenTarget.name }
     }
