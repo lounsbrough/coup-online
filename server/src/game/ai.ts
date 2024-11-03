@@ -91,15 +91,20 @@ export const decideAction = (gameState: PublicGameState): {
     return { action: Actions.Coup, targetPlayer: targetPlayer.name }
   }
 
-  if (gameState.selfPlayer.influences.includes(Influences.Captain) || Math.random() > 0.95) {
-    if (getProbabilityOfPlayerInfluence(gameState, Influences.Captain) < 0.4 + Math.random() * 0.4) {
-      const targetPlayer = getTargetPlayer(gameState)
-      return { action: Actions.Steal, targetPlayer: targetPlayer.name }
-    }
-  }
-
   if (gameState.selfPlayer.influences.includes(Influences.Duke) || Math.random() > 0.95) {
     return { action: Actions.Tax }
+  }
+
+  if (gameState.selfPlayer.influences.includes(Influences.Captain) || Math.random() > 0.95) {
+    const getProbabilityOfBlockingSteal = (playerName: string) =>
+      getProbabilityOfPlayerInfluence(gameState, Influences.Captain, playerName)
+      + getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador, playerName)
+    const leastProbableToBlockSteal = gameState.players
+      .filter(({ influenceCount }) => influenceCount)
+      .sort((a, b) => getProbabilityOfBlockingSteal(a.name) - getProbabilityOfBlockingSteal(b.name))[0]
+    if (getProbabilityOfBlockingSteal(leastProbableToBlockSteal.name) < 1) {
+      return { action: Actions.Steal, targetPlayer: leastProbableToBlockSteal.name }
+    }
   }
 
   if (gameState.selfPlayer.influences.includes(Influences.Ambassador) || Math.random() > 0.95) {
@@ -126,7 +131,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
   if (ActionAttributes[gameState.pendingAction!.action].blockable
     && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer?.name
       || gameState.pendingAction!.action === Actions.ForeignAid
-  )) {
+    )) {
     const requiredInfluenceForBlock = Object.entries(InfluenceAttributes)
       .find(([, { legalBlock }]) => legalBlock === gameState.pendingAction?.action)
       ?.[0] as Influences | undefined
@@ -134,7 +139,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
     if (requiredInfluenceForBlock
       && (
         gameState.selfPlayer?.influences.some((i) => i === requiredInfluenceForBlock)
-        || (Math.random() > 0.2 && getProbabilityOfHiddenCardBeingInfluence(gameState, requiredInfluenceForBlock) > 0)
+        || (Math.random() > 0.1 && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForBlock) > 0)
       )) {
       return { response: Responses.Block, claimedInfluence: requiredInfluenceForBlock }
     }
@@ -169,11 +174,15 @@ export const decideActionChallengeResponse = (gameState: PublicGameState): {
 export const decideBlockResponse = (gameState: PublicGameState): {
   response: Responses
 } => {
-  if (getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer) < (0.05 + Math.random() * 0.05)) {
+  const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer
+
+  const bluffProbability = getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer)
+  if ((isSelfTarget && bluffProbability < (0.05 + Math.random() * 0.05))
+    || bluffProbability === 0) {
     return { response: Responses.Challenge }
   }
 
-  return Math.random() > 0.1
+  return Math.random() > 0.05
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }
