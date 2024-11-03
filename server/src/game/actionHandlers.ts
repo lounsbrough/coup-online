@@ -388,6 +388,10 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     throw new GameMutationInputError('Target player is not allowed for this action')
   }
 
+  if (targetPlayer === player.name) {
+    throw new GameMutationInputError('You can\'t target yourself')
+  }
+
   if (!ActionAttributes[action].blockable && !ActionAttributes[action].challengeable) {
     if (action === Actions.Coup) {
       await mutateGameState(gameState, (state) => {

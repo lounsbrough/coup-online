@@ -311,6 +311,7 @@ describe('actionHandlers', () => {
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
       await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
 
+      await expect(actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Coup, targetPlayer: hailey.playerName })).rejects.toThrow('You can\'t target yourself')
       await actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Coup, targetPlayer: david.playerName })
       await expect(actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Income })).rejects.toThrow('You can\'t choose an action right now')
 
