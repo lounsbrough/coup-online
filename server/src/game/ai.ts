@@ -169,7 +169,11 @@ export const decideActionChallengeResponse = (gameState: PublicGameState): {
 export const decideBlockResponse = (gameState: PublicGameState): {
   response: Responses
 } => {
-  return Math.random() > 0.5 && gameState.pendingBlock?.claimedInfluence
+  if (getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer) < (0.05 + Math.random() * 0.05)) {
+    return { response: Responses.Challenge }
+  }
+
+  return Math.random() > 0.1
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }
@@ -177,7 +181,11 @@ export const decideBlockResponse = (gameState: PublicGameState): {
 export const decideBlockChallengeResponse = (gameState: PublicGameState): {
   influence: Influences
 } => {
-  return { influence: gameState.selfPlayer!.influences[0] }
+  const revealedInfluence = gameState.selfPlayer?.influences.some((i) => i === gameState.pendingBlock!.claimedInfluence)
+    ? gameState.pendingBlock!.claimedInfluence
+    : gameState.selfPlayer!.influences[Math.floor(Math.random() * gameState.selfPlayer!.influences.length)]
+
+  return { influence: revealedInfluence }
 }
 
 export const decideInfluencesToLose = (gameState: PublicGameState): {
