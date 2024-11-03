@@ -13,7 +13,7 @@ function SnarkyDeadComment() {
     `You've perfected the skill of coming in last.`,
     `You're a true champion of failure.`,
     `You've managed to make losing look easy.`,
-    `You're so good, you're almost bad enough to be good.`,
+    `You're so bad, you're almost bad enough to be good.`,
     `I guess you'll have to stick to playing solitaire from now on.`,
     `You're a natural-born loser.`,
     `You're so good at losing, you should get a trophy.`,
