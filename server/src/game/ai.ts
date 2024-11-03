@@ -126,7 +126,9 @@ export const decideActionResponse = (gameState: PublicGameState): {
   claimedInfluence?: Influences
 } => {
   if (ActionAttributes[gameState.pendingAction!.action].blockable
-    && gameState.pendingAction?.targetPlayer === gameState.selfPlayer?.name) {
+    && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer?.name
+      || gameState.pendingAction!.action === Actions.ForeignAid
+  )) {
     const requiredInfluenceForBlock = Object.entries(InfluenceAttributes)
       .find(([, { legalBlock }]) => legalBlock === gameState.pendingAction?.action)
       ?.[0] as Influences | undefined
