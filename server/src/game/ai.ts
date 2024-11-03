@@ -139,7 +139,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
     if (requiredInfluenceForBlock
       && (
         gameState.selfPlayer?.influences.some((i) => i === requiredInfluenceForBlock)
-        || (Math.random() > 0.1 && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForBlock) > 0)
+        || (Math.random() > 0.85 && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForBlock) > 0)
       )) {
       return { response: Responses.Block, claimedInfluence: requiredInfluenceForBlock }
     }
