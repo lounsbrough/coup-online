@@ -127,20 +127,27 @@ export const decideActionResponse = (gameState: PublicGameState): {
 } => {
   if (ActionAttributes[gameState.pendingAction!.action].blockable
     && gameState.pendingAction?.targetPlayer === gameState.selfPlayer?.name) {
-    const requiredInfluence = Object.entries(InfluenceAttributes)
+    const requiredInfluenceForBlock = Object.entries(InfluenceAttributes)
       .find(([, { legalBlock }]) => legalBlock === gameState.pendingAction?.action)
       ?.[0] as Influences | undefined
 
-    if (requiredInfluence
+    if (requiredInfluenceForBlock
       && (
-        gameState.selfPlayer?.influences.some((i) => i === requiredInfluence)
-        || (Math.random() > 0.2 && getProbabilityOfHiddenCardBeingInfluence(gameState, requiredInfluence) > 0)
+        gameState.selfPlayer?.influences.some((i) => i === requiredInfluenceForBlock)
+        || (Math.random() > 0.2 && getProbabilityOfHiddenCardBeingInfluence(gameState, requiredInfluenceForBlock) > 0)
       )) {
-      return { response: Responses.Block, claimedInfluence: requiredInfluence }
+      return { response: Responses.Block, claimedInfluence: requiredInfluenceForBlock }
     }
   }
 
-  return Math.random() > 0.15 || gameState.pendingAction?.claimConfirmed
+  const requiredInfluenceForAction = Object.entries(InfluenceAttributes)
+    .find(([, { legalAction }]) => legalAction === gameState.pendingAction?.action)
+    ?.[0] as Influences | undefined
+  if (requiredInfluenceForAction && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) < (0.05 + Math.random() * 0.05)) {
+    return { response: Responses.Challenge }
+  }
+
+  return Math.random() > 0.1 || gameState.pendingAction?.claimConfirmed
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }
