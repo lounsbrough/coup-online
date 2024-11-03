@@ -182,6 +182,23 @@ export const decideActionResponse = (gameState: PublicGameState): {
     return { response: Responses.Challenge }
   }
 
+  if (gameState.pendingAction?.action === Actions.Assassinate
+    && gameState.pendingAction.targetPlayer === gameState.selfPlayer?.name
+    && gameState.selfPlayer?.influences.length === 1
+    && requiredInfluenceForAction
+  ) {
+    const probabilityOfAssassin = getProbabilityOfPlayerInfluence(gameState, Influences.Assassin, gameState.turnPlayer)
+    const probabilityOfContessa = getProbabilityOfPlayerInfluence(gameState, Influences.Contessa, gameState.selfPlayer.name)
+
+    if (probabilityOfAssassin === 0 || probabilityOfContessa === 0) {
+      return { response: Responses.Challenge }
+    }
+
+    return probabilityOfAssassin > 0.4 + Math.random() * 0.2
+      ? { response: Responses.Block, claimedInfluence: Influences.Contessa }
+      : { response: Responses.Challenge }
+  }
+
   return Math.random() > 0.1 || gameState.pendingAction?.claimConfirmed
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
