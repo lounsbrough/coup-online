@@ -6,6 +6,7 @@ import useGameMutation from "../../hooks/useGameMutation"
 import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
+import BetaTag from "../utilities/BetaTag"
 
 const botNameIdeas = [
   'R2-D2',
@@ -52,7 +53,8 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
       aria-describedby="add-ai-player"
     >
       <DialogTitle>
-        {"Add AI Player"}
+        Add AI Player
+        <BetaTag />
       </DialogTitle>
       <form
         onSubmit={(event) => {

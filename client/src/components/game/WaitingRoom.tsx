@@ -10,6 +10,7 @@ import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import AddAiPlayer from "./AddAiPlayer"
+import BetaTag from "../utilities/BetaTag"
 
 function WaitingRoom() {
   const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
@@ -26,8 +27,6 @@ function WaitingRoom() {
   }
 
   const inviteLink = `${window.location.origin}/join-game?roomId=${gameState.roomId}`
-
-  const addAiEnabled = gameState.players.some(({ name }) => name === 'gmbrnpat')
 
   return (
     <>
@@ -70,9 +69,10 @@ function WaitingRoom() {
             onClick={() => {
               setAddAiPlayerDialogOpen(true)
             }}
-            disabled={!addAiEnabled} // ={gameState.players.length === 6}
+            disabled={gameState.players.length === 6}
           >
-            Coming Soon{/* Add AI Player */}
+            Add AI Player
+            <BetaTag />
           </Button>
         </Grid2>
         <Grid2>
