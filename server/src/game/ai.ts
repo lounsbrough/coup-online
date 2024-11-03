@@ -176,9 +176,9 @@ export const decideBlockResponse = (gameState: PublicGameState): {
 } => {
   const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer
 
-  const bluffProbability = getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer)
-  if ((isSelfTarget && bluffProbability < (0.05 + Math.random() * 0.05))
-    || bluffProbability === 0) {
+  const legalProbability = getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer)
+  if ((isSelfTarget && legalProbability < (0.05 + Math.random() * 0.05))
+    || legalProbability === 0) {
     return { response: Responses.Challenge }
   }
 
