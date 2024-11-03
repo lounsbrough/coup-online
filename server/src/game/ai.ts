@@ -191,10 +191,11 @@ export const decideBlockChallengeResponse = (gameState: PublicGameState): {
 export const decideInfluencesToLose = (gameState: PublicGameState): {
   influences: Influences[]
 } => {
-  return {
-    influences: gameState.selfPlayer!.influences.slice(
-      0,
-      gameState.pendingInfluenceLoss[gameState.selfPlayer!.name].length
-    )
-  }
+  const currentInfluences = [...gameState.selfPlayer!.influences]
+
+  const lostInfluences = gameState.pendingInfluenceLoss[gameState.selfPlayer!.name].map(() =>
+    currentInfluences.splice(Math.floor(Math.random() * currentInfluences.length), 1)[0]
+  )
+
+  return { influences: lostInfluences }
 }
