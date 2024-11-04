@@ -208,7 +208,12 @@ export const moveTurnToNextPlayer = (state: GameState) => {
   state.turnPlayer = state.players[nextIndex % state.players.length].name
 }
 
-export const canPlayerTakeAction = (state: GameState, player: Player) =>
+export const canPlayerChooseAction = (state: GameState, player: Player) =>
   state.turnPlayer === player.name
   && !state.pendingAction
   && !Object.keys(state.pendingInfluenceLoss).length
+
+export const canPlayerChooseActionResponse = (state: GameState, player: Player) =>
+  state.pendingAction
+  && !state.pendingActionChallenge
+  && state.pendingAction.pendingPlayers.includes(player.name)
