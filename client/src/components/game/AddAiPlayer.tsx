@@ -84,6 +84,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               startIcon={<Casino />}
               onClick={() => {
                 const unusedIdeas = botNameIdeas.filter((idea) =>
+                  idea !== botName &&
                   !gameState.players.some(({ name }) => name.toUpperCase() === idea.toUpperCase()))
                 setBotName(unusedIdeas[Math.floor(Math.random() * unusedIdeas.length)])
               }}
