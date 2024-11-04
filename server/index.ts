@@ -28,6 +28,8 @@ type InterServerEvents = object
 
 type SocketData = { playerId: string }
 
+const genericErrorMessage = 'Unexpected error processing request'
+
 const port = process.env.EXPRESS_PORT || 8008
 
 const app = express()
@@ -356,7 +358,6 @@ io.on('connection', (socket) => {
   getObjectEntries(eventHandlers).forEach(([event, { handler, joiSchema }]) => {
     socket.on(event, async (params, callback) => {
       const result = joiSchema.validate(params, { abortEarly: false })
-      const genericErrorMessage = 'Unexpected error processing request'
 
       if (result.error) {
         const error = result.error.details.map(({ message }) => message).join(', ')
@@ -384,14 +385,14 @@ io.on('connection', (socket) => {
               pushToSocket.emit(ServerEvents.gameStateChanged, publicGameState)
               if (isCallerSocket) callback?.({ gameState: publicGameState })
             } catch (error) {
+              console.error(error, { event, params })
+              if (event === PlayerActions.checkAiMove) {
+                return
+              }
               if (error instanceof GameMutationInputError) {
-                if (error.httpCode >= 500 && error.httpCode <= 599) {
-                  console.error(error)
-                }
                 pushToSocket.emit(ServerEvents.error, error.message)
                 if (isCallerSocket) callback?.({ error: error.message })
               } else {
-                console.error(error)
                 pushToSocket.emit(ServerEvents.error, genericErrorMessage)
                 if (isCallerSocket) callback?.({ error: genericErrorMessage })
               }
@@ -412,14 +413,14 @@ io.on('connection', (socket) => {
             await emitGameStateChanged(socket)
           }
         } catch (error) {
+          console.error(error, { event, params })
+          if (event === PlayerActions.checkAiMove) {
+            return
+          }
           if (error instanceof GameMutationInputError) {
-            if (error.httpCode >= 500 && error.httpCode <= 599) {
-              console.error(error)
-            }
             socket.emit(ServerEvents.error, error.message)
             callback?.({ error: error.message })
           } else {
-            console.error(error)
             socket.emit(ServerEvents.error, genericErrorMessage)
             callback?.({ error: genericErrorMessage })
           }
@@ -429,23 +430,29 @@ io.on('connection', (socket) => {
   })
 })
 
-const responseHandler = <T>(handler: (props: T) =>
-  Promise<{ roomId: string, playerId: string }>) => async (res: Response<PublicGameStateOrError>, props: T) => {
+const responseHandler = <T>(
+  event: PlayerActions,
+  handler: (props: T) => Promise<{ roomId: string, playerId: string }>
+) => async (res: Response<PublicGameStateOrError>, props: T) => {
     try {
       const publicGameState = await getPublicGameState(await handler(props))
       res.status(200).json({ gameState: publicGameState })
     } catch (error) {
+      console.error(error, { event, props })
+      if (event === PlayerActions.checkAiMove) {
+        return
+      }
       if (error instanceof GameMutationInputError) {
         res.status(error.httpCode).send({ error: error.message })
       } else {
-        res.status(500).send({ error: 'Unexpected error processing request' })
+        res.status(500).send({ error: genericErrorMessage })
       }
     }
   }
 
 getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }]) => {
   app[express.method](`/${event}`, express.validator(joiSchema), (req, res) => {
-    return responseHandler(handler)(res, express.parseParams(req))
+    return responseHandler(event, handler)(res, express.parseParams(req))
   })
 })
 
