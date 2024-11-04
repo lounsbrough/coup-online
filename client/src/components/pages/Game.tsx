@@ -2,25 +2,9 @@ import { Button, Grid2, Typography } from "@mui/material"
 import GameBoard from "../game/GameBoard"
 import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { useEffect } from "react"
-
-const warnWhenLeavingGame = (event: BeforeUnloadEvent): void => {
-  event.preventDefault()
-}
 
 function Game() {
   const { gameState } = useGameStateContext()
-  const isPlayerAlive = gameState?.selfPlayer?.influences.length
-
-  useEffect(() => {
-    if (isPlayerAlive) {
-      window.addEventListener("beforeunload", warnWhenLeavingGame)
-    }
-
-    return () => {
-      window.removeEventListener("beforeunload", warnWhenLeavingGame)
-    }
-  }, [isPlayerAlive])
 
   return (
     <>
