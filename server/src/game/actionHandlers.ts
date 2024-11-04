@@ -4,7 +4,7 @@ import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, 
 import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, canPlayerChooseAction, canPlayerChooseActionResponse, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addPlayerToGame, canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
 const getPlayerInRoom = (gameState: GameState, playerId: string) => {
@@ -269,7 +269,7 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
 
   const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
 
-  if (turnPlayer?.ai && canPlayerChooseAction(gameState, turnPlayer)) {
+  if (turnPlayer?.ai && canPlayerChooseAction(gameState, turnPlayer.name)) {
     const { action, targetPlayer } = decideAction(
       await getPublicGameState({ gameState, playerId: turnPlayer.id })
     )
@@ -284,8 +284,8 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
     return changedResponse
   }
 
-  let nextPendingAiPlayer = gameState.players.find((player) =>
-    player.ai && canPlayerChooseActionResponse(gameState, player))
+  let nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
+    ai && canPlayerChooseActionResponse(gameState, name))
   if (nextPendingAiPlayer) {
     const { response, claimedInfluence } = decideActionResponse(
       await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
@@ -301,7 +301,7 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
     return changedResponse
   }
 
-  if (turnPlayer?.ai && gameState.pendingActionChallenge) {
+  if (turnPlayer?.ai && canPlayerChooseActionChallengeResponse(gameState, turnPlayer.name)) {
     const { influence } = decideActionChallengeResponse(
       await getPublicGameState({ gameState, playerId: turnPlayer.id })
     )
@@ -316,9 +316,7 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   }
 
   nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
-    ai
-    && !gameState.pendingBlockChallenge
-    && gameState.pendingBlock?.pendingPlayers.includes(name))
+    ai && canPlayerChooseBlockResponse(gameState, name))
   if (nextPendingAiPlayer) {
     const { response } = decideBlockResponse(
       await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
@@ -333,8 +331,8 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
     return changedResponse
   }
 
-  nextPendingAiPlayer = gameState.pendingBlockChallenge && gameState.players.find(({ ai, name }) =>
-    ai && gameState.pendingBlock?.sourcePlayer === name)
+  nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
+    ai && canPlayerChooseBlockChallengeResponse(gameState, name))
   if (nextPendingAiPlayer) {
     const { influence } = decideBlockChallengeResponse(
       await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
@@ -407,7 +405,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unexpected player state, refusing mutation')
         }
 
-        if (!canPlayerChooseAction(state, coupingPlayer)) {
+        if (!canPlayerChooseAction(state, coupingPlayer.name)) {
           throw new GameMutationInputError('You can\'t choose an action right now')
         }
 
@@ -432,7 +430,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unexpected player state, refusing mutation')
         }
 
-        if (!canPlayerChooseAction(state, incomePlayer)) {
+        if (!canPlayerChooseAction(state, incomePlayer.name)) {
           throw new GameMutationInputError('You can\'t choose an action right now')
         }
 
@@ -447,7 +445,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     }
   } else {
     await mutateGameState(gameState, (state) => {
-      if (!canPlayerChooseAction(state, player)) {
+      if (!canPlayerChooseAction(state, player.name)) {
         throw new GameMutationInputError('You can\'t choose an action right now')
       }
 
@@ -488,7 +486,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!canPlayerChooseActionResponse(gameState, player)) {
+  if (!canPlayerChooseActionResponse(gameState, player.name)) {
     throw new GameMutationInputError('You can\'t choose an action response right now')
   }
 
@@ -573,7 +571,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingAction || !gameState.pendingActionChallenge || gameState.turnPlayer !== player.name) {
+  if (!canPlayerChooseActionChallengeResponse(gameState, player.name)) {
     throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
@@ -581,7 +579,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     throw new GameMutationInputError('You don\'t have that influence')
   }
 
-  if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
+  if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction!.action) {
     await mutateGameState(gameState, (state) => {
       if (!state.pendingAction || !state.pendingActionChallenge) {
         throw new GameMutationInputError('Unable to find pending action or pending action challenge')
@@ -654,10 +652,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingBlock
-    || gameState.pendingBlockChallenge
-    || !gameState.pendingBlock.pendingPlayers.includes(player.name)
-  ) {
+  if (!canPlayerChooseBlockResponse(gameState, player.name)) {
     throw new GameMutationInputError('You can\'t choose a block response right now')
   }
 
@@ -728,7 +723,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingBlockChallenge || gameState.pendingBlock?.sourcePlayer !== player.name) {
+  if (!canPlayerChooseBlockChallengeResponse(gameState, player.name)) {
     throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
@@ -736,7 +731,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     throw new GameMutationInputError('You don\'t have that influence')
   }
 
-  if (influence === gameState.pendingBlock.claimedInfluence) {
+  if (influence === gameState.pendingBlock!.claimedInfluence) {
     await mutateGameState(gameState, (state) => {
       if (!state.pendingAction || !state.pendingBlock) {
         throw new GameMutationInputError('Unable to find pending action or pending block')

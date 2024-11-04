@@ -208,12 +208,28 @@ export const moveTurnToNextPlayer = (state: GameState) => {
   state.turnPlayer = state.players[nextIndex % state.players.length].name
 }
 
-export const canPlayerChooseAction = (state: GameState, player: Player) =>
-  state.turnPlayer === player.name
+export const canPlayerChooseAction = (state: GameState, playerName: string) =>
+  state.turnPlayer === playerName
   && !state.pendingAction
   && !Object.keys(state.pendingInfluenceLoss).length
 
-export const canPlayerChooseActionResponse = (state: GameState, player: Player) =>
+export const canPlayerChooseActionResponse = (state: GameState, playerName: string) =>
   state.pendingAction
   && !state.pendingActionChallenge
-  && state.pendingAction.pendingPlayers.includes(player.name)
+  && !state.pendingBlock
+  && state.pendingAction.pendingPlayers.includes(playerName)
+
+export const canPlayerChooseActionChallengeResponse = (state: GameState, playerName: string) =>
+  state.turnPlayer === playerName
+  && state.pendingAction
+  && state.pendingActionChallenge
+
+export const canPlayerChooseBlockResponse = (state: GameState, playerName: string) =>
+  state.pendingBlock
+  && !state.pendingBlockChallenge
+  && state.pendingBlock.pendingPlayers.includes(playerName)
+
+export const canPlayerChooseBlockChallengeResponse = (state: GameState, playerName: string) =>
+  state.pendingBlock
+  && state.pendingBlockChallenge
+  && state.pendingBlock.sourcePlayer === playerName
