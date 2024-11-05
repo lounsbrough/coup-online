@@ -1,4 +1,5 @@
 import { Typography } from "@mui/material"
+import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '@shared'
 import ChooseAction from "./ChooseAction"
 import ChooseActionResponse from "./ChooseActionResponse"
 import ChooseChallengeResponse from "./ChooseChallengeResponse"
@@ -16,8 +17,6 @@ function PlayerDecision() {
     return null
   }
 
-  const isMyTurn = gameState.turnPlayer === gameState.selfPlayer.name
-
   const pendingInfluenceLoss = gameState.pendingInfluenceLoss[gameState.selfPlayer.name]
   if (pendingInfluenceLoss) {
     if (pendingInfluenceLoss[0].putBackInDeck) {
@@ -27,41 +26,23 @@ function PlayerDecision() {
     }
   }
 
-  if (isMyTurn &&
-    !gameState.pendingAction &&
-    !gameState.pendingActionChallenge &&
-    !gameState.pendingBlock &&
-    !gameState.pendingBlockChallenge &&
-    !Object.keys(gameState.pendingInfluenceLoss).length) {
+  if (canPlayerChooseAction(gameState)) {
     return <ChooseAction />
   }
 
-  if (!isMyTurn &&
-    gameState.pendingAction &&
-    !gameState.pendingActionChallenge &&
-    !gameState.pendingBlock &&
-    gameState.pendingAction.pendingPlayers.includes(gameState.selfPlayer.name)) {
+  if (canPlayerChooseActionResponse(gameState)) {
     return <ChooseActionResponse />
   }
 
-  if (isMyTurn &&
-    gameState.pendingActionChallenge) {
+  if (canPlayerChooseActionChallengeResponse(gameState)) {
     return <ChooseChallengeResponse />
   }
 
-  if (gameState.pendingBlock &&
-    !gameState.pendingBlockChallenge &&
-    gameState.selfPlayer.name !== gameState.pendingBlock.sourcePlayer &&
-    gameState.pendingBlock.pendingPlayers.includes(gameState.selfPlayer.name)
-  ) {
+  if (gameState.pendingBlock && canPlayerChooseBlockResponse(gameState)) {
     return <ChooseBlockResponse />
   }
 
-  if (
-    gameState.pendingBlock &&
-    gameState.pendingBlockChallenge &&
-    gameState.pendingBlock.sourcePlayer === gameState.selfPlayer.name
-  ) {
+  if (canPlayerChooseBlockChallengeResponse(gameState)) {
     return <ChooseChallengeResponse />
   }
 

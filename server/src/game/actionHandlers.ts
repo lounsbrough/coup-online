@@ -4,7 +4,8 @@ import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, 
 import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addPlayerToGame, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
 const getPlayerInRoom = (gameState: GameState, playerId: string) => {
@@ -255,7 +256,7 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
     ai && pendingLossPlayers.includes(name))
   if (nextPendingLossAiPlayer) {
     const { influences } = decideInfluencesToLose(
-      await getPublicGameState({ gameState, playerId: nextPendingLossAiPlayer.id })
+      getPublicGameState({ gameState, playerId: nextPendingLossAiPlayer.id })
     )
 
     await loseInfluencesHandler({
@@ -269,10 +270,10 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
 
   const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
 
-  if (turnPlayer?.ai && canPlayerChooseAction(gameState, turnPlayer.name)) {
-    const { action, targetPlayer } = decideAction(
-      await getPublicGameState({ gameState, playerId: turnPlayer.id })
-    )
+  const turnPlayerState = getPublicGameState({ gameState, playerId: turnPlayer!.id })
+
+  if (turnPlayer?.ai && canPlayerChooseAction(turnPlayerState)) {
+    const { action, targetPlayer } = decideAction(turnPlayerState)
 
     await actionHandler({
       roomId,
@@ -284,11 +285,11 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
     return changedResponse
   }
 
-  let nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
-    ai && canPlayerChooseActionResponse(gameState, name))
+  let nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
+    ai && canPlayerChooseActionResponse(getPublicGameState({ gameState, playerId: id })))
   if (nextPendingAiPlayer) {
     const { response, claimedInfluence } = decideActionResponse(
-      await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
     )
 
     await actionResponseHandler({
@@ -301,9 +302,9 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
     return changedResponse
   }
 
-  if (turnPlayer?.ai && canPlayerChooseActionChallengeResponse(gameState, turnPlayer.name)) {
+  if (turnPlayer?.ai && canPlayerChooseActionChallengeResponse(turnPlayerState)) {
     const { influence } = decideActionChallengeResponse(
-      await getPublicGameState({ gameState, playerId: turnPlayer.id })
+      getPublicGameState({ gameState, playerId: turnPlayer.id })
     )
 
     await actionChallengeResponseHandler({
@@ -315,11 +316,11 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
     return changedResponse
   }
 
-  nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
-    ai && canPlayerChooseBlockResponse(gameState, name))
+  nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
+    ai && canPlayerChooseBlockResponse(getPublicGameState({ gameState, playerId: id })))
   if (nextPendingAiPlayer) {
     const { response } = decideBlockResponse(
-      await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
     )
 
     await blockResponseHandler({
@@ -331,11 +332,11 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
     return changedResponse
   }
 
-  nextPendingAiPlayer = gameState.players.find(({ ai, name }) =>
-    ai && canPlayerChooseBlockChallengeResponse(gameState, name))
+  nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
+    ai && canPlayerChooseBlockChallengeResponse(getPublicGameState({ gameState, playerId: id })))
   if (nextPendingAiPlayer) {
     const { influence } = decideBlockChallengeResponse(
-      await getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
     )
 
     await blockChallengeResponseHandler({
@@ -405,7 +406,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unexpected player state, refusing mutation')
         }
 
-        if (!canPlayerChooseAction(state, coupingPlayer.name)) {
+        if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: coupingPlayer.id }))) {
           throw new GameMutationInputError('You can\'t choose an action right now')
         }
 
@@ -430,7 +431,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unexpected player state, refusing mutation')
         }
 
-        if (!canPlayerChooseAction(state, incomePlayer.name)) {
+        if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: incomePlayer.id }))) {
           throw new GameMutationInputError('You can\'t choose an action right now')
         }
 
@@ -445,7 +446,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     }
   } else {
     await mutateGameState(gameState, (state) => {
-      if (!canPlayerChooseAction(state, player.name)) {
+      if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: player.id }))) {
         throw new GameMutationInputError('You can\'t choose an action right now')
       }
 
@@ -486,7 +487,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!canPlayerChooseActionResponse(gameState, player.name)) {
+  if (!canPlayerChooseActionResponse(getPublicGameState({ gameState, playerId: player.id }))) {
     throw new GameMutationInputError('You can\'t choose an action response right now')
   }
 
@@ -571,7 +572,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!canPlayerChooseActionChallengeResponse(gameState, player.name)) {
+  if (!canPlayerChooseActionChallengeResponse(getPublicGameState({ gameState, playerId: player.id }))) {
     throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
@@ -652,7 +653,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!canPlayerChooseBlockResponse(gameState, player.name)) {
+  if (!canPlayerChooseBlockResponse(getPublicGameState({ gameState, playerId: player.id }))) {
     throw new GameMutationInputError('You can\'t choose a block response right now')
   }
 
@@ -723,7 +724,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!canPlayerChooseBlockChallengeResponse(gameState, player.name)) {
+  if (!canPlayerChooseBlockChallengeResponse(getPublicGameState({ gameState, playerId: player.id }))) {
     throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
