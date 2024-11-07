@@ -199,7 +199,9 @@ export const decideActionResponse = (gameState: PublicGameState): {
       : { response: Responses.Challenge }
   }
 
-  return Math.random() > 0.1 || gameState.pendingAction?.claimConfirmed
+  return Math.random() > 0.1
+    || gameState.pendingAction?.claimConfirmed
+    || !ActionAttributes[gameState.pendingAction!.action].challengeable
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }

@@ -381,7 +381,7 @@ io.on('connection', (socket) => {
           const emitGameStateChanged = async (pushToSocket: Socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId
             try {
-              const publicGameState = await getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId })
+              const publicGameState = getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId })
               pushToSocket.emit(ServerEvents.gameStateChanged, publicGameState)
               if (isCallerSocket) callback?.({ gameState: publicGameState })
             } catch (error) {
@@ -434,21 +434,25 @@ const responseHandler = <T>(
   event: PlayerActions,
   handler: (props: T) => Promise<{ roomId: string, playerId: string }>
 ) => async (res: Response<PublicGameStateOrError>, props: T) => {
-    try {
-      const publicGameState = await getPublicGameState(await handler(props))
-      res.status(200).json({ gameState: publicGameState })
-    } catch (error) {
-      console.error(error, { event, props })
-      if (event === PlayerActions.checkAiMove) {
-        return
-      }
-      if (error instanceof GameMutationInputError) {
-        res.status(error.httpCode).send({ error: error.message })
-      } else {
-        res.status(500).send({ error: genericErrorMessage })
-      }
+  try {
+    const { roomId, playerId } = await handler(props)
+    const publicGameState = getPublicGameState({
+      gameState: await getGameState(roomId),
+      playerId
+    })
+    res.status(200).json({ gameState: publicGameState })
+  } catch (error) {
+    console.error(error, { event, props })
+    if (event === PlayerActions.checkAiMove) {
+      return
+    }
+    if (error instanceof GameMutationInputError) {
+      res.status(error.httpCode).send({ error: error.message })
+    } else {
+      res.status(500).send({ error: genericErrorMessage })
     }
   }
+}
 
 getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }]) => {
   app[express.method](`/${event}`, express.validator(joiSchema), (req, res) => {

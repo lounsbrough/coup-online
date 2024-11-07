@@ -23,21 +23,14 @@ export const getGameState = async (
   return state
 }
 
-export const getPublicGameState = async ({ roomId, gameState, playerId }: {
-  roomId?: string
-  gameState?: GameState
+export const getPublicGameState = ({ gameState, playerId }: {
+  gameState: GameState
   playerId: string
-}): Promise<PublicGameState> => {
-  if ([roomId, gameState].filter(Boolean).length !== 1) {
-    throw new GameMutationInputError('Please provide roomId or gameState')
-  }
-
-  const fullGameState = gameState || await getGameState(roomId!)
-
+}): PublicGameState => {
   let selfPlayer: Player | undefined
   const publicPlayers: PublicPlayer[] = []
-  fullGameState.players.forEach((player) => {
-    const pendingInfluenceCountToPutBack = fullGameState.pendingInfluenceLoss[player.name]
+  gameState.players.forEach((player) => {
+    const pendingInfluenceCountToPutBack = gameState.pendingInfluenceLoss[player.name]
       ?.filter(({ putBackInDeck }) => putBackInDeck)?.length ?? 0
     publicPlayers.push({
       name: player.name,
@@ -53,20 +46,20 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
   })
 
   return {
-    eventLogs: fullGameState.eventLogs,
-    lastEventTimestamp: fullGameState.lastEventTimestamp,
-    isStarted: fullGameState.isStarted,
-    pendingInfluenceLoss: fullGameState.pendingInfluenceLoss,
+    eventLogs: gameState.eventLogs,
+    lastEventTimestamp: gameState.lastEventTimestamp,
+    isStarted: gameState.isStarted,
+    pendingInfluenceLoss: gameState.pendingInfluenceLoss,
     players: publicPlayers,
-    roomId: fullGameState.roomId,
-    deckCount: fullGameState.deck.length,
+    roomId: gameState.roomId,
+    deckCount: gameState.deck.length,
     ...(selfPlayer && { selfPlayer }),
-    ...(fullGameState.pendingAction && { pendingAction: fullGameState.pendingAction }),
-    ...(fullGameState.pendingActionChallenge && { pendingActionChallenge: fullGameState.pendingActionChallenge }),
-    ...(fullGameState.pendingBlock && { pendingBlock: fullGameState.pendingBlock }),
-    ...(fullGameState.pendingBlockChallenge && { pendingBlockChallenge: fullGameState.pendingBlockChallenge }),
-    ...(fullGameState.turnPlayer && { turnPlayer: fullGameState.turnPlayer }),
-    ...(fullGameState.resetGameRequest && { resetGameRequest: fullGameState.resetGameRequest })
+    ...(gameState.pendingAction && { pendingAction: gameState.pendingAction }),
+    ...(gameState.pendingActionChallenge && { pendingActionChallenge: gameState.pendingActionChallenge }),
+    ...(gameState.pendingBlock && { pendingBlock: gameState.pendingBlock }),
+    ...(gameState.pendingBlockChallenge && { pendingBlockChallenge: gameState.pendingBlockChallenge }),
+    ...(gameState.turnPlayer && { turnPlayer: gameState.turnPlayer }),
+    ...(gameState.resetGameRequest && { resetGameRequest: gameState.resetGameRequest })
   }
 }
 

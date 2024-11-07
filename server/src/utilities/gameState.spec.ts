@@ -72,10 +72,9 @@ describe('gameState', () => {
   })
 
   describe('getPublicGameState', () => {
-    it('should get portion of game state that is accessible to player', async () => {
+    it('should get portion of game state that is accessible to player', () => {
       const gameState = getRandomGameState()
       const selfPlayer = chance.pickone(gameState.players)
-      getValueMock.mockResolvedValue(JSON.stringify(gameState))
 
       const publicGameState: PublicGameState = {
         eventLogs: gameState.eventLogs,
@@ -108,7 +107,7 @@ describe('gameState', () => {
         ...(gameState.turnPlayer && { turnPlayer: gameState.turnPlayer })
       }
 
-      expect(await getPublicGameState({ gameState, playerId: selfPlayer.id }))
+      expect(getPublicGameState({ gameState, playerId: selfPlayer.id }))
         .toStrictEqual(publicGameState)
     })
   })
