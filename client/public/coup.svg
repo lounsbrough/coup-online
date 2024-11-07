@@ -14,8 +14,13 @@
      pagecolor="#ffffff"
      bordercolor="#000000"
      borderopacity="0.25"
-     /><defs
-     id="defs1" /><g
+    /><defs
+     id="defs1" /><circle
+     style="display:inline;fill:#000000;stroke-width:0.264999;fill-opacity:1"
+     id="path2"
+     cx="41.511421"
+     cy="41.511681"
+     r="40.107655" /><g
      id="layer1"
      transform="translate(-63.488631,-106.9883)"><path
        id="path1"
