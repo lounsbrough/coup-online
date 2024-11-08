@@ -41,49 +41,49 @@ describe('Games', () => {
     const gameUrl = `/game?roomId=${encodeURIComponent(gameState.roomId)}`
 
     cy.loadPlayer(gameUrl, david)
-    cy.contains('button', Actions.Tax).click()
+    cy.clickGameBoardButton(Actions.Tax)
 
     cy.loadPlayer(gameUrl, harper)
-    cy.contains('button', Responses.Pass).click()
-    cy.contains('button', Actions.Steal).click()
-    cy.contains('button', david).click()
+    cy.clickGameBoardButton(Responses.Pass)
+    cy.clickGameBoardButton(Actions.Steal)
+    cy.clickGameBoardButton(david)
 
     cy.loadPlayer(gameUrl, david)
-    cy.contains('button', Responses.Pass).click()
-    cy.contains('button', Actions.Income).click()
+    cy.clickGameBoardButton(Responses.Pass)
+    cy.clickGameBoardButton(Actions.Income)
 
     cy.loadPlayer(gameUrl, harper)
-    cy.contains('button', Actions.ForeignAid).click()
+    cy.clickGameBoardButton(Actions.ForeignAid)
 
     cy.loadPlayer(gameUrl, david)
-    cy.contains('button', Responses.Block).click()
-    cy.contains('button', Influences.Duke).click()
+    cy.clickGameBoardButton(Responses.Block)
+    cy.clickGameBoardButton(Influences.Duke)
 
     cy.loadPlayer(gameUrl, harper)
-    cy.contains('button', Responses.Challenge).click()
+    cy.clickGameBoardButton(Responses.Challenge)
 
     cy.loadPlayer(gameUrl, david)
-    cy.contains('button', Influences.Contessa).click()
-    cy.contains('button', Actions.Assassinate).click()
-    cy.contains('button', harper).click()
+    cy.clickGameBoardButton(Influences.Contessa)
+    cy.clickGameBoardButton(Actions.Assassinate)
+    cy.clickGameBoardButton(harper)
 
     cy.loadPlayer(gameUrl, harper)
-    cy.contains('button', Responses.Pass).click()
-    cy.contains('button', Influences.Duke).click()
-    cy.contains('button', Actions.Income).click()
+    cy.clickGameBoardButton(Responses.Pass)
+    cy.clickGameBoardButton(Influences.Duke)
+    cy.clickGameBoardButton(Actions.Income)
 
     cy.loadPlayer(gameUrl, david)
-    cy.contains('button', Actions.Exchange).click()
+    cy.clickGameBoardButton(Actions.Exchange)
 
     cy.loadPlayer(gameUrl, harper)
-    cy.contains('button', Responses.Pass).click()
+    cy.clickGameBoardButton(Responses.Pass)
 
     cy.loadPlayer(gameUrl, david)
     cy.get('input[type="checkbox"]').eq(1).click()
 
     cy.loadPlayer(gameUrl, harper)
-    cy.contains('button', Actions.Coup).click()
-    cy.contains('button', david).click()
+    cy.clickGameBoardButton(Actions.Coup)
+    cy.clickGameBoardButton(david)
 
     cy.contains(`${harper} Wins!`)
 

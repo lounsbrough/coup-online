@@ -4,7 +4,6 @@ const Logo = ({ height }: { height: string }) => (
     xmlSpace="preserve"
     viewBox="0 0 83.023 83.023"
     height={height}
-    preserveAspectRatio="true"
   >
     <circle
       cx={41.511}
