@@ -36,18 +36,19 @@ function UserSettings() {
         <DialogContent>
           <Grid2 container spacing={3} direction="column">
             {roomId && (
-              <Grid2>
-                <Typography component="span" sx={{ mr: 2 }}>
-                  {'Room: '}<strong>{roomId}</strong>
+              <Grid2 height={rowHeight} alignContent="center">
+                <Typography component="span" sx={{ mr: 1 }}>
+                  {'Room: '}
                 </Typography>
+                <strong>{roomId}</strong>
               </Grid2>
             )}
-            <Grid2 height={rowHeight}>
+            <Grid2 height={rowHeight} alignContent="center">
               <Typography component="span" sx={{ mr: 2 }}>Color Mode:</Typography>
               <ColorModeToggle />
             </Grid2>
-            <Grid2 height={rowHeight}>
-              <Typography component="span" sx={{ mr: 1 }}>Confirm Actions:</Typography>
+            <Grid2 height={rowHeight} alignContent="center">
+              <Typography component="span">Confirm Actions:</Typography>
               <Switch
                 checked={confirmActions}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +59,9 @@ function UserSettings() {
               />
             </Grid2>
             <Grid2 height={rowHeight} alignContent="center">
-              {'WebSockets Connection: '}
+              <Typography component="span" sx={{ mr: 1 }}>
+                {'WebSockets Connection: '}
+              </Typography>
               {isConnected
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
                 : <CancelOutlined color="error" sx={{ verticalAlign: 'middle' }} />}
