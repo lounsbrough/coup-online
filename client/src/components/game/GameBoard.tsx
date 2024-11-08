@@ -24,7 +24,7 @@ function GameBoard() {
   const gameIsOver = playersLeft.length === 1
 
   return (
-    <Grid2 container>
+    <Grid2 container className="game-board">
       <Grid2 size={{ xs: 12, sm: 12, md: 0, lg: 3 }} />
       <Grid2
         p={2}

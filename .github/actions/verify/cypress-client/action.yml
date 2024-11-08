@@ -21,6 +21,6 @@ runs:
     with:
       name: cypress-output
       path: |
-        cypress/screenshots/
-        cypress/videos/
+        **/cypress/screenshots/
+        **/cypress/videos/
       retention-days: 7
