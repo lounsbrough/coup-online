@@ -4,7 +4,7 @@ import { ActionAttributes, Actions, AiPersonality, GameState, InfluenceAttribute
 import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, createNewGame, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addPlayerToGame, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
@@ -380,7 +380,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     throw new GameMutationInputError('You must coup when you have 10 or more coins')
   }
 
-  if (targetPlayer && !gameState.players.some((player) => player.name === targetPlayer)) {
+  if (!gameState.players.some((player) => player.name === targetPlayer)) {
     throw new GameMutationInputError('Unknown target player')
   }
 
@@ -418,12 +418,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         }
 
         coupingPlayer.coins -= ActionAttributes.Coup.coinsRequired!
-        logEvent(state, getActionMessage({
-          action,
-          tense: 'complete',
-          actionPlayer: player.name,
-          targetPlayer
-        }))
+        logEvent(state, getActionMessage({ action, tense: 'complete', actionPlayer: player.name, targetPlayer }))
+        holdGrudge({ state, offended: targetPlayer, offender: coupingPlayer.name, weight: grudgeSizes[Actions.Coup] })
         promptPlayerToLoseInfluence(state, targetPlayer)
       })
     } else if (action === Actions.Income) {
@@ -444,11 +440,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
 
         incomePlayer.coins += 1
         moveTurnToNextPlayer(state)
-        logEvent(state, getActionMessage({
-          action,
-          tense: 'complete',
-          actionPlayer: player.name
-        }))
+        logEvent(state, getActionMessage({ action, tense: 'complete', actionPlayer: player.name }))
       })
     }
   } else {
@@ -468,12 +460,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         ...(targetPlayer && { targetPlayer }),
         claimConfirmed: false
       }
-      logEvent(state, getActionMessage({
-        action,
-        tense: 'pending',
-        actionPlayer: player.name,
-        targetPlayer
-      }))
+      logEvent(state, getActionMessage({ action, tense: 'pending', actionPlayer: player.name, targetPlayer }))
     })
   }
 
@@ -637,6 +624,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       }
 
       logEvent(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`)
+      holdGrudge({ state, offended: state.turnPlayer!, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, actionPlayer.name, influence)
       moveTurnToNextPlayer(state)
       delete state.pendingActionChallenge
@@ -784,6 +772,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
 
       logEvent(state, `${challengePlayer.name} successfully challenged ${blockPlayer.name}`)
       logEvent(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`)
+      holdGrudge({ state, offended: blockPlayer.name, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, blockPlayer.name, influence)
       processPendingAction(state)
       delete state.pendingBlockChallenge

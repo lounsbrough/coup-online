@@ -1,5 +1,5 @@
 import { shuffle } from "../utilities/array"
-import { ActionAttributes, Actions, AiPersonality, GameState, Influences, Player } from "../../../shared/types/game"
+import { ActionAttributes, Actions, AiPersonality, GameState, Influences, Player, Responses } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
 import { getActionMessage } from "../../../shared/utilities/message"
 import { GameMutationInputError } from "../utilities/errors"
@@ -76,12 +76,13 @@ export const processPendingAction = (state: GameState) => {
   }))
 
   if (state.pendingAction.action === Actions.Assassinate) {
-    actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired!
-
     if (!targetPlayer) {
       throw new GameMutationInputError('Target Player not found')
     }
 
+    actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired!
+
+    holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Assassinate] })
     promptPlayerToLoseInfluence(state, targetPlayer.name)
   } else if (state.pendingAction.action === Actions.Exchange) {
     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state))
@@ -94,6 +95,8 @@ export const processPendingAction = (state: GameState) => {
     if (!targetPlayer) {
       throw new GameMutationInputError('Target Player not found')
     }
+
+    holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Steal] })
 
     const coinsAvailable = Math.min(2, targetPlayer.coins)
     actionPlayer.coins += coinsAvailable
@@ -206,6 +209,23 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
   shuffleDeck(state)
   player.influences.push(drawCardFromDeck(state))
   logEvent(state, `${playerName} revealed and replaced ${influence}`)
+}
+
+export const grudgeSizes = {
+  [Actions.Coup]: 10,
+  [Actions.Assassinate]: 10,
+  [Actions.Steal]: 3,
+  [Responses.Challenge]: 5
+}
+
+export const holdGrudge = ({ state, offended, offender, weight }: {
+  state: GameState
+  offended: string
+  offender: string
+  weight: number
+}) => {
+  const offendedPlayer = state.players.find(({ name }) => name === offended)!
+  offendedPlayer.grudges[offender] = (offendedPlayer.grudges[offender] ?? 0) + weight
 }
 
 export const moveTurnToNextPlayer = (state: GameState) => {
