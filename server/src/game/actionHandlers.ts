@@ -4,7 +4,7 @@ import { ActionAttributes, Actions, AiPersonality, GameState, InfluenceAttribute
 import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addClaimedInfluence, addPlayerToGame, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
@@ -680,6 +680,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
           throw new GameMutationInputError('Unable to find blocking player')
         }
 
+        addClaimedInfluence(blockPlayer, state.pendingBlock?.claimedInfluence)
         logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
         if (state.pendingAction.action === Actions.Assassinate) {
           const assassin = state.players.find(({ name }) => name === state.turnPlayer)

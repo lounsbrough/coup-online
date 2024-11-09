@@ -11,6 +11,7 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
     throw new GameMutationInputError('Player not found')
   }
 
+  removeClaimedInfluence(player, influence)
   player.influences.splice(
     player.influences.findIndex((i) => i === influence),
     1
@@ -80,11 +81,12 @@ export const processPendingAction = (state: GameState) => {
       throw new GameMutationInputError('Target Player not found')
     }
 
+    addClaimedInfluence(actionPlayer, Influences.Assassin)
     actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired!
-
     holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Assassinate] })
     promptPlayerToLoseInfluence(state, targetPlayer.name)
   } else if (state.pendingAction.action === Actions.Exchange) {
+    removeClaimedInfluence(actionPlayer)
     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state))
     state.deck = shuffle(state.deck)
     promptPlayerToLoseInfluence(state, actionPlayer.name, true)
@@ -96,12 +98,13 @@ export const processPendingAction = (state: GameState) => {
       throw new GameMutationInputError('Target Player not found')
     }
 
+    addClaimedInfluence(actionPlayer, Influences.Captain)
     holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Steal] })
-
     const coinsAvailable = Math.min(2, targetPlayer.coins)
     actionPlayer.coins += coinsAvailable
     targetPlayer.coins -= coinsAvailable
   } else if (state.pendingAction.action === Actions.Tax) {
+    addClaimedInfluence(actionPlayer, Influences.Duke)
     actionPlayer.coins += 3
   }
 
@@ -202,6 +205,7 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
     throw new GameMutationInputError('Player not found')
   }
 
+  removeClaimedInfluence(player, influence)
   state.deck.push(player.influences.splice(
     player.influences.findIndex((i) => i === influence),
     1
@@ -209,6 +213,21 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
   shuffleDeck(state)
   player.influences.push(drawCardFromDeck(state))
   logEvent(state, `${playerName} revealed and replaced ${influence}`)
+}
+
+export const moveTurnToNextPlayer = (state: GameState) => {
+  const currentIndex = state.players.findIndex((player) => player.name === state.turnPlayer)
+
+  let nextIndex = currentIndex + 1
+  while (!state.players[nextIndex % state.players.length].influences.length) {
+    if (nextIndex % state.players.length === currentIndex) {
+      throw new GameMutationInputError('Unable to determine next player turn')
+    }
+
+    nextIndex++
+  }
+
+  state.turnPlayer = state.players[nextIndex % state.players.length].name
 }
 
 export const grudgeSizes = {
@@ -228,17 +247,17 @@ export const holdGrudge = ({ state, offended, offender, weight }: {
   offendedPlayer.grudges[offender] = (offendedPlayer.grudges[offender] ?? 0) + weight
 }
 
-export const moveTurnToNextPlayer = (state: GameState) => {
-  const currentIndex = state.players.findIndex((player) => player.name === state.turnPlayer)
+export const addClaimedInfluence = (player: Player, influence: Influences) => {
+  if (!player.claimedInfluences.some((i) => i === influence)) {
+    player.claimedInfluences.push(influence)
+  }
+}
 
-  let nextIndex = currentIndex + 1
-  while (!state.players[nextIndex % state.players.length].influences.length) {
-    if (nextIndex % state.players.length === currentIndex) {
-      throw new GameMutationInputError('Unable to determine next player turn')
-    }
-
-    nextIndex++
+export const removeClaimedInfluence = (player: Player, influence?: Influences) => {
+  if (!influence) {
+    player.claimedInfluences = []
+    return
   }
 
-  state.turnPlayer = state.players[nextIndex % state.players.length].name
+  player.claimedInfluences = player.claimedInfluences.filter((i) => i !== influence)
 }
