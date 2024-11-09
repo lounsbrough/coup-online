@@ -165,7 +165,7 @@ export enum Responses {
 export type AiPersonality = {
   vengefulness: number
   honesty: number
-  gullibility: number
+  credulity: number
 }
 
 export type Player = {

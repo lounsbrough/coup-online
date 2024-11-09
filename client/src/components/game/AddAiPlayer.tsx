@@ -46,7 +46,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
 
   const [vengefulness, setVengefulness] = useState<number>(50)
   const [honesty, setHonesty] = useState<number>(50)
-  const [gullibility, setGullibility] = useState<number>(50)
+  const [credulity, setCredulity] = useState<number>(50)
 
   const handleVengefulnessChange = (_: Event, value: number | number[]) => {
     setVengefulness(value as number)
@@ -54,8 +54,8 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
   const handleHonestyChange = (_: Event, value: number | number[]) => {
     setHonesty(value as number)
   }
-  const handleGullibilityChange = (_: Event, value: number | number[]) => {
-    setGullibility(value as number)
+  const handleCredulityChange = (_: Event, value: number | number[]) => {
+    setCredulity(value as number)
   }
 
   if (!gameState) {
@@ -80,7 +80,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
             roomId: gameState.roomId.trim(),
             playerId: getPlayerId(),
             playerName: botName.trim(),
-            personality: { vengefulness, honesty, gullibility }
+            personality: { vengefulness, honesty, credulity }
           })
         }}
       >
@@ -130,14 +130,14 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               max={maxSliderValue}
               onChange={handleHonestyChange}
             />
-            <Typography mt={2}>{`Gullibility: ${gullibility}%`}</Typography>
+            <Typography mt={2}>{`Credulity: ${credulity}%`}</Typography>
             <Slider
               step={1}
-              value={gullibility}
+              value={credulity}
               valueLabelDisplay="auto"
               min={minSliderValue}
               max={maxSliderValue}
-              onChange={handleGullibilityChange}
+              onChange={handleCredulityChange}
             />
           </Box>
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
