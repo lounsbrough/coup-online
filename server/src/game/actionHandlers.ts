@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { GameMutationInputError } from "../utilities/errors"
-import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
+import { ActionAttributes, Actions, AiPersonality, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
 import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
@@ -78,17 +78,18 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
         throw new GameMutationInputError(`Room ${roomId} already has player named ${playerName}`)
       }
 
-      addPlayerToGame(state, playerId, playerName)
+      addPlayerToGame({ state, playerId, playerName })
     })
   }
 
   return { roomId, playerId }
 }
 
-export const addAiPlayerHandler = async ({ roomId, playerId, playerName }: {
+export const addAiPlayerHandler = async ({ roomId, playerId, playerName, personality }: {
   roomId: string
   playerId: string
   playerName: string
+  personality: AiPersonality
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -111,7 +112,13 @@ export const addAiPlayerHandler = async ({ roomId, playerId, playerName }: {
 
     const aiPlayerId = uuidv4()
 
-    addPlayerToGame(state, aiPlayerId, playerName, true)
+    addPlayerToGame({
+      state,
+      playerId: aiPlayerId,
+      playerName,
+      ai: true,
+      aiPersonality: personality
+    })
   })
 
   return { roomId, playerId }

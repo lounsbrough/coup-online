@@ -162,14 +162,25 @@ export enum Responses {
   Block = 'Block'
 }
 
+export type AiPersonality = {
+  vengefulness: number
+  honesty: number
+  gullibility: number
+}
+
 export type Player = {
   coins: number
   color: string
   id: string
   influences: Influences[]
+  claimedInfluences: Influences[]
   deadInfluences: Influences[]
   name: string
   ai: boolean
+  personality?: AiPersonality
+  grudges: {
+    [playerName: string]: number
+  }
 }
 
 export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {

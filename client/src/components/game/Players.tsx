@@ -1,4 +1,4 @@
-import { Badge, Button, Grid2, Paper, Typography, useTheme } from "@mui/material"
+import { Badge, Button, Grid2, Paper, Tooltip, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Close, MonetizationOn } from "@mui/icons-material"
@@ -30,7 +30,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
     <>
       <Grid2 container justifyContent="center" spacing={3}>
         {gameState.players
-          .map(({ name, color, coins, influenceCount, deadInfluences, ai }, index) => {
+          .map(({ name, color, coins, influenceCount, deadInfluences, ai, personality }, index) => {
             const playerColor = influenceCount ? color : '#777777'
             const cardTextColor = theme.palette.mode === LIGHT_COLOR_MODE ? 'white' : 'black'
             const isWaitingOnPlayer = waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
@@ -83,7 +83,17 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     <OverflowTooltip>{name}</OverflowTooltip>
                   </Typography>
                   <Typography variant="h6" sx={{ color: cardTextColor }}>
-                    {ai && <Bot sx={{ verticalAlign: 'text-bottom' }} />}
+                    {ai && (
+                      <Tooltip title={
+                        <>
+                          <Typography>{`Vengefulness: ${personality?.vengefulness}`}%</Typography>
+                          <Typography>{`Honesty: ${personality?.honesty}`}%</Typography>
+                          <Typography>{`Gullibility: ${personality?.gullibility}`}%</Typography>
+                        </>
+                      }>
+                        <Bot sx={{ verticalAlign: 'text-bottom' }} />
+                      </Tooltip>
+                    )}
                     <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                   </Typography>
                   <Grid2

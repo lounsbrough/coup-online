@@ -1,5 +1,5 @@
 import { shuffle } from "../utilities/array"
-import { ActionAttributes, Actions, GameState, Influences, Player } from "../../../shared/types/game"
+import { ActionAttributes, Actions, AiPersonality, GameState, Influences, Player } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
 import { getActionMessage } from "../../../shared/utilities/message"
 import { GameMutationInputError } from "../utilities/errors"
@@ -125,15 +125,30 @@ const getNewGameState = (roomId: string): GameState => ({
   lastEventTimestamp: new Date()
 })
 
-export const addPlayerToGame = (state: GameState, playerId: string, playerName: string, ai: boolean = false) => {
+export const addPlayerToGame = ({
+  state,
+  playerId,
+  playerName,
+  ai = false,
+  aiPersonality,
+}: {
+  state: GameState
+  playerId: string
+  playerName: string
+  ai?: boolean
+  aiPersonality?: AiPersonality
+}) => {
   state.players.push({
     id: playerId,
     name: playerName,
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
     deadInfluences: [],
+    claimedInfluences: [],
     color: state.availablePlayerColors.shift()!,
-    ai
+    ai,
+    grudges: {},
+    ...(aiPersonality && { personality: aiPersonality })
   })
 }
 
@@ -148,7 +163,7 @@ export const removePlayerFromGame = (state: GameState, playerName: string) => {
 
 export const createNewGame = async (roomId: string, playerId: string, playerName: string) => {
   const newGameState = getNewGameState(roomId)
-  addPlayerToGame(newGameState, playerId, playerName)
+  addPlayerToGame({ state: newGameState, playerId, playerName })
   await createGameState(roomId, newGameState)
 }
 
