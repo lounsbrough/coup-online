@@ -4,7 +4,7 @@ import { ActionAttributes, Actions, AiPersonality, GameState, InfluenceAttribute
 import { getActionMessage } from '../../../shared/utilities/message'
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addClaimedInfluence, addPlayerToGame, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addClaimedInfluence, addPlayerToGame, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
@@ -450,7 +450,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
       }
 
       state.pendingAction = {
-        action: action,
+        action,
         pendingPlayers: state.players.reduce((agg: string[], cur) => {
           if (cur.influences.length && cur.name !== player.name) {
             agg.push(cur.name)
@@ -491,7 +491,17 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
         throw new GameMutationInputError('Unable to find pending action')
       }
 
+      const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
+
+      if (!actionPlayer) {
+        throw new GameMutationInputError('Unable to find action player')
+      }
+
       if (state.pendingAction.pendingPlayers.length === 1) {
+        const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
+        if (claimedInfluence) {
+          addClaimedInfluence(actionPlayer, claimedInfluence)
+        }
         processPendingAction(state)
       } else {
         state.pendingAction.pendingPlayers.splice(
@@ -624,6 +634,10 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       }
 
       logEvent(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`)
+      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      if (claimedInfluence) {
+        removeClaimedInfluence(actionPlayer, claimedInfluence)
+      }
       holdGrudge({ state, offended: state.turnPlayer!, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, actionPlayer.name, influence)
       moveTurnToNextPlayer(state)
@@ -674,12 +688,21 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
       }
 
       if (state.pendingBlock.pendingPlayers.length === 1) {
+        const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
         const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
+
+        if (!actionPlayer) {
+          throw new GameMutationInputError('Unable to find action player')
+        }
 
         if (!blockPlayer) {
           throw new GameMutationInputError('Unable to find blocking player')
         }
 
+        const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+        if (claimedInfluence) {
+          addClaimedInfluence(actionPlayer, claimedInfluence)
+        }
         addClaimedInfluence(blockPlayer, state.pendingBlock?.claimedInfluence)
         logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
         if (state.pendingAction.action === Actions.Assassinate) {
@@ -734,10 +757,20 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
         throw new GameMutationInputError('Unable to find pending action or pending block')
       }
 
+      const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
       const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge?.sourcePlayer)
+
+      if (!actionPlayer) {
+        throw new GameMutationInputError('Unable to find action player')
+      }
 
       if (!challengePlayer) {
         throw new GameMutationInputError('Unable to find challenging player')
+      }
+
+      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      if (claimedInfluence) {
+        addClaimedInfluence(actionPlayer, claimedInfluence)
       }
 
       revealAndReplaceInfluence(state, state.pendingBlock.sourcePlayer, influence)
@@ -760,19 +793,29 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     })
   } else {
     await mutateGameState(gameState, (state) => {
-      const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge?.sourcePlayer)
+      const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
       const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
+      const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge?.sourcePlayer)
 
-      if (!challengePlayer) {
-        throw new GameMutationInputError('Unable to find challenging player')
+      if (!actionPlayer) {
+        throw new GameMutationInputError('Unable to find action player')
       }
 
       if (!blockPlayer) {
         throw new GameMutationInputError('Unable to find blocking player')
       }
 
+      if (!challengePlayer) {
+        throw new GameMutationInputError('Unable to find challenging player')
+      }
+
       logEvent(state, `${challengePlayer.name} successfully challenged ${blockPlayer.name}`)
       logEvent(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`)
+      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      if (claimedInfluence) {
+        addClaimedInfluence(actionPlayer, claimedInfluence)
+      }
+      removeClaimedInfluence(blockPlayer, state.pendingBlock!.claimedInfluence)
       holdGrudge({ state, offended: blockPlayer.name, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, blockPlayer.name, influence)
       processPendingAction(state)

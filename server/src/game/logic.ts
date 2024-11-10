@@ -81,7 +81,6 @@ export const processPendingAction = (state: GameState) => {
       throw new GameMutationInputError('Target Player not found')
     }
 
-    addClaimedInfluence(actionPlayer, Influences.Assassin)
     actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired!
     holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Assassinate] })
     promptPlayerToLoseInfluence(state, targetPlayer.name)
@@ -98,13 +97,11 @@ export const processPendingAction = (state: GameState) => {
       throw new GameMutationInputError('Target Player not found')
     }
 
-    addClaimedInfluence(actionPlayer, Influences.Captain)
     holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Steal] })
     const coinsAvailable = Math.min(2, targetPlayer.coins)
     actionPlayer.coins += coinsAvailable
     targetPlayer.coins -= coinsAvailable
   } else if (state.pendingAction.action === Actions.Tax) {
-    addClaimedInfluence(actionPlayer, Influences.Duke)
     actionPlayer.coins += 3
   }
 
@@ -192,7 +189,9 @@ export const resetGame = async (roomId: string) => {
     ...player,
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
-    deadInfluences: []
+    claimedInfluences: [],
+    deadInfluences: [],
+    grudges: {}
   }))
   newGameState.availablePlayerColors = oldGameState.availablePlayerColors
   await createGameState(roomId, newGameState)

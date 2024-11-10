@@ -175,9 +175,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
     }
   }
 
-  const requiredInfluenceForAction = Object.entries(InfluenceAttributes)
-    .find(([, { legalAction }]) => legalAction === gameState.pendingAction?.action)
-    ?.[0] as Influences | undefined
+  const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
   if (requiredInfluenceForAction && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) < (0.05 + Math.random() * 0.05)) {
     return { response: Responses.Challenge }
   }
@@ -209,10 +207,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
 export const decideActionChallengeResponse = (gameState: PublicGameState): {
   influence: Influences
 } => {
-  const requiredInfluence = Object.entries(InfluenceAttributes)
-    .find(([, { legalAction }]) => legalAction === gameState.pendingAction?.action)
-    ?.[0] as Influences | undefined
-
+  const requiredInfluence = ActionAttributes[gameState.pendingAction!.action].influenceRequired
   const revealedInfluence = requiredInfluence && gameState.selfPlayer?.influences.some((i) => i === requiredInfluence)
     ? requiredInfluence
     : gameState.selfPlayer!.influences[Math.floor(Math.random() * gameState.selfPlayer!.influences.length)]
