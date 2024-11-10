@@ -71,6 +71,7 @@ export const ActionAttributes: {
     blockable: boolean
     challengeable: boolean
     coinsRequired?: number
+    influenceRequired?: Influences
     requiresTarget: boolean
     wordVariations?: string[]
     messageTemplates: {
@@ -84,6 +85,7 @@ export const ActionAttributes: {
     blockable: true,
     challengeable: true,
     coinsRequired: 3,
+    influenceRequired: Influences.Assassin,
     requiresTarget: true,
     wordVariations: ['Assassinated'],
     messageTemplates: {
@@ -95,6 +97,7 @@ export const ActionAttributes: {
   [Actions.Steal]: {
     blockable: true,
     challengeable: true,
+    influenceRequired: Influences.Captain,
     requiresTarget: true,
     wordVariations: ['Stole'],
     messageTemplates: {
@@ -117,6 +120,7 @@ export const ActionAttributes: {
   [Actions.Tax]: {
     blockable: false,
     challengeable: true,
+    influenceRequired: Influences.Duke,
     requiresTarget: false,
     messageTemplates: {
       confirm: 'Collect Tax',
@@ -146,6 +150,7 @@ export const ActionAttributes: {
   [Actions.Exchange]: {
     blockable: false,
     challengeable: true,
+    influenceRequired: Influences.Ambassador,
     requiresTarget: false,
     wordVariations: ['Exchanged'],
     messageTemplates: {
@@ -162,14 +167,25 @@ export enum Responses {
   Block = 'Block'
 }
 
+export type AiPersonality = {
+  vengefulness: number
+  honesty: number
+  credulity: number
+}
+
 export type Player = {
   coins: number
   color: string
   id: string
   influences: Influences[]
+  claimedInfluences: Influences[]
   deadInfluences: Influences[]
   name: string
   ai: boolean
+  personality?: AiPersonality
+  grudges: {
+    [playerName: string]: number
+  }
 }
 
 export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {

@@ -25,8 +25,10 @@ const getRandomPlayers = (state: GameState, count?: number) =>
     color: chance.color(),
     coins: 2,
     influences: [...Array.from({ length: 2 }, () => drawCardFromDeck(state))],
+    claimedInfluences: [],
     deadInfluences: [],
-    ai: false
+    ai: false,
+    grudges: {}
   }), count ?? chance.natural({ min: 2, max: 6 }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
@@ -89,16 +91,20 @@ describe('gameState', () => {
           color: selfPlayer.color,
           coins: selfPlayer.coins,
           influences: selfPlayer.influences,
+          claimedInfluences: selfPlayer.claimedInfluences,
           deadInfluences: selfPlayer.deadInfluences,
-          ai: selfPlayer.ai
+          ai: selfPlayer.ai,
+          grudges: selfPlayer.grudges
         },
         players: gameState.players.map((player) => ({
           name: player.name,
           color: player.color,
           coins: player.coins,
           influenceCount: player.influences.length,
+          claimedInfluences: player.claimedInfluences,
           deadInfluences: player.deadInfluences,
-          ai: player.ai
+          ai: player.ai,
+          grudges: player.grudges
         })),
         ...(gameState.pendingAction && { pendingAction: gameState.pendingAction }),
         ...(gameState.pendingActionChallenge && { pendingActionChallenge: gameState.pendingActionChallenge }),

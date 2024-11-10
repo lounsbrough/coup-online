@@ -13,6 +13,7 @@ export const getGameState = ({ players }: { players: Player[] }) => {
     availablePlayerColors: chance.n(chance.color, 6),
     players: [],
     pendingInfluenceLoss: {},
+    lastEventTimestamp: chance.date(),
     roomId: chance.string()
   }
 

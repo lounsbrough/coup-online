@@ -11,8 +11,10 @@ describe('Games', () => {
         {
           name: harper,
           influences: [Influences.Duke, Influences.Captain],
+          claimedInfluences: [],
           deadInfluences: [],
           ai: false,
+          grudges: {},
           coins: 2,
           color: '#00cc00',
           id: harper
@@ -20,8 +22,10 @@ describe('Games', () => {
         {
           name: david,
           influences: [Influences.Ambassador, Influences.Contessa],
+          claimedInfluences: [],
           deadInfluences: [],
           ai: false,
+          grudges: {},
           coins: 2,
           color: '#33aaff',
           id: david

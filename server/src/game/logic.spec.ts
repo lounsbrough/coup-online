@@ -15,8 +15,10 @@ const getRandomPlayers = (count?: number) =>
     color: chance.color(),
     coins: 2,
     influences: [],
+    claimedInfluences: [],
     deadInfluences: [],
-    ai: false
+    ai: false,
+    grudges: {}
   }), count ?? chance.natural({ min: 2, max: 6 }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {

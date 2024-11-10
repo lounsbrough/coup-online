@@ -37,8 +37,11 @@ export const getPublicGameState = ({ gameState, playerId }: {
       coins: player.coins,
       influenceCount: player.influences.length - pendingInfluenceCountToPutBack,
       deadInfluences: player.deadInfluences,
+      claimedInfluences: player.claimedInfluences,
       color: player.color,
-      ai: player.ai
+      ai: player.ai,
+      grudges: player.grudges,
+      ...(player.personality && { personality: player.personality })
     })
     if (player.id === playerId) {
       selfPlayer = player

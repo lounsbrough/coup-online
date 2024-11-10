@@ -2,7 +2,7 @@ import { useState, forwardRef } from "react"
 import { AppBar, Box, Button, Dialog, DialogContent, DialogContentText, Divider, IconButton, Toolbar, Typography, Slide, useTheme } from "@mui/material"
 import { Block, Close, Gavel, Group } from "@mui/icons-material"
 import { TransitionProps } from '@mui/material/transitions'
-import { Actions, InfluenceAttributes, Influences } from '@shared'
+import { ActionAttributes, Actions, Influences } from '@shared'
 import './Rules.css'
 import InfluenceIcon from "./icons/InfluenceIcon"
 
@@ -21,12 +21,9 @@ const influenceText = Object.fromEntries(
 )
 
 const actionText = Object.fromEntries(
-  Object.values(Actions).map((action) => {
-    const relatedInfluence = Object.entries(InfluenceAttributes).find(([, attributes]) =>
-      attributes.legalAction === action)
-
-    return ([action, <Typography component="span" fontSize="large" fontWeight='bold' color={relatedInfluence?.[0] as Influences}>{action}</Typography>])
-  })
+  Object.entries(ActionAttributes).map(([action, { influenceRequired }]) =>
+    [action, <Typography component="span" fontSize="large" fontWeight='bold' color={influenceRequired as Influences}>{action}</Typography>]
+  )
 )
 
 function Rules() {
