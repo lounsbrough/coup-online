@@ -84,15 +84,15 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                   </Typography>
                   <Typography variant="h6" sx={{ color: cardTextColor }}>
                     {ai && (
-                      <Tooltip title={
-                        <>
-                          <Typography>{`Vengefulness: ${personality?.vengefulness}`}%</Typography>
-                          <Typography>{`Honesty: ${personality?.honesty}`}%</Typography>
-                          <Typography>{`Credulity: ${personality?.credulity}`}%</Typography>
-                        </>
-                      }>
-                        <Bot sx={{ verticalAlign: 'text-bottom' }} />
-                      </Tooltip>
+                      // <Tooltip title={
+                      //   <>
+                      //     <Typography>{`Vengefulness: ${personality?.vengefulness}`}%</Typography>
+                      //     <Typography>{`Honesty: ${personality?.honesty}`}%</Typography>
+                      //     <Typography>{`Credulity: ${personality?.credulity}`}%</Typography>
+                      //   </>
+                      // }>
+                      <Bot sx={{ verticalAlign: 'text-bottom' }} />
+                      // </Tooltip>
                     )}
                     <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                   </Typography>
