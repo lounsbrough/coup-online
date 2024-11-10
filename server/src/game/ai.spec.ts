@@ -9,9 +9,11 @@ describe('ai', () => {
     name: chance.string(),
     coins: chance.natural(),
     influenceCount: 2,
+    claimedInfluences: [],
     deadInfluences: [],
     color: chance.string(),
-    ai: chance.bool()
+    ai: chance.bool(),
+    grudges: {}
   })
 
   describe('getProbabilityOfPlayerInfluence', () => {
