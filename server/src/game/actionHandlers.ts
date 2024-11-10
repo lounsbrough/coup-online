@@ -380,7 +380,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     throw new GameMutationInputError('You must coup when you have 10 or more coins')
   }
 
-  if (!gameState.players.some((player) => player.name === targetPlayer)) {
+  if (targetPlayer && !gameState.players.some((player) => player.name === targetPlayer)) {
     throw new GameMutationInputError('Unknown target player')
   }
 
