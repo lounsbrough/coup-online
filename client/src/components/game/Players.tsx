@@ -83,16 +83,19 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     <OverflowTooltip>{name}</OverflowTooltip>
                   </Typography>
                   <Typography variant="h6" sx={{ color: cardTextColor }}>
-                    {ai && (
-                      // <Tooltip title={
-                      //   <>
-                      //     <Typography>{`Vengefulness: ${personality?.vengefulness}`}%</Typography>
-                      //     <Typography>{`Honesty: ${personality?.honesty}`}%</Typography>
-                      //     <Typography>{`Credulity: ${personality?.credulity}`}%</Typography>
-                      //   </>
-                      // }>
+                    {false && ai && (
+                      <Tooltip title={
+                        <>
+                          <Typography>{`Vengefulness: ${personality?.vengefulness}`}%</Typography>
+                          <Typography>{`Honesty: ${personality?.honesty}`}%</Typography>
+                          <Typography>{`Credulity: ${personality?.credulity}`}%</Typography>
+                        </>
+                      }>
+                        <Bot sx={{ verticalAlign: 'text-bottom' }} />
+                      </Tooltip>
+                    )}
+                    {true && ai && (
                       <Bot sx={{ verticalAlign: 'text-bottom' }} />
-                      // </Tooltip>
                     )}
                     <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                   </Typography>
