@@ -244,7 +244,9 @@ export const holdGrudge = ({ state, offended, offender, weight }: {
   weight: number
 }) => {
   const offendedPlayer = state.players.find(({ name }) => name === offended)!
+  const offenderPlayer = state.players.find(({ name }) => name === offender)!
   offendedPlayer.grudges[offender] = (offendedPlayer.grudges[offender] ?? 0) + weight
+  offenderPlayer.grudges[offended] = (offenderPlayer.grudges[offended] ?? 0) - weight * 0.75
 }
 
 export const addClaimedInfluence = (player: Player, influence: Influences) => {
