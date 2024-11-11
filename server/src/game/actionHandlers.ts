@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+import crypto from 'crypto'
 import { GameMutationInputError } from "../utilities/errors"
 import { ActionAttributes, Actions, AiPersonality, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
 import { getActionMessage } from '../../../shared/utilities/message'
@@ -110,7 +110,7 @@ export const addAiPlayerHandler = async ({ roomId, playerId, playerName, persona
       throw new GameMutationInputError(`Room ${roomId} already has player named ${playerName}`)
     }
 
-    const aiPlayerId = uuidv4()
+    const aiPlayerId = crypto.randomUUID()
 
     addPlayerToGame({
       state,
