@@ -602,13 +602,14 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       delete state.pendingActionChallenge
       state.pendingAction.claimConfirmed = true
       if (state.pendingAction.targetPlayer) {
-        const targetPlayer = gameState.players.find(({ name }) => name === state.pendingAction!.targetPlayer)
+        const targetPlayer = state.players.find(({ name }) => name === state.pendingAction!.targetPlayer)
 
         if (!targetPlayer) {
           throw new GameMutationInputError('Unable to find target player')
         }
 
-        if (targetPlayer.influences.length > 1 - (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)) {
+        const remainingInfluenceCount = targetPlayer.influences.length - (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)
+        if (remainingInfluenceCount > 0) {
           state.pendingAction.pendingPlayers = [state.pendingAction.targetPlayer]
         } else {
           processPendingAction(state)

@@ -416,6 +416,37 @@ describe('actionHandlers', () => {
       expect(gameState.players[2].coins).toBe(0)
     })
 
+    it('assassination -> failed challenge -> successful block', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain], deadInfluences: [Influences.Ambassador] },
+        { ...harper, influences: [Influences.Ambassador], deadInfluences: [Influences.Captain] },
+        { ...hailey, influences: [Influences.Captain, Influences.Assassin], coins: 3 }
+      ])
+
+      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
+      await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
+      await actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Assassinate, targetPlayer: david.playerName })
+
+      await actionResponseHandler({ roomId, playerId: harper.playerId, response: Responses.Challenge })
+
+      await actionChallengeResponseHandler({ roomId, playerId: hailey.playerId, influence: Influences.Assassin })
+
+      await expect(actionResponseHandler({ roomId, playerId: david.playerId, response: Responses.Block, claimedInfluence: Influences.Ambassador })).rejects.toThrow('claimedInfluence can\'t block this action')
+      await actionResponseHandler({ roomId, playerId: david.playerId, response: Responses.Block, claimedInfluence: Influences.Contessa })
+
+      await blockResponseHandler({ roomId, playerId: hailey.playerId, response: Responses.Pass })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(david.playerName)
+      expect(gameState.players[0].influences).toHaveLength(1)
+      expect(gameState.players[1].influences).toHaveLength(0)
+      expect(gameState.players[2].influences).toHaveLength(2)
+      expect(gameState.players[0].coins).toBe(3)
+      expect(gameState.players[1].coins).toBe(3)
+      expect(gameState.players[2].coins).toBe(0)
+    })
+
     it('tax -> failed challenge -> tax and lost influence', async () => {
       const roomId = await setupTestGame([
         { ...david, influences: [Influences.Captain, Influences.Duke] },
