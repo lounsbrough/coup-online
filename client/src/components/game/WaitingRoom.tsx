@@ -1,7 +1,7 @@
 import { Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
-import { ContentCopy, InfoOutlined } from "@mui/icons-material"
+import { ContentCopy } from "@mui/icons-material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useState } from "react"
