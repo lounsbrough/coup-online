@@ -1,6 +1,6 @@
 import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, AiPersonality, GameState, Influences, Player, Responses } from "../../../shared/types/game"
-import { createGameState, drawCardFromDeck, getGameState, logEvent, mutateGameState, shuffleDeck } from "../utilities/gameState"
+import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
 import { getActionMessage } from "../../../shared/utilities/message"
 import { GameMutationInputError } from "../utilities/errors"
 
@@ -171,12 +171,13 @@ export const createNewGame = async (roomId: string, playerId: string, playerName
 }
 
 export const startGame = async (gameState: GameState) => {
-  await mutateGameState(gameState, (state) => {
-    state.isStarted = true
-    state.players = shuffle(state.players)
-    state.turnPlayer = state.players[0].name
-    logEvent(state, 'Game has started')
-  })
+  gameState.isStarted = true
+  gameState.players = shuffle(gameState.players)
+  if (gameState.players.length === 2) {
+    gameState.players[0].coins = 1
+  }
+  gameState.turnPlayer = gameState.players[0].name
+  logEvent(gameState, 'Game has started')
 }
 
 export const humanOpponentsRemain = (gameState: GameState, player: Player) =>

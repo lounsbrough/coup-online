@@ -272,7 +272,7 @@ function Rules() {
               <p><strong>Number of players</strong>: 2-6.</p>
               <p><strong>Goal</strong>: To be the only player with any influence cards left.</p>
               <p><strong>Contents</strong>: Deck of influence cards, bank of coins.</p>
-              <p><strong>Setup</strong>: Shuffle the cards and deal two to each player. Players should look at their cards but keep them hidden from everyone else. Each player takes two coins from the bank as their starting wealth.</p>
+              <p><strong>Setup</strong>: Shuffle the cards and deal two to each player. Players should look at their cards but keep them hidden from everyone else. Each player takes two coins from the bank as their starting wealth. In a game with only two players, the starting player begins the game with one coin instead of two.</p>
               <p><strong>Influences</strong>: There are five different characters in the influence deck (three of each character).</p>
               <ul>
                 <li>{influenceText[Influences.Duke]}: Can Tax and Block Foreign Aid.</li>

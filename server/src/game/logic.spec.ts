@@ -1,8 +1,8 @@
 import { Chance } from "chance"
-import { drawCardFromDeck, logEvent } from "../utilities/gameState"
+import { drawCardFromDeck } from "../utilities/gameState"
 import { GameState, Influences } from '../../../shared/types/game'
 import { shuffle } from "../utilities/array"
-import { moveTurnToNextPlayer } from "./logic"
+import { moveTurnToNextPlayer, startGame } from "./logic"
 
 jest.mock("../utilities/storage")
 
@@ -44,35 +44,23 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
   return gameState
 }
 
-describe('gameState', () => {
+describe('logic', () => {
   afterEach(jest.clearAllMocks)
 
-  describe('drawCardFromDeck', () => {
-    it('should return top card and remove it from deck', () => {
+  describe('startGame', () => {
+    it('should set started flag', () => {
       const gameState = getRandomGameState()
-
-      const expectedCard = gameState.deck.at(-1)
-      const expectedDeckSize = gameState.deck.length - 1
-
-      expect(drawCardFromDeck(gameState)).toBe(expectedCard)
-      expect(gameState.deck.length).toBe(expectedDeckSize)
+      gameState.isStarted = false
+      startGame(gameState)
+      expect(gameState.isStarted).toBe(true)
     })
-  })
 
-  describe('logEvent', () => {
-    const gameState = getRandomGameState()
-
-    const newLog = chance.string()
-
-    let expectedEventLogs = [...gameState.eventLogs, newLog]
-    logEvent(gameState, newLog)
-    expect(gameState.eventLogs).toEqual(expectedEventLogs)
-
-    gameState.eventLogs = chance.n(chance.string, 100)
-
-    expectedEventLogs = [...gameState.eventLogs.slice(1), newLog]
-    logEvent(gameState, newLog)
-    expect(gameState.eventLogs).toEqual(expectedEventLogs)
+    it('should give starting player 1 coin in 2 player game', () => {
+      const gameState = getRandomGameState({ playersCount: 2 })
+      gameState.isStarted = false
+      startGame(gameState)
+      expect(gameState.players[0].coins).toBe(1)
+    })
   })
 
   describe('moveTurnToNextPlayer', () => {

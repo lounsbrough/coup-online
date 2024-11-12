@@ -231,7 +231,9 @@ export const startGameHandler = async ({ roomId, playerId }: {
     throw new GameMutationInputError('Game has already started')
   }
 
-  await startGame(gameState)
+  await mutateGameState(gameState, (state) => {
+    startGame(state)
+  })
 
   return { roomId, playerId }
 }
