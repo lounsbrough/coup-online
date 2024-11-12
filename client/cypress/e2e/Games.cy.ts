@@ -15,7 +15,7 @@ describe('Games', () => {
           deadInfluences: [],
           ai: false,
           grudges: {},
-          coins: 2,
+          coins: 1,
           color: '#00cc00',
           id: harper
         },
@@ -74,9 +74,10 @@ describe('Games', () => {
     cy.loadPlayer(gameUrl, harper)
     cy.clickGameBoardButton(Responses.Pass)
     cy.clickGameBoardButton(Influences.Duke)
-    cy.clickGameBoardButton(Actions.Income)
+    cy.clickGameBoardButton(Actions.ForeignAid)
 
     cy.loadPlayer(gameUrl, david)
+    cy.clickGameBoardButton(Responses.Pass)
     cy.clickGameBoardButton(Actions.Exchange)
 
     cy.loadPlayer(gameUrl, harper)
@@ -106,7 +107,7 @@ describe('Games', () => {
     cy.contains('David is trying to Assassinate Harper')
     cy.contains('David Assassinated Harper')
     cy.contains('Harper lost their Duke')
-    cy.contains('Harper collected Income')
+    cy.contains('Harper collected Foreign Aid')
     cy.contains('David is trying to Exchange influences')
     cy.contains('David Exchanged influences')
     cy.contains('Harper Couped David')

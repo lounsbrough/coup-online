@@ -76,21 +76,28 @@ function WaitingRoom() {
           </Button>
         </Grid2>
         <Grid2>
-          {gameState.players.length <= 1
-            ? <Typography>Add at least one more player to start game</Typography>
-            : (<Button
-              variant='contained'
-              onClick={() => {
-                trigger({
-                  roomId: gameState.roomId,
-                  playerId: getPlayerId()
-                })
-              }}
-              disabled={isMutating}
-            >
-              Start Game
-            </Button>
-            )}
+          <Button
+            variant='contained'
+            onClick={() => {
+              trigger({
+                roomId: gameState.roomId,
+                playerId: getPlayerId()
+              })
+            }}
+            disabled={gameState.players.length < 2 || isMutating}
+          >
+            Start Game
+          </Button>
+          {gameState.players.length < 2 && (
+            <Typography sx={{ fontStyle: 'italic' }} mt={2}>
+              Add at least one more player to start game
+            </Typography>
+          )}
+          {gameState.players.length === 2 && (
+            <Typography sx={{ fontStyle: 'italic' }} mt={2}>
+              2 player game, starting player will begin with 1 coin
+            </Typography>
+          )}
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </Grid2>
       </Grid2>

@@ -1,5 +1,5 @@
 import { Chance } from "chance"
-import { drawCardFromDeck, getGameState, getPublicGameState, mutateGameState, validateGameState } from "./gameState"
+import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, mutateGameState, validateGameState } from "./gameState"
 import { Actions, GameState, Influences, PublicGameState } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
@@ -241,5 +241,33 @@ describe('gameState', () => {
       mutation(gameState)
       expect(() => validateGameState(gameState)).toThrow(error)
     })
+  })
+
+  describe('drawCardFromDeck', () => {
+    it('should return top card and remove it from deck', () => {
+      const gameState = getRandomGameState()
+
+      const expectedCard = gameState.deck.at(-1)
+      const expectedDeckSize = gameState.deck.length - 1
+
+      expect(drawCardFromDeck(gameState)).toBe(expectedCard)
+      expect(gameState.deck.length).toBe(expectedDeckSize)
+    })
+  })
+
+  describe('logEvent', () => {
+    const gameState = getRandomGameState()
+
+    const newLog = chance.string()
+
+    let expectedEventLogs = [...gameState.eventLogs, newLog]
+    logEvent(gameState, newLog)
+    expect(gameState.eventLogs).toEqual(expectedEventLogs)
+
+    gameState.eventLogs = chance.n(chance.string, 100)
+
+    expectedEventLogs = [...gameState.eventLogs.slice(1), newLog]
+    logEvent(gameState, newLog)
+    expect(gameState.eventLogs).toEqual(expectedEventLogs)
   })
 })
