@@ -205,7 +205,6 @@ export const decideActionResponse = (gameState: PublicGameState): {
       return { response: Responses.Challenge }
     }
 
-    // Note that 100% honesty and 100% credulity could mean the AI accepts their death here, but that seems silly
     return probabilityOfAssassin > 0.4 + Math.random() * 0.2
       ? { response: Responses.Block, claimedInfluence: Influences.Contessa }
       : { response: Responses.Challenge }
