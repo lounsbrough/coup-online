@@ -115,11 +115,13 @@ export const decideAction = (gameState: PublicGameState): {
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const bluffMargin = 1 - (1 - honesty) ** 1.5 * 0.5
 
-  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Duke)) || Math.random() > bluffMargin) {
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Duke))
+    || (Math.random() > bluffMargin && getProbabilityOfHiddenCardBeingInfluence(gameState, Influences.Duke) > 0)) {
     return { action: Actions.Tax }
   }
 
-  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Captain)) || Math.random() > bluffMargin) {
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Captain))
+    || (Math.random() > bluffMargin && getProbabilityOfHiddenCardBeingInfluence(gameState, Influences.Captain) > 0)) {
     const getProbabilityOfBlockingSteal = (playerName: string) =>
       getProbabilityOfPlayerInfluence(gameState, Influences.Captain, playerName)
       + getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador, playerName)
@@ -146,11 +148,13 @@ export const decideAction = (gameState: PublicGameState): {
     }
   }
 
-  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Ambassador)) || Math.random() > bluffMargin) {
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Ambassador))
+    || (Math.random() > bluffMargin && getProbabilityOfHiddenCardBeingInfluence(gameState, Influences.Ambassador) > 0)) {
     return { action: Actions.Exchange }
   }
 
-  if (((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Assassin)) || Math.random() > bluffMargin)
+  if (((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Assassin))
+    || (Math.random() > bluffMargin && getProbabilityOfHiddenCardBeingInfluence(gameState, Influences.Assassin) > 0))
     && gameState.selfPlayer.coins >= 3) {
     const targetPlayer = getTargetPlayer(gameState)
     return { action: Actions.Assassinate, targetPlayer: targetPlayer.name }
