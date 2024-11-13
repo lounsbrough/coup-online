@@ -142,7 +142,7 @@ const eventHandlers: {
       personality: Joi.object().keys({
         vengefulness: Joi.number().integer().min(0).max(100).required(),
         honesty: Joi.number().integer().min(0).max(100).required(),
-        credulity: Joi.number().integer().min(0).max(100).required()
+        skepticism: Joi.number().integer().min(0).max(100).required()
       }).required()
     })
   },

@@ -46,7 +46,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
 
   const [vengefulness, setVengefulness] = useState<number>(50)
   const [honesty, setHonesty] = useState<number>(50)
-  const [credulity, setCredulity] = useState<number>(50)
+  const [skepticism, setSkepticism] = useState<number>(50)
 
   const handleVengefulnessChange = (_: Event, value: number | number[]) => {
     setVengefulness(value as number)
@@ -54,8 +54,8 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
   const handleHonestyChange = (_: Event, value: number | number[]) => {
     setHonesty(value as number)
   }
-  const handleCredulityChange = (_: Event, value: number | number[]) => {
-    setCredulity(value as number)
+  const handleSkepticismChange = (_: Event, value: number | number[]) => {
+    setSkepticism(value as number)
   }
 
   if (!gameState) {
@@ -80,7 +80,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
             roomId: gameState.roomId.trim(),
             playerId: getPlayerId(),
             playerName: botName.trim(),
-            personality: { vengefulness, honesty, credulity }
+            personality: { vengefulness, honesty, skepticism }
           })
         }}
       >
@@ -130,14 +130,14 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               max={maxSliderValue}
               onChange={handleHonestyChange}
             />
-            <Typography mt={2}>{`Credulity: ${credulity}%`}</Typography>
+            <Typography mt={2}>{`Skepticism: ${skepticism}%`}</Typography>
             <Slider
               step={1}
-              value={credulity}
+              value={skepticism}
               valueLabelDisplay="auto"
               min={minSliderValue}
               max={maxSliderValue}
-              onChange={handleCredulityChange}
+              onChange={handleSkepticismChange}
             />
           </Box>
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
