@@ -73,7 +73,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     p: 1,
                     width: '6rem',
                     transition: theme.transitions.create(['transform', 'box-shadow']),
-                    transform: isWaitingOnPlayer ? 'scale(1.06)' : undefined
+                    animation: isWaitingOnPlayer ? 'pulse 1.5s infinite' : undefined
                   }}>
                   <Typography variant="h6" sx={{
                     fontWeight: 'bold',
