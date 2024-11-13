@@ -235,13 +235,15 @@ export const decideBlockResponse = (gameState: PublicGameState): {
 } => {
   const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer
 
+  const credulity = (gameState.selfPlayer?.personality?.credulity ?? 50) / 100
+
   const legalProbability = getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer)
-  if ((isSelfTarget && legalProbability < (0.05 + Math.random() * 0.05))
+  if ((isSelfTarget && legalProbability <= (1 - credulity) ** 0.5 * (0.4 + Math.random() * 0.2))
     || legalProbability === 0) {
     return { response: Responses.Challenge }
   }
 
-  return Math.random() > 0.05
+  return legalProbability <= (1 - credulity) ** 0.5 * (0.1 + Math.random() * 0.2)
     ? { response: Responses.Pass }
     : { response: Responses.Challenge }
 }
