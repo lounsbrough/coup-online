@@ -74,9 +74,15 @@ export const getTargetPlayer = (gameState: PublicGameState) => {
   const opponents = gameState.players.filter(({ influenceCount, name }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
 
-  return opponents.sort((a, b) =>
-    getPlayerDangerFactor(b) * Math.random() * 0.05 -
-    getPlayerDangerFactor(a) * Math.random() * 0.05)[0]
+  let opponentAffinities: [number, PublicPlayer][]
+
+  if (Math.random() > 1 - (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100) {
+    opponentAffinities = opponents.map((opponent) => [(gameState.selfPlayer?.grudges[opponent.name] ?? 0) + Math.random() * 3, opponent])
+  } else {
+    opponentAffinities = opponents.map((opponent) => [getPlayerDangerFactor(opponent) + Math.random() * 5, opponent])
+  }
+
+  return opponentAffinities.sort((a, b) => b[0] - a[0])[0][1]
 }
 
 export const decideAction = (gameState: PublicGameState): {
@@ -106,11 +112,16 @@ export const decideAction = (gameState: PublicGameState): {
     return { action: Actions.Coup, targetPlayer: targetPlayer.name }
   }
 
-  if (gameState.selfPlayer.influences.includes(Influences.Duke) || Math.random() > 0.95) {
+  const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
+  const bluffMargin = 1 - (1 - honesty) ** 1.5 * 0.5
+
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Duke))
+    || (Math.random() > bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Duke) > 0)) {
     return { action: Actions.Tax }
   }
 
-  if (gameState.selfPlayer.influences.includes(Influences.Captain) || Math.random() > 0.95) {
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Captain))
+    || (Math.random() > bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Captain) > 0)) {
     const getProbabilityOfBlockingSteal = (playerName: string) =>
       getProbabilityOfPlayerInfluence(gameState, Influences.Captain, playerName)
       + getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador, playerName)
@@ -137,11 +148,13 @@ export const decideAction = (gameState: PublicGameState): {
     }
   }
 
-  if (gameState.selfPlayer.influences.includes(Influences.Ambassador) || Math.random() > 0.95) {
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Ambassador))
+    || (Math.random() > bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador) > 0)) {
     return { action: Actions.Exchange }
   }
 
-  if ((gameState.selfPlayer.influences.includes(Influences.Assassin) || Math.random() > 0.95)
+  if (((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Assassin))
+    || (Math.random() > bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Assassin) > 0))
     && gameState.selfPlayer.coins >= 3) {
     const targetPlayer = getTargetPlayer(gameState)
     return { action: Actions.Assassinate, targetPlayer: targetPlayer.name }
@@ -158,32 +171,32 @@ export const decideActionResponse = (gameState: PublicGameState): {
   response: Responses
   claimedInfluence?: Influences
 } => {
+  const honesty = (gameState.selfPlayer?.personality?.honesty ?? 50) / 100
+  const bluffMargin = 1 - (1 - honesty) ** 1.5 * 0.5
+  const credulity = (gameState.selfPlayer?.personality?.credulity ?? 50) / 100
+
   if (ActionAttributes[gameState.pendingAction!.action].blockable
     && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer?.name
       || gameState.pendingAction!.action === Actions.ForeignAid
     )) {
-    const requiredInfluenceForBlock = Object.entries(InfluenceAttributes)
-      .find(([, { legalBlock }]) => legalBlock === gameState.pendingAction?.action)
-      ?.[0] as Influences | undefined
+    const legalBlockInfluences = Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
+      if (legalBlock === gameState.pendingAction?.action) {
+        agg.push(influence as Influences)
+      }
+      return agg
+    }, [] as Influences[])
 
-    if (requiredInfluenceForBlock
-      && (
-        gameState.selfPlayer?.influences.some((i) => i === requiredInfluenceForBlock)
-        || (Math.random() > 0.85 && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForBlock) > 0)
-      )) {
-      return { response: Responses.Block, claimedInfluence: requiredInfluenceForBlock }
+    for (const legalBlockInfluence of legalBlockInfluences) {
+      if (gameState.selfPlayer?.influences.some((i) => i === legalBlockInfluence)
+        || (Math.random() > bluffMargin && getProbabilityOfPlayerInfluence(gameState, legalBlockInfluence) > 0)) {
+        return { response: Responses.Block, claimedInfluence: legalBlockInfluence }
+      }
     }
-  }
-
-  const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
-  if (requiredInfluenceForAction && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) < (0.05 + Math.random() * 0.05)) {
-    return { response: Responses.Challenge }
   }
 
   if (gameState.pendingAction?.action === Actions.Assassinate
     && gameState.pendingAction.targetPlayer === gameState.selfPlayer?.name
     && gameState.selfPlayer?.influences.length === 1
-    && requiredInfluenceForAction
   ) {
     const probabilityOfAssassin = getProbabilityOfPlayerInfluence(gameState, Influences.Assassin, gameState.turnPlayer)
     const probabilityOfContessa = getProbabilityOfPlayerInfluence(gameState, Influences.Contessa, gameState.selfPlayer.name)
@@ -197,11 +210,17 @@ export const decideActionResponse = (gameState: PublicGameState): {
       : { response: Responses.Challenge }
   }
 
-  return Math.random() > 0.1
-    || gameState.pendingAction?.claimConfirmed
-    || !ActionAttributes[gameState.pendingAction!.action].challengeable
-    ? { response: Responses.Pass }
-    : { response: Responses.Challenge }
+  const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer
+  const credulityMargin = (1 - credulity) ** 0.5 * (isSelfTarget ? 0.9 : 0.4 + Math.random() * 0.1)
+
+  const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
+  if (!gameState.pendingAction?.claimConfirmed
+    && requiredInfluenceForAction
+    && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) <= credulityMargin) {
+    return { response: Responses.Challenge }
+  }
+
+  return { response: Responses.Pass }
 }
 
 export const decideActionChallengeResponse = (gameState: PublicGameState): {
@@ -218,17 +237,15 @@ export const decideActionChallengeResponse = (gameState: PublicGameState): {
 export const decideBlockResponse = (gameState: PublicGameState): {
   response: Responses
 } => {
-  const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer
+  const credulity = (gameState.selfPlayer?.personality?.credulity ?? 50) / 100
 
-  const legalProbability = getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer)
-  if ((isSelfTarget && legalProbability < (0.05 + Math.random() * 0.05))
-    || legalProbability === 0) {
+  const isSelfAction = gameState.turnPlayer === gameState.selfPlayer?.name
+  const credulityMargin = (1 - credulity) ** 0.5 * (isSelfAction ? 0.9 : 0.4 + Math.random() * 0.1)
+  if (getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer) <= credulityMargin) {
     return { response: Responses.Challenge }
   }
 
-  return Math.random() > 0.05
-    ? { response: Responses.Pass }
-    : { response: Responses.Challenge }
+  return { response: Responses.Pass }
 }
 
 export const decideBlockChallengeResponse = (gameState: PublicGameState): {
