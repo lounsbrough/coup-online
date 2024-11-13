@@ -74,9 +74,15 @@ export const getTargetPlayer = (gameState: PublicGameState) => {
   const opponents = gameState.players.filter(({ influenceCount, name }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
 
-  return opponents.sort((a, b) =>
-    getPlayerDangerFactor(b) * Math.random() * 0.05 -
-    getPlayerDangerFactor(a) * Math.random() * 0.05)[0]
+  let opponentAfinities: [number, PublicPlayer][]
+
+  if (Math.random() > 1 - (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100) {
+    opponentAfinities = opponents.map((opponent) => [(gameState.selfPlayer?.grudges[opponent.name] ?? 0) + Math.random() * 3, opponent])
+  } else {
+    opponentAfinities = opponents.map((opponent) => [getPlayerDangerFactor(opponent) + Math.random() * 5, opponent])
+  }
+
+  return opponentAfinities.sort((a, b) => b[0] - a[0])[0][1]
 }
 
 export const decideAction = (gameState: PublicGameState): {

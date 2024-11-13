@@ -140,9 +140,9 @@ const eventHandlers: {
       playerId: Joi.string().required(),
       playerName: playerNameRule,
       personality: Joi.object().keys({
-        vengefulness: Joi.number().min(0).max(100).required(),
-        honesty: Joi.number().min(0).max(100).required(),
-        credulity: Joi.number().min(0).max(100).required()
+        vengefulness: Joi.number().integer().min(0).max(100).required(),
+        honesty: Joi.number().integer().min(0).max(100).required(),
+        credulity: Joi.number().integer().min(0).max(100).required()
       }).required()
     })
   },
