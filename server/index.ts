@@ -380,7 +380,9 @@ io.on('connection', (socket) => {
           }
           const roomPrefix = 'coup-game-'
           const socketRoom = `${roomPrefix}${roomId}`
-          if (![...socket.rooms].some((room) => room.startsWith(roomPrefix)) && roomId) {
+          const currentRooms = [...socket.rooms]
+          if (roomId && !currentRooms.some((room) => room === socketRoom)) {
+            await Promise.all(currentRooms.map((currentRoom) => socket.leave(currentRoom)))
             await socket.join(socketRoom)
           }
           const fullGameState = await getGameState(roomId)
