@@ -74,15 +74,15 @@ export const getTargetPlayer = (gameState: PublicGameState) => {
   const opponents = gameState.players.filter(({ influenceCount, name }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
 
-  let opponentAfinities: [number, PublicPlayer][]
+  let opponentAffinities: [number, PublicPlayer][]
 
   if (Math.random() > 1 - (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100) {
-    opponentAfinities = opponents.map((opponent) => [(gameState.selfPlayer?.grudges[opponent.name] ?? 0) + Math.random() * 3, opponent])
+    opponentAffinities = opponents.map((opponent) => [(gameState.selfPlayer?.grudges[opponent.name] ?? 0) + Math.random() * 3, opponent])
   } else {
-    opponentAfinities = opponents.map((opponent) => [getPlayerDangerFactor(opponent) + Math.random() * 5, opponent])
+    opponentAffinities = opponents.map((opponent) => [getPlayerDangerFactor(opponent) + Math.random() * 5, opponent])
   }
 
-  return opponentAfinities.sort((a, b) => b[0] - a[0])[0][1]
+  return opponentAffinities.sort((a, b) => b[0] - a[0])[0][1]
 }
 
 export const decideAction = (gameState: PublicGameState): {
@@ -112,11 +112,11 @@ export const decideAction = (gameState: PublicGameState): {
     return { action: Actions.Coup, targetPlayer: targetPlayer.name }
   }
 
-  if (gameState.selfPlayer.influences.includes(Influences.Duke) || Math.random() > 0.95) {
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Duke)) || Math.random() > 0.95) {
     return { action: Actions.Tax }
   }
 
-  if (gameState.selfPlayer.influences.includes(Influences.Captain) || Math.random() > 0.95) {
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Captain)) || Math.random() > 0.95) {
     const getProbabilityOfBlockingSteal = (playerName: string) =>
       getProbabilityOfPlayerInfluence(gameState, Influences.Captain, playerName)
       + getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador, playerName)
@@ -143,11 +143,11 @@ export const decideAction = (gameState: PublicGameState): {
     }
   }
 
-  if (gameState.selfPlayer.influences.includes(Influences.Ambassador) || Math.random() > 0.95) {
+  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Ambassador)) || Math.random() > 0.95) {
     return { action: Actions.Exchange }
   }
 
-  if ((gameState.selfPlayer.influences.includes(Influences.Assassin) || Math.random() > 0.95)
+  if (((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Assassin)) || Math.random() > 0.95)
     && gameState.selfPlayer.coins >= 3) {
     const targetPlayer = getTargetPlayer(gameState)
     return { action: Actions.Assassinate, targetPlayer: targetPlayer.name }
