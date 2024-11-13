@@ -211,7 +211,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
   }
 
   const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer
-  const credulityMargin = (1 - credulity) ** 0.5 * (isSelfTarget ? 0.9 : 0.4 + Math.random() * 0.1)
+  const credulityMargin = (1 - credulity) ** 0.5 * ((isSelfTarget ? 0.9 : 0.2) + Math.random() * 0.1)
 
   const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
   if (!gameState.pendingAction?.claimConfirmed
@@ -240,7 +240,7 @@ export const decideBlockResponse = (gameState: PublicGameState): {
   const credulity = (gameState.selfPlayer?.personality?.credulity ?? 50) / 100
 
   const isSelfAction = gameState.turnPlayer === gameState.selfPlayer?.name
-  const credulityMargin = (1 - credulity) ** 0.5 * (isSelfAction ? 0.9 : 0.4 + Math.random() * 0.1)
+  const credulityMargin = (1 - credulity) ** 0.5 * ((isSelfAction ? 0.9 : 0.2) + Math.random() * 0.1)
   if (getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer) <= credulityMargin) {
     return { response: Responses.Challenge }
   }
