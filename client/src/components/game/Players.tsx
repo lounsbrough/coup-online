@@ -88,7 +88,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                         <>
                           <Typography>{`Vengefulness: ${personality?.vengefulness}`}%</Typography>
                           <Typography>{`Honesty: ${personality?.honesty}`}%</Typography>
-                          <Typography>{`Credulity: ${personality?.credulity}`}%</Typography>
+                          <Typography>{`Skepticism: ${personality?.skepticism}`}%</Typography>
                         </>
                       }>
                         <Bot sx={{ verticalAlign: 'text-bottom' }} />
