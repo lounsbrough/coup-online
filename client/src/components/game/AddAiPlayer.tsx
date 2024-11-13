@@ -111,7 +111,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               Random
             </Button>
           </Box>
-          {false && <Box p={2} mt={2}>
+          <Box p={2} mt={2}>
             <Typography mt={2}>{`Vengefulness: ${vengefulness}%`}</Typography>
             <Slider
               step={1}
@@ -139,7 +139,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               max={maxSliderValue}
               onChange={handleCredulityChange}
             />
-          </Box>}
+          </Box>
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </DialogContent>
         <DialogActions>
