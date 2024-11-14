@@ -131,7 +131,7 @@ export const decideAction = (gameState: PublicGameState): {
   const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100
   const bluffMargin = (1 - honesty) ** 1.5 * 0.5
 
-  const selfEffectiveInfluences = new Set([...gameState.selfPlayer.influences, gameState.selfPlayer.claimedInfluences])
+  const selfEffectiveInfluences = new Set([...gameState.selfPlayer.influences, ...gameState.selfPlayer.claimedInfluences])
 
   if ((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Duke))
     || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Duke) > 0)) {
