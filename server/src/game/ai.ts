@@ -266,7 +266,8 @@ export const decideBlockResponse = (gameState: PublicGameState): {
 
   const isSelfAction = gameState.turnPlayer === gameState.selfPlayer?.name
   const skepticismMargin = skepticism ** 2 * ((isSelfAction ? 0.8 : 0.4) + Math.random() * 0.1)
-  if (getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer) <= skepticismMargin) {
+  if (getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer) <= skepticismMargin
+    && (!gameState.players.find(({ name }) => name === gameState.pendingBlock!.sourcePlayer)?.claimedInfluences.includes(gameState.pendingBlock!.claimedInfluence) || Math.random() < skepticismMargin)) {
     return { response: Responses.Challenge }
   }
 
