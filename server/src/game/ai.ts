@@ -86,15 +86,17 @@ export const decideAssasinationTarget = (gameState: PublicGameState) => {
   const opponents = gameState.players.filter(({ influenceCount, name }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
 
-  // TODO: consider claimed contessa
+  const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
 
   const vengefulness = (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100
   const opponentAffinities: [number, PublicPlayer][] = opponents.map((opponent) => {
     const dangerFactor = getPlayerDangerFactor(opponent)
     const revengeFactor = (gameState.selfPlayer?.grudges[opponent.name] ?? 0) * vengefulness * 2
-    return [dangerFactor + revengeFactor + Math.random() * 3, opponent]
+    const contessaFactor = opponent.claimedInfluences.includes(Influences.Contessa) ? -10 - 10 * (1 - skepticism) : 0
+    return [dangerFactor + revengeFactor + contessaFactor + Math.random() * 3, opponent]
   })
 
+  // TODO: return affinity as well to decide if action should even be taken
   return opponentAffinities.sort((a, b) => b[0] - a[0])[0][1]
 }
 
@@ -179,7 +181,8 @@ export const decideAction = (gameState: PublicGameState): {
     return { action: Actions.Assassinate, targetPlayer: targetPlayer.name }
   }
 
-  if (getProbabilityOfPlayerInfluence(gameState, Influences.Duke) < 0.1 + Math.random() * 0.1) {
+  const claimedDukeCount = gameState.players.filter(({ claimedInfluences }) => claimedInfluences.includes(Influences.Duke)).length
+  if (claimedDukeCount * (0.35 - skepticism * 0.35) + getProbabilityOfPlayerInfluence(gameState, Influences.Duke) < 0.25 + Math.random() * 0.1) {
     return { action: Actions.ForeignAid }
   }
 
