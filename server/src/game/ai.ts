@@ -68,9 +68,25 @@ export const getPossibleTargetPlayers = (
       return targets
     }, [] as PublicPlayer[])
 
-export const getTargetPlayer = (gameState: PublicGameState) => {
+export const decideCoupTarget = (gameState: PublicGameState) => {
   const opponents = gameState.players.filter(({ influenceCount, name }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
+
+  const vengefulness = (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100
+  const opponentAffinities: [number, PublicPlayer][] = opponents.map((opponent) => {
+    const dangerFactor = getPlayerDangerFactor(opponent)
+    const revengeFactor = (gameState.selfPlayer?.grudges[opponent.name] ?? 0) * vengefulness * 2
+    return [dangerFactor + revengeFactor + Math.random() * 3, opponent]
+  })
+
+  return opponentAffinities.sort((a, b) => b[0] - a[0])[0][1]
+}
+
+export const decideAssasinationTarget = (gameState: PublicGameState) => {
+  const opponents = gameState.players.filter(({ influenceCount, name }) =>
+    influenceCount && name !== gameState.selfPlayer?.name)
+
+  // TODO: consider claimed contessa
 
   const vengefulness = (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100
   const opponentAffinities: [number, PublicPlayer][] = opponents.map((opponent) => {
@@ -105,7 +121,7 @@ export const decideAction = (gameState: PublicGameState): {
   }
 
   if (willCoup) {
-    const targetPlayer = getTargetPlayer(gameState)
+    const targetPlayer = decideCoupTarget(gameState)
     return { action: Actions.Coup, targetPlayer: targetPlayer.name }
   }
 
@@ -159,7 +175,7 @@ export const decideAction = (gameState: PublicGameState): {
   if (((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Assassin))
     || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Assassin) > 0))
     && gameState.selfPlayer.coins >= 3) {
-    const targetPlayer = getTargetPlayer(gameState)
+    const targetPlayer = decideAssasinationTarget(gameState)
     return { action: Actions.Assassinate, targetPlayer: targetPlayer.name }
   }
 
