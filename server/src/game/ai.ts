@@ -112,12 +112,14 @@ export const decideAction = (gameState: PublicGameState): {
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const bluffMargin = (1 - honesty) ** 1.5 * 0.5
 
-  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Duke))
+  const selfEffectiveInfluences = new Set([...gameState.selfPlayer.influences, gameState.selfPlayer.claimedInfluences])
+
+  if ((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Duke))
     || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Duke) > 0)) {
     return { action: Actions.Tax }
   }
 
-  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Captain))
+  if ((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Captain))
     || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Captain) > 0)) {
     const getProbabilityOfBlockingSteal = (playerName: string) =>
       getProbabilityOfPlayerInfluence(gameState, Influences.Captain, playerName)
@@ -145,12 +147,12 @@ export const decideAction = (gameState: PublicGameState): {
     }
   }
 
-  if ((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Ambassador))
+  if ((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Ambassador))
     || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador) > 0)) {
     return { action: Actions.Exchange }
   }
 
-  if (((Math.random() > 0.05 && gameState.selfPlayer.influences.includes(Influences.Assassin))
+  if (((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Assassin))
     || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Assassin) > 0))
     && gameState.selfPlayer.coins >= 3) {
     const targetPlayer = getTargetPlayer(gameState)
