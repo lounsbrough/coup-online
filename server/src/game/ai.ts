@@ -110,6 +110,7 @@ export const decideAction = (gameState: PublicGameState): {
   }
 
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
+  const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100
   const bluffMargin = (1 - honesty) ** 1.5 * 0.5
 
   const selfEffectiveInfluences = new Set([...gameState.selfPlayer.influences, gameState.selfPlayer.claimedInfluences])
@@ -127,21 +128,24 @@ export const decideAction = (gameState: PublicGameState): {
 
     const possibleTargets = getPossibleTargetPlayers(gameState, ({ coins }) => coins > 0)
 
-    let minProbabilityOfBlockingSteal = Infinity
+    let minBlockingAbility = Infinity
     const bestTargets: PublicPlayer[] = []
     possibleTargets.forEach((possibleTarget) => {
-      const probability = getProbabilityOfBlockingSteal(possibleTarget.name)
-      if (probability < minProbabilityOfBlockingSteal) {
-        minProbabilityOfBlockingSteal = probability
+      const blockingAbility =
+        (possibleTarget.claimedInfluences.includes(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
+        + (possibleTarget.claimedInfluences.includes(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
+        + getProbabilityOfBlockingSteal(possibleTarget.name)
+      if (blockingAbility < minBlockingAbility) {
+        minBlockingAbility = blockingAbility
         bestTargets.length = 0
       }
 
-      if (probability <= minProbabilityOfBlockingSteal) {
+      if (blockingAbility <= minBlockingAbility) {
         bestTargets.push(possibleTarget)
       }
     })
 
-    if (bestTargets.length && minProbabilityOfBlockingSteal < 0.99) {
+    if (bestTargets.length && minBlockingAbility < 0.99) {
       const chosenTarget = bestTargets[Math.floor(Math.random() * bestTargets.length)]
       return { action: Actions.Steal, targetPlayer: chosenTarget.name }
     }
