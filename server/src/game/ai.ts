@@ -240,7 +240,8 @@ export const decideActionResponse = (gameState: PublicGameState): {
   const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
   if (!gameState.pendingAction?.claimConfirmed
     && requiredInfluenceForAction
-    && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) <= skepticismMargin) {
+    && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) <= skepticismMargin
+    && (!gameState.players.find(({ name }) => name === gameState.turnPlayer)?.claimedInfluences.includes(requiredInfluenceForAction) || Math.random() < skepticismMargin)) {
     return { response: Responses.Challenge }
   }
 
