@@ -22,7 +22,7 @@ function App() {
       <MaterialThemeContextProvider>
         <WebSocketContextProvider>
           <header className="App-header">
-            <Box>
+            <Box sx={{ whiteSpace: 'nowrap' }}>
               <Rules />
               <Link to={'/'}>
                 <Button
