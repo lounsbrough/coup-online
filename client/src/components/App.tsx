@@ -1,5 +1,5 @@
 import { Route, Routes, Link } from 'react-router-dom'
-import { Button, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import JoinGame from './pages/JoinGame'
 import CreateGame from './pages/CreateGame'
 import Home from './pages/Home'
@@ -22,22 +22,24 @@ function App() {
       <MaterialThemeContextProvider>
         <WebSocketContextProvider>
           <header className="App-header">
-            <Rules />
-            <Link to={'/'}>
-              <Button
-                size='large'
-                color='primary'
-                startIcon={<Logo height='32px' />}
-              >
-                <Typography component="span" sx={{
-                  fontSize: "32px"
-                }}
+            <Box sx={{ whiteSpace: 'nowrap' }}>
+              <Rules />
+              <Link to={'/'}>
+                <Button
+                  size='large'
+                  color='primary'
+                  startIcon={<Logo height='32px' />}
                 >
-                  Coup
-                </Typography>
-              </Button>
-            </Link>
-            <UserSettings />
+                  <Typography component="span" sx={{
+                    fontSize: "32px"
+                  }}
+                  >
+                    Coup
+                  </Typography>
+                </Button>
+              </Link>
+              <UserSettings />
+            </Box>
           </header>
           <Routes>
             <Route path="/">

@@ -1,4 +1,4 @@
-import { Box, Grid2, Typography, useTheme } from "@mui/material"
+import { Box, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
@@ -8,6 +8,7 @@ import SnarkyDeadComment from "./SnarkyDeadComment"
 import Victory from "./Victory"
 import PlayAgain from "./PlayAgain"
 import { useGameStateContext } from "../../contexts/GameStateContext"
+import CardDeck from "../icons/CardDeck"
 
 function GameBoard() {
   const { gameState } = useGameStateContext()
@@ -22,6 +23,15 @@ function GameBoard() {
   )
   const playersLeft = gameState.players.filter(({ influenceCount }) => influenceCount)
   const gameIsOver = playersLeft.length === 1
+
+  const centeredOnSmallScreen = {
+    justifyContent: 'center',
+    textAlign: 'center',
+    [theme.breakpoints.up('md')]: {
+      justifyContent: 'flex-end',
+      textAlign: 'right'
+    }
+  }
 
   return (
     <Grid2 container className="game-board">
@@ -76,24 +86,41 @@ function GameBoard() {
         <Grid2
           container
           p={1}
-          spacing={1}
-          sx={{
-            justifyContent: 'center',
-            textAlign: 'center',
-            [theme.breakpoints.up('md')]: {
-              justifyContent: 'flex-end',
-              textAlign: 'right'
-            },
-          }}>
+          spacing={0.5}
+          sx={centeredOnSmallScreen}
+        >
           <Grid2 size={12}>
             <EventLog />
+          </Grid2>
+          <Grid2
+            container
+            size={12}
+            alignItems='center'
+            sx={{
+              ...centeredOnSmallScreen,
+              fontSize: '2rem'
+            }}>
+            <Tooltip
+              placement="top"
+              title={
+                <Typography variant="h6">
+                  {`${gameState.deckCount} cards in the deck`}
+                </Typography>
+              }>
+              <Typography
+                display='flex'
+                alignItems='center'
+                component='span'
+                fontSize='smaller'
+              >{gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} /></Typography>
+            </Tooltip>
           </Grid2>
           <Grid2 size={12}>
             <RequestReset />
           </Grid2>
         </Grid2>
       </Grid2>
-    </Grid2>
+    </Grid2 >
   )
 }
 
