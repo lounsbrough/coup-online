@@ -115,16 +115,16 @@ const checkEndGameAction = (gameState: PublicGameState): {
         return assassinate
       }
 
-      if (gameState.selfPlayer!.influences.includes(Influences.Assassin)) {
+      if (gameState.selfPlayer.influences.includes(Influences.Assassin)) {
         return assassinate
       }
 
-      if (gameState.selfPlayer!.influences.includes(Influences.Captain)) {
+      if (gameState.selfPlayer.influences.includes(Influences.Captain)) {
         return steal
       }
 
-      const chanceOfAssassin = getProbabilityOfPlayerInfluence(gameState, Influences.Assassin, gameState.selfPlayer!.name)
-      const chanceOfCaptain = getProbabilityOfPlayerInfluence(gameState, Influences.Captain, gameState.selfPlayer!.name)
+      const chanceOfAssassin = getProbabilityOfPlayerInfluence(gameState, Influences.Assassin, gameState.selfPlayer.name)
+      const chanceOfCaptain = getProbabilityOfPlayerInfluence(gameState, Influences.Captain, gameState.selfPlayer.name)
 
       if ((chanceOfAssassin === 0 && chanceOfCaptain === 0) || chanceOfAssassin === chanceOfCaptain) {
         return Math.random() > 0.5 ? assassinate : steal
