@@ -229,7 +229,7 @@ describe('ai', () => {
         expected: []
       },
       {
-        testCase: '2 living opponent',
+        testCase: '2 living opponents',
         gameState: getRandomPublicGameState({
           players: [
             { name: 'david', influenceCount: 1 },
