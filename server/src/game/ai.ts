@@ -1,7 +1,7 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 
-export const getProbabilityOfHiddenCardBeingInfluence = (
+const getProbabilityOfHiddenCardBeingInfluence = (
   gameState: PublicGameState,
   influence: Influences
 ) => {
@@ -53,24 +53,17 @@ export const getPlayerDangerFactor = (player: PublicPlayer) => {
   return player.influenceCount * 10 + player.coins
 }
 
-export const getPossibleTargetPlayers = (
-  gameState: PublicGameState,
-  condition?: (player: PublicPlayer) => boolean
-) =>
-  gameState.players
-    .reduce((targets, player) => {
-      if (
-        player.influenceCount
-        && player.name !== gameState.selfPlayer?.name
-        && condition?.(player)) {
-        targets.push(player)
-      }
-      return targets
-    }, [] as PublicPlayer[])
-
-export const decideCoupTarget = (gameState: PublicGameState) => {
-  const opponents = gameState.players.filter(({ influenceCount, name }) =>
+export const getOpponents = (gameState: PublicGameState): PublicPlayer[] =>
+  gameState.players.filter(({ name, influenceCount }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
+
+const getPossibleTargetPlayers = (
+  gameState: PublicGameState,
+  condition: (player: PublicPlayer) => boolean
+) => getOpponents(gameState).filter(condition)
+
+const decideCoupTarget = (gameState: PublicGameState) => {
+  const opponents = getOpponents(gameState)
 
   const vengefulness = (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100
   const opponentAffinities: [number, PublicPlayer][] = opponents.map((opponent) => {
@@ -82,9 +75,8 @@ export const decideCoupTarget = (gameState: PublicGameState) => {
   return opponentAffinities.sort((a, b) => b[0] - a[0])[0][1]
 }
 
-export const decideAssasinationTarget = (gameState: PublicGameState) => {
-  const opponents = gameState.players.filter(({ influenceCount, name }) =>
-    influenceCount && name !== gameState.selfPlayer?.name)
+const decideAssasinationTarget = (gameState: PublicGameState) => {
+  const opponents = getOpponents(gameState)
 
   const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
 
@@ -100,6 +92,66 @@ export const decideAssasinationTarget = (gameState: PublicGameState) => {
   return opponentAffinities.sort((a, b) => b[0] - a[0])[0][1]
 }
 
+const checkEndGameAction = (gameState: PublicGameState): {
+  action: Actions
+  targetPlayer?: string
+} | null => {
+  if (gameState.selfPlayer?.influences.length === 1) {
+    const opponents = getOpponents(gameState)
+
+    if (opponents.length === 1 && opponents[0].coins >= 7) {
+      if (opponents[0].influenceCount === 1 && gameState.selfPlayer.coins >= 7) {
+        return { action: Actions.Coup, targetPlayer: opponents[0].name }
+      }
+
+      const assassinate = { action: Actions.Assassinate, targetPlayer: opponents[0].name }
+      const steal = { action: Actions.Steal, targetPlayer: opponents[0].name }
+
+      if (gameState.selfPlayer.coins < 3) {
+        return steal
+      }
+
+      if (opponents[0].coins >= 9) {
+        return assassinate
+      }
+
+      if (gameState.selfPlayer.influences.includes(Influences.Assassin)) {
+        return assassinate
+      }
+
+      if (gameState.selfPlayer.influences.includes(Influences.Captain)) {
+        return steal
+      }
+
+      const chanceOfAssassin = getProbabilityOfPlayerInfluence(gameState, Influences.Assassin, gameState.selfPlayer.name)
+      const chanceOfCaptain = getProbabilityOfPlayerInfluence(gameState, Influences.Captain, gameState.selfPlayer.name)
+
+      if ((chanceOfAssassin === 0 && chanceOfCaptain === 0) || chanceOfAssassin === chanceOfCaptain) {
+        return Math.random() > 0.5 ? assassinate : steal
+      }
+
+      return chanceOfAssassin + Math.random() * 0.1 > chanceOfCaptain + Math.random() * 0.1
+       ? assassinate : steal
+    }
+  }
+
+  return null
+}
+
+const checkEndGameBlockResponse = (gameState: PublicGameState): {
+  response: Responses
+} | null => {
+  if (gameState.selfPlayer?.influences.length === 1) {
+    const opponents = getOpponents(gameState)
+
+    if (opponents.length === 1 && opponents[0].coins >= 7) {
+      return { response: Responses.Challenge }
+    }
+  }
+
+  return null
+}
+
 export const decideAction = (gameState: PublicGameState): {
   action: Actions
   targetPlayer?: string
@@ -108,18 +160,16 @@ export const decideAction = (gameState: PublicGameState): {
     throw new Error('AI could not determine self player')
   }
 
-  const opponents = gameState.players.filter(({ influenceCount, name }) =>
-    influenceCount && name !== gameState.selfPlayer?.name)
+  const endGameAction = checkEndGameAction(gameState)
+  if (endGameAction) {
+    return endGameAction
+  }
 
   let willCoup = false
   if (gameState.selfPlayer?.coins >= 10) {
     willCoup = true
   } else if (gameState.selfPlayer?.coins >= 7) {
-    if (opponents.length === 1 && opponents[0].influenceCount === 1) {
-      willCoup = true
-    } else {
-      willCoup = Math.random() > 0.5
-    }
+    willCoup = Math.random() > 0.5
   }
 
   if (willCoup) {
@@ -263,6 +313,11 @@ export const decideBlockResponse = (gameState: PublicGameState): {
   response: Responses
 } => {
   const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
+
+  const endGameBlockResponse = checkEndGameBlockResponse(gameState)
+  if (endGameBlockResponse) {
+    return endGameBlockResponse
+  }
 
   const isSelfAction = gameState.turnPlayer === gameState.selfPlayer?.name
   const skepticismMargin = skepticism ** 2 * ((isSelfAction ? 0.8 : 0.4) + Math.random() * 0.1)

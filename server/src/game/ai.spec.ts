@@ -1,11 +1,23 @@
 import { Chance } from 'chance'
-import { Actions, Influences, PublicGameState, PublicPlayer } from '../../../shared/types/game'
-import { decideAction, getPlayerDangerFactor, getProbabilityOfPlayerInfluence } from './ai'
+import { Actions, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
+import { decideAction, getOpponents, getPlayerDangerFactor, getProbabilityOfPlayerInfluence } from './ai'
 
 const chance = new Chance()
 
 describe('ai', () => {
-  const getRandomPlayer = (): PublicPlayer => ({
+  const getRandomPlayer = (): Player => ({
+    id: chance.guid(),
+    name: chance.string(),
+    coins: chance.natural(),
+    influences: [],
+    claimedInfluences: [],
+    deadInfluences: [],
+    color: chance.string(),
+    ai: chance.bool(),
+    grudges: {}
+  })
+
+  const getRandomPublicPlayer = (): PublicPlayer => ({
     name: chance.string(),
     coins: chance.natural(),
     influenceCount: 2,
@@ -15,6 +27,34 @@ describe('ai', () => {
     ai: chance.bool(),
     grudges: {}
   })
+
+  const getRandomPublicGameState = ({ players, selfPlayer }:
+    { players: Partial<PublicPlayer>[], selfPlayer: Partial<Player> }
+  ): PublicGameState => {
+    const gameState: PublicGameState = {
+      deckCount: 15 - players.length * 2,
+      eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
+      lastEventTimestamp: chance.date(),
+      isStarted: chance.bool(),
+      players: [],
+      pendingInfluenceLoss: {},
+      roomId: chance.string()
+    }
+
+    gameState.players = players.map((player) => {
+      return ({
+        ...getRandomPublicPlayer(),
+        ...player
+      })
+    })
+    gameState.selfPlayer = {
+      ...getRandomPlayer(),
+      ...selfPlayer
+    }
+    gameState.turnPlayer = gameState.selfPlayer!.name
+
+    return gameState
+  }
 
   describe('getProbabilityOfPlayerInfluence', () => {
     const testCases: {
@@ -27,35 +67,13 @@ describe('ai', () => {
     }[] = [
         {
           testCase: '2 hidden cards',
-          gameState: {
-            roomId: chance.string(),
-            isStarted: chance.bool(),
-            eventLogs: [],
-            lastEventTimestamp: chance.date(),
+          gameState: getRandomPublicGameState({
             players: [
-              {
-                ...getRandomPlayer(),
-                name: 'david',
-                influenceCount: 1,
-                deadInfluences: [Influences.Contessa]
-              },
-              {
-                ...getRandomPlayer(),
-                name: 'harper',
-                influenceCount: 1,
-                deadInfluences: [Influences.Captain]
-              }
+              { name: 'david', influenceCount: 1, deadInfluences: [Influences.Contessa] },
+              { name: 'harper', influenceCount: 1, deadInfluences: [Influences.Captain] }
             ],
-            selfPlayer: {
-              ...getRandomPlayer(),
-              name: 'david',
-              id: chance.string(),
-              influences: [Influences.Ambassador],
-              deadInfluences: [Influences.Contessa]
-            },
-            pendingInfluenceLoss: {},
-            deckCount: 11
-          },
+            selfPlayer: { name: 'david', influences: [Influences.Ambassador], deadInfluences: [Influences.Contessa] }
+          }),
           influence: Influences.Captain,
           playerName: 'harper',
           probability: 2 / 12,
@@ -63,40 +81,14 @@ describe('ai', () => {
         },
         {
           testCase: '2 cards revealed and self holding last card',
-          gameState: {
-            roomId: chance.string(),
-            isStarted: chance.bool(),
-            eventLogs: [],
-            lastEventTimestamp: chance.date(),
+          gameState: getRandomPublicGameState({
             players: [
-              {
-                ...getRandomPlayer(),
-                name: 'david',
-                influenceCount: 1,
-                deadInfluences: [Influences.Ambassador]
-              },
-              {
-                ...getRandomPlayer(),
-                name: 'harper',
-                influenceCount: 1,
-                deadInfluences: [Influences.Assassin]
-              },
-              {
-                ...getRandomPlayer(),
-                name: 'hailey',
-                influenceCount: 1,
-                deadInfluences: [Influences.Assassin]
-              }
+              { name: 'david', influenceCount: 1, deadInfluences: [Influences.Ambassador] },
+              { name: 'harper', influenceCount: 1, deadInfluences: [Influences.Assassin] },
+              { name: 'hailey', influenceCount: 1, deadInfluences: [Influences.Assassin] }
             ],
-            selfPlayer: {
-              ...getRandomPlayer(),
-              id: chance.string(),
-              influences: [Influences.Assassin],
-              deadInfluences: [Influences.Ambassador]
-            },
-            pendingInfluenceLoss: {},
-            deckCount: 9
-          },
+            selfPlayer: { name: 'david', influences: [Influences.Assassin], deadInfluences: [Influences.Ambassador] }
+          }),
           influence: Influences.Assassin,
           playerName: 'hailey',
           probability: 0,
@@ -104,41 +96,14 @@ describe('ai', () => {
         },
         {
           testCase: 'self holding 2 cards and last card hidden',
-          gameState: {
-            roomId: chance.string(),
-            isStarted: chance.bool(),
-            eventLogs: [],
-            lastEventTimestamp: chance.date(),
+          gameState: getRandomPublicGameState({
             players: [
-              {
-                ...getRandomPlayer(),
-                name: 'david',
-                influenceCount: 2,
-                deadInfluences: []
-              },
-              {
-                ...getRandomPlayer(),
-                name: 'harper',
-                influenceCount: 2,
-                deadInfluences: []
-              },
-              {
-                ...getRandomPlayer(),
-                name: 'hailey',
-                influenceCount: 2,
-                deadInfluences: []
-              }
+              { name: 'david', influenceCount: 2, deadInfluences: [] },
+              { name: 'harper', influenceCount: 2, deadInfluences: [] },
+              { name: 'hailey', influenceCount: 2, deadInfluences: [] }
             ],
-            selfPlayer: {
-              ...getRandomPlayer(),
-              name: 'david',
-              id: chance.string(),
-              influences: [Influences.Duke, Influences.Duke],
-              deadInfluences: []
-            },
-            pendingInfluenceLoss: {},
-            deckCount: 9
-          },
+            selfPlayer: { name: 'david', influences: [Influences.Duke, Influences.Duke], deadInfluences: [] }
+          }),
           influence: Influences.Duke,
           playerName: 'harper',
           probability: 2 / 13,
@@ -146,41 +111,14 @@ describe('ai', () => {
         },
         {
           testCase: 'all cards revealed for influence',
-          gameState: {
-            roomId: chance.string(),
-            isStarted: chance.bool(),
-            eventLogs: [],
-            lastEventTimestamp: chance.date(),
+          gameState: getRandomPublicGameState({
             players: [
-              {
-                ...getRandomPlayer(),
-                name: 'david',
-                influenceCount: 1,
-                deadInfluences: [Influences.Assassin]
-              },
-              {
-                ...getRandomPlayer(),
-                name: 'harper',
-                influenceCount: 1,
-                deadInfluences: [Influences.Assassin]
-              },
-              {
-                ...getRandomPlayer(),
-                name: 'hailey',
-                influenceCount: 1,
-                deadInfluences: [Influences.Assassin]
-              }
+              { name: 'david', influenceCount: 1, deadInfluences: [Influences.Assassin] },
+              { name: 'harper', influenceCount: 1, deadInfluences: [Influences.Assassin] },
+              { name: 'hailey', influenceCount: 1, deadInfluences: [Influences.Assassin] }
             ],
-            selfPlayer: {
-              ...getRandomPlayer(),
-              name: 'david',
-              id: chance.string(),
-              influences: [Influences.Ambassador],
-              deadInfluences: [Influences.Assassin]
-            },
-            pendingInfluenceLoss: {},
-            deckCount: 9
-          },
+            selfPlayer: { name: 'david', influences: [Influences.Ambassador], deadInfluences: [Influences.Assassin] }
+          }),
           influence: Influences.Assassin,
           playerName: 'harper',
           probability: 0,
@@ -216,7 +154,7 @@ describe('ai', () => {
         {
           testCase: 'dead player with some coins',
           player: {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             influenceCount: 0,
             coins: 12
           },
@@ -225,7 +163,7 @@ describe('ai', () => {
         {
           testCase: '1 influence left with 0 coins',
           player: {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             influenceCount: 1,
             coins: 0
           },
@@ -234,7 +172,7 @@ describe('ai', () => {
         {
           testCase: '1 influence left with 12 coins',
           player: {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             influenceCount: 1,
             coins: 12
           },
@@ -243,7 +181,7 @@ describe('ai', () => {
         {
           testCase: '2 influences left with 0 coins',
           player: {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             influenceCount: 2,
             coins: 0
           },
@@ -252,7 +190,7 @@ describe('ai', () => {
         {
           testCase: '2 influences left with 12 coins',
           player: {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             influenceCount: 2,
             coins: 12
           },
@@ -265,6 +203,48 @@ describe('ai', () => {
     })
   })
 
+  describe('getOpponents', () => {
+    it.each([
+      {
+        testCase: '1 living opponent, 1 dead opponent',
+        gameState: getRandomPublicGameState({
+          players: [
+            { name: 'david', influenceCount: 1 },
+            { name: 'harper', influenceCount: 0 },
+            { name: 'hailey', influenceCount: 1 }
+          ],
+          selfPlayer: { name: 'david' }
+        }),
+        expected: [expect.objectContaining({ name: 'hailey' })]
+      },
+      {
+        testCase: '1 dead opponent',
+        gameState: getRandomPublicGameState({
+          players: [
+            { name: 'david', influenceCount: 1 },
+            { name: 'harper', influenceCount: 0 }
+          ],
+          selfPlayer: { name: 'david' }
+        }),
+        expected: []
+      },
+      {
+        testCase: '2 living opponents',
+        gameState: getRandomPublicGameState({
+          players: [
+            { name: 'david', influenceCount: 1 },
+            { name: 'harper', influenceCount: 1 },
+            { name: 'hailey', influenceCount: 1 }
+          ],
+          selfPlayer: { name: 'david' }
+        }),
+        expected: [expect.objectContaining({ name: 'harper' }), expect.objectContaining({ name: 'hailey' })]
+      }
+    ])('should return $expected for $testCase', ({ gameState, expected }) => {
+      expect(getOpponents(gameState)).toEqual(expected)
+    })
+  })
+
   describe('decideAction', () => {
     it('should choose Coup if 10 or more coins', () => {
       expect(decideAction({
@@ -274,20 +254,20 @@ describe('ai', () => {
         lastEventTimestamp: chance.date(),
         players: [
           {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             name: 'harper',
             influenceCount: 2,
             deadInfluences: []
           },
           {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             name: 'david',
             influenceCount: 2,
             deadInfluences: []
           }
         ],
         selfPlayer: {
-          ...getRandomPlayer(),
+          ...getRandomPublicPlayer(),
           id: chance.string(),
           name: 'harper',
           coins: 10,
@@ -310,20 +290,20 @@ describe('ai', () => {
         lastEventTimestamp: chance.date(),
         players: [
           {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             name: 'harper',
             influenceCount: 1,
             deadInfluences: [Influences.Contessa]
           },
           {
-            ...getRandomPlayer(),
+            ...getRandomPublicPlayer(),
             name: 'david',
             influenceCount: 1,
             deadInfluences: [Influences.Captain]
           }
         ],
         selfPlayer: {
-          ...getRandomPlayer(),
+          ...getRandomPublicPlayer(),
           id: chance.string(),
           name: 'harper',
           coins: 7,
