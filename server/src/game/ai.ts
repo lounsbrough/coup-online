@@ -130,7 +130,8 @@ const checkEndGameAction = (gameState: PublicGameState): {
         return Math.random() > 0.5 ? assassinate : steal
       }
 
-      return chanceOfAssassin > chanceOfCaptain ? assassinate : steal
+      return chanceOfAssassin + Math.random() * 0.1 > chanceOfCaptain + Math.random() * 0.1
+       ? assassinate : steal
     }
   }
 
