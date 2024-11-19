@@ -7,7 +7,7 @@ function TypographyWithBackButton({ children, onBack, ...props }: TypographyProp
   onBack: () => void
 }) {
   return (
-    <Grid2 container alignItems="center">
+    <Grid2 container alignItems="center" justifyContent="center">
       <IconButton
         onClick={() => { onBack() }}
         sx={buttonSx}
