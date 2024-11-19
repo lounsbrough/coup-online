@@ -4,6 +4,7 @@ import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
 
 function ChooseAction() {
   const [selectedAction, setSelectedAction] = useState<Actions>()
@@ -40,9 +41,14 @@ function ChooseAction() {
   if (selectedAction) {
     return (
       <>
-        <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+        <TypographyWithBackButton
+          my={1}
+          variant="h6"
+          fontWeight="bold"
+          onBack={() => { setSelectedAction(undefined) }}
+        >
           Choose a Target
-        </Typography>
+        </TypographyWithBackButton>
         <Grid2 container spacing={2} justifyContent="center">
           {gameState.players.map((player) => {
             if (player.name === gameState.selfPlayer?.name || !player.influenceCount
