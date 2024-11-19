@@ -138,6 +138,20 @@ const checkEndGameAction = (gameState: PublicGameState): {
   return null
 }
 
+const checkEndGameBlockResponse = (gameState: PublicGameState): {
+  response: Responses
+} | null => {
+  if (gameState.selfPlayer?.influences.length === 1) {
+    const opponents = getOpponents(gameState)
+
+    if (opponents.length === 1 && opponents[0].coins >= 7) {
+      return { response: Responses.Challenge }
+    }
+  }
+
+  return null
+}
+
 export const decideAction = (gameState: PublicGameState): {
   action: Actions
   targetPlayer?: string
@@ -299,6 +313,11 @@ export const decideBlockResponse = (gameState: PublicGameState): {
   response: Responses
 } => {
   const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
+
+  const endGameBlockResponse = checkEndGameBlockResponse(gameState)
+  if (endGameBlockResponse) {
+    return endGameBlockResponse
+  }
 
   const isSelfAction = gameState.turnPlayer === gameState.selfPlayer?.name
   const skepticismMargin = skepticism ** 2 * ((isSelfAction ? 0.8 : 0.4) + Math.random() * 0.1)
