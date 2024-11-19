@@ -1,10 +1,11 @@
-import { Button, Grid2, Typography } from "@mui/material"
+import { Button, Grid2 } from "@mui/material"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, PlayerActions, Responses, getActionMessage } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
@@ -35,9 +36,14 @@ function ChooseActionResponse() {
   if (selectedResponse) {
     return (
       <>
-        <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+        <TypographyWithBackButton
+          my={1}
+          variant="h6"
+          fontWeight="bold"
+          onBack={() => { setSelectedResponse(undefined) }}
+        >
           Claim an Influence
-        </Typography>
+        </TypographyWithBackButton>
         <Grid2 container spacing={2} justifyContent="center">
           {Object.entries(InfluenceAttributes)
             .sort((a, b) => a[0].localeCompare(b[0]))

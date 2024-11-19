@@ -96,9 +96,13 @@ const checkEndGameAction = (gameState: PublicGameState): {
   action: Actions
   targetPlayer?: string
 } | null => {
-  if (gameState.selfPlayer?.influences.length === 1) {
-    const opponents = getOpponents(gameState)
+  const opponents = getOpponents(gameState)
 
+  if (opponents.length === 1 && opponents[0].influenceCount === 1 && gameState.selfPlayer!.coins >= 7) {
+    return { action: Actions.Coup, targetPlayer: opponents[0].name }
+  }
+
+  if (gameState.selfPlayer?.influences.length === 1) {
     if (opponents.length === 1 && opponents[0].coins >= 7) {
       if (opponents[0].influenceCount === 1 && gameState.selfPlayer.coins >= 7) {
         return { action: Actions.Coup, targetPlayer: opponents[0].name }
