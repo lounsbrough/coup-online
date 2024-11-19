@@ -107,6 +107,14 @@ const checkEndGameAction = (gameState: PublicGameState): {
       const assassinate = { action: Actions.Assassinate, targetPlayer: opponents[0].name }
       const steal = { action: Actions.Steal, targetPlayer: opponents[0].name }
 
+      if (gameState.selfPlayer.coins < 3) {
+        return steal
+      }
+
+      if (opponents[0].coins >= 9) {
+        return assassinate
+      }
+
       if (gameState.selfPlayer!.influences.includes(Influences.Assassin)) {
         return assassinate
       }
