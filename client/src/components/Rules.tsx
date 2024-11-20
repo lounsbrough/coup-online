@@ -32,8 +32,8 @@ function Rules() {
   const { breakpoints, actionColors, influenceColors, isSmallScreen } = useTheme()
   const { t } = useTranslationContext()
 
-  const noneIndicator = <><Block sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{' None'}</span></>
-  const anyIndicator = <><Group sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{' Anyone'}</span></>
+  const noneIndicator = <><Block sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{` ${t('none')}`}</span></>
+  const anyIndicator = <><Group sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{` ${t('anyone')}`}</span></>
 
   return (
     <>
@@ -204,19 +204,19 @@ function Rules() {
                         <td>{anyIndicator}</td>
                         <td>{Actions.Income}</td>
                         <td>{t('collectCoins', { count: 1 })}</td>
-                        <td>{noneIndicator}</td>
+                        <td></td>
                       </tr>
                       <tr style={{ background: actionColors[Actions.ForeignAid] }}>
                         <td>{anyIndicator}</td>
                         <td>{Actions.ForeignAid}</td>
                         <td>{t('collectCoins', { count: 2 })}</td>
-                        <td>{noneIndicator}</td>
+                        <td></td>
                       </tr>
                       <tr style={{ background: actionColors[Actions.Coup] }}>
                         <td>{anyIndicator}</td>
                         <td>{Actions.Coup}</td>
                         <td>Pay 7 coins - Kill an influence</td>
-                        <td>{noneIndicator}</td>
+                        <td></td>
                       </tr>
                       <tr style={{
                         background: influenceColors[Influences.Duke]

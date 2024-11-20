@@ -1,6 +1,7 @@
 import { AvailableLanguageCode } from './availableLanguages'
 
 export type Translations = {
+  anyone: string
   briefDescriptionOfCoup: string
   cheatSheet: string
   collectCoins: string
@@ -8,6 +9,7 @@ export type Translations = {
   fullRules: string
   joinExistingGame: string
   language: string
+  none: string,
   rules: string
   settings: string
   title: string
@@ -16,6 +18,7 @@ export type Translations = {
 
 const translations: { [key in AvailableLanguageCode]: Translations } = {
   'en-US': {
+    anyone: 'Anyone',
     briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
     cheatSheet: 'Cheat Sheet',
     collectCoins: 'Collect {{count}} coin{{plural:s}}',
@@ -23,12 +26,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     fullRules: 'Complete Rules',
     joinExistingGame: 'Join Existing Game',
     language: 'Language',
+    none: 'None',
     rules: 'Rules',
     settings: 'Settings',
     title: 'Coup',
     welcomeToCoup: 'Welcome To Coup!'
   },
   'pt-BR': {
+    anyone: 'Todos',
     briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
     cheatSheet: 'Folha de dicas',
     collectCoins: 'Colete {{count}} moeda{{plural:s}}',
@@ -36,6 +41,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     fullRules: 'Regras completas',
     joinExistingGame: 'Participe de um jogo',
     language: 'Idioma',
+    none: 'Nenhum',
     rules: 'Regras',
     settings: 'Configurações',
     title: 'Golpe',
