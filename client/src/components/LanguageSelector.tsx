@@ -17,7 +17,7 @@ function LanguageSelector() {
       onChange={handleChange}
     >
       {availableLanguages.map(({ code, flag, name }) =>
-        <MenuItem key={code} value={code}>{name} {flag}</MenuItem>)}
+        <MenuItem key={code} value={code}>{flag} {name}</MenuItem>)}
     </Select>
   )
 }

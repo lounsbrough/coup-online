@@ -5,6 +5,7 @@ import { TransitionProps } from '@mui/material/transitions'
 import { ActionAttributes, Actions, Influences } from '@shared'
 import './Rules.css'
 import InfluenceIcon from "./icons/InfluenceIcon"
+import { useTranslationContext } from "../contexts/TranslationsContext"
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,21 +30,34 @@ const actionText = Object.fromEntries(
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const { breakpoints, actionColors, influenceColors, isSmallScreen } = useTheme()
+  const { t } = useTranslationContext()
 
   const noneIndicator = <><Block sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{' None'}</span></>
   const anyIndicator = <><Group sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{' Anyone'}</span></>
 
   return (
     <>
-      <Button
-        size="large"
-        startIcon={<Gavel />}
-        onClick={() => {
-          setModalOpen(true)
-        }}
-      >
-        Rules
-      </Button>
+      {isSmallScreen ? (
+        <IconButton
+          color="primary"
+          size="large"
+          onClick={() => {
+            setModalOpen(true)
+          }}
+        >
+          <Gavel />
+        </IconButton>
+      ) : (
+        <Button
+          size="large"
+          startIcon={<Gavel />}
+          onClick={() => {
+            setModalOpen(true)
+          }}
+        >
+          {t('rules')}
+        </Button>
+      )}
       <Dialog
         fullScreen
         open={modalOpen}
@@ -62,7 +76,7 @@ function Rules() {
               <Close />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h5" component="div">
-              <Gavel sx={{ verticalAlign: 'middle' }} /> <span style={{ verticalAlign: 'middle' }}>Rules</span>
+              <Gavel sx={{ verticalAlign: 'middle' }} /> <span style={{ verticalAlign: 'middle' }}>{t('rules')}</span>
             </Typography>
           </Toolbar>
         </AppBar>
@@ -75,7 +89,7 @@ function Rules() {
             <Typography
               variant="h3"
               sx={{ fontWeight: "bold" }}
-            >Cheat Sheet</Typography>
+            >{t('cheatSheet')}</Typography>
             <Box sx={{ mt: 3 }}>
               {isSmallScreen
                 ? (
@@ -267,7 +281,7 @@ function Rules() {
             <Typography
               variant="h3"
               sx={{ fontWeight: 'bold' }}
-            >Full Rules</Typography>
+            >{t('fullRules')}</Typography>
             <Box sx={{ textAlign: 'left' }}>
               <p><strong>Number of players</strong>: 2-6.</p>
               <p><strong>Goal</strong>: To be the only player with any influence cards left.</p>

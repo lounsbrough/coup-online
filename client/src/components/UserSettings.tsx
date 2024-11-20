@@ -1,11 +1,12 @@
 import { useState } from "react"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, Switch, Typography } from "@mui/material"
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, Switch, Typography, useTheme } from "@mui/material"
 import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
 import ColorModeToggle from "./ColorModeToggle"
 import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useSearchParams } from "react-router-dom"
 import LanguageSelector from "./LanguageSelector"
+import { useTranslationContext } from "../contexts/TranslationsContext"
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -14,30 +15,44 @@ function UserSettings() {
   )
   const [searchParams] = useSearchParams()
   const { isConnected } = useWebSocketContext()
+  const { t } = useTranslationContext()
+  const { isSmallScreen } = useTheme()
 
   const roomId = searchParams.get('roomId')
   const rowHeight = 36
 
   return (
     <>
-      <Button
-        size="large"
-        startIcon={<Settings />}
-        onClick={() => {
-          setModalOpen(true)
-        }}
-      >
-        Settings
-      </Button>
+      {isSmallScreen ? (
+        <IconButton
+          color="primary"
+          size="large"
+          onClick={() => {
+            setModalOpen(true)
+          }}
+        >
+          <Settings />
+        </IconButton>
+      ) : (
+        <Button
+          size="large"
+          startIcon={<Settings />}
+          onClick={() => {
+            setModalOpen(true)
+          }}
+        >
+          {t('settings')}
+        </Button>
+      )}
       <Dialog
         open={modalOpen}
         onClose={() => { setModalOpen(false) }}
       >
-        <DialogTitle mb={2}>Settings</DialogTitle>
+        <DialogTitle mb={2}>{t('settings')}</DialogTitle>
         <DialogContent>
           <Grid2 container spacing={3} direction="column">
             <Grid2 height={rowHeight} alignContent="center" sx={{ whiteSpace: 'nowrap' }}>
-              <Typography component="span" sx={{ mr: 2 }}>Language:</Typography>
+              <Typography component="span" sx={{ mr: 2 }}>{t('language')}:</Typography>
               <LanguageSelector />
             </Grid2>
             {roomId && (
