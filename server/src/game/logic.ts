@@ -119,7 +119,7 @@ const buildGameDeck = () => {
 
 const getNewGameState = (roomId: string): GameState => ({
   roomId,
-  availablePlayerColors: ['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088'],
+  availablePlayerColors: shuffle(['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088']),
   players: [],
   deck: shuffle(buildGameDeck()),
   pendingInfluenceLoss: {},
