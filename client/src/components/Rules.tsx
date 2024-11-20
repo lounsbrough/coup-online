@@ -100,7 +100,7 @@ function Rules() {
                         <td>
                           {Actions.Income}
                           <br />
-                          Collect 1 coin
+                          {t('collectCoins', { count: 1 })}
                         </td>
                       </tr>
                       <tr style={{ background: actionColors[Actions.ForeignAid] }}>
@@ -108,7 +108,7 @@ function Rules() {
                         <td>
                           {Actions.ForeignAid}
                           <br />
-                          Collect 2 coins
+                          {t('collectCoins', { count: 2 })}
                         </td>
                       </tr>
                       <tr style={{ background: actionColors[Actions.Coup] }}>
@@ -130,7 +130,7 @@ function Rules() {
                         <td>
                           {Actions.Tax}
                           <br />
-                          Collect 3 coins
+                          {t('collectCoins', { count: 3 })}
                           <br />
                           Block Foreign Aid
                         </td>
@@ -203,13 +203,13 @@ function Rules() {
                       <tr style={{ background: actionColors[Actions.Income] }}>
                         <td>{anyIndicator}</td>
                         <td>{Actions.Income}</td>
-                        <td>Collect 1 coin</td>
+                        <td>{t('collectCoins', { count: 1 })}</td>
                         <td>{noneIndicator}</td>
                       </tr>
                       <tr style={{ background: actionColors[Actions.ForeignAid] }}>
                         <td>{anyIndicator}</td>
                         <td>{Actions.ForeignAid}</td>
-                        <td>Collect 2 coins</td>
+                        <td>{t('collectCoins', { count: 2 })}</td>
                         <td>{noneIndicator}</td>
                       </tr>
                       <tr style={{ background: actionColors[Actions.Coup] }}>
@@ -226,7 +226,7 @@ function Rules() {
                           <span> {Influences.Duke}</span>
                         </td>
                         <td>{Actions.Tax}</td>
-                        <td>Collect 3 coins</td>
+                        <td>{t('collectCoins', { count: 3 })}</td>
                         <td>Foreign Aid</td>
                       </tr>
                       <tr style={{
