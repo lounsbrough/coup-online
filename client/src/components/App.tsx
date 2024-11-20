@@ -15,8 +15,11 @@ import Rules from './Rules'
 import UserSettings from './UserSettings'
 import { WebSocketContextProvider } from '../contexts/WebSocketContext'
 import Logo from './icons/Logo'
+import { useTranslationContext } from '../contexts/TranslationsContext'
 
 function App() {
+  const { t } = useTranslationContext()
+
   return (
     <div className="App">
       <MaterialThemeContextProvider>
@@ -34,7 +37,7 @@ function App() {
                     fontSize: "32px"
                   }}
                   >
-                    Coup
+                    {t('title')}
                   </Typography>
                 </Button>
               </Link>

@@ -5,6 +5,7 @@ import ColorModeToggle from "./ColorModeToggle"
 import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useSearchParams } from "react-router-dom"
+import LanguageSelector from "./LanguageSelector"
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -35,6 +36,10 @@ function UserSettings() {
         <DialogTitle mb={2}>Settings</DialogTitle>
         <DialogContent>
           <Grid2 container spacing={3} direction="column">
+            <Grid2 height={rowHeight} alignContent="center" sx={{ whiteSpace: 'nowrap' }}>
+              <Typography component="span" sx={{ mr: 2 }}>Language:</Typography>
+              <LanguageSelector />
+            </Grid2>
             {roomId && (
               <Grid2 height={rowHeight} alignContent="center">
                 <Typography component="span" sx={{ mr: 1 }}>

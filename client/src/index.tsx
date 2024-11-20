@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './components/App'
+import { TranslationContextProvider } from './contexts/TranslationsContext'
 import reportWebVitals from './reportWebVitals'
-import { BrowserRouter } from 'react-router-dom'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <TranslationContextProvider>
+        <App />
+      </TranslationContextProvider>
     </BrowserRouter>
   </React.StrictMode>
 )
