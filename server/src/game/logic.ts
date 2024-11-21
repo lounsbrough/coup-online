@@ -18,14 +18,14 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
   player.deadInfluences.push(influence)
   logEvent(state, {
     event: EventMessages.PlayerLostInfluence,
-    mainPlayer: player.name,
+    primaryPlayer: player.name,
     influence
   })
 
   if (!player.influences.length) {
     logEvent(state, {
       event: EventMessages.PlayerDied,
-      mainPlayer: player.name
+      primaryPlayer: player.name
     })
     delete state.pendingInfluenceLoss[player.name]
   }
@@ -78,7 +78,7 @@ export const processPendingAction = (state: GameState) => {
   logEvent(state, {
     event: EventMessages.ActionProcessed,
     action: state.pendingAction!.action,
-    mainPlayer: actionPlayer!.name,
+    primaryPlayer: actionPlayer!.name,
     ...(targetPlayer?.name && {secondaryPlayer: targetPlayer?.name})
   })
 
@@ -222,7 +222,7 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
   player.influences.push(drawCardFromDeck(state))
   logEvent(state, {
     event: EventMessages.PlayerReplacedInfluence,
-    mainPlayer: player.name,
+    primaryPlayer: player.name,
     influence
   })
 }

@@ -1,14 +1,16 @@
 import { Button, Grid2 } from "@mui/material"
-import { EventMessages, PlayerActions, Responses } from '@shared'
+import { PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function ChooseBlockResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.pendingBlock) {
     return null
@@ -32,9 +34,8 @@ function ChooseBlockResponse() {
   return (
     <>
       <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {JSON.stringify({
-          event: EventMessages.BlockPending,
-          mainPlayer: gameState.pendingBlock.sourcePlayer,
+        {t('blockPending', {
+          primaryPlayer: gameState.pendingBlock.sourcePlayer,
           secondaryPlayer: gameState.turnPlayer,
           influence: gameState.pendingBlock.claimedInfluence
         })}

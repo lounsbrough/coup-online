@@ -149,7 +149,7 @@ export enum EventMessages {
 export type EventMessage = {
   event: EventMessages
   action?: Actions
-  mainPlayer?: string
+  primaryPlayer?: string
   secondaryPlayer?: string
   influence?: Influences
 }

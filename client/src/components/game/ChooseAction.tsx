@@ -21,7 +21,7 @@ function ChooseAction() {
       message={JSON.stringify({
         event: EventMessages.ActionPending,
         action: selectedAction,
-        mainPlayer: gameState.turnPlayer!,
+        primaryPlayer: gameState.turnPlayer!,
         secondaryPlayer: selectedTargetPlayer
       })}
       action={PlayerActions.action}

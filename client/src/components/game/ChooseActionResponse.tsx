@@ -72,7 +72,7 @@ function ChooseActionResponse() {
         {JSON.stringify({
           event: EventMessages.ActionPending,
           action: gameState.pendingAction.action,
-          mainPlayer: gameState.turnPlayer!,
+          primaryPlayer: gameState.turnPlayer!,
           secondaryPlayer: gameState.pendingAction.targetPlayer
         })}
       </ColoredTypography>

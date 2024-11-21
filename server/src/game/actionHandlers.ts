@@ -420,7 +420,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         logEvent(state, {
           event: EventMessages.ActionProcessed,
           action,
-          mainPlayer: player.name,
+          primaryPlayer: player.name,
           secondaryPlayer: targetPlayer
         })
         holdGrudge({ state, offended: targetPlayer, offender: coupingPlayer.name, weight: grudgeSizes[Actions.Coup] })
@@ -447,7 +447,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         logEvent(state, {
           event: EventMessages.ActionProcessed,
           action,
-          mainPlayer: player.name
+          primaryPlayer: player.name
         })
       })
     }
@@ -471,7 +471,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
       logEvent(state, {
         event: EventMessages.ActionPending,
         action,
-        mainPlayer: player.name,
+        primaryPlayer: player.name,
         ...(targetPlayer && {secondaryPlayer: targetPlayer})
       })
     })
@@ -538,7 +538,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       }
       logEvent(state, {
         event: EventMessages.ChallengePending,
-        mainPlayer: player.name,
+        primaryPlayer: player.name,
         secondaryPlayer: state.turnPlayer!
       })
     })
@@ -575,7 +575,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       }
       logEvent(state, {
         event: EventMessages.BlockPending,
-        mainPlayer: player.name,
+        primaryPlayer: player.name,
         secondaryPlayer: state.turnPlayer!,
         influence: claimedInfluence
       })
@@ -621,7 +621,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       revealAndReplaceInfluence(state, state.turnPlayer, influence)
       logEvent(state, {
         event: EventMessages.ChallengeFailed,
-        mainPlayer: challengePlayer.name,
+        primaryPlayer: challengePlayer.name,
         secondaryPlayer: state.turnPlayer!
       })
       promptPlayerToLoseInfluence(state, challengePlayer.name)
@@ -662,7 +662,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
 
       logEvent(state, {
         event: EventMessages.ChallengeSuccessful,
-        mainPlayer: challengePlayer.name,
+        primaryPlayer: challengePlayer.name,
         secondaryPlayer: state.turnPlayer!
       })
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
@@ -711,7 +711,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
 
       logEvent(state, {
         event: EventMessages.ChallengePending,
-        mainPlayer: player.name,
+        primaryPlayer: player.name,
         secondaryPlayer: blockPlayer.name
       })
       state.pendingBlockChallenge = { sourcePlayer: player.name }
@@ -741,7 +741,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
         addClaimedInfluence(blockPlayer, state.pendingBlock?.claimedInfluence)
         logEvent(state, {
           event: EventMessages.BlockSuccessful,
-          mainPlayer: blockPlayer.name,
+          primaryPlayer: blockPlayer.name,
           secondaryPlayer: state.turnPlayer!
         })
         if (state.pendingAction.action === Actions.Assassinate) {
@@ -815,7 +815,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
       revealAndReplaceInfluence(state, state.pendingBlock.sourcePlayer, influence)
       logEvent(state, {
         event: EventMessages.BlockSuccessful,
-        mainPlayer: state.pendingBlock.sourcePlayer,
+        primaryPlayer: state.pendingBlock.sourcePlayer,
         secondaryPlayer: state.turnPlayer!
       })
       if (state.pendingAction.action === Actions.Assassinate) {
@@ -854,12 +854,12 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
 
       logEvent(state, {
         event: EventMessages.ChallengeSuccessful,
-        mainPlayer: challengePlayer.name,
+        primaryPlayer: challengePlayer.name,
         secondaryPlayer: blockPlayer.name
       })
       logEvent(state, {
         event: EventMessages.BlockFailed,
-        mainPlayer: blockPlayer.name,
+        primaryPlayer: blockPlayer.name,
         secondaryPlayer: state.turnPlayer!
       })
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired

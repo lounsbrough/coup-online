@@ -39,7 +39,7 @@ function ChooseChallengeResponse() {
       <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
         {JSON.stringify({
           event: EventMessages.ChallengePending,
-          mainPlayer: challengingPlayer,
+          primaryPlayer: challengingPlayer,
           secondaryPlayer: challengedPlayer
         })}
       </ColoredTypography>

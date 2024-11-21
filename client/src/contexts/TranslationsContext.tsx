@@ -1,10 +1,21 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react'
+import { Influences } from '@shared'
 import { activeLanguageStorageKey } from '../helpers/localStorageKeys'
 import { AvailableLanguageCode } from '../i18n/availableLanguages'
 import translations, { Translations } from '../i18n/translations'
 
+type TranslationSimpleReplacementVariables = {
+  primaryPlayer?: string | undefined
+  secondaryPlayer?: string | undefined
+  influence?: Influences | undefined
+}
+
+type TranslationVariables = TranslationSimpleReplacementVariables & {
+  count?: number | undefined
+}
+
 type TranslationContextType = {
-  t: (key: keyof Translations, options?: { count: number }) => string
+  t: (key: keyof Translations, options?: TranslationVariables) => string
   language: AvailableLanguageCode
   setLanguage: (key: AvailableLanguageCode) => void
 }
@@ -19,17 +30,33 @@ const defaultLanguage = localStorage.getItem(activeLanguageStorageKey) as Availa
 export function TranslationContextProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<AvailableLanguageCode>(defaultLanguage)
 
-  const getTranslation = useCallback((key: keyof Translations, options?: { count: number }) => {
+  const getTranslation = useCallback((key: keyof Translations, variables?: TranslationVariables) => {
     let text = translations[language][key]
 
-    if (options?.count !== undefined) {
-      text = text.replaceAll('{{count}}', options.count.toString())
+    if (!variables) {
+      return text
+    }
+
+    if (variables.count !== undefined) {
+      text = text.replaceAll('{{count}}', variables.count.toString())
       const pluralRegex = /\{\{plural:(.*)\}\}/g
       text = text.replaceAll(pluralRegex, (replaceMatch) => {
         const plural = replaceMatch.matchAll(pluralRegex).next().value?.[1]
-        return (options.count !== 1 && plural) || ''
+        return (variables.count !== 1 && plural) || ''
       })
     }
+
+    const replacementKeys: (keyof TranslationSimpleReplacementVariables)[] = [
+      'primaryPlayer',
+      'secondaryPlayer',
+      'influence'
+    ]
+
+    replacementKeys.forEach((thing) => {
+      if (variables[thing] !== undefined) {
+        text = text.replaceAll(`{{${thing}}}`, variables[thing] as string)
+      }
+    })
 
     return text
   }, [language])

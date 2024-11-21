@@ -2,6 +2,7 @@ import { AvailableLanguageCode } from './availableLanguages'
 
 export type Translations = {
   anyone: string
+  blockPending: string
   briefDescriptionOfCoup: string
   cheatSheet: string
   collectCoins: string
@@ -9,7 +10,7 @@ export type Translations = {
   fullRules: string
   joinExistingGame: string
   language: string
-  none: string,
+  none: string
   rules: string
   settings: string
   title: string
@@ -19,6 +20,7 @@ export type Translations = {
 const translations: { [key in AvailableLanguageCode]: Translations } = {
   'en-US': {
     anyone: 'Anyone',
+    blockPending: '{{primaryPlayer}} is trying to block {{secondaryPlayer}} as {{influence}}',
     briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
     cheatSheet: 'Cheat Sheet',
     collectCoins: 'Collect {{count}} coin{{plural:s}}',
@@ -34,6 +36,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
   },
   'pt-BR': {
     anyone: 'Todos',
+    blockPending: '{{primaryPlayer}} está tentando bloquear {{secondaryPlayer}} como {{influence}}',
     briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
     cheatSheet: 'Folha de dicas',
     collectCoins: 'Colete {{count}} moeda{{plural:s}}',
