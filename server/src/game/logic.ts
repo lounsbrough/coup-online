@@ -1,7 +1,6 @@
 import { shuffle } from "../utilities/array"
-import { ActionAttributes, Actions, AiPersonality, GameState, Influences, Player, Responses } from "../../../shared/types/game"
+import { ActionAttributes, Actions, AiPersonality, EventMessages, GameState, Influences, Player, Responses } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
-import { getActionMessage } from "../../../shared/utilities/message"
 import { GameMutationInputError } from "../utilities/errors"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
@@ -17,10 +16,17 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
     1
   )
   player.deadInfluences.push(influence)
-  logEvent(state, `${player.name} lost their ${influence}`)
+  logEvent(state, {
+    event: EventMessages.PlayerLostInfluence,
+    mainPlayer: player.name,
+    influence
+  })
 
   if (!player.influences.length) {
-    logEvent(state, `${player.name} is out!`)
+    logEvent(state, {
+      event: EventMessages.PlayerDied,
+      mainPlayer: player.name
+    })
     delete state.pendingInfluenceLoss[player.name]
   }
 
@@ -69,12 +75,12 @@ export const processPendingAction = (state: GameState) => {
     throw new GameMutationInputError('Action Player not found')
   }
 
-  logEvent(state, getActionMessage({
+  logEvent(state, {
+    event: EventMessages.ActionProcessed,
     action: state.pendingAction!.action,
-    tense: 'complete',
-    actionPlayer: actionPlayer!.name,
-    targetPlayer: targetPlayer?.name
-  }))
+    mainPlayer: actionPlayer!.name,
+    ...(targetPlayer?.name && {secondaryPlayer: targetPlayer?.name})
+  })
 
   if (state.pendingAction.action === Actions.Assassinate) {
     if (!targetPlayer) {
@@ -177,7 +183,9 @@ export const startGame = async (gameState: GameState) => {
     gameState.players[0].coins = 1
   }
   gameState.turnPlayer = gameState.players[0].name
-  logEvent(gameState, 'Game has started')
+  logEvent(gameState, {
+    event: EventMessages.GameStarted
+  })
 }
 
 export const humanOpponentsRemain = (gameState: GameState, player: Player) =>
@@ -212,7 +220,11 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
   )[0])
   shuffleDeck(state)
   player.influences.push(drawCardFromDeck(state))
-  logEvent(state, `${playerName} revealed and replaced ${influence}`)
+  logEvent(state, {
+    event: EventMessages.PlayerReplacedInfluence,
+    mainPlayer: player.name,
+    influence
+  })
 }
 
 export const moveTurnToNextPlayer = (state: GameState) => {

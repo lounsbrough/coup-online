@@ -29,7 +29,7 @@ function EventLog() {
         overflowY: 'auto'
       }}>
         {gameState?.eventLogs.map((log, logIndex) =>
-          <ColoredTypography key={logIndex}>{log}</ColoredTypography>
+          <ColoredTypography key={logIndex}>{JSON.stringify(log)}</ColoredTypography>
         )}
       </Box>
     </>

@@ -1,4 +1,4 @@
-import { GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
+import { EventMessage, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { shuffle } from './array'
 import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
@@ -144,7 +144,7 @@ export const drawCardFromDeck = (state: GameState): Influences => {
   return state.deck.pop()!
 }
 
-export const logEvent = (state: GameState, log: string) => {
+export const logEvent = (state: GameState, log: EventMessage) => {
   state.eventLogs.push(log)
   if (state.eventLogs.length > 100) {
     state.eventLogs.splice(0, 1)
