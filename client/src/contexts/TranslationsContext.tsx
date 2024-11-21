@@ -27,7 +27,7 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
       const pluralRegex = /\{\{plural:(.*)\}\}/g
       text = text.replaceAll(pluralRegex, (replaceMatch) => {
         const plural = replaceMatch.matchAll(pluralRegex).next().value?.[1]
-        return options.count !== 1 && plural || ''
+        return (options.count !== 1 && plural) || ''
       })
     }
 
