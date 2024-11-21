@@ -1,5 +1,5 @@
 import { Button, Grid2 } from "@mui/material"
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
+import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -70,10 +70,10 @@ function ChooseActionResponse() {
     <>
       <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
         {JSON.stringify({
+          event: EventMessages.ActionPending,
           action: gameState.pendingAction.action,
-          tense: 'pending',
-          actionPlayer: gameState.turnPlayer!,
-          targetPlayer: gameState.pendingAction.targetPlayer
+          mainPlayer: gameState.turnPlayer!,
+          secondaryPlayer: gameState.pendingAction.targetPlayer
         })}
       </ColoredTypography>
       <Grid2 container spacing={2} justifyContent="center">

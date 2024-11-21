@@ -1,5 +1,5 @@
 import { Button, Grid2 } from "@mui/material"
-import { PlayerActions, Responses } from '@shared'
+import { EventMessages, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -32,7 +32,12 @@ function ChooseBlockResponse() {
   return (
     <>
       <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {`${gameState.pendingBlock.sourcePlayer} is trying to block ${gameState.turnPlayer} as ${gameState.pendingBlock.claimedInfluence}`}
+        {JSON.stringify({
+          event: EventMessages.BlockPending,
+          mainPlayer: gameState.pendingBlock.sourcePlayer,
+          secondaryPlayer: gameState.turnPlayer,
+          influence: gameState.pendingBlock.claimedInfluence
+        })}
       </ColoredTypography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.values(Responses)

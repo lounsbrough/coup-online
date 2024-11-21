@@ -1,5 +1,5 @@
 import { Button, Grid2, Typography } from "@mui/material"
-import { Influences, PlayerActions } from '@shared'
+import { EventMessages, Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -37,7 +37,11 @@ function ChooseChallengeResponse() {
   return (
     <>
       <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {`${challengingPlayer} is challenging ${challengedPlayer}`}
+        {JSON.stringify({
+          event: EventMessages.ChallengePending,
+          mainPlayer: challengingPlayer,
+          secondaryPlayer: challengedPlayer
+        })}
       </ColoredTypography>
       <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
         Choose an Influence to Reveal

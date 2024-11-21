@@ -1,5 +1,5 @@
 import { Button, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
-import { ActionAttributes, Actions, PlayerActions } from '@shared'
+import { ActionAttributes, Actions, PlayerActions, EventMessages } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -19,10 +19,10 @@ function ChooseAction() {
   if (selectedAction && (!ActionAttributes[selectedAction].requiresTarget || selectedTargetPlayer)) {
     return <PlayerActionConfirmation
       message={JSON.stringify({
+        event: EventMessages.ActionPending,
         action: selectedAction,
-        tense: 'confirm',
-        actionPlayer: gameState.turnPlayer!,
-        targetPlayer: selectedTargetPlayer
+        mainPlayer: gameState.turnPlayer!,
+        secondaryPlayer: selectedTargetPlayer
       })}
       action={PlayerActions.action}
       variables={{
