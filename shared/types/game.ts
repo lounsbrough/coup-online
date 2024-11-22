@@ -73,7 +73,6 @@ export const ActionAttributes: {
     coinsRequired?: number
     influenceRequired?: Influences
     requiresTarget: boolean
-    wordVariations?: string[]
   }
 } = {
   [Actions.Assassinate]: {
@@ -81,22 +80,19 @@ export const ActionAttributes: {
     challengeable: true,
     coinsRequired: 3,
     influenceRequired: Influences.Assassin,
-    requiresTarget: true,
-    wordVariations: ['Assassinated']
+    requiresTarget: true
   },
   [Actions.Steal]: {
     blockable: true,
     challengeable: true,
     influenceRequired: Influences.Captain,
-    requiresTarget: true,
-    wordVariations: ['Stole']
+    requiresTarget: true
   },
   [Actions.Coup]: {
     blockable: false,
     challengeable: false,
     coinsRequired: 7,
-    requiresTarget: true,
-    wordVariations: ['Couped']
+    requiresTarget: true
   },
   [Actions.Tax]: {
     blockable: false,
@@ -118,8 +114,7 @@ export const ActionAttributes: {
     blockable: false,
     challengeable: true,
     influenceRequired: Influences.Ambassador,
-    requiresTarget: false,
-    wordVariations: ['Exchanged']
+    requiresTarget: false
   }
 }
 
@@ -137,7 +132,6 @@ export enum EventMessages {
   PlayerReplacedInfluence = 'PlayerReplacedInfluence',
   ActionPending = 'ActionPending',
   ActionProcessed = 'ActionProcessed',
-  ActionBlocked = 'ActionBlocked',
   ChallengePending = 'ChallengePending',
   ChallengeSuccessful = 'ChallengeSuccessful',
   ChallengeFailed = 'ChallengeFailed',

@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react'
-import { Influences } from '@shared'
+import { Actions, EventMessages, Influences } from '@shared'
 import { activeLanguageStorageKey } from '../helpers/localStorageKeys'
 import { AvailableLanguageCode } from '../i18n/availableLanguages'
 import translations, { Translations } from '../i18n/translations'
@@ -7,20 +7,21 @@ import translations, { Translations } from '../i18n/translations'
 type TranslationSimpleReplacementVariables = {
   primaryPlayer?: string | undefined
   secondaryPlayer?: string | undefined
-  influence?: Influences | undefined
 }
 
 type TranslationVariables = TranslationSimpleReplacementVariables & {
   count?: number | undefined
+  action?: Actions | undefined
+  influence?: Influences | undefined
 }
 
 type TranslationContextType = {
-  t: (key: keyof Translations, options?: TranslationVariables) => string
+  t: (key: keyof Translations, options?: TranslationVariables) => ReactNode
   language: AvailableLanguageCode
   setLanguage: (key: AvailableLanguageCode) => void
 }
 
-export const TranslationContext = createContext<TranslationContextType>({ t: () => '', language: AvailableLanguageCode['en-US'], setLanguage: () => { } })
+export const TranslationContext = createContext<TranslationContextType>({ t: () => null, language: AvailableLanguageCode['en-US'], setLanguage: () => { } })
 
 const availableCodes = new Set<string>(Object.values(AvailableLanguageCode))
 const defaultLanguage = localStorage.getItem(activeLanguageStorageKey) as AvailableLanguageCode
@@ -30,35 +31,55 @@ const defaultLanguage = localStorage.getItem(activeLanguageStorageKey) as Availa
 export function TranslationContextProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<AvailableLanguageCode>(defaultLanguage)
 
-  const getTranslation = useCallback((key: keyof Translations, variables?: TranslationVariables) => {
-    let text = translations[language][key]
+  const getTranslation = useCallback((key: keyof Translations, variables?: TranslationVariables): ReactNode => {
+    const effectiveTranslations = translations[language]
+
+    const hasActionsKey = key === EventMessages.ActionPending || key === EventMessages.ActionProcessed
+
+    let template = hasActionsKey
+      ? effectiveTranslations[key][variables!.action!]
+      : effectiveTranslations[key]
 
     if (!variables) {
-      return text
+      return template
     }
 
     if (variables.count !== undefined) {
-      text = text.replaceAll('{{count}}', variables.count.toString())
-      const pluralRegex = /\{\{plural:(.*)\}\}/g
-      text = text.replaceAll(pluralRegex, (replaceMatch) => {
+      template = template.replaceAll('{{count}}', variables.count.toString())
+      const pluralRegex = /\{\{plural:(.*?)\}\}/g
+      template = template.replaceAll(pluralRegex, (replaceMatch) => {
         const plural = replaceMatch.matchAll(pluralRegex).next().value?.[1]
         return (variables.count !== 1 && plural) || ''
       })
     }
 
+    if (variables.influence) {
+      template = template.replaceAll(`{{influence}}`, effectiveTranslations[variables.influence])
+    }
+
+    if (variables.action) {
+      const actionRegex = /\{\{action(:?.*?)\}\}/g
+      template = template.replaceAll(actionRegex, (replaceMatch) => {
+        const actionOverride = replaceMatch.matchAll(actionRegex).next().value?.[1]
+        console.log(actionOverride)
+        return actionOverride
+          ? actionOverride.slice(1)
+          : effectiveTranslations[variables.action!]
+      })
+    }
+
     const replacementKeys: (keyof TranslationSimpleReplacementVariables)[] = [
       'primaryPlayer',
-      'secondaryPlayer',
-      'influence'
+      'secondaryPlayer'
     ]
 
     replacementKeys.forEach((thing) => {
       if (variables[thing] !== undefined) {
-        text = text.replaceAll(`{{${thing}}}`, variables[thing] as string)
+        template = template.replaceAll(`{{${thing}}}`, variables[thing] as string)
       }
     })
 
-    return text
+    return template
   }, [language])
 
   return (

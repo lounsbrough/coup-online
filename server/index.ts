@@ -3,7 +3,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
-import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, ActionAttributes, AiPersonality } from '../shared/types/game'
+import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, AiPersonality } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
@@ -40,11 +40,7 @@ const io = new ioServer<ClientToServerEvents, ServerToClientEvents, InterServerE
   cors: { origin: "*" }
 })
 
-const playerNameRule = Joi.string().min(1).max(10).disallow(
-  ...Object.values(Influences),
-  ...Object.values(Actions),
-  ...Object.values(ActionAttributes).flatMap(({ wordVariations }) => wordVariations ?? [])
-).required()
+const playerNameRule = Joi.string().min(1).max(10).required()
 
 const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
   return (req: Request, res: Response, next: NextFunction) => {
