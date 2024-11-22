@@ -110,11 +110,14 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               }}
               disabled={isMutating}
             >
-              Random
+              {t('random')}
             </Button>
           </Box>
           <Box p={2} mt={2}>
-            <Typography mt={2}>{`Vengefulness: ${vengefulness}%`}</Typography>
+            <Typography mt={2}>
+              {t('vengefulness')}
+              {`: ${vengefulness}%`}
+            </Typography>
             <Slider
               step={1}
               value={vengefulness}
@@ -123,7 +126,10 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               max={maxSliderValue}
               onChange={handleVengefulnessChange}
             />
-            <Typography mt={2}>{`Honesty: ${honesty}%`}</Typography>
+            <Typography mt={2}>
+              {t('honesty')}
+              {`: ${honesty}%`}
+            </Typography>
             <Slider
               step={1}
               value={honesty}
@@ -132,7 +138,10 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               max={maxSliderValue}
               onChange={handleHonestyChange}
             />
-            <Typography mt={2}>{`Skepticism: ${skepticism}%`}</Typography>
+            <Typography mt={2}>
+              {t('skepticism')}
+              {`: ${skepticism}%`}
+            </Typography>
             <Slider
               step={1}
               value={skepticism}
