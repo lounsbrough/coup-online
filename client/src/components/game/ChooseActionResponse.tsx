@@ -19,7 +19,7 @@ function ChooseActionResponse() {
 
   if (selectedResponse && (selectedResponse !== Responses.Block || selectedInfluence)) {
     return <PlayerActionConfirmation
-      message={`${selectedResponse}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
+      message={`${t(selectedResponse)}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
       action={PlayerActions.actionResponse}
       variables={{
         roomId: gameState.roomId,
@@ -102,7 +102,7 @@ function ChooseActionResponse() {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
             >
-              {response}
+              {t(response)}
             </Button>
           })}
       </Grid2>

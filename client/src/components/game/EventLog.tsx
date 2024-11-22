@@ -22,7 +22,9 @@ function EventLog() {
 
   return (
     <>
-      <Typography sx={{ fontWeight: 700 }}>Event Log</Typography>
+      <Typography sx={{ fontWeight: 700 }}>
+        {t('eventLog')}
+      </Typography>
       <Box ref={logBox} sx={{
         width: '100%',
         maxHeight: '25dvh',

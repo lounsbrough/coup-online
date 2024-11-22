@@ -6,6 +6,7 @@ import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function PlayerActionConfirmation({
   message,
@@ -21,6 +22,7 @@ function PlayerActionConfirmation({
   const [autoSubmitProgress, setAutoSubmitProgress] = useState(0)
   const autoSubmitInterval = useRef<ReturnType<typeof setInterval>>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   const { trigger, isMutating, error } = useGameMutation<object>({ action })
@@ -69,7 +71,9 @@ function PlayerActionConfirmation({
               onCancel()
             }}
             disabled={isMutating}
-          >Cancel</Button>
+          >
+            {t('cancel')}
+          </Button>
         </Grid2>
         <Grid2>
           <Button
@@ -96,7 +100,7 @@ function PlayerActionConfirmation({
             }}
             disabled={isMutating}
           >
-            Confirm
+            {t('confirm')}
           </Button>
         </Grid2>
       </Grid2>

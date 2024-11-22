@@ -71,7 +71,7 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
               <Typography
                 key={variables.influence}
                 component='span'
-                fontWeight='inherit'
+                fontWeight={500}
                 fontSize='inherit'
                 sx={{ color: influenceColors?.[variables.influence!] }}
               >
@@ -95,7 +95,7 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
               <Typography
                 key={variables.action}
                 component='span'
-                fontWeight='inherit'
+                fontWeight={500}
                 fontSize='inherit'
                 sx={{ color: actionColors?.[variables.action!] }}
               >
@@ -124,7 +124,7 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
                 <Typography
                   key={playerKey}
                   component='span'
-                  fontWeight='inherit'
+                  fontWeight={500}
                   fontSize='inherit'
                   sx={{ color: variables.gameState?.players.find(({ name }) => name === variables[playerKey])?.color }}
                 >

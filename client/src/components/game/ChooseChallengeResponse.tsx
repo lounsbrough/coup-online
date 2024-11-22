@@ -45,11 +45,14 @@ function ChooseChallengeResponse() {
         })}
       </Typography>
       <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        Choose an Influence to Reveal
+        {t('chooseInfluenceToReveal')}
       </Typography>
       {gameState.pendingBlock?.claimedInfluence && (
         <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-          {`${gameState.pendingBlock?.claimedInfluence} was claimed`}
+          {t('influenceWasClaimed', {
+            influence: gameState.pendingBlock?.claimedInfluence,
+            gameState
+          })}
         </Typography>
       )}
       <Grid2 container spacing={2} justifyContent="center">

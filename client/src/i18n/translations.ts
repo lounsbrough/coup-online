@@ -1,4 +1,4 @@
-import { Actions, EventMessages, Influences } from '@shared'
+import { Actions, EventMessages, Influences, Responses } from '@shared'
 import { AvailableLanguageCode } from './availableLanguages'
 
 type ActionMessages = {
@@ -27,21 +27,39 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerLostInfluence]: string
   [EventMessages.PlayerReplacedInfluence]: string
   briefDescriptionOfCoup: string
+  cancel: string
   cheatSheet: string
+  chooseATarget: string
+  chooseAnAction: string
+  chooseInfluenceToReveal: string
+  close: string
   collectCoins: string
+  confirm: string
   createNewGame: string
+  eventLog: string
   fullRules: string
   [Influences.Ambassador]: string
   [Influences.Assassin]: string
   [Influences.Captain]: string
   [Influences.Contessa]: string
   [Influences.Duke]: string
+  influenceWasClaimed: string
   joinExistingGame: string
   language: string
   none: string
+  notEnoughCoins: string
+  playAgain: string
+  playerTurn: string
+  playerWantToReset: string
+  playerWins: string
+  resetGame: string
+  [Responses.Block]: string
+  [Responses.Challenge]: string
+  [Responses.Pass]: string
   rules: string
   settings: string
   title: string
+  waitingOnOtherPlayers: string
   welcomeToCoup: string
 }
 
@@ -93,10 +111,18 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerLostInfluence]: '',
     [EventMessages.PlayerReplacedInfluence]: '',
     briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
+    cancel: 'Cancel',
     cheatSheet: 'Cheat Sheet',
+    chooseATarget: 'Choose a Target',
+    chooseAnAction: 'Choose an Action',
+    chooseInfluenceToReveal: 'Choose an Influence to Reveal',
+    close: 'Close',
     collectCoins: 'Collect {{count}} coin{{plural:s}}',
+    confirm: 'Confirm',
     createNewGame: 'Create New Game',
+    eventLog: 'Event Log',
     fullRules: 'Complete Rules',
+    influenceWasClaimed: '{{influence}} was claimed',
     joinExistingGame: 'Join Existing Game',
     [Influences.Ambassador]: 'Ambassador',
     [Influences.Assassin]: 'Assassin',
@@ -105,9 +131,19 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Influences.Duke]: 'Duke',
     language: 'Language',
     none: 'None',
+    notEnoughCoins: 'Not enough coins',
+    playAgain: 'Play Again',
+    playerTurn: '{{primaryPlayer}}\'s Turn',
+    playerWantToReset: '{{primaryPlayer}} wants to reset the game',
+    playerWins: '{{primaryPlayer}} Wins!',
+    resetGame: 'Reset Game',
+    [Responses.Block]: 'Block',
+    [Responses.Challenge]: 'Challenge',
+    [Responses.Pass]: 'Pass',
     rules: 'Rules',
     settings: 'Settings',
     title: 'Coup',
+    waitingOnOtherPlayers: 'Waiting on Other Players',
     welcomeToCoup: 'Welcome To Coup!'
   },
   'pt-BR': {
@@ -120,13 +156,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Tax]: 'Imposto',
     anyone: 'Todos',
     [EventMessages.ActionConfirm]: {
-      [Actions.Assassinate]: '{{primaryPlayer}} está tentando {{action:Assassinar}} {{secondaryPlayer}}',
+      [Actions.Assassinate]: '{{action:Assassinar}} {{secondaryPlayer}}',
       [Actions.Coup]: '',
       [Actions.Exchange]: '',
       [Actions.ForeignAid]: '',
       [Actions.Income]: '',
       [Actions.Steal]: '{{action:Roubar}} de {{secondaryPlayer}}',
-      [Actions.Tax]: 'Coleter {{action}}',
+      [Actions.Tax]: 'Cobrar {{action}}',
     },
     [EventMessages.ActionPending]: {
       [Actions.Assassinate]: '{{primaryPlayer}} está tentando {{action:Assassinar}} {{secondaryPlayer}}',
@@ -135,7 +171,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]: '',
       [Actions.Income]: '',
       [Actions.Steal]: '{{primaryPlayer}} está tentando {{action:Roubar}} de {{secondaryPlayer}}',
-      [Actions.Tax]: '{{primaryPlayer}} está tentando coleter {{action}}',
+      [Actions.Tax]: '{{primaryPlayer}} está tentando cobrar {{action}}',
     },
     [EventMessages.ActionProcessed]: {
       [Actions.Assassinate]: '{{primaryPlayer}} {{action:Assassinou}} {{secondaryPlayer}}',
@@ -144,7 +180,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]: '',
       [Actions.Income]: '{{primaryPlayer}} coletou {{action}}',
       [Actions.Steal]: '',
-      [Actions.Tax]: '',
+      [Actions.Tax]: '{{primaryPlayer}} coubrou {{action}}',
     },
     [EventMessages.BlockFailed]: '',
     [EventMessages.BlockPending]: '{{primaryPlayer}} está tentando bloquear {{secondaryPlayer}} como {{influence}}',
@@ -157,10 +193,18 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerLostInfluence]: '',
     [EventMessages.PlayerReplacedInfluence]: '',
     briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
+    cancel: 'Cancelar',
     cheatSheet: 'Folha de dicas',
+    chooseATarget: 'Escolha um alvo',
+    chooseAnAction: 'Escolha uma ação',
+    chooseInfluenceToReveal: 'Escolha uma influência para revelar',
+    close: 'Fechar',
     collectCoins: 'Colete {{count}} moeda{{plural:s}}',
+    confirm: 'Confirmar',
     createNewGame: 'Crie um jogo',
+    eventLog: 'Registro de eventos',
     fullRules: 'Regras completas',
+    influenceWasClaimed: '{{influence}} foi declarado',
     joinExistingGame: 'Participe de um jogo',
     [Influences.Ambassador]: 'Embaixador',
     [Influences.Assassin]: 'Assassino',
@@ -169,9 +213,19 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Influences.Duke]: 'Duque',
     language: 'Idioma',
     none: 'Nenhum',
+    notEnoughCoins: 'Moedas insuficientes',
+    playAgain: 'Jogar novamente',
+    playerTurn: 'A vez de {{primaryPlayer}}',
+    playerWantToReset: '{{primaryPlayer}} quer reiniciar o jogo',
+    playerWins: '{{primaryPlayer}} vence!',
+    resetGame: 'Reiniciar jogo',
+    [Responses.Block]: 'Bloquear',
+    [Responses.Challenge]: 'Desafiar',
+    [Responses.Pass]: 'Passar',
     rules: 'Regras',
     settings: 'Configurações',
     title: 'Golpe',
+    waitingOnOtherPlayers: 'Esperando por outros jogadores',
     welcomeToCoup: 'Bem vindo ao Golpe!'
   }
 }

@@ -4,6 +4,7 @@ import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useGameStateContext } from "../../contexts/GameStateContext"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 const ResetIcon = Delete
 
@@ -21,6 +22,7 @@ function RequestReset() {
   }>({ action: PlayerActions.resetGame })
 
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   if (!gameState) {
@@ -48,7 +50,7 @@ function RequestReset() {
               }}
               disabled={resetGameRequest.isMutating || isResetPending}
             >
-              {!isResetPending ? 'Reset Game' : 'Waiting For Others'}
+              {!isResetPending ? 'Reset Game' : t('waitingOnOtherPlayers')}
             </Button>
             {resetGameRequest.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGameRequest.error}</Typography>}
           </>
@@ -57,7 +59,10 @@ function RequestReset() {
       {isResetPending && !isResetMine && !playerIsDead && (
         <>
           <Typography>
-            {`${gameState.resetGameRequest!.player} wants to reset the game`}
+            {t('playerWantToReset', {
+              primaryPlayer: gameState.resetGameRequest!.player,
+              gameState
+            })}
           </Typography>
           <Grid2 mt={1} container spacing={1}
             sx={{
@@ -77,7 +82,7 @@ function RequestReset() {
                   })
                 }}
               >
-                Cancel
+                {t('cancel')}
               </Button>
               {resetGameRequestCancel.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGameRequestCancel.error}</Typography>}
             </Grid2>
@@ -95,7 +100,7 @@ function RequestReset() {
                   })
                 }}
               >
-                Reset
+                {t('resetGame')}
               </Button>
               {resetGame.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGame.error}</Typography>}
             </Grid2>

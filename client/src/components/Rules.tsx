@@ -70,7 +70,7 @@ function Rules() {
               edge="start"
               color="inherit"
               onClick={() => { setModalOpen(false) }}
-              aria-label="close"
+              aria-label={t('close')?.toString()}
               sx={{ ml: 1 }}
             >
               <Close />

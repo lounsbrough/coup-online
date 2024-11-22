@@ -48,7 +48,7 @@ function ChooseAction() {
           fontWeight="bold"
           onBack={() => { setSelectedAction(undefined) }}
         >
-          Choose a Target
+          {t('chooseATarget')}
         </TypographyWithBackButton>
         <Grid2 container spacing={2} justifyContent="center">
           {gameState.players.map((player) => {
@@ -84,7 +84,7 @@ function ChooseAction() {
   return (
     <>
       <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        Choose an Action
+        {t('chooseAnAction')}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.entries(ActionAttributes)
@@ -98,28 +98,20 @@ function ChooseAction() {
 
             return (
               <Grid2 key={index}>
-                {lackingCoins ? (
-                  <Tooltip title="Not enough coins">
-                    <span>
-                      <Button
-                        variant="contained"
-                        disabled
-                      >
-                        {action}
-                      </Button>
-                    </span>
-                  </Tooltip>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      setSelectedAction(action as Actions)
-                    }}
-                    color={action as Actions}
-                    variant="contained"
-                  >
-                    {action}
-                  </Button>
-                )}
+                <Tooltip title={lackingCoins && t('notEnoughCoins')}>
+                  <span>
+                    <Button
+                      onClick={() => {
+                        setSelectedAction(action as Actions)
+                      }}
+                      color={action as Actions}
+                      variant="contained"
+                      disabled={lackingCoins}
+                    >
+                      {t(action as Actions)}
+                    </Button>
+                  </span>
+                </Tooltip>
               </Grid2>
             )
           })}

@@ -89,7 +89,9 @@ function UserSettings() {
           </Grid2>
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' onClick={() => { setModalOpen(false) }}>Close</Button>
+          <Button variant='contained' onClick={() => { setModalOpen(false) }}>
+            {t('close')}
+          </Button>
         </DialogActions>
       </Dialog>
     </>
