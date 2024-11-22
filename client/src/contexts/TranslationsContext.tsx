@@ -32,7 +32,7 @@ const defaultLanguage = localStorage.getItem(activeLanguageStorageKey) as Availa
 
 export function TranslationContextProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<AvailableLanguageCode>(defaultLanguage)
-  const { influenceColors } = useTheme()
+  const { influenceColors, actionColors } = useTheme()
 
   const getTranslation = useCallback((key: keyof Translations, variables?: Partial<TranslationVariables>): ReactNode => {
     const effectiveTranslations = translations[language]
@@ -61,12 +61,12 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
     if (variables.influence) {
       segments.forEach((segment, i) => {
         if (typeof segment === 'string') {
-          const matches = [...segment.matchAll(/(.*?)\{\{influence\}\}(.*?)/g)][0]
+          const matches = [...segment.matchAll(/(.*)\{\{influence\}\}(.*)/g)][0]
           if (matches) {
-            segments.splice(i, 1)
-            segments.push(
+            segments.splice(i, 1,
               matches[1],
               <Typography
+                key={variables.influence}
                 component='span'
                 fontWeight='inherit'
                 fontSize='inherit'
@@ -82,12 +82,26 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
     }
 
     if (variables.action) {
-      const actionRegex = /\{\{action(:?.*?)\}\}/g
-      template = template.replaceAll(actionRegex, (replaceMatch) => {
-        const actionOverride = replaceMatch.matchAll(actionRegex).next().value?.[1]
-        return actionOverride
-          ? actionOverride.slice(1)
-          : effectiveTranslations[variables.action!]
+      segments.forEach((segment, i) => {
+        if (typeof segment === 'string') {
+          const matches = [...segment.matchAll(/(.*)\{\{action(:?.*?)\}\}(.*)/g)][0]
+          if (matches) {
+            const effectiveAction = matches[2]?.slice(1) || effectiveTranslations[variables.action!]
+            segments.splice(i, 1,
+              matches[1],
+              <Typography
+                key={variables.action}
+                component='span'
+                fontWeight='inherit'
+                fontSize='inherit'
+                sx={{ color: actionColors?.[variables.action!] }}
+              >
+                {effectiveAction}
+              </Typography>,
+              matches[3]
+            )
+          }
+        }
       })
     }
 
@@ -102,21 +116,18 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
           if (typeof segment === 'string') {
             const matches = [...segment.matchAll(new RegExp(`(.*){{${playerKey}}}(.*)`, 'g'))][0]
             if (matches) {
-              segments.splice(
-                i,
-                1,
-                ...[
-                  matches[1],
-                  <Typography
-                    component='span'
-                    fontWeight='inherit'
-                    fontSize='inherit'
-                    sx={{ color: variables.gameState?.players.find(({ name }) => name === variables[playerKey])?.color }}
-                  >
-                    {variables[playerKey]}
-                  </Typography>,
-                  matches[2]
-                ].filter(Boolean)
+              segments.splice(i, 1,
+                matches[1],
+                <Typography
+                  key={playerKey}
+                  component='span'
+                  fontWeight='inherit'
+                  fontSize='inherit'
+                  sx={{ color: variables.gameState?.players.find(({ name }) => name === variables[playerKey])?.color }}
+                >
+                  {variables[playerKey]}
+                </Typography>,
+                matches[2]
               )
             }
           }
@@ -125,7 +136,7 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
     })
 
     return segments
-  }, [language, influenceColors])
+  }, [language, influenceColors, actionColors])
 
   return (
     <TranslationContext.Provider value={{
