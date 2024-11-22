@@ -39,8 +39,11 @@ export type Translations = ActionMessages & {
   claimAnInfluence: string
   close: string
   collectCoins: string
+  colorMode: string
   confirm: string
+  confirmActions: string
   createNewGame: string
+  dark: string
   eventLog: string
   fullRules: string
   [Influences.Ambassador]: string
@@ -52,6 +55,8 @@ export type Translations = ActionMessages & {
   joinExistingGame: string
   keepInfluences: string
   language: string
+  light: string
+  loseInfluence: string
   none: string
   notEnoughCoins: string
   playAgain: string
@@ -64,10 +69,13 @@ export type Translations = ActionMessages & {
   [Responses.Block]: string
   [Responses.Challenge]: string
   [Responses.Pass]: string
+  room: string
   rules: string
   settings: string
+  system: string
   title: string
   waitingOnOtherPlayers: string
+  websocketsConnection: string
   welcomeToCoup: string
 }
 
@@ -129,8 +137,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     claimAnInfluence: 'Claim an influence',
     close: 'Close',
     collectCoins: 'Collect {{count}} coin{{plural[[s]]}}',
+    colorMode: 'Color Mode',
     confirm: 'Confirm',
+    confirmActions: 'Confirm Actions',
     createNewGame: 'Create New Game',
+    dark: 'Dark',
     eventLog: 'Event Log',
     fullRules: 'Complete Rules',
     [Influences.Ambassador]: 'Ambassador',
@@ -142,6 +153,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     joinExistingGame: 'Join Existing Game',
     keepInfluences: 'Keep {{primaryInfluence}}{{plural[[ and {{secondaryInfluence}}]]}}',
     language: 'Language',
+    light: 'Light',
+    loseInfluence: 'Lose {{primaryInfluence}}',
     none: 'None',
     notEnoughCoins: 'Not enough coins',
     playAgain: 'Play Again',
@@ -154,10 +167,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Block]: 'Block',
     [Responses.Challenge]: 'Challenge',
     [Responses.Pass]: 'Pass',
+    room: 'Room',
     rules: 'Rules',
     settings: 'Settings',
+    system: 'System',
     title: 'Coup',
     waitingOnOtherPlayers: 'Waiting on Other Players',
+    websocketsConnection: 'WebSockets Connection',
     welcomeToCoup: 'Welcome To Coup!'
   },
   'pt-BR': {
@@ -217,8 +233,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     claimAnInfluence: 'Declare uma influência',
     close: 'Fechar',
     collectCoins: 'Colete {{count}} moeda{{plural[[s]]}}',
+    colorMode: 'Modo de cor',
     confirm: 'Confirmar',
+    confirmActions: 'Confirmar ações',
     createNewGame: 'Crie um jogo',
+    dark: 'Escuro',
     eventLog: 'Registro de eventos',
     fullRules: 'Regras completas',
     [Influences.Ambassador]: 'Embaixador',
@@ -230,6 +249,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     joinExistingGame: 'Participe de um jogo',
     keepInfluences: 'Manter {{primaryInfluence}}{{plural[[ e {{secondaryInfluence}}]]}}',
     language: 'Idioma',
+    light: 'Claro',
+    loseInfluence: 'Perder {{primaryInfluence}}',
     none: 'Nenhum',
     notEnoughCoins: 'Moedas insuficientes',
     playAgain: 'Jogar novamente',
@@ -242,10 +263,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Block]: 'Bloquear',
     [Responses.Challenge]: 'Desafiar',
     [Responses.Pass]: 'Passar',
+    room: 'Sala',
     rules: 'Regras',
     settings: 'Configurações',
+    system: 'Sistema',
     title: 'Golpe',
     waitingOnOtherPlayers: 'Esperando por outros jogadores',
+    websocketsConnection: 'Conexão WebSockets',
     welcomeToCoup: 'Bem vindo ao Golpe!'
   }
 }

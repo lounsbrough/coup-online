@@ -17,7 +17,10 @@ function ChooseInfluenceToLose() {
 
   if (selectedInfluence) {
     return <PlayerActionConfirmation
-      message={`Lose ${selectedInfluence}`}
+      message={t('loseInfluence', {
+        primaryInfluence: selectedInfluence,
+        gameState
+      })}
       action={PlayerActions.loseInfluences}
       variables={{
         roomId: gameState.roomId,

@@ -18,7 +18,7 @@ const availableLanguages: AvailableLanguage[] = [
   {
     code: AvailableLanguageCode["pt-BR"],
     flag: '🇧🇷',
-    name: 'Brazil'
+    name: 'Brasil'
   }
 ]
 

@@ -58,17 +58,24 @@ function UserSettings() {
             {roomId && (
               <Grid2 height={rowHeight} alignContent="center">
                 <Typography component="span" sx={{ mr: 1 }}>
-                  {'Room: '}
+                  {t('room')}
+                  :
                 </Typography>
                 <strong>{roomId}</strong>
               </Grid2>
             )}
             <Grid2 height={rowHeight} alignContent="center">
-              <Typography component="span" sx={{ mr: 2 }}>Color Mode:</Typography>
+              <Typography component="span" sx={{ mr: 2 }}>
+                {t('colorMode')}
+                :
+              </Typography>
               <ColorModeToggle />
             </Grid2>
             <Grid2 height={rowHeight} alignContent="center">
-              <Typography component="span">Confirm Actions:</Typography>
+              <Typography component="span">
+                {t('confirmActions')}
+                :
+              </Typography>
               <Switch
                 checked={confirmActions}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +87,8 @@ function UserSettings() {
             </Grid2>
             <Grid2 height={rowHeight} alignContent="center">
               <Typography component="span" sx={{ mr: 1 }}>
-                {'WebSockets Connection: '}
+                {t('websocketsConnection')}
+                :
               </Typography>
               {isConnected
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
