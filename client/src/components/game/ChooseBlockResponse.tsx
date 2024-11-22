@@ -36,7 +36,8 @@ function ChooseBlockResponse() {
         {t(EventMessages.BlockPending, {
           primaryPlayer: gameState.pendingBlock.sourcePlayer,
           secondaryPlayer: gameState.turnPlayer,
-          influence: gameState.pendingBlock.claimedInfluence
+          influence: gameState.pendingBlock.claimedInfluence,
+          gameState
         })}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">

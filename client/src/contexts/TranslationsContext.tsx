@@ -1,23 +1,24 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react'
 import { Typography, useTheme } from '@mui/material'
-import { Actions, EventMessages, Influences } from '@shared'
+import { Actions, EventMessages, Influences, PublicGameState } from '@shared'
 import { activeLanguageStorageKey } from '../helpers/localStorageKeys'
 import { AvailableLanguageCode } from '../i18n/availableLanguages'
 import translations, { Translations } from '../i18n/translations'
 
-type TranslationSimpleReplacementVariables = {
-  primaryPlayer?: string | undefined
-  secondaryPlayer?: string | undefined
+type PlayerVariables = {
+  primaryPlayer: string | undefined
+  secondaryPlayer: string | undefined
 }
 
-type TranslationVariables = TranslationSimpleReplacementVariables & {
-  count?: number | undefined
-  action?: Actions | undefined
-  influence?: Influences | undefined
+type TranslationVariables = PlayerVariables & {
+  gameState: PublicGameState | undefined
+  count: number | undefined
+  action: Actions | undefined
+  influence: Influences | undefined
 }
 
 type TranslationContextType = {
-  t: (key: keyof Translations, options?: TranslationVariables) => ReactNode
+  t: (key: keyof Translations, variables?: Partial<TranslationVariables>) => ReactNode
   language: AvailableLanguageCode
   setLanguage: (key: AvailableLanguageCode) => void
 }
@@ -33,7 +34,7 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
   const [language, setLanguage] = useState<AvailableLanguageCode>(defaultLanguage)
   const { influenceColors } = useTheme()
 
-  const getTranslation = useCallback((key: keyof Translations, variables?: TranslationVariables): ReactNode => {
+  const getTranslation = useCallback((key: keyof Translations, variables?: Partial<TranslationVariables>): ReactNode => {
     const effectiveTranslations = translations[language]
 
     const hasActionsKey = key === EventMessages.ActionPending || key === EventMessages.ActionProcessed
@@ -90,14 +91,36 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
       })
     }
 
-    const replacementKeys: (keyof TranslationSimpleReplacementVariables)[] = [
+    const playerKeys: (keyof PlayerVariables)[] = [
       'primaryPlayer',
       'secondaryPlayer'
     ]
 
-    replacementKeys.forEach((thing) => {
-      if (variables[thing] !== undefined) {
-        template = template.replaceAll(`{{${thing}}}`, variables[thing] as string)
+    playerKeys.forEach((playerKey) => {
+      if (variables[playerKey] !== undefined) {
+        segments.forEach((segment, i) => {
+          if (typeof segment === 'string') {
+            const matches = [...segment.matchAll(new RegExp(`(.*){{${playerKey}}}(.*)`, 'g'))][0]
+            if (matches) {
+              segments.splice(
+                i,
+                1,
+                ...[
+                  matches[1],
+                  <Typography
+                    component='span'
+                    fontWeight='inherit'
+                    fontSize='inherit'
+                    sx={{ color: variables.gameState?.players.find(({ name }) => name === variables[playerKey])?.color }}
+                  >
+                    {variables[playerKey]}
+                  </Typography>,
+                  matches[2]
+                ].filter(Boolean)
+              )
+            }
+          }
+        })
       }
     })
 
