@@ -5,11 +5,13 @@ import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function ChooseAction() {
   const [selectedAction, setSelectedAction] = useState<Actions>()
   const [selectedTargetPlayer, setSelectedTargetPlayer] = useState<string>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   if (!gameState?.selfPlayer) {
@@ -18,11 +20,10 @@ function ChooseAction() {
 
   if (selectedAction && (!ActionAttributes[selectedAction].requiresTarget || selectedTargetPlayer)) {
     return <PlayerActionConfirmation
-      message={JSON.stringify({
-        event: EventMessages.ActionPending,
+      message={t(EventMessages.ActionConfirm, {
         action: selectedAction,
-        primaryPlayer: gameState.turnPlayer!,
-        secondaryPlayer: selectedTargetPlayer
+        secondaryPlayer: selectedTargetPlayer,
+        gameState
       })}
       action={PlayerActions.action}
       variables={{

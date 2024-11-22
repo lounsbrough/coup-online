@@ -127,9 +127,9 @@ export enum Responses {
 export enum EventMessages {
   GameStarted = 'GameStarted',
   PlayerDied = 'PlayerDied',
-  PlayerWon = 'PlayerWon',
   PlayerLostInfluence = 'PlayerLostInfluence',
   PlayerReplacedInfluence = 'PlayerReplacedInfluence',
+  ActionConfirm = 'ActionConfirm',
   ActionPending = 'ActionPending',
   ActionProcessed = 'ActionProcessed',
   ChallengePending = 'ChallengePending',

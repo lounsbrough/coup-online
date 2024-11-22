@@ -13,6 +13,7 @@ type ActionMessages = {
 
 export type Translations = ActionMessages & {
   anyone: string
+  [EventMessages.ActionConfirm]: ActionMessages
   [EventMessages.ActionPending]: ActionMessages
   [EventMessages.ActionProcessed]: ActionMessages
   [EventMessages.BlockFailed]: string
@@ -25,7 +26,6 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerDied]: string
   [EventMessages.PlayerLostInfluence]: string
   [EventMessages.PlayerReplacedInfluence]: string
-  [EventMessages.PlayerWon]: string
   briefDescriptionOfCoup: string
   cheatSheet: string
   collectCoins: string
@@ -50,11 +50,20 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Assassinate]: 'Assassinate',
     [Actions.Coup]: 'Coup',
     [Actions.Exchange]: 'Exchange',
-    [Actions.ForeignAid]: 'ForeignAid',
+    [Actions.ForeignAid]: 'Foreign Aid',
     [Actions.Income]: 'Income',
     [Actions.Steal]: 'Steal',
     [Actions.Tax]: 'Tax',
     anyone: 'Anyone',
+    [EventMessages.ActionConfirm]: {
+      [Actions.Assassinate]: '{{primaryPlayer}} está tentando {{action:Assassinar}} {{secondaryPlayer}}',
+      [Actions.Coup]: '',
+      [Actions.Exchange]: '',
+      [Actions.ForeignAid]: '',
+      [Actions.Income]: '',
+      [Actions.Steal]: '{{action:Steal}} from {{secondaryPlayer}}',
+      [Actions.Tax]: 'Collect {{action}}',
+    },
     [EventMessages.ActionPending]: {
       [Actions.Assassinate]: '{{primaryPlayer}} is trying to {{action}} {{secondaryPlayer}}',
       [Actions.Coup]: '',
@@ -62,7 +71,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]: '',
       [Actions.Income]: '',
       [Actions.Steal]: '',
-      [Actions.Tax]: '',
+      [Actions.Tax]: '{{primaryPlayer}} is trying to collect {{action}}',
     },
     [EventMessages.ActionProcessed]: {
       [Actions.Assassinate]: '{{primaryPlayer}} {{action:Assassinated}} {{secondaryPlayer}}',
@@ -83,7 +92,6 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerDied]: '',
     [EventMessages.PlayerLostInfluence]: '',
     [EventMessages.PlayerReplacedInfluence]: '',
-    [EventMessages.PlayerWon]: '',
     briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
     cheatSheet: 'Cheat Sheet',
     collectCoins: 'Collect {{count}} coin{{plural:s}}',
@@ -103,22 +111,31 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     welcomeToCoup: 'Welcome To Coup!'
   },
   'pt-BR': {
-    [Actions.Assassinate]: 'Assassinate',
-    [Actions.Coup]: 'Coup',
-    [Actions.Exchange]: 'Exchange',
-    [Actions.ForeignAid]: 'ForeignAid',
-    [Actions.Income]: 'Income',
-    [Actions.Steal]: 'Steal',
-    [Actions.Tax]: 'Tax',
+    [Actions.Assassinate]: 'Assassino',
+    [Actions.Coup]: 'Golpe',
+    [Actions.Exchange]: 'Troca',
+    [Actions.ForeignAid]: 'Ajuda Externa',
+    [Actions.Income]: 'Renda',
+    [Actions.Steal]: 'Roubo',
+    [Actions.Tax]: 'Imposto',
     anyone: 'Todos',
+    [EventMessages.ActionConfirm]: {
+      [Actions.Assassinate]: '{{primaryPlayer}} está tentando {{action:Assassinar}} {{secondaryPlayer}}',
+      [Actions.Coup]: '',
+      [Actions.Exchange]: '',
+      [Actions.ForeignAid]: '',
+      [Actions.Income]: '',
+      [Actions.Steal]: '{{action:Roubar}} de {{secondaryPlayer}}',
+      [Actions.Tax]: 'Coleter {{action}}',
+    },
     [EventMessages.ActionPending]: {
       [Actions.Assassinate]: '{{primaryPlayer}} está tentando {{action:Assassinar}} {{secondaryPlayer}}',
       [Actions.Coup]: '',
       [Actions.Exchange]: '',
       [Actions.ForeignAid]: '',
       [Actions.Income]: '',
-      [Actions.Steal]: '',
-      [Actions.Tax]: '',
+      [Actions.Steal]: '{{primaryPlayer}} está tentando {{action:Roubar}} de {{secondaryPlayer}}',
+      [Actions.Tax]: '{{primaryPlayer}} está tentando coleter {{action}}',
     },
     [EventMessages.ActionProcessed]: {
       [Actions.Assassinate]: '{{primaryPlayer}} {{action:Assassinou}} {{secondaryPlayer}}',
@@ -139,7 +156,6 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerDied]: '',
     [EventMessages.PlayerLostInfluence]: '',
     [EventMessages.PlayerReplacedInfluence]: '',
-    [EventMessages.PlayerWon]: '',
     briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
     cheatSheet: 'Folha de dicas',
     collectCoins: 'Colete {{count}} moeda{{plural:s}}',

@@ -37,7 +37,10 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
   const getTranslation = useCallback((key: keyof Translations, variables?: Partial<TranslationVariables>): ReactNode => {
     const effectiveTranslations = translations[language]
 
-    const hasActionsKey = key === EventMessages.ActionPending || key === EventMessages.ActionProcessed
+    const hasActionsKey =
+      key === EventMessages.ActionConfirm
+      || key === EventMessages.ActionPending
+      || key === EventMessages.ActionProcessed
 
     let template = hasActionsKey
       ? effectiveTranslations[key][variables!.action!]

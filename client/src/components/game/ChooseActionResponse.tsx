@@ -1,16 +1,17 @@
-import { Button, Grid2 } from "@mui/material"
+import { Button, Grid2, Typography } from "@mui/material"
 import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer || !gameState?.pendingAction) {
     return null
@@ -68,14 +69,14 @@ function ChooseActionResponse() {
 
   return (
     <>
-      <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {JSON.stringify({
-          event: EventMessages.ActionPending,
+      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+        {t(EventMessages.ActionPending, {
           action: gameState.pendingAction.action,
           primaryPlayer: gameState.turnPlayer!,
-          secondaryPlayer: gameState.pendingAction.targetPlayer
+          secondaryPlayer: gameState.pendingAction.targetPlayer,
+          gameState
         })}
-      </ColoredTypography>
+      </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
