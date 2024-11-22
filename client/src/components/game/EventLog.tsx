@@ -40,8 +40,7 @@ function EventLog() {
               })}
             </Typography>
           )
-        }
-        )}
+        })}
       </Box>
     </>
   )

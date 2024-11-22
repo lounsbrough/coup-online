@@ -61,7 +61,6 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
       const actionRegex = /\{\{action(:?.*?)\}\}/g
       template = template.replaceAll(actionRegex, (replaceMatch) => {
         const actionOverride = replaceMatch.matchAll(actionRegex).next().value?.[1]
-        console.log(actionOverride)
         return actionOverride
           ? actionOverride.slice(1)
           : effectiveTranslations[variables.action!]
