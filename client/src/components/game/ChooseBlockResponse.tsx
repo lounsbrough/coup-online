@@ -17,7 +17,7 @@ function ChooseBlockResponse() {
 
   if (selectedResponse) {
     return <PlayerActionConfirmation
-      message={selectedResponse}
+      message={t(selectedResponse)}
       action={PlayerActions.blockResponse}
       variables={{
         roomId: gameState.roomId,
@@ -36,7 +36,7 @@ function ChooseBlockResponse() {
         {t(EventMessages.BlockPending, {
           primaryPlayer: gameState.pendingBlock.sourcePlayer,
           secondaryPlayer: gameState.turnPlayer,
-          influence: gameState.pendingBlock.claimedInfluence,
+          primaryInfluence: gameState.pendingBlock.claimedInfluence,
           gameState
         })}
       </Typography>
@@ -54,7 +54,7 @@ function ChooseBlockResponse() {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
             >
-              {response}
+              {t(response)}
             </Button>
           })}
       </Grid2>

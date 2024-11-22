@@ -38,7 +38,7 @@ function EventLog() {
                 action: log.action,
                 primaryPlayer: log.primaryPlayer,
                 secondaryPlayer: log.secondaryPlayer,
-                influence: log.influence,
+                primaryInfluence: log.influence,
                 gameState
               })}
             </Typography>

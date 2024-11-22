@@ -19,7 +19,12 @@ function ChooseActionResponse() {
 
   if (selectedResponse && (selectedResponse !== Responses.Block || selectedInfluence)) {
     return <PlayerActionConfirmation
-      message={`${t(selectedResponse)}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
+      message={selectedInfluence
+        ? t('blockAsInfluence', {
+          primaryInfluence: selectedInfluence,
+          gameState
+        })
+        : t(selectedResponse)}
       action={PlayerActions.actionResponse}
       variables={{
         roomId: gameState.roomId,
@@ -43,7 +48,7 @@ function ChooseActionResponse() {
           fontWeight="bold"
           onBack={() => { setSelectedResponse(undefined) }}
         >
-          Claim an Influence
+          {t('claimAnInfluence')}
         </TypographyWithBackButton>
         <Grid2 container spacing={2} justifyContent="center">
           {Object.entries(InfluenceAttributes)
@@ -60,7 +65,7 @@ function ChooseActionResponse() {
                 }}
                 color={influence as Influences}
                 variant="contained"
-              >{influence}</Button>
+              >{t(influence as Influences)}</Button>
             })}
         </Grid2>
       </>

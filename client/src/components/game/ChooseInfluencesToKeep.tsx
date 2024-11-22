@@ -4,10 +4,12 @@ import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { PlayerActions } from "@shared"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function ChooseInfluencesToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer) {
     return null
@@ -18,8 +20,15 @@ function ChooseInfluencesToKeep() {
       .filter(({ putBackInDeck }) => putBackInDeck).length
 
   if (checkedIndexes.length === influenceCountToKeep) {
+    const influencesToKeep = gameState.selfPlayer.influences.filter((_i, index) => checkedIndexes.includes(index))
     return <PlayerActionConfirmation
-      message={`Keep ${gameState.selfPlayer.influences.filter((_i, index) => checkedIndexes.includes(index)).join(' and ')}`}
+      message={t('keepInfluences', {
+        primaryInfluence: influencesToKeep[0],
+        secondaryInfluence: influencesToKeep[1],
+        count: influenceCountToKeep,
+        gameState
+      })}
+      // message={`Keep ${influencesToKeep.join(' and ')}`}
       action={PlayerActions.loseInfluences}
       variables={{
         roomId: gameState.roomId,
@@ -36,7 +45,9 @@ function ChooseInfluencesToKeep() {
   return (
     <>
       <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {`Choose ${influenceCountToKeep} Influence${influenceCountToKeep === 1 ? '' : 's'} to Keep`}
+        {t('chooseInfluencesToKeep', {
+          count: influenceCountToKeep
+        })}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
@@ -63,7 +74,7 @@ function ChooseInfluencesToKeep() {
                 sx={{ color: 'inherit', p: 0, pr: 1 }}
                 checked={checkedIndexes.includes(index)}
               />
-              {influence}
+              {t(influence)}
             </Button>
           })}
       </Grid2>

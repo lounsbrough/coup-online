@@ -10,11 +10,15 @@ type PlayerVariables = {
   secondaryPlayer: string | undefined
 }
 
-type TranslationVariables = PlayerVariables & {
+type InfluenceVariables = {
+  primaryInfluence: Influences | undefined
+  secondaryInfluence: Influences | undefined
+}
+
+type TranslationVariables = PlayerVariables & InfluenceVariables & {
   gameState: PublicGameState | undefined
   count: number | undefined
   action: Actions | undefined
-  influence: Influences | undefined
 }
 
 type TranslationContextType = {
@@ -46,13 +50,13 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
       ? effectiveTranslations[key][variables!.action!]
       : effectiveTranslations[key]
 
-    if (!variables) {
+    if (!variables || !template) {
       return template
     }
 
     if (variables.count !== undefined) {
       template = template.replaceAll('{{count}}', variables.count.toString())
-      const pluralRegex = /\{\{plural:(.*?)\}\}/g
+      const pluralRegex = /\{\{plural\[\[(.+?)\]\]\}\}/g
       template = template.replaceAll(pluralRegex, (replaceMatch) => {
         const plural = replaceMatch.matchAll(pluralRegex).next().value?.[1]
         return (variables.count !== 1 && plural) || ''
@@ -61,35 +65,12 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
 
     const segments: (ReactNode)[] = [template]
 
-    if (variables.influence) {
-      segments.forEach((segment, i) => {
-        if (typeof segment === 'string') {
-          const matches = [...segment.matchAll(/(.*)\{\{influence\}\}(.*)/g)][0]
-          if (matches) {
-            segments.splice(i, 1,
-              matches[1],
-              <Typography
-                key={variables.influence}
-                component='span'
-                fontWeight={500}
-                fontSize='inherit'
-                sx={{ color: influenceColors?.[variables.influence!] }}
-              >
-                {effectiveTranslations[variables.influence!]}
-              </Typography>,
-              matches[2]
-            )
-          }
-        }
-      })
-    }
-
     if (variables.action) {
       segments.forEach((segment, i) => {
         if (typeof segment === 'string') {
-          const matches = [...segment.matchAll(/(.*)\{\{action(:?.*?)\}\}(.*)/g)][0]
+          const matches = [...segment.matchAll(/(.*)\{\{action\[{0,2}(.*?)\]{0,2}\}\}(.*)/g)][0]
           if (matches) {
-            const effectiveAction = matches[2]?.slice(1) || effectiveTranslations[variables.action!]
+            const effectiveAction = matches[2] || effectiveTranslations[variables.action!]
             segments.splice(i, 1,
               matches[1],
               <Typography
@@ -107,6 +88,36 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
         }
       })
     }
+
+    const influenceKeys: (keyof InfluenceVariables)[] = [
+      'primaryInfluence',
+      'secondaryInfluence'
+    ]
+
+    influenceKeys.forEach((influenceKey) => {
+      if (variables[influenceKey] !== undefined) {
+        segments.forEach((segment, i) => {
+          if (typeof segment === 'string') {
+            const matches = [...segment.matchAll(new RegExp(`(.*){{${influenceKey}}}(.*)`, 'g'))][0]
+            if (matches) {
+              segments.splice(i, 1,
+                matches[1],
+                <Typography
+                  key={variables[influenceKey]}
+                  component='span'
+                  fontWeight={500}
+                  fontSize='inherit'
+                  sx={{ color: influenceColors?.[variables[influenceKey]!] }}
+                >
+                  {effectiveTranslations[variables[influenceKey]!]}
+                </Typography>,
+                matches[2]
+              )
+            }
+          }
+        })
+      }
+    })
 
     const playerKeys: (keyof PlayerVariables)[] = [
       'primaryPlayer',

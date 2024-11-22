@@ -50,7 +50,7 @@ function ChooseChallengeResponse() {
       {gameState.pendingBlock?.claimedInfluence && (
         <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
           {t('influenceWasClaimed', {
-            influence: gameState.pendingBlock?.claimedInfluence,
+            primaryInfluence: gameState.pendingBlock?.claimedInfluence,
             gameState
           })}
         </Typography>

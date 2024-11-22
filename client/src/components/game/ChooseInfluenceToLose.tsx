@@ -4,10 +4,12 @@ import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function ChooseInfluenceToLose() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer) {
     return null
@@ -31,7 +33,7 @@ function ChooseInfluenceToLose() {
   return (
     <>
       <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {'Choose an Influence to Lose'}
+        {t('chooseInfluenceToLose')}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
@@ -45,7 +47,7 @@ function ChooseInfluenceToLose() {
               color={influence}
               variant="contained"
             >
-              {influence}
+              {t(influence)}
             </Button>
           })}
       </Grid2>
