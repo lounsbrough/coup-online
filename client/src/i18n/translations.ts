@@ -28,6 +28,7 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerReplacedInfluence]: string
   briefDescriptionOfCoup: string
   cancel: string
+  cardCountInDeck: string
   cheatSheet: string
   chooseATarget: string
   chooseAnAction: string
@@ -52,6 +53,8 @@ export type Translations = ActionMessages & {
   playerTurn: string
   playerWantToReset: string
   playerWins: string
+  reportBug: string
+  requestFeature: string
   resetGame: string
   [Responses.Block]: string
   [Responses.Challenge]: string
@@ -112,6 +115,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]: '',
     briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
     cancel: 'Cancel',
+    cardCountInDeck: '{{count}} card{{plural:s}} in the deck',
     cheatSheet: 'Cheat Sheet',
     chooseATarget: 'Choose a Target',
     chooseAnAction: 'Choose an Action',
@@ -136,6 +140,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     playerTurn: '{{primaryPlayer}}\'s Turn',
     playerWantToReset: '{{primaryPlayer}} wants to reset the game',
     playerWins: '{{primaryPlayer}} Wins!',
+    reportBug: 'Report Bug',
+    requestFeature: 'Request Feature',
     resetGame: 'Reset Game',
     [Responses.Block]: 'Block',
     [Responses.Challenge]: 'Challenge',
@@ -194,6 +200,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]: '',
     briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
     cancel: 'Cancelar',
+    cardCountInDeck: '{{count}} carta{{plural:s}} no baralho',
     cheatSheet: 'Folha de dicas',
     chooseATarget: 'Escolha um alvo',
     chooseAnAction: 'Escolha uma ação',
@@ -218,6 +225,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     playerTurn: 'A vez de {{primaryPlayer}}',
     playerWantToReset: '{{primaryPlayer}} quer reiniciar o jogo',
     playerWins: '{{primaryPlayer}} vence!',
+    reportBug: 'Reportar bug',
+    requestFeature: 'Solicitar recurso',
     resetGame: 'Reiniciar jogo',
     [Responses.Block]: 'Bloquear',
     [Responses.Challenge]: 'Desafiar',

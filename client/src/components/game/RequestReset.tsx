@@ -50,7 +50,7 @@ function RequestReset() {
               }}
               disabled={resetGameRequest.isMutating || isResetPending}
             >
-              {!isResetPending ? 'Reset Game' : t('waitingOnOtherPlayers')}
+              {!isResetPending ? t('resetGame') : t('waitingOnOtherPlayers')}
             </Button>
             {resetGameRequest.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGameRequest.error}</Typography>}
           </>

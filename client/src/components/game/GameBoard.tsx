@@ -108,7 +108,9 @@ function GameBoard() {
               placement="top"
               title={
                 <Typography variant="h6">
-                  {`${gameState.deckCount} cards in the deck`}
+                  {t('cardCountInDeck', {
+                    count: gameState.deckCount
+                  })}
                 </Typography>
               }>
               <Typography
