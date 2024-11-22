@@ -12,20 +12,8 @@ type ActionMessages = {
 }
 
 export type Translations = ActionMessages & {
+  addAiPlayer: string
   anyone: string
-  [EventMessages.ActionConfirm]: ActionMessages
-  [EventMessages.ActionPending]: Partial<ActionMessages>
-  [EventMessages.ActionProcessed]: ActionMessages
-  [EventMessages.BlockFailed]: string
-  [EventMessages.BlockPending]: string
-  [EventMessages.BlockSuccessful]: string
-  [EventMessages.ChallengeFailed]: string
-  [EventMessages.ChallengePending]: string
-  [EventMessages.ChallengeSuccessful]: string
-  [EventMessages.GameStarted]: string
-  [EventMessages.PlayerDied]: string
-  [EventMessages.PlayerLostInfluence]: string
-  [EventMessages.PlayerReplacedInfluence]: string
   blockAsInfluence: string
   briefDescriptionOfCoup: string
   cancel: string
@@ -42,10 +30,25 @@ export type Translations = ActionMessages & {
   colorMode: string
   confirm: string
   confirmActions: string
+  copyInviteLink: string
   createNewGame: string
   dark: string
   eventLog: string
+  [EventMessages.ActionConfirm]: ActionMessages
+  [EventMessages.ActionPending]: Partial<ActionMessages>
+  [EventMessages.ActionProcessed]: ActionMessages
+  [EventMessages.BlockFailed]: string
+  [EventMessages.BlockPending]: string
+  [EventMessages.BlockSuccessful]: string
+  [EventMessages.ChallengeFailed]: string
+  [EventMessages.ChallengePending]: string
+  [EventMessages.ChallengeSuccessful]: string
+  [EventMessages.GameStarted]: string
+  [EventMessages.PlayerDied]: string
+  [EventMessages.PlayerLostInfluence]: string
+  [EventMessages.PlayerReplacedInfluence]: string
   fullRules: string
+  honesty: string
   [Influences.Ambassador]: string
   [Influences.Assassin]: string
   [Influences.Captain]: string
@@ -63,6 +66,7 @@ export type Translations = ActionMessages & {
   playerTurn: string
   playerWantToReset: string
   playerWins: string
+  random: string
   reportBug: string
   requestFeature: string
   resetGame: string
@@ -72,8 +76,11 @@ export type Translations = ActionMessages & {
   room: string
   rules: string
   settings: string
+  skepticism: string
+  startGame: string
   system: string
   title: string
+  vengefulness: string
   waitingOnOtherPlayers: string
   websocketsConnection: string
   welcomeToCoup: string
@@ -88,7 +95,28 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Income]: 'Income',
     [Actions.Steal]: 'Steal',
     [Actions.Tax]: 'Tax',
+    addAiPlayer: 'Add AI Player',
     anyone: 'Anyone',
+    blockAsInfluence: 'Block as {{primaryInfluence}}',
+    briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
+    cancel: 'Cancel',
+    cardCountInDeck: '{{count}} card{{plural[[s]]}} in the deck',
+    cheatSheet: 'Cheat Sheet',
+    chooseATarget: 'Choose a Target',
+    chooseAnAction: 'Choose an Action',
+    chooseInfluencesToKeep: 'Choose {{count}} Influence{{plural[[s]]}} to Keep',
+    chooseInfluenceToLose: 'Choose an Influence to Lose',
+    chooseInfluenceToReveal: 'Choose an Influence to Reveal',
+    claimAnInfluence: 'Claim an influence',
+    close: 'Close',
+    collectCoins: 'Collect {{count}} coin{{plural[[s]]}}',
+    colorMode: 'Color Mode',
+    confirm: 'Confirm',
+    confirmActions: 'Confirm Actions',
+    copyInviteLink: 'Copy Invite Link',
+    createNewGame: 'Create New Game',
+    dark: 'Dark',
+    eventLog: 'Event Log',
     [EventMessages.ActionConfirm]: {
       [Actions.Assassinate]: '{{action[[Assassinate]]}} {{secondaryPlayer}}',
       [Actions.Coup]: '{{action[[Coup]]}} {{secondaryPlayer}}',
@@ -114,36 +142,18 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Steal]: '{{primaryPlayer}} {{action[[Stole]]}} from {{secondaryPlayer}}',
       [Actions.Tax]: '{{primaryPlayer}} collected {{action[[Tax]]}}',
     },
-    [EventMessages.BlockFailed]: '',
+    [EventMessages.BlockFailed]: '{{primaryPlayer}} failed to block {{secondaryPlayer}}',
     [EventMessages.BlockPending]: '{{primaryPlayer}} is trying to block {{secondaryPlayer}} as {{primaryInfluence}}',
-    [EventMessages.BlockSuccessful]: '',
-    [EventMessages.ChallengeFailed]: '',
+    [EventMessages.BlockSuccessful]: '???',
+    [EventMessages.ChallengeFailed]: '???',
     [EventMessages.ChallengePending]: '{{primaryPlayer}} is challenging {{secondaryPlayer}}',
-    [EventMessages.ChallengeSuccessful]: '',
-    [EventMessages.GameStarted]: '',
-    [EventMessages.PlayerDied]: '',
-    [EventMessages.PlayerLostInfluence]: '',
-    [EventMessages.PlayerReplacedInfluence]: '',
-    blockAsInfluence: 'Block as {{primaryInfluence}}',
-    briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
-    cancel: 'Cancel',
-    cardCountInDeck: '{{count}} card{{plural[[s]]}} in the deck',
-    cheatSheet: 'Cheat Sheet',
-    chooseATarget: 'Choose a Target',
-    chooseAnAction: 'Choose an Action',
-    chooseInfluencesToKeep: 'Choose {{count}} Influence{{plural[[s]]}} to Keep',
-    chooseInfluenceToLose: 'Choose an Influence to Lose',
-    chooseInfluenceToReveal: 'Choose an Influence to Reveal',
-    claimAnInfluence: 'Claim an influence',
-    close: 'Close',
-    collectCoins: 'Collect {{count}} coin{{plural[[s]]}}',
-    colorMode: 'Color Mode',
-    confirm: 'Confirm',
-    confirmActions: 'Confirm Actions',
-    createNewGame: 'Create New Game',
-    dark: 'Dark',
-    eventLog: 'Event Log',
+    [EventMessages.ChallengeSuccessful]: '???',
+    [EventMessages.GameStarted]: '???',
+    [EventMessages.PlayerDied]: '???',
+    [EventMessages.PlayerLostInfluence]: '???',
+    [EventMessages.PlayerReplacedInfluence]: '???',
     fullRules: 'Complete Rules',
+    honesty: 'Honesty',
     [Influences.Ambassador]: 'Ambassador',
     [Influences.Assassin]: 'Assassin',
     [Influences.Captain]: 'Captain',
@@ -161,6 +171,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     playerTurn: '{{primaryPlayer}}\'s Turn',
     playerWantToReset: '{{primaryPlayer}} wants to reset the game',
     playerWins: '{{primaryPlayer}} Wins!',
+    random: 'Random',
     reportBug: 'Report Bug',
     requestFeature: 'Request Feature',
     resetGame: 'Reset Game',
@@ -170,8 +181,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     room: 'Room',
     rules: 'Rules',
     settings: 'Settings',
+    skepticism: 'Skepticism',
+    startGame: 'Start Game',
     system: 'System',
     title: 'Coup',
+    vengefulness: 'Vengefulness',
     waitingOnOtherPlayers: 'Waiting on Other Players',
     websocketsConnection: 'WebSockets Connection',
     welcomeToCoup: 'Welcome To Coup!'
@@ -184,7 +198,28 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Income]: 'Renda',
     [Actions.Steal]: 'Roubo',
     [Actions.Tax]: 'Imposto',
+    addAiPlayer: 'Adicionar jogador AI',
     anyone: 'Todos',
+    blockAsInfluence: 'Bloquear como {{primaryInfluence}}',
+    briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
+    cancel: 'Cancelar',
+    cardCountInDeck: '{{count}} carta{{plural[[s]]}} no baralho',
+    cheatSheet: 'Folha de dicas',
+    chooseATarget: 'Escolha um alvo',
+    chooseAnAction: 'Escolha uma ação',
+    chooseInfluencesToKeep: 'Escolha {{count}} influência{{plural[[s]]}} para manter',
+    chooseInfluenceToLose: 'Escolha uma influência para perder',
+    chooseInfluenceToReveal: 'Escolha uma influência para revelar',
+    claimAnInfluence: 'Declare uma influência',
+    close: 'Fechar',
+    collectCoins: 'Colete {{count}} moeda{{plural[[s]]}}',
+    colorMode: 'Modo de cor',
+    confirm: 'Confirmar',
+    confirmActions: 'Confirmar ações',
+    copyInviteLink: 'Copiar link de convite',
+    createNewGame: 'Crie um jogo',
+    dark: 'Escuro',
+    eventLog: 'Registro de eventos',
     [EventMessages.ActionConfirm]: {
       [Actions.Assassinate]: '{{action[[Assassinar]]}} {{secondaryPlayer}}',
       [Actions.Coup]: '{{action[[Golpear]]}} {{secondaryPlayer}}',
@@ -210,36 +245,18 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Steal]: '{{primaryPlayer}} {{action[[roubou]]}} de {{secondaryPlayer}}',
       [Actions.Tax]: '{{primaryPlayer}} coubrou {{action[[imposto]]}}',
     },
-    [EventMessages.BlockFailed]: '',
+    [EventMessages.BlockFailed]: '{{primaryPlayer}} não conseguiu bloquear {{secondaryPlayer}}',
     [EventMessages.BlockPending]: '{{primaryPlayer}} está tentando bloquear {{secondaryPlayer}} como {{primaryInfluence}}',
-    [EventMessages.BlockSuccessful]: '',
-    [EventMessages.ChallengeFailed]: '',
+    [EventMessages.BlockSuccessful]: '???',
+    [EventMessages.ChallengeFailed]: '???',
     [EventMessages.ChallengePending]: '{{primaryPlayer}} está desafiando {{secondaryPlayer}}',
-    [EventMessages.ChallengeSuccessful]: '',
-    [EventMessages.GameStarted]: '',
-    [EventMessages.PlayerDied]: '',
-    [EventMessages.PlayerLostInfluence]: '',
-    [EventMessages.PlayerReplacedInfluence]: '',
-    blockAsInfluence: 'Bloquear como {{primaryInfluence}}',
-    briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
-    cancel: 'Cancelar',
-    cardCountInDeck: '{{count}} carta{{plural[[s]]}} no baralho',
-    cheatSheet: 'Folha de dicas',
-    chooseATarget: 'Escolha um alvo',
-    chooseAnAction: 'Escolha uma ação',
-    chooseInfluencesToKeep: 'Escolha {{count}} influência{{plural[[s]]}} para manter',
-    chooseInfluenceToLose: 'Escolha uma influência para perder',
-    chooseInfluenceToReveal: 'Escolha uma influência para revelar',
-    claimAnInfluence: 'Declare uma influência',
-    close: 'Fechar',
-    collectCoins: 'Colete {{count}} moeda{{plural[[s]]}}',
-    colorMode: 'Modo de cor',
-    confirm: 'Confirmar',
-    confirmActions: 'Confirmar ações',
-    createNewGame: 'Crie um jogo',
-    dark: 'Escuro',
-    eventLog: 'Registro de eventos',
+    [EventMessages.ChallengeSuccessful]: '???',
+    [EventMessages.GameStarted]: '???',
+    [EventMessages.PlayerDied]: '???',
+    [EventMessages.PlayerLostInfluence]: '???',
+    [EventMessages.PlayerReplacedInfluence]: '???',
     fullRules: 'Regras completas',
+    honesty: 'Honestidade',
     [Influences.Ambassador]: 'Embaixador',
     [Influences.Assassin]: 'Assassino',
     [Influences.Captain]: 'Capitão',
@@ -257,6 +274,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     playerTurn: 'A vez de {{primaryPlayer}}',
     playerWantToReset: '{{primaryPlayer}} quer reiniciar o jogo',
     playerWins: '{{primaryPlayer}} vence!',
+    random: 'Aleatório',
     reportBug: 'Reportar bug',
     requestFeature: 'Solicitar recurso',
     resetGame: 'Reiniciar jogo',
@@ -266,8 +284,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     room: 'Sala',
     rules: 'Regras',
     settings: 'Configurações',
+    skepticism: 'Ceticismo',
+    startGame: 'Iniciar jogo',
     system: 'Sistema',
     title: 'Golpe',
+    vengefulness: 'Vingança',
     waitingOnOtherPlayers: 'Esperando por outros jogadores',
     websocketsConnection: 'Conexão WebSockets',
     welcomeToCoup: 'Bem vindo ao Golpe!'

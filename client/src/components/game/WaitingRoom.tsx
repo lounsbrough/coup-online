@@ -11,11 +11,13 @@ import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import AddAiPlayer from "./AddAiPlayer"
 import BetaTag from "../utilities/BetaTag"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function WaitingRoom() {
   const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
   const [addAiPlayerDialogOpen, setAddAiPlayerDialogOpen] = useState(false)
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   const { trigger, isMutating, error } = useGameMutation<{
@@ -35,7 +37,9 @@ function WaitingRoom() {
           <Players inWaitingRoom />
         </Grid2>
       </Grid2>
-      <Typography variant="h5" m={3}>Room: <strong>{gameState.roomId}</strong></Typography>
+      <Typography variant="h5" m={3}>
+        {t('room')}
+        : <strong>{gameState.roomId}</strong></Typography>
       <Grid2 container direction='column' spacing={2}>
         <Grid2>
           <QRCodeSVG
@@ -53,7 +57,7 @@ function WaitingRoom() {
               setShowCopiedToClipboardMessage(true)
             }}
           >
-            Copy Invite Link
+            {(t('copyInviteLink'))}
           </Button>
           <Snackbar
             open={showCopiedToClipboardMessage}
@@ -71,7 +75,7 @@ function WaitingRoom() {
             }}
             disabled={gameState.players.length === 6}
           >
-            Add AI Player
+            {(t('addAiPlayer'))}
             <BetaTag />
           </Button>
         </Grid2>
@@ -86,7 +90,7 @@ function WaitingRoom() {
             }}
             disabled={gameState.players.length < 2 || isMutating}
           >
-            Start Game
+            {(t('startGame'))}
           </Button>
           {gameState.players.length < 2 && (
             <Typography sx={{ fontStyle: 'italic' }} mt={2}>

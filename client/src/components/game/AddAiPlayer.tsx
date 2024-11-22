@@ -7,6 +7,7 @@ import { AiPersonality, PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import BetaTag from "../utilities/BetaTag"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 const botNameIdeas = [
   'R2-D2',
@@ -30,6 +31,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
 }) {
   const [botName, setBotName] = useState('')
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   const { trigger, isMutating, error } = useGameMutation<{
     roomId: string, playerId: string, playerName: string, personality: AiPersonality
@@ -70,7 +72,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
       aria-describedby="add-ai-player"
     >
       <DialogTitle>
-        Add AI Player
+        {(t('addAiPlayer'))}
         <BetaTag />
       </DialogTitle>
       <form
