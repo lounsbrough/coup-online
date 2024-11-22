@@ -1,11 +1,10 @@
-import { Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { PublicPlayer } from '@shared'
-import ColoredTypography from "../utilities/ColoredTypography"
 
 function Victory({ player }: { player: PublicPlayer }) {
   return (
     <Box>
-      <ColoredTypography variant="h1">{`${player.name} Wins!`}</ColoredTypography>
+      <Typography variant="h1">{`${player.name} Wins!`}</Typography>
     </Box>
   )
 }

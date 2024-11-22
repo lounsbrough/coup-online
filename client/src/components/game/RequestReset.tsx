@@ -4,7 +4,6 @@ import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import ColoredTypography from "../utilities/ColoredTypography"
 
 const ResetIcon = Delete
 
@@ -57,9 +56,9 @@ function RequestReset() {
       </Box>
       {isResetPending && !isResetMine && !playerIsDead && (
         <>
-          <ColoredTypography>
+          <Typography>
             {`${gameState.resetGameRequest!.player} wants to reset the game`}
-          </ColoredTypography>
+          </Typography>
           <Grid2 mt={1} container spacing={1}
             sx={{
               justifyContent: 'center',
