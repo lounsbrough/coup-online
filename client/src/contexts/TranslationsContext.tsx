@@ -1,4 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react'
+import { Typography, useTheme } from '@mui/material'
 import { Actions, EventMessages, Influences } from '@shared'
 import { activeLanguageStorageKey } from '../helpers/localStorageKeys'
 import { AvailableLanguageCode } from '../i18n/availableLanguages'
@@ -30,6 +31,7 @@ const defaultLanguage = localStorage.getItem(activeLanguageStorageKey) as Availa
 
 export function TranslationContextProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<AvailableLanguageCode>(defaultLanguage)
+  const { influenceColors } = useTheme()
 
   const getTranslation = useCallback((key: keyof Translations, variables?: TranslationVariables): ReactNode => {
     const effectiveTranslations = translations[language]
@@ -53,8 +55,29 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
       })
     }
 
+    const segments: (ReactNode)[] = [template]
+
     if (variables.influence) {
-      template = template.replaceAll(`{{influence}}`, effectiveTranslations[variables.influence])
+      segments.forEach((segment, i) => {
+        if (typeof segment === 'string') {
+          const matches = [...segment.matchAll(/(.*?)\{\{influence\}\}(.*?)/g)][0]
+          if (matches) {
+            segments.splice(i, 1)
+            segments.push(
+              matches[1],
+              <Typography
+                component='span'
+                fontWeight='inherit'
+                fontSize='inherit'
+                sx={{ color: influenceColors?.[variables.influence!] }}
+              >
+                {effectiveTranslations[variables.influence!]}
+              </Typography>,
+              matches[2]
+            )
+          }
+        }
+      })
     }
 
     if (variables.action) {
@@ -78,8 +101,8 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
       }
     })
 
-    return template
-  }, [language])
+    return segments
+  }, [language, influenceColors])
 
   return (
     <TranslationContext.Provider value={{

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './components/App'
-import { TranslationContextProvider } from './contexts/TranslationsContext'
 import reportWebVitals from './reportWebVitals'
 
 const root = ReactDOM.createRoot(
@@ -12,9 +11,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <TranslationContextProvider>
-        <App />
-      </TranslationContextProvider>
+      <App />
     </BrowserRouter>
   </React.StrictMode>
 )
