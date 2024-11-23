@@ -283,11 +283,11 @@ function Rules() {
               sx={{ fontWeight: 'bold' }}
             >{t('fullRules')}</Typography>
             <Box sx={{ textAlign: 'left' }}>
-              <p><strong>Number of players</strong>: 2-6.</p>
-              <p><strong>Goal</strong>: To be the only player with any influence cards left.</p>
-              <p><strong>Contents</strong>: Deck of influence cards, bank of coins.</p>
-              <p><strong>Setup</strong>: Shuffle the cards and deal two to each player. Players should look at their cards but keep them hidden from everyone else. Each player takes two coins from the bank as their starting wealth. In a game with only two players, the starting player begins the game with one coin instead of two.</p>
-              <p><strong>Influences</strong>: There are five different characters in the influence deck (three of each character).</p>
+              <p><strong>{t('numberOfPlayers')}</strong>: 2-6.</p>
+              <p><strong>{t('goal')}</strong>: To be the only player with any influence cards left.</p>
+              <p><strong>{t('contents')}</strong>: Deck of influence cards, bank of coins.</p>
+              <p><strong>{t('setup')}</strong>: Shuffle the cards and deal two to each player. Players should look at their cards but keep them hidden from everyone else. Each player takes two coins from the bank as their starting wealth. In a game with only two players, the starting player begins the game with one coin instead of two.</p>
+              <p><strong>{t('influences')}</strong>: There are five different characters in the influence deck (three of each character).</p>
               <ul>
                 <li>{influenceText[Influences.Duke]}: Can Tax and Block Foreign Aid.</li>
                 <li>{influenceText[Influences.Assassin]}: Can Force one player to give up an Influence card.</li>
@@ -305,10 +305,10 @@ function Rules() {
                 <li>{actionText[Actions.Steal]}: Take two coins from another player. Can be Challenged. Can be Blocked by {influenceText[Influences.Captain]} or {influenceText[Influences.Ambassador]}.</li>
                 <li>{actionText[Actions.Exchange]}: Draw two Influence cards from the deck, look at them and mix them with your current Influence cards. Place two cards back in the deck and shuffle the deck. Can be Challenged. Cannot be Blocked.</li>
               </ul>
-              <p><strong>Challenge</strong>: When the acting player declares their action, any other player may Challenge their right to take the action. They are saying "I don't believe you have the proper character to do that." The acting player now must prove they have the power to take the action or lose the Challenge. If they have the right character, they reveal it and place the revealed card back in the deck. They then shuffle the deck and draw a new card. The Challenging player has lost the Challenge. If they do not have the proper character, they lose the Challenge.</p>
-              <p><strong>Blocking</strong>: If another player takes an action that can be Blocked, the targeted player, or anyone in the case of Foreign Aid, may Block it by claiming to have the proper character on one of their Influence cards. The acting player cannot perform the action and takes no other action this turn. Any player may choose to Challenge the Blocking player. If they win the Challenge, the action goes through as normal.</p>
-              <p><strong>Losing a Challenge</strong>: Any player who loses a Challenge must turn one of their Influence cards face up for all to see. If that is their last Influence card, they are out of the game.</p>
-              <p><strong>Losing Influence</strong>: Any time a player loses an Influence card, they choose which of their cards to reveal.</p>
+              <p><strong>{t('challenge')}</strong>: {t('rulesChallenge')}</p>
+              <p><strong>{t('block')}</strong>: {t('rulesBlock')}</p>
+              <p><strong>{t('losingAChallenge')}</strong>: {t('rulesLosingAChallenge')}</p>
+              <p><strong>{t('losingInfluence')}</strong>: {t('rulesLosingInfluence')}</p>
             </Box>
           </DialogContentText>
         </DialogContent>
