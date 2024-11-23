@@ -284,26 +284,26 @@ function Rules() {
             >{t('fullRules')}</Typography>
             <Box sx={{ textAlign: 'left' }}>
               <p><strong>{t('numberOfPlayers')}</strong>: 2-6.</p>
-              <p><strong>{t('goal')}</strong>: To be the only player with any influence cards left.</p>
-              <p><strong>{t('contents')}</strong>: Deck of influence cards, bank of coins.</p>
-              <p><strong>{t('setup')}</strong>: Shuffle the cards and deal two to each player. Players should look at their cards but keep them hidden from everyone else. Each player takes two coins from the bank as their starting wealth. In a game with only two players, the starting player begins the game with one coin instead of two.</p>
-              <p><strong>{t('influences')}</strong>: There are five different characters in the influence deck (three of each character).</p>
+              <p><strong>{t('goal')}</strong>: {t('rulesGoal')}</p>
+              <p><strong>{t('contents')}</strong>: {t('rulesContents')}</p>
+              <p><strong>{t('setup')}</strong>: {t('rulesSetup')}</p>
+              <p><strong>{t('influences')}</strong>: {t('rulesInfluences')}</p>
               <ul>
-                <li>{influenceText[Influences.Duke]}: Can Tax and Block Foreign Aid.</li>
-                <li>{influenceText[Influences.Assassin]}: Can Force one player to give up an Influence card.</li>
-                <li>{influenceText[Influences.Captain]}: Can Steal two coins from another player and Block stealing attempts.</li>
-                <li>{influenceText[Influences.Ambassador]}: Can Exchange your Influence cards with new ones from the deck and Block stealing attempts.</li>
-                <li>{influenceText[Influences.Contessa]}: Can Block assassination attempts.</li>
+                <li>{influenceText[Influences.Duke]}: {t('rulesDuke')}</li>
+                <li>{influenceText[Influences.Assassin]}: {t('rulesAssassin')}</li>
+                <li>{influenceText[Influences.Captain]}: {t('rulesCaptain')}</li>
+                <li>{influenceText[Influences.Ambassador]}: {t('rulesAmbassador')}</li>
+                <li>{influenceText[Influences.Contessa]}: {t('rulesContessa')}</li>
               </ul>
-              <p><strong>Actions</strong>: Players take turns performing one of these available actions:</p>
+              <p><strong>{t('actions')}</strong>: {t('rulesActions')}</p>
               <ul>
-                <li>{actionText[Actions.Income]}: Take one coin from the bank. Cannot be Challenged or Blocked.</li>
-                <li>{actionText[Actions.ForeignAid]}: Take two coins from the bank. Cannot be Challenged. Can be Blocked by the {influenceText[Influences.Duke]}.</li>
-                <li>{actionText[Actions.Coup]}: Costs seven coins. Cause a player to give up an Influence card. Cannot be Challenged or Blocked. If you start your turn with 10+ coins, you must take this action.</li>
-                <li>{actionText[Actions.Tax]}: Take three coins from the bank. Can be Challenged. Cannot be Blocked.</li>
-                <li>{actionText[Actions.Assassinate]}: Costs three coins. Force one player to give up an Influence card of their choice. Can be Challenged. Can be Blocked by the {influenceText[Influences.Contessa]}.</li>
-                <li>{actionText[Actions.Steal]}: Take two coins from another player. Can be Challenged. Can be Blocked by {influenceText[Influences.Captain]} or {influenceText[Influences.Ambassador]}.</li>
-                <li>{actionText[Actions.Exchange]}: Draw two Influence cards from the deck, look at them and mix them with your current Influence cards. Place two cards back in the deck and shuffle the deck. Can be Challenged. Cannot be Blocked.</li>
+                <li>{actionText[Actions.Income]}: {t('rulesIncome')}</li>
+                <li>{actionText[Actions.ForeignAid]}: {t('rulesForeignAid')}</li>
+                <li>{actionText[Actions.Coup]}: {t('rulesCoup')}</li>
+                <li>{actionText[Actions.Tax]}: {t('rulesTax')}</li>
+                <li>{actionText[Actions.Assassinate]}: {t('rulesAssassinate')}</li>
+                <li>{actionText[Actions.Steal]}: {t('rulesSteal')}</li>
+                <li>{actionText[Actions.Exchange]}: {t('rulesExchange')}</li>
               </ul>
               <p><strong>{t('challenge')}</strong>: {t('rulesChallenge')}</p>
               <p><strong>{t('block')}</strong>: {t('rulesBlock')}</p>

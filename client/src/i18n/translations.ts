@@ -13,6 +13,7 @@ type ActionMessages = {
 
 export type Translations = ActionMessages & {
   action: string
+  actions: string
   add: string
   addAiPlayer: string
   addPlayersToStartGame: string
@@ -26,9 +27,9 @@ export type Translations = ActionMessages & {
   challenge: string
   chooseATarget: string
   chooseAnAction: string
-  chooseInfluencesToKeep: string
   chooseInfluenceToLose: string
   chooseInfluenceToReveal: string
+  chooseInfluencesToKeep: string
   claimAnInfluence: string
   close: string
   collectCoins: string
@@ -60,13 +61,13 @@ export type Translations = ActionMessages & {
   goal: string
   honesty: string
   influence: string
+  influenceWasClaimed: string
   influences: string
   [Influences.Ambassador]: string
   [Influences.Assassin]: string
   [Influences.Captain]: string
   [Influences.Contessa]: string
   [Influences.Duke]: string
-  influenceWasClaimed: string
   inviteLinkCopied: string
   joinExistingGame: string
   joinGame: string
@@ -94,10 +95,27 @@ export type Translations = ActionMessages & {
   [Responses.Pass]: string
   room: string
   rules: string
+  rulesActions: string
+  rulesAmbassador: string
+  rulesAssassin: string
+  rulesAssassinate: string
   rulesBlock: string
+  rulesCaptain: string
   rulesChallenge: string
+  rulesContents: string
+  rulesContessa: string
+  rulesCoup: string
+  rulesDuke: string
+  rulesExchange: string
+  rulesForeignAid: string
+  rulesGoal: string
+  rulesIncome: string
+  rulesInfluences: string
   rulesLosingAChallenge: string
   rulesLosingInfluence: string
+  rulesSetup: string
+  rulesSteal: string
+  rulesTax: string
   settings: string
   setup: string
   skepticism: string
@@ -110,13 +128,15 @@ export type Translations = ActionMessages & {
   waitingOnOtherPlayers: string
   websocketsConnection: string
   welcomeToCoup: string
-  whatIsYourName: string
   whatIsBotsName: string
+  whatIsYourName: string
+  youAreNotInGame: string
 }
 
 const translations: { [key in AvailableLanguageCode]: Translations } = {
   'en-US': {
     action: 'Action',
+    actions: 'Actions',
     [Actions.Assassinate]: 'Assassinate',
     [Actions.Coup]: 'Coup',
     [Actions.Exchange]: 'Exchange',
@@ -137,9 +157,9 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     cheatSheet: 'Cheat Sheet',
     chooseATarget: 'Choose a Target',
     chooseAnAction: 'Choose an Action',
-    chooseInfluencesToKeep: 'Choose {{count}} Influence{{plural[[s]]}} to Keep',
     chooseInfluenceToLose: 'Choose an Influence to Lose',
     chooseInfluenceToReveal: 'Choose an Influence to Reveal',
+    chooseInfluencesToKeep: 'Choose {{count}} Influence{{plural[[s]]}} to Keep',
     claimAnInfluence: 'Claim an influence',
     close: 'Close',
     collectCoins: 'Collect {{count}} coin{{plural[[s]]}}',
@@ -193,13 +213,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     goal: 'Goal',
     honesty: 'Honesty',
     influence: 'Influence',
+    influenceWasClaimed: '{{primaryInfluence}} was claimed',
     influences: 'Influences',
     [Influences.Ambassador]: 'Ambassador',
     [Influences.Assassin]: 'Assassin',
     [Influences.Captain]: 'Captain',
     [Influences.Contessa]: 'Contessa',
     [Influences.Duke]: 'Duke',
-    influenceWasClaimed: '{{primaryInfluence}} was claimed',
     inviteLinkCopied: 'Invite Link Copied',
     joinExistingGame: 'Join Existing Game',
     joinGame: 'Join Game',
@@ -227,10 +247,27 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Pass]: 'Pass',
     room: 'Room',
     rules: 'Rules',
+    rulesActions: 'Players take turns performing one of these available actions:',
+    rulesAmbassador: 'Can Exchange your Influence cards with new ones from the deck and Block stealing attempts.',
+    rulesAssassin: 'Can Force one player to give up an Influence card.',
+    rulesAssassinate: 'Costs three coins. Force one player to give up an Influence card of their choice. Can be Challenged. Can be Blocked by the Contessa.',
     rulesBlock: 'If another player takes an action that can be Blocked, the targeted player, or anyone in the case of Foreign Aid, may Block it by claiming to have the proper character on one of their Influence cards. The acting player cannot perform the action and takes no other action this turn. Any player may choose to Challenge the Blocking player. If they win the Challenge, the action goes through as normal.',
+    rulesCaptain: 'Can Steal two coins from another player and Block stealing attempts.',
     rulesChallenge: 'When the acting player declares their action, any other player may Challenge their right to take the action. They are saying "I don\'t believe you have the proper character to do that." The acting player now must prove they have the power to take the action or lose the Challenge. If they have the right character, they reveal it and place the revealed card back in the deck. They then shuffle the deck and draw a new card. The Challenging player has lost the Challenge. If they do not have the proper character, they lose the Challenge.',
+    rulesContents: 'Deck of influence cards, bank of coins.',
+    rulesContessa: 'Can Block assassination attempts.',
+    rulesCoup: 'Costs seven coins. Cause a player to give up an Influence card. Cannot be Challenged or Blocked. If you start your turn with 10+ coins, you must take this action.',
+    rulesDuke: 'Can Tax and Block Foreign Aid.',
+    rulesExchange: 'Draw two Influence cards from the deck, look at them and mix them with your current Influence cards. Place two cards back in the deck and shuffle the deck. Can be Challenged. Cannot be Blocked.',
+    rulesForeignAid: 'Take two coins from the bank. Cannot be Challenged. Can be Blocked by the Duke.',
+    rulesGoal: 'To be the only player with any influence cards left.',
+    rulesIncome: 'Take one coin from the bank. Cannot be Challenged or Blocked.',
+    rulesInfluences: 'There are five different characters in the influence deck (three of each character).',
     rulesLosingAChallenge: 'Any player who loses a Challenge must turn one of their Influence cards face up for all to see. If that is their last Influence card, they are out of the game.',
     rulesLosingInfluence: 'Any time a player loses an Influence card, they choose which of their cards to reveal.',
+    rulesSetup: 'Shuffle the cards and deal two to each player. Players should look at their cards but keep them hidden from everyone else. Each player takes two coins from the bank as their starting wealth. In a game with only two players, the starting player begins the game with one coin instead of two.',
+    rulesSteal: 'Take two coins from another player. Can be Challenged. Can be Blocked by Captain or Ambassador.',
+    rulesTax: 'Take three coins from the bank. Can be Challenged. Cannot be Blocked.',
     settings: 'Settings',
     setup: 'Setup',
     skepticism: 'Skepticism',
@@ -243,11 +280,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     waitingOnOtherPlayers: 'Waiting on Other Players',
     websocketsConnection: 'WebSockets Connection',
     welcomeToCoup: 'Welcome To Coup!',
+    whatIsBotsName: 'What is its name?',
     whatIsYourName: 'What is your name?',
-    whatIsBotsName: 'What is its name?'
+    youAreNotInGame: 'You are not in the game'
   },
   'pt-BR': {
     action: 'Ação',
+    actions: 'Ações',
     [Actions.Assassinate]: 'Assassinar',
     [Actions.Coup]: 'Golpe',
     [Actions.Exchange]: 'Trocar',
@@ -268,9 +307,9 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     cheatSheet: 'Folha de dicas',
     chooseATarget: 'Escolha um alvo',
     chooseAnAction: 'Escolha uma ação',
-    chooseInfluencesToKeep: 'Escolha {{count}} influência{{plural[[s]]}} para manter',
     chooseInfluenceToLose: 'Escolha uma influência para perder',
     chooseInfluenceToReveal: 'Escolha uma influência para revelar',
+    chooseInfluencesToKeep: 'Escolha {{count}} influência{{plural[[s]]}} para manter',
     claimAnInfluence: 'Declare uma influência',
     close: 'Fechar',
     collectCoins: 'Colete {{count}} moeda{{plural[[s]]}}',
@@ -281,8 +320,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     copyInviteLink: 'Copiar link de convite',
     createGame: 'Crie jogo',
     createNewGame: 'Crie um jogo',
-    draw2InfluencesAndDiscard2: 'Ganhe 2 influências e descarte 2',
     dark: 'Escuro',
+    draw2InfluencesAndDiscard2: 'Ganhe 2 influências e descarte 2',
     effect: 'Efeito',
     eventLog: 'Registro de eventos',
     [EventMessages.ActionConfirm]: {
@@ -324,13 +363,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     goal: 'Meta',
     honesty: 'Honestidade',
     influence: 'Influência',
+    influenceWasClaimed: '{{primaryInfluence}} foi declarado',
     influences: 'Influências',
     [Influences.Ambassador]: 'Embaixador',
     [Influences.Assassin]: 'Assassino',
     [Influences.Captain]: 'Capitão',
     [Influences.Contessa]: 'Contessa',
     [Influences.Duke]: 'Duque',
-    influenceWasClaimed: '{{primaryInfluence}} foi declarado',
     inviteLinkCopied: 'Link de convite copiado',
     joinExistingGame: 'Participe de um jogo',
     joinGame: 'Entre no jogo',
@@ -358,10 +397,27 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Pass]: 'Passar',
     room: 'Sala',
     rules: 'Regras',
+    rulesActions: 'Os jogadores se revezam realizando uma destas ações disponíveis:',
+    rulesAmbassador: 'Pode trocar suas cartas de influência por novas do baralho e bloquear tentativas de roubo.',
+    rulesAssassin: 'Pode forçar um jogador a descartar uma carta de influência.',
+    rulesAssassinate: 'Custa três moedas. Force um jogador a descartar uma carta de Influência de sua escolha. Pode ser desafiado. Pode ser bloqueado pela Contessa.',
     rulesBlock: 'Se outro jogador realizar uma ação que possa ser Bloqueada, o jogador alvo, ou qualquer pessoa no caso de Ajuda Externa, poderá Bloqueá-la alegando ter o personagem adequado em uma de suas cartas de Influência. O jogador agente não pode realizar a ação e não realiza nenhuma outra ação neste turno. Qualquer jogador pode escolher desafiar o jogador bloqueador. Se vencerem o Desafio, a ação prosseguirá normalmente.',
+    rulesCaptain: 'Pode roubar duas moedas de outro jogador e bloquear tentativas de roubo.',
     rulesChallenge: 'Quando o jogador agente declara sua ação, qualquer outro jogador pode contestar seu direito de realizar a ação. Eles estão dizendo: “Não acredito que você tenha o caráter adequado para fazer isso”. O jogador atuante agora deve provar que tem o poder de realizar a ação ou perderá o Desafio. Se tiverem o personagem certo, eles o revelam e colocam a carta revelada de volta no baralho. Eles então embaralham o baralho e compram uma nova carta. O jogador Desafiador perdeu o Desafio. Se não tiverem o caráter adequado, perdem o Desafio.',
+    rulesContents: 'Baralho de cartas de influência, banco de moedas.',
+    rulesContessa: 'Pode bloquear tentativas de assassinato.',
+    rulesCoup: 'Custa sete moedas. Faça com que um jogador descarte uma carta de Influência. Não pode ser desafiado ou bloqueado. Se você começar seu turno com 10 moedas ou mais, você será forçado a realizar esta ação.',
+    rulesDuke: 'Pode cobrar impostos e bloquear ajuda externa.',
+    rulesExchange: 'Pegue duas cartas de Influência do baralho, observe-as e misture-as com suas cartas de Influência atuais. Coloque duas cartas de volta no baralho e embaralhe-o. Pode ser desafiado. Não pode ser bloqueado.',
+    rulesForeignAid: 'Pegue duas moedas do banco. Não pode ser desafiado. Pode ser bloqueado pelo duque.',
+    rulesGoal: 'Ser o único jogador com cartas de influência restantes.',
+    rulesIncome: 'Pegue uma moeda do banco. Não pode ser desafiado ou bloqueado.',
+    rulesInfluences: 'Existem cinco personagens diferentes no baralho de influência (três de cada personagem).',
     rulesLosingAChallenge: 'Qualquer jogador que perder um Desafio deve virar uma de suas cartas de Influência para que todos possam ver. Se esta for a última carta de Influência, eles estão fora do jogo.',
     rulesLosingInfluence: 'Sempre que um jogador perde uma carta de Influência, ele escolhe qual das suas cartas revelar.',
+    rulesSetup: 'Embaralhe as cartas e distribua duas para cada jogador. Os jogadores devem olhar para as suas cartas, mas mantê-las escondidas de todos os outros. Cada jogador pega duas moedas do banco como riqueza inicial. Num jogo com apenas dois jogadores, o jogador inicial começa o jogo com uma moeda em vez de duas.',
+    rulesSteal: 'Pegue duas moedas de outro jogador. Pode ser desafiado. Pode ser bloqueado pelo Capitão ou Embaixador.',
+    rulesTax: 'Pegue três moedas do banco. Pode ser desafiado. Não pode ser bloqueado.',
     settings: 'Configurações',
     setup: 'Configurar',
     skepticism: 'Ceticismo',
@@ -374,8 +430,9 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     waitingOnOtherPlayers: 'Esperando por outros jogadores',
     websocketsConnection: 'Conexão WebSockets',
     welcomeToCoup: 'Bem vindo ao Golpe!',
+    whatIsBotsName: 'Qual é seu nome?',
     whatIsYourName: 'Qual o seu nome?',
-    whatIsBotsName: 'Qual é seu nome?'
+    youAreNotInGame: 'Você não está neste jogo'
   }
 }
 

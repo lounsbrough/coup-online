@@ -9,8 +9,9 @@ export default [
   ...tseslint.configs.recommended,
   {
     rules: {
+      '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
       semi: ['error', 'never'],
-      "@typescript-eslint/no-empty-object-type": ['error', { allowInterfaces: 'with-single-extends' }]
+      'sort-keys': ['error', 'asc']
     }
   }
 ]
