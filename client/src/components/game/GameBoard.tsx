@@ -9,9 +9,11 @@ import Victory from "./Victory"
 import PlayAgain from "./PlayAgain"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import CardDeck from "../icons/CardDeck"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function GameBoard() {
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   if (!gameState?.selfPlayer) {
@@ -57,10 +59,12 @@ function GameBoard() {
         )}
         {turnPlayer && !gameIsOver && (
           <Box my={2}>
-            <Typography component="span" variant="h4" sx={{
-              fontWeight: 'bold', color: turnPlayer.color
-            }}>{gameState.turnPlayer}</Typography>
-            <Typography component="span" variant="h4">'s Turn</Typography>
+            <Typography variant="h4">
+              {t('playerTurn', {
+                primaryPlayer: gameState.turnPlayer,
+                gameState
+              })}
+            </Typography>
           </Box>
         )}
         {!!gameState?.selfPlayer?.influences?.length && (
@@ -104,7 +108,9 @@ function GameBoard() {
               placement="top"
               title={
                 <Typography variant="h6">
-                  {`${gameState.deckCount} cards in the deck`}
+                  {t('cardCountInDeck', {
+                    count: gameState.deckCount
+                  })}
                 </Typography>
               }>
               <Typography

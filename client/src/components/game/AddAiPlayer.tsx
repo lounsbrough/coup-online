@@ -7,6 +7,7 @@ import { AiPersonality, PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import BetaTag from "../utilities/BetaTag"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 const botNameIdeas = [
   'R2-D2',
@@ -30,6 +31,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
 }) {
   const [botName, setBotName] = useState('')
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   const { trigger, isMutating, error } = useGameMutation<{
     roomId: string, playerId: string, playerName: string, personality: AiPersonality
@@ -70,7 +72,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
       aria-describedby="add-ai-player"
     >
       <DialogTitle>
-        Add AI Player
+        {(t('addAiPlayer'))}
         <BetaTag />
       </DialogTitle>
       <form
@@ -92,7 +94,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               onChange={(event) => {
                 setBotName(event.target.value.slice(0, 10))
               }}
-              label="What is its name?"
+              label={t('whatIsBotsName')}
               variant="standard"
               required
             />
@@ -108,11 +110,14 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               }}
               disabled={isMutating}
             >
-              Random
+              {t('random')}
             </Button>
           </Box>
           <Box p={2} mt={2}>
-            <Typography mt={2}>{`Vengefulness: ${vengefulness}%`}</Typography>
+            <Typography mt={2}>
+              {t('vengefulness')}
+              {`: ${vengefulness}%`}
+            </Typography>
             <Slider
               step={1}
               value={vengefulness}
@@ -121,7 +126,10 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               max={maxSliderValue}
               onChange={handleVengefulnessChange}
             />
-            <Typography mt={2}>{`Honesty: ${honesty}%`}</Typography>
+            <Typography mt={2}>
+              {t('honesty')}
+              {`: ${honesty}%`}
+            </Typography>
             <Slider
               step={1}
               value={honesty}
@@ -130,7 +138,10 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               max={maxSliderValue}
               onChange={handleHonestyChange}
             />
-            <Typography mt={2}>{`Skepticism: ${skepticism}%`}</Typography>
+            <Typography mt={2}>
+              {t('skepticism')}
+              {`: ${skepticism}%`}
+            </Typography>
             <Slider
               step={1}
               value={skepticism}
@@ -148,14 +159,14 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
             onClick={() => { setAddAiPlayerDialogOpen(false) }}
             disabled={isMutating}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button
             type="submit"
             variant="contained"
             disabled={isMutating}
           >
-            Add
+            {t('add')}
           </Button>
         </DialogActions>
       </form>

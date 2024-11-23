@@ -1,14 +1,15 @@
 import { Button, Grid2, Typography } from "@mui/material"
-import { Influences, PlayerActions } from '@shared'
+import { EventMessages, Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function ChooseChallengeResponse() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer ||
     (!gameState?.pendingActionChallenge && !gameState?.pendingBlockChallenge)
@@ -36,16 +37,23 @@ function ChooseChallengeResponse() {
 
   return (
     <>
-      <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {`${challengingPlayer} is challenging ${challengedPlayer}`}
-      </ColoredTypography>
       <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        Choose an Influence to Reveal
+        {t(EventMessages.ChallengePending, {
+          primaryPlayer: challengingPlayer,
+          secondaryPlayer: challengedPlayer,
+          gameState
+        })}
+      </Typography>
+      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+        {t('chooseInfluenceToReveal')}
       </Typography>
       {gameState.pendingBlock?.claimedInfluence && (
-        <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-          {`${gameState.pendingBlock?.claimedInfluence} was claimed`}
-        </ColoredTypography>
+        <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+          {t('influenceWasClaimed', {
+            primaryInfluence: gameState.pendingBlock?.claimedInfluence,
+            gameState
+          })}
+        </Typography>
       )}
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
@@ -59,7 +67,7 @@ function ChooseChallengeResponse() {
               color={influence as Influences}
               variant="contained"
             >
-              {influence}
+              {t(influence as Influences)}
             </Button>
           })}
       </Grid2>

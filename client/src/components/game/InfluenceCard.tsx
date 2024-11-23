@@ -1,10 +1,12 @@
 import { Grid2, Paper, Typography, useTheme } from "@mui/material"
 import { Influences } from '@shared'
 import InfluenceIcon from "../icons/InfluenceIcon"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function InfluenceCard({ influence }: {
   influence: Influences
 }) {
+  const { t } = useTranslationContext()
   const { influenceColors } = useTheme()
 
   return (
@@ -27,7 +29,7 @@ function InfluenceCard({ influence }: {
             variant="h6"
             sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}
           >
-            {influence}
+            {t(influence)}
           </Typography>
         </Grid2>
       </Grid2>

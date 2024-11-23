@@ -1,4 +1,4 @@
-import { Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
+import { Alert, Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
 import { ContentCopy } from "@mui/icons-material"
@@ -11,11 +11,13 @@ import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import AddAiPlayer from "./AddAiPlayer"
 import BetaTag from "../utilities/BetaTag"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function WaitingRoom() {
   const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
   const [addAiPlayerDialogOpen, setAddAiPlayerDialogOpen] = useState(false)
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   const { trigger, isMutating, error } = useGameMutation<{
@@ -35,7 +37,9 @@ function WaitingRoom() {
           <Players inWaitingRoom />
         </Grid2>
       </Grid2>
-      <Typography variant="h5" m={3}>Room: <strong>{gameState.roomId}</strong></Typography>
+      <Typography variant="h5" m={3}>
+        {t('room')}
+        : <strong>{gameState.roomId}</strong></Typography>
       <Grid2 container direction='column' spacing={2}>
         <Grid2>
           <QRCodeSVG
@@ -53,14 +57,22 @@ function WaitingRoom() {
               setShowCopiedToClipboardMessage(true)
             }}
           >
-            Copy Invite Link
+            {(t('copyInviteLink'))}
           </Button>
           <Snackbar
             open={showCopiedToClipboardMessage}
             autoHideDuration={5000}
             onClose={() => { setShowCopiedToClipboardMessage(false) }}
-            message="Invite link copied"
-          />
+          >
+            <Alert
+              onClose={() => { setShowCopiedToClipboardMessage(false) }}
+              severity="success"
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {t('inviteLinkCopied')}
+            </Alert>
+          </Snackbar>
         </Grid2>
         <Grid2>
           <Button
@@ -71,7 +83,7 @@ function WaitingRoom() {
             }}
             disabled={gameState.players.length === 6}
           >
-            Add AI Player
+            {(t('addAiPlayer'))}
             <BetaTag />
           </Button>
         </Grid2>
@@ -86,16 +98,16 @@ function WaitingRoom() {
             }}
             disabled={gameState.players.length < 2 || isMutating}
           >
-            Start Game
+            {(t('startGame'))}
           </Button>
           {gameState.players.length < 2 && (
             <Typography sx={{ fontStyle: 'italic' }} mt={2}>
-              Add at least one more player to start game
+              {t('addPlayersToStartGame')}
             </Typography>
           )}
           {gameState.players.length === 2 && (
             <Typography sx={{ fontStyle: 'italic' }} mt={2}>
-              2 player game, starting player will begin with 1 coin
+              {t('startingPlayerBeginsWith1Coin')}
             </Typography>
           )}
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}

@@ -1,16 +1,17 @@
-import { Button, Grid2 } from "@mui/material"
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, PlayerActions, Responses, getActionMessage } from '@shared'
+import { Button, Grid2, Typography } from "@mui/material"
+import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer || !gameState?.pendingAction) {
     return null
@@ -18,7 +19,12 @@ function ChooseActionResponse() {
 
   if (selectedResponse && (selectedResponse !== Responses.Block || selectedInfluence)) {
     return <PlayerActionConfirmation
-      message={`${selectedResponse}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
+      message={selectedInfluence
+        ? t('blockAsInfluence', {
+          primaryInfluence: selectedInfluence,
+          gameState
+        })
+        : t(selectedResponse)}
       action={PlayerActions.actionResponse}
       variables={{
         roomId: gameState.roomId,
@@ -42,7 +48,7 @@ function ChooseActionResponse() {
           fontWeight="bold"
           onBack={() => { setSelectedResponse(undefined) }}
         >
-          Claim an Influence
+          {t('claimAnInfluence')}
         </TypographyWithBackButton>
         <Grid2 container spacing={2} justifyContent="center">
           {Object.entries(InfluenceAttributes)
@@ -59,7 +65,7 @@ function ChooseActionResponse() {
                 }}
                 color={influence as Influences}
                 variant="contained"
-              >{influence}</Button>
+              >{t(influence as Influences)}</Button>
             })}
         </Grid2>
       </>
@@ -68,14 +74,14 @@ function ChooseActionResponse() {
 
   return (
     <>
-      <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {getActionMessage({
+      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+        {t(EventMessages.ActionPending, {
           action: gameState.pendingAction.action,
-          tense: 'pending',
-          actionPlayer: gameState.turnPlayer!,
-          targetPlayer: gameState.pendingAction.targetPlayer
+          primaryPlayer: gameState.turnPlayer!,
+          secondaryPlayer: gameState.pendingAction.targetPlayer,
+          gameState
         })}
-      </ColoredTypography>
+      </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
@@ -101,7 +107,7 @@ function ChooseActionResponse() {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
             >
-              {response}
+              {t(response)}
             </Button>
           })}
       </Grid2>

@@ -73,12 +73,6 @@ export const ActionAttributes: {
     coinsRequired?: number
     influenceRequired?: Influences
     requiresTarget: boolean
-    wordVariations?: string[]
-    messageTemplates: {
-      confirm: string
-      pending?: string
-      complete: string
-    }
   }
 } = {
   [Actions.Assassinate]: {
@@ -86,78 +80,41 @@ export const ActionAttributes: {
     challengeable: true,
     coinsRequired: 3,
     influenceRequired: Influences.Assassin,
-    requiresTarget: true,
-    wordVariations: ['Assassinated'],
-    messageTemplates: {
-      confirm: 'Assassinate <targetPlayer>',
-      pending: `<actionPlayer> is trying to Assassinate <targetPlayer>`,
-      complete: `<actionPlayer> Assassinated <targetPlayer>`
-    }
+    requiresTarget: true
   },
   [Actions.Steal]: {
     blockable: true,
     challengeable: true,
     influenceRequired: Influences.Captain,
-    requiresTarget: true,
-    wordVariations: ['Stole'],
-    messageTemplates: {
-      confirm: 'Steal from <targetPlayer>',
-      pending: `<actionPlayer> is trying to Steal from <targetPlayer>`,
-      complete: `<actionPlayer> Stole from <targetPlayer>`
-    }
+    requiresTarget: true
   },
   [Actions.Coup]: {
     blockable: false,
     challengeable: false,
     coinsRequired: 7,
-    requiresTarget: true,
-    wordVariations: ['Couped'],
-    messageTemplates: {
-      confirm: 'Coup <targetPlayer>',
-      complete: `<actionPlayer> Couped <targetPlayer>`
-    }
+    requiresTarget: true
   },
   [Actions.Tax]: {
     blockable: false,
     challengeable: true,
     influenceRequired: Influences.Duke,
-    requiresTarget: false,
-    messageTemplates: {
-      confirm: 'Collect Tax',
-      pending: `<actionPlayer> is trying to collect Tax`,
-      complete: `<actionPlayer> collected Tax`
-    }
+    requiresTarget: false
   },
   [Actions.ForeignAid]: {
     blockable: true,
     challengeable: false,
-    requiresTarget: false,
-    messageTemplates: {
-      confirm: 'Collect Foreign Aid',
-      pending: `<actionPlayer> is trying to collect Foreign Aid`,
-      complete: `<actionPlayer> collected Foreign Aid`
-    }
+    requiresTarget: false
   },
   [Actions.Income]: {
     blockable: false,
     challengeable: false,
-    requiresTarget: false,
-    messageTemplates: {
-      confirm: 'Collect Income',
-      complete: `<actionPlayer> collected Income`
-    }
+    requiresTarget: false
   },
   [Actions.Exchange]: {
     blockable: false,
     challengeable: true,
     influenceRequired: Influences.Ambassador,
-    requiresTarget: false,
-    wordVariations: ['Exchanged'],
-    messageTemplates: {
-      confirm: 'Exchange influences',
-      pending: `<actionPlayer> is trying to Exchange influences`,
-      complete: `<actionPlayer> Exchanged influences`
-    }
+    requiresTarget: false
   }
 }
 
@@ -165,6 +122,30 @@ export enum Responses {
   Pass = 'Pass',
   Challenge = 'Challenge',
   Block = 'Block'
+}
+
+export enum EventMessages {
+  GameStarted = 'GameStarted',
+  PlayerDied = 'PlayerDied',
+  PlayerLostInfluence = 'PlayerLostInfluence',
+  PlayerReplacedInfluence = 'PlayerReplacedInfluence',
+  ActionConfirm = 'ActionConfirm',
+  ActionPending = 'ActionPending',
+  ActionProcessed = 'ActionProcessed',
+  ChallengePending = 'ChallengePending',
+  ChallengeSuccessful = 'ChallengeSuccessful',
+  ChallengeFailed = 'ChallengeFailed',
+  BlockPending = 'BlockPending',
+  BlockSuccessful = 'BlockSuccessful',
+  BlockFailed = 'BlockFailed'
+}
+
+export type EventMessage = {
+  event: EventMessages
+  action?: Actions
+  primaryPlayer?: string
+  secondaryPlayer?: string
+  influence?: Influences
 }
 
 export type AiPersonality = {
@@ -194,7 +175,7 @@ export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
 
 export type GameState = {
   deck: Influences[]
-  eventLogs: string[]
+  eventLogs: EventMessage[]
   lastEventTimestamp: Date
   isStarted: boolean
   availablePlayerColors: string[]

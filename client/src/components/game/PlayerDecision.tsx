@@ -9,9 +9,11 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Circle } from "@mui/icons-material"
 import ChooseInfluencesToKeep from "./ChooseInfluencesToKeep"
 import { getWaitingOnPlayers } from "../../helpers/players"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function PlayerDecision() {
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer?.influences.length) {
     return null
@@ -48,7 +50,9 @@ function PlayerDecision() {
 
   return (
     <>
-      <Typography variant="h6" my={1} fontWeight="bold">Waiting for other players</Typography>
+      <Typography variant="h6" my={1} fontWeight="bold">
+        {t('waitingOnOtherPlayers')}
+      </Typography>
       <Typography>
         {getWaitingOnPlayers(gameState).map(({ color }) =>
           <Circle key={color} sx={{ color }} />

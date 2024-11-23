@@ -1,6 +1,6 @@
 import Chance from 'chance'
 import { io, Socket } from 'socket.io-client'
-import { Actions, Influences, Player, PlayerActions, PublicGameState, PublicPlayer, Responses, ServerEvents } from '../shared/types/game'
+import { Actions, Player, PlayerActions, PublicGameState, PublicPlayer, Responses, ServerEvents } from '../shared/types/game'
 import { PublicGameStateOrError } from './index'
 
 const chance = new Chance()
@@ -118,22 +118,6 @@ describe('index', () => {
           },
           error: '"playerName" length must be less than or equal to 10 characters long',
           status: 400
-        },
-        {
-          body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: Influences.Duke
-          },
-          error: '"playerName" contains an invalid value',
-          status: 400
-        },
-        {
-          body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: Actions.Exchange
-          },
-          error: '"playerName" contains an invalid value',
-          status: 400
         }
       ] as {
         body: Partial<{ playerId: string, playerName: string }>,
@@ -242,36 +226,6 @@ describe('index', () => {
             return { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) }
           },
           error: 'Game has already started',
-          status: 400
-        },
-        {
-          getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
-
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName })
-
-            const { json: { gameState } } = response
-            const roomId = gameState?.roomId
-
-            return { roomId, playerId: chance.string({ length: 10 }), playerName: Influences.Captain }
-          },
-          error: '"playerName" contains an invalid value',
-          status: 400
-        },
-        {
-          getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
-
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName })
-
-            const { json: { gameState } } = response
-            const roomId = gameState?.roomId
-
-            return { roomId, playerId: chance.string({ length: 10 }), playerName: Actions.Income }
-          },
-          error: '"playerName" contains an invalid value',
           status: 400
         },
         {

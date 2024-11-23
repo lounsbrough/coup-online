@@ -6,12 +6,14 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { getPlayerId } from "../../helpers/players"
 import { PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function JoinGame() {
   const [searchParams] = useSearchParams()
   const [roomId, setRoomId] = useState(searchParams.get('roomId') ?? '')
   const [playerName, setPlayerName] = useState('')
   const navigate = useNavigate()
+  const { t } = useTranslationContext()
 
   const navigateToRoom = useCallback((gameState: PublicGameState) => {
     navigate(`/game?roomId=${gameState.roomId}`)
@@ -26,10 +28,10 @@ function JoinGame() {
       <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
         <Link to='/'>Home</Link>
-        <Typography>Join Game</Typography>
+        <Typography>{t('joinExistingGame')}</Typography>
       </Breadcrumbs>
       <Typography variant="h5" sx={{ m: 5 }}>
-        Join an Existing Game
+        {t('joinExistingGame')}
       </Typography>
       <form
         onSubmit={(event) => {
@@ -77,7 +79,9 @@ function JoinGame() {
             sx={{ mt: 5 }}
             variant="contained"
             disabled={isMutating}
-          >Join Game</Button>
+          >
+            {t('joinGame')}
+          </Button>
         </Grid2>
         {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>
