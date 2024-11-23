@@ -184,7 +184,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.BlockSuccessful]: '{{primaryPlayer}} successfully blocked {{secondaryPlayer}}',
     [EventMessages.ChallengeFailed]: '{{primaryPlayer}} failed to challenge {{secondaryPlayer}}',
     [EventMessages.ChallengePending]: '{{primaryPlayer}} is challenging {{secondaryPlayer}}',
-    [EventMessages.ChallengeSuccessful]: '{{primaryPlayer}} succesfully challenged {{secondaryPlayer}}',
+    [EventMessages.ChallengeSuccessful]: '{{primaryPlayer}} successfully challenged {{secondaryPlayer}}',
     [EventMessages.GameStarted]: 'Game has started',
     [EventMessages.PlayerDied]: '{{primaryPlayer}} is out!',
     [EventMessages.PlayerLostInfluence]: '{{primaryPlayer}} lost their {{primaryInfluence}}',
