@@ -25,8 +25,8 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   }
 
   const colorModeFactor = theme.palette.mode === LIGHT_COLOR_MODE ? -1 : 1
-
   const waitingOnPlayers = getWaitingOnPlayers(gameState)
+  const humanPlayers = gameState.players.filter(({ ai }) => !ai)
 
   return (
     <>
@@ -40,7 +40,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
             return (
               <Badge
                 key={index}
-                invisible={!inWaitingRoom}
+                invisible={!inWaitingRoom || (!ai && humanPlayers.length === 1)}
                 badgeContent={
                   <Button
                     sx={{
