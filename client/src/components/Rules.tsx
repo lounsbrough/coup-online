@@ -1,4 +1,4 @@
-import { useState, forwardRef } from "react"
+import { useState, forwardRef, useMemo } from "react"
 import { AppBar, Box, Button, Dialog, DialogContent, DialogContentText, Divider, IconButton, Toolbar, Typography, Slide, useTheme } from "@mui/material"
 import { Block, Close, Gavel, Group } from "@mui/icons-material"
 import { TransitionProps } from '@mui/material/transitions'
@@ -16,21 +16,21 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} appear={props.appear ?? false} />
 })
 
-const influenceText = Object.fromEntries(
-  Object.values(Influences).map((influence) =>
-    ([influence, <Typography component="span" fontSize="large" fontWeight='bold' color={influence}>{influence}</Typography>]))
-)
-
-const actionText = Object.fromEntries(
-  Object.entries(ActionAttributes).map(([action, { influenceRequired }]) =>
-    [action, <Typography component="span" fontSize="large" fontWeight='bold' color={influenceRequired as Influences}>{action}</Typography>]
-  )
-)
-
 function Rules() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const { breakpoints, actionColors, influenceColors, isSmallScreen } = useTheme()
   const { t } = useTranslationContext()
+
+  const influenceText = useMemo(() => Object.fromEntries(
+    Object.values(Influences).map((influence) =>
+      ([influence, <Typography component="span" fontSize="large" fontWeight='bold' color={influence}>{t(influence)}</Typography>]))
+  ), [t])
+
+  const actionText = useMemo(() => Object.fromEntries(
+    Object.entries(ActionAttributes).map(([action, { influenceRequired }]) =>
+      [action, <Typography component="span" fontSize="large" fontWeight='bold' color={influenceRequired as Influences}>{t(action as Actions)}</Typography>]
+    )
+  ), [t])
 
   const noneIndicator = <><Block sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{` ${t('none')}`}</span></>
   const anyIndicator = <><Group sx={{ verticalAlign: 'middle', }} />{isSmallScreen ? <br /> : null}<span style={{ verticalAlign: 'middle' }}>{` ${t('anyone')}`}</span></>
