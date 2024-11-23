@@ -1,6 +1,6 @@
 import { Chance } from "chance"
 import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, mutateGameState, validateGameState } from "./gameState"
-import { Actions, GameState, Influences, PublicGameState } from '../../../shared/types/game'
+import { Actions, EventMessages, GameState, Influences, PublicGameState } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 import { compressString, decompressString } from "./compression"
@@ -35,7 +35,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
   const gameState: GameState = {
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
-    eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
+    eventLogs: [],
     lastEventTimestamp: chance.date(),
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, 6),
@@ -258,13 +258,17 @@ describe('gameState', () => {
   describe('logEvent', () => {
     const gameState = getRandomGameState()
 
-    const newLog = chance.string()
+    const newLog = {
+      event: chance.pickone(Object.values(EventMessages))
+    }
 
     let expectedEventLogs = [...gameState.eventLogs, newLog]
     logEvent(gameState, newLog)
     expect(gameState.eventLogs).toEqual(expectedEventLogs)
 
-    gameState.eventLogs = chance.n(chance.string, 100)
+    gameState.eventLogs = chance.n(() => ({
+      event: chance.pickone(Object.values(EventMessages))
+    }), 100)
 
     expectedEventLogs = [...gameState.eventLogs.slice(1), newLog]
     logEvent(gameState, newLog)

@@ -33,7 +33,7 @@ describe('ai', () => {
   ): PublicGameState => {
     const gameState: PublicGameState = {
       deckCount: 15 - players.length * 2,
-      eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
+      eventLogs: [],
       lastEventTimestamp: chance.date(),
       isStarted: chance.bool(),
       players: [],
