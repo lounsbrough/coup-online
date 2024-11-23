@@ -12,7 +12,9 @@ type ActionMessages = {
 }
 
 export type Translations = ActionMessages & {
+  add: string
   addAiPlayer: string
+  addPlayersToStartGame: string
   anyone: string
   blockAsInfluence: string
   briefDescriptionOfCoup: string
@@ -31,6 +33,7 @@ export type Translations = ActionMessages & {
   confirm: string
   confirmActions: string
   copyInviteLink: string
+  createGame: string
   createNewGame: string
   dark: string
   eventLog: string
@@ -47,6 +50,7 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerDied]: string
   [EventMessages.PlayerLostInfluence]: string
   [EventMessages.PlayerReplacedInfluence]: string
+  startingPlayerBeginsWith1Coin: string
   fullRules: string
   honesty: string
   [Influences.Ambassador]: string
@@ -55,6 +59,7 @@ export type Translations = ActionMessages & {
   [Influences.Contessa]: string
   [Influences.Duke]: string
   influenceWasClaimed: string
+  inviteLinkCopied: string
   joinExistingGame: string
   keepInfluences: string
   language: string
@@ -84,6 +89,8 @@ export type Translations = ActionMessages & {
   waitingOnOtherPlayers: string
   websocketsConnection: string
   welcomeToCoup: string
+  whatIsYourName: string
+  whatIsBotsName: string
 }
 
 const translations: { [key in AvailableLanguageCode]: Translations } = {
@@ -95,7 +102,9 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Income]: 'Income',
     [Actions.Steal]: 'Steal',
     [Actions.Tax]: 'Tax',
+    add: 'Add',
     addAiPlayer: 'Add AI Player',
+    addPlayersToStartGame: 'Add at least one more player to start game',
     anyone: 'Anyone',
     blockAsInfluence: 'Block as {{primaryInfluence}}',
     briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
@@ -114,6 +123,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     confirm: 'Confirm',
     confirmActions: 'Confirm Actions',
     copyInviteLink: 'Copy Invite Link',
+    createGame: 'Create Game',
     createNewGame: 'Create New Game',
     dark: 'Dark',
     eventLog: 'Event Log',
@@ -144,14 +154,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     },
     [EventMessages.BlockFailed]: '{{primaryPlayer}} failed to block {{secondaryPlayer}}',
     [EventMessages.BlockPending]: '{{primaryPlayer}} is trying to block {{secondaryPlayer}} as {{primaryInfluence}}',
-    [EventMessages.BlockSuccessful]: '???',
-    [EventMessages.ChallengeFailed]: '???',
+    [EventMessages.BlockSuccessful]: '{{primaryPlayer}} successfully blocked {{secondaryPlayer}}',
+    [EventMessages.ChallengeFailed]: '{{primaryPlayer}} failed to challenge {{secondaryPlayer}}',
     [EventMessages.ChallengePending]: '{{primaryPlayer}} is challenging {{secondaryPlayer}}',
-    [EventMessages.ChallengeSuccessful]: '???',
-    [EventMessages.GameStarted]: '???',
-    [EventMessages.PlayerDied]: '???',
-    [EventMessages.PlayerLostInfluence]: '???',
-    [EventMessages.PlayerReplacedInfluence]: '???',
+    [EventMessages.ChallengeSuccessful]: '{{primaryPlayer}} succesfully challenged {{secondaryPlayer}}',
+    [EventMessages.GameStarted]: 'Game has started',
+    [EventMessages.PlayerDied]: '{{primaryPlayer}} is out!',
+    [EventMessages.PlayerLostInfluence]: '{{primaryPlayer}} lost their {{primaryInfluence}}',
+    [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revealed and replaced {{primaryInfluence}}',
     fullRules: 'Complete Rules',
     honesty: 'Honesty',
     [Influences.Ambassador]: 'Ambassador',
@@ -160,6 +170,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Influences.Contessa]: 'Contessa',
     [Influences.Duke]: 'Duke',
     influenceWasClaimed: '{{primaryInfluence}} was claimed',
+    inviteLinkCopied: 'Invite Link Copied',
     joinExistingGame: 'Join Existing Game',
     keepInfluences: 'Keep {{primaryInfluence}}{{plural[[ and {{secondaryInfluence}}]]}}',
     language: 'Language',
@@ -183,12 +194,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     settings: 'Settings',
     skepticism: 'Skepticism',
     startGame: 'Start Game',
+    startingPlayerBeginsWith1Coin: '2 player game, starting player will begin with 1 coin',
     system: 'System',
     title: 'Coup',
     vengefulness: 'Vengefulness',
     waitingOnOtherPlayers: 'Waiting on Other Players',
     websocketsConnection: 'WebSockets Connection',
-    welcomeToCoup: 'Welcome To Coup!'
+    welcomeToCoup: 'Welcome To Coup!',
+    whatIsYourName: 'What is your name?',
+    whatIsBotsName: 'What is its name?'
   },
   'pt-BR': {
     [Actions.Assassinate]: 'Assassino',
@@ -198,7 +212,9 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Income]: 'Renda',
     [Actions.Steal]: 'Roubo',
     [Actions.Tax]: 'Imposto',
+    add: 'Adicionar',
     addAiPlayer: 'Adicionar jogador AI',
+    addPlayersToStartGame: 'Adicione pelo menos mais um jogador para iniciar o jogo',
     anyone: 'Todos',
     blockAsInfluence: 'Bloquear como {{primaryInfluence}}',
     briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
@@ -217,6 +233,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     confirm: 'Confirmar',
     confirmActions: 'Confirmar ações',
     copyInviteLink: 'Copiar link de convite',
+    createGame: 'Crie jogo',
     createNewGame: 'Crie um jogo',
     dark: 'Escuro',
     eventLog: 'Registro de eventos',
@@ -247,14 +264,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     },
     [EventMessages.BlockFailed]: '{{primaryPlayer}} não conseguiu bloquear {{secondaryPlayer}}',
     [EventMessages.BlockPending]: '{{primaryPlayer}} está tentando bloquear {{secondaryPlayer}} como {{primaryInfluence}}',
-    [EventMessages.BlockSuccessful]: '???',
-    [EventMessages.ChallengeFailed]: '???',
+    [EventMessages.BlockSuccessful]: '{{primaryPlayer}} bloqueou {{secondaryPlayer}} com sucesso',
+    [EventMessages.ChallengeFailed]: '{{primaryPlayer}} não conseguiu desafiar {{secondaryPlayer}}',
     [EventMessages.ChallengePending]: '{{primaryPlayer}} está desafiando {{secondaryPlayer}}',
-    [EventMessages.ChallengeSuccessful]: '???',
-    [EventMessages.GameStarted]: '???',
-    [EventMessages.PlayerDied]: '???',
-    [EventMessages.PlayerLostInfluence]: '???',
-    [EventMessages.PlayerReplacedInfluence]: '???',
+    [EventMessages.ChallengeSuccessful]: '{{primaryPlayer}} desafiou {{secondaryPlayer}} com sucesso',
+    [EventMessages.GameStarted]: 'O jogo começou',
+    [EventMessages.PlayerDied]: '{{primaryPlayer}} está fora!',
+    [EventMessages.PlayerLostInfluence]: '{{primaryPlayer}} perdeu seu {{primaryInfluence}}',
+    [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}',
     fullRules: 'Regras completas',
     honesty: 'Honestidade',
     [Influences.Ambassador]: 'Embaixador',
@@ -263,6 +280,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Influences.Contessa]: 'Contessa',
     [Influences.Duke]: 'Duque',
     influenceWasClaimed: '{{primaryInfluence}} foi declarado',
+    inviteLinkCopied: 'Link de convite copiado',
     joinExistingGame: 'Participe de um jogo',
     keepInfluences: 'Manter {{primaryInfluence}}{{plural[[ e {{secondaryInfluence}}]]}}',
     language: 'Idioma',
@@ -286,12 +304,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     settings: 'Configurações',
     skepticism: 'Ceticismo',
     startGame: 'Iniciar jogo',
+    startingPlayerBeginsWith1Coin: '2 jogadores, o jogador inicial começará com 1 moeda',
     system: 'Sistema',
     title: 'Golpe',
     vengefulness: 'Vingança',
     waitingOnOtherPlayers: 'Esperando por outros jogadores',
     websocketsConnection: 'Conexão WebSockets',
-    welcomeToCoup: 'Bem vindo ao Golpe!'
+    welcomeToCoup: 'Bem vindo ao Golpe!',
+    whatIsYourName: 'Qual o seu nome?',
+    whatIsBotsName: 'Qual é seu nome?'
   }
 }
 

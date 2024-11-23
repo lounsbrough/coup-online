@@ -7,10 +7,12 @@ import { Link } from "react-router-dom"
 import { Analytics } from '@vercel/analytics/react'
 import { PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
   const navigate = useNavigate()
+  const { t } = useTranslationContext()
 
   const navigateToRoom = useCallback((gameState: PublicGameState) => {
     navigate(`/game?roomId=${gameState.roomId}`)
@@ -25,9 +27,13 @@ function CreateGame() {
       <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
         <Link to='/'>Home</Link>
-        <Typography>Create Game</Typography>
+        <Typography>
+          {t('createNewGame')}
+        </Typography>
       </Breadcrumbs>
-      <Typography variant="h5" sx={{ m: 5 }}>Create a New Game</Typography>
+      <Typography variant="h5" sx={{ m: 5 }}>
+        {t('createNewGame')}
+      </Typography>
       <form
         onSubmit={(event) => {
           event.preventDefault()
@@ -46,7 +52,7 @@ function CreateGame() {
                 onChange={(event) => {
                   setPlayerName(event.target.value.slice(0, 10))
                 }}
-                label="What is your name?"
+                label={t('whatIsYourName')}
                 variant="standard"
                 required
               />
@@ -59,7 +65,9 @@ function CreateGame() {
             sx={{ mt: 5 }}
             variant="contained"
             disabled={isMutating}
-          >Create Game</Button>
+          >
+            {t('createGame')}
+          </Button>
         </Grid2>
         {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>

@@ -1,4 +1,4 @@
-import { Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
+import { Alert, Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
 import { ContentCopy } from "@mui/icons-material"
@@ -63,8 +63,16 @@ function WaitingRoom() {
             open={showCopiedToClipboardMessage}
             autoHideDuration={5000}
             onClose={() => { setShowCopiedToClipboardMessage(false) }}
-            message="Invite link copied"
-          />
+          >
+            <Alert
+              onClose={() => { setShowCopiedToClipboardMessage(false) }}
+              severity="success"
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {t('inviteLinkCopied')}
+            </Alert>
+          </Snackbar>
         </Grid2>
         <Grid2>
           <Button
@@ -94,12 +102,12 @@ function WaitingRoom() {
           </Button>
           {gameState.players.length < 2 && (
             <Typography sx={{ fontStyle: 'italic' }} mt={2}>
-              Add at least one more player to start game
+              {t('addPlayersToStartGame')}
             </Typography>
           )}
           {gameState.players.length === 2 && (
             <Typography sx={{ fontStyle: 'italic' }} mt={2}>
-              2 player game, starting player will begin with 1 coin
+              {t('startingPlayerBeginsWith1Coin')}
             </Typography>
           )}
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}

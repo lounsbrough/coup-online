@@ -94,7 +94,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               onChange={(event) => {
                 setBotName(event.target.value.slice(0, 10))
               }}
-              label="What is its name?"
+              label={t('whatIsBotsName')}
               variant="standard"
               required
             />
@@ -159,14 +159,14 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
             onClick={() => { setAddAiPlayerDialogOpen(false) }}
             disabled={isMutating}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button
             type="submit"
             variant="contained"
             disabled={isMutating}
           >
-            Add
+            {t('add')}
           </Button>
         </DialogActions>
       </form>
