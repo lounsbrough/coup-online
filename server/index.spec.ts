@@ -1,6 +1,6 @@
 import Chance from 'chance'
 import { io, Socket } from 'socket.io-client'
-import { Actions, Influences, Player, PlayerActions, PublicGameState, PublicPlayer, Responses, ServerEvents } from '../shared/types/game'
+import { Actions, Player, PlayerActions, PublicGameState, PublicPlayer, Responses, ServerEvents } from '../shared/types/game'
 import { PublicGameStateOrError } from './index'
 
 const chance = new Chance()
