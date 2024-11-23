@@ -52,8 +52,8 @@ export const render = (jsx: React.JSX.Element, {
 
     return (
       <GameStateContext.Provider value={{
+        gameState: gameState ?? getRandomGameState(),
         setGameState: () => { },
-        gameState: gameState ?? getRandomGameState()
       }}>
         <>
           <span data-testid="current-color-mode">{colorMode}</span>
