@@ -67,7 +67,7 @@ function ChooseChallengeResponse() {
               color={influence as Influences}
               variant="contained"
             >
-              {influence}
+              {t(influence as Influences)}
             </Button>
           })}
       </Grid2>

@@ -12,10 +12,12 @@ type ActionMessages = {
 }
 
 export type Translations = ActionMessages & {
+  action: string
   add: string
   addAiPlayer: string
   addPlayersToStartGame: string
   anyone: string
+  block: string
   blockAsInfluence: string
   briefDescriptionOfCoup: string
   cancel: string
@@ -35,7 +37,9 @@ export type Translations = ActionMessages & {
   copyInviteLink: string
   createGame: string
   createNewGame: string
+  draw2InfluencesAndDiscard2: string
   dark: string
+  effect: string
   eventLog: string
   [EventMessages.ActionConfirm]: ActionMessages
   [EventMessages.ActionPending]: Partial<ActionMessages>
@@ -50,9 +54,9 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerDied]: string
   [EventMessages.PlayerLostInfluence]: string
   [EventMessages.PlayerReplacedInfluence]: string
-  startingPlayerBeginsWith1Coin: string
   fullRules: string
   honesty: string
+  influence: string
   [Influences.Ambassador]: string
   [Influences.Assassin]: string
   [Influences.Captain]: string
@@ -62,11 +66,13 @@ export type Translations = ActionMessages & {
   inviteLinkCopied: string
   joinExistingGame: string
   keepInfluences: string
+  killAnInfluence: string
   language: string
   light: string
   loseInfluence: string
   none: string
   notEnoughCoins: string
+  payCoins: string
   playAgain: string
   playerTurn: string
   playerWantToReset: string
@@ -83,6 +89,8 @@ export type Translations = ActionMessages & {
   settings: string
   skepticism: string
   startGame: string
+  startingPlayerBeginsWith1Coin: string
+  steal2CoinsFromSomeone: string
   system: string
   title: string
   vengefulness: string
@@ -95,6 +103,7 @@ export type Translations = ActionMessages & {
 
 const translations: { [key in AvailableLanguageCode]: Translations } = {
   'en-US': {
+    action: 'Action',
     [Actions.Assassinate]: 'Assassinate',
     [Actions.Coup]: 'Coup',
     [Actions.Exchange]: 'Exchange',
@@ -106,6 +115,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     addAiPlayer: 'Add AI Player',
     addPlayersToStartGame: 'Add at least one more player to start game',
     anyone: 'Anyone',
+    block: 'Block',
     blockAsInfluence: 'Block as {{primaryInfluence}}',
     briefDescriptionOfCoup: 'The game of deception, deduction, and luck.',
     cancel: 'Cancel',
@@ -126,6 +136,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     createGame: 'Create Game',
     createNewGame: 'Create New Game',
     dark: 'Dark',
+    draw2InfluencesAndDiscard2: 'Draw 2 influences & Discard 2',
+    effect: 'Effect',
     eventLog: 'Event Log',
     [EventMessages.ActionConfirm]: {
       [Actions.Assassinate]: '{{action[[Assassinate]]}} {{secondaryPlayer}}',
@@ -164,6 +176,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revealed and replaced {{primaryInfluence}}',
     fullRules: 'Complete Rules',
     honesty: 'Honesty',
+    influence: 'Influence',
     [Influences.Ambassador]: 'Ambassador',
     [Influences.Assassin]: 'Assassin',
     [Influences.Captain]: 'Captain',
@@ -173,11 +186,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     inviteLinkCopied: 'Invite Link Copied',
     joinExistingGame: 'Join Existing Game',
     keepInfluences: 'Keep {{primaryInfluence}}{{plural[[ and {{secondaryInfluence}}]]}}',
+    killAnInfluence: 'Kill an influence',
     language: 'Language',
     light: 'Light',
     loseInfluence: 'Lose {{primaryInfluence}}',
     none: 'None',
     notEnoughCoins: 'Not enough coins',
+    payCoins: 'Pay {{count}} coin{{plural[[s]]}}',
     playAgain: 'Play Again',
     playerTurn: '{{primaryPlayer}}\'s Turn',
     playerWantToReset: '{{primaryPlayer}} wants to reset the game',
@@ -195,6 +210,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     skepticism: 'Skepticism',
     startGame: 'Start Game',
     startingPlayerBeginsWith1Coin: '2 player game, starting player will begin with 1 coin',
+    steal2CoinsFromSomeone: 'Steal 2 coins from someone',
     system: 'System',
     title: 'Coup',
     vengefulness: 'Vengefulness',
@@ -205,17 +221,19 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: 'What is its name?'
   },
   'pt-BR': {
-    [Actions.Assassinate]: 'Assassino',
+    action: 'Ação',
+    [Actions.Assassinate]: 'Assassinar',
     [Actions.Coup]: 'Golpe',
-    [Actions.Exchange]: 'Troca',
+    [Actions.Exchange]: 'Trocar',
     [Actions.ForeignAid]: 'Ajuda Externa',
     [Actions.Income]: 'Renda',
-    [Actions.Steal]: 'Roubo',
+    [Actions.Steal]: 'Roubar',
     [Actions.Tax]: 'Imposto',
     add: 'Adicionar',
     addAiPlayer: 'Adicionar jogador AI',
     addPlayersToStartGame: 'Adicione pelo menos mais um jogador para iniciar o jogo',
     anyone: 'Todos',
+    block: 'Bloque',
     blockAsInfluence: 'Bloquear como {{primaryInfluence}}',
     briefDescriptionOfCoup: 'O jogo de engano, dedução e sorte.',
     cancel: 'Cancelar',
@@ -235,7 +253,9 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     copyInviteLink: 'Copiar link de convite',
     createGame: 'Crie jogo',
     createNewGame: 'Crie um jogo',
+    draw2InfluencesAndDiscard2: 'Ganhe 2 influências e descarte 2',
     dark: 'Escuro',
+    effect: 'Efeito',
     eventLog: 'Registro de eventos',
     [EventMessages.ActionConfirm]: {
       [Actions.Assassinate]: '{{action[[Assassinar]]}} {{secondaryPlayer}}',
@@ -251,7 +271,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: '{{primaryPlayer}} está tentando {{action[[trocar]]}} influências',
       [Actions.ForeignAid]: '{{primaryPlayer}} está tentando receber {{action[[ajuda externa]]}}',
       [Actions.Steal]: '{{primaryPlayer}} está tentando {{action[[Roubar]]}} de {{secondaryPlayer}}',
-      [Actions.Tax]: '{{primaryPlayer}} está tentando cobrar {{action}}',
+      [Actions.Tax]: '{{primaryPlayer}} está tentando cobrar {{action[[imposto]]}}',
     },
     [EventMessages.ActionProcessed]: {
       [Actions.Assassinate]: '{{primaryPlayer}} {{action[[Assassinou]]}} {{secondaryPlayer}}',
@@ -274,6 +294,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}',
     fullRules: 'Regras completas',
     honesty: 'Honestidade',
+    influence: 'Influência',
     [Influences.Ambassador]: 'Embaixador',
     [Influences.Assassin]: 'Assassino',
     [Influences.Captain]: 'Capitão',
@@ -283,11 +304,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     inviteLinkCopied: 'Link de convite copiado',
     joinExistingGame: 'Participe de um jogo',
     keepInfluences: 'Manter {{primaryInfluence}}{{plural[[ e {{secondaryInfluence}}]]}}',
+    killAnInfluence: 'Mate uma influência',
     language: 'Idioma',
     light: 'Claro',
     loseInfluence: 'Perder {{primaryInfluence}}',
     none: 'Nenhum',
     notEnoughCoins: 'Moedas insuficientes',
+    payCoins: 'Pague {{count}} moeda{{plural[[s]]}}',
     playAgain: 'Jogar novamente',
     playerTurn: 'A vez de {{primaryPlayer}}',
     playerWantToReset: '{{primaryPlayer}} quer reiniciar o jogo',
@@ -305,6 +328,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     skepticism: 'Ceticismo',
     startGame: 'Iniciar jogo',
     startingPlayerBeginsWith1Coin: '2 jogadores, o jogador inicial começará com 1 moeda',
+    steal2CoinsFromSomeone: 'Rouba 2 moedas de alguém',
     system: 'Sistema',
     title: 'Golpe',
     vengefulness: 'Vingança',

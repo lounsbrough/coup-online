@@ -98,7 +98,7 @@ function Rules() {
                       <tr style={{ background: actionColors[Actions.Income] }}>
                         <td>{anyIndicator}</td>
                         <td>
-                          {Actions.Income}
+                          {t(Actions.Income)}
                           <br />
                           {t('collectCoins', { count: 1 })}
                         </td>
@@ -106,7 +106,7 @@ function Rules() {
                       <tr style={{ background: actionColors[Actions.ForeignAid] }}>
                         <td>{anyIndicator}</td>
                         <td>
-                          {Actions.ForeignAid}
+                          {t(Actions.ForeignAid)}
                           <br />
                           {t('collectCoins', { count: 2 })}
                         </td>
@@ -114,77 +114,77 @@ function Rules() {
                       <tr style={{ background: actionColors[Actions.Coup] }}>
                         <td>{anyIndicator}</td>
                         <td>
-                          {Actions.Coup}
+                          {t(Actions.Coup)}
                           <br />
-                          Pay 7 coins
+                          {t('payCoins', { count: 7 })}
                           <br />
-                          Kill an influence
+                          {t('killAnInfluence')}
                         </td>
                       </tr>
                       <tr style={{ background: influenceColors[Influences.Duke] }}>
                         <td>
                           <InfluenceIcon influence={Influences.Duke} />
                           <br />
-                          {Influences.Duke}
+                          {t(Influences.Duke)}
                         </td>
                         <td>
-                          {Actions.Tax}
+                          {t(Actions.Tax)}
                           <br />
                           {t('collectCoins', { count: 3 })}
                           <br />
-                          Block Foreign Aid
+                          {t('block')} {t(Actions.ForeignAid)}
                         </td>
                       </tr>
                       <tr style={{ background: influenceColors[Influences.Assassin] }}>
                         <td>
                           <InfluenceIcon influence={Influences.Assassin} />
                           <br />
-                          {Influences.Assassin}
+                          {t(Influences.Assassin)}
                         </td>
                         <td>
-                          {Actions.Assassinate}
+                          {t(Actions.Assassinate)}
                           <br />
-                          Pay 3 coins
+                          {t('payCoins', { count: 3 })}
                           <br />
-                          Kill an influence
+                          {t('killAnInfluence')}
                         </td>
                       </tr>
                       <tr style={{ background: influenceColors[Influences.Ambassador] }}>
                         <td>
                           <InfluenceIcon influence={Influences.Ambassador} />
                           <br />
-                          {Influences.Ambassador}
+                          {t(Influences.Ambassador)}
                         </td>
                         <td>
-                          {Actions.Exchange}
+                          {t(Actions.Exchange)}
                           <br />
-                          Draw 2 influences & Discard 2
+                          {t('draw2InfluencesAndDiscard2')}
                           <br />
-                          Block Stealing
+                          {t('block')} {t(Actions.Steal)}
                         </td>
                       </tr>
                       <tr style={{ background: influenceColors[Influences.Captain] }}>
                         <td>
                           <InfluenceIcon influence={Influences.Captain} />
                           <br />
-                          {Influences.Captain}
+                          {t(Influences.Captain)}
                         </td>
                         <td>
-                          {Actions.Steal}
+                          {t(Actions.Steal)}
                           <br />
-                          Steal 2 coins from someone
+                          {t('steal2CoinsFromSomeone')}
                           <br />
-                          Block Stealing
+                          {t('block')} {t(Actions.Steal)}
                         </td>
                       </tr>
                       <tr style={{ background: influenceColors[Influences.Contessa] }}>
                         <td>
                           <InfluenceIcon influence={Influences.Contessa} />
                           <br />
-                          {Influences.Contessa}
+                          {t(Influences.Contessa)}
                         </td>
                         <td>
-                          Block Assassination
+                          {t('block')} {t(Actions.Assassinate)}
                         </td>
                       </tr>
                     </tbody>
@@ -193,29 +193,29 @@ function Rules() {
                   <table className="cheat-sheet-table large-screen">
                     <thead>
                       <tr>
-                        <th>Influence</th>
-                        <th>Action</th>
-                        <th>Effect</th>
-                        <th>Block</th>
+                        <th>{t('influence')}</th>
+                        <th>{t('action')}</th>
+                        <th>{t('effect')}</th>
+                        <th>{t('block')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr style={{ background: actionColors[Actions.Income] }}>
                         <td>{anyIndicator}</td>
-                        <td>{Actions.Income}</td>
+                        <td>{t(Actions.Income)}</td>
                         <td>{t('collectCoins', { count: 1 })}</td>
                         <td></td>
                       </tr>
                       <tr style={{ background: actionColors[Actions.ForeignAid] }}>
                         <td>{anyIndicator}</td>
-                        <td>{Actions.ForeignAid}</td>
+                        <td>{t(Actions.ForeignAid)}</td>
                         <td>{t('collectCoins', { count: 2 })}</td>
                         <td></td>
                       </tr>
                       <tr style={{ background: actionColors[Actions.Coup] }}>
                         <td>{anyIndicator}</td>
-                        <td>{Actions.Coup}</td>
-                        <td>Pay 7 coins - Kill an influence</td>
+                        <td>{t(Actions.Coup)}</td>
+                        <td>{t('payCoins', { count: 7 })} - {t('killAnInfluence')}</td>
                         <td></td>
                       </tr>
                       <tr style={{
@@ -223,21 +223,21 @@ function Rules() {
                       }}>
                         <td>
                           <InfluenceIcon influence={Influences.Duke} />
-                          <span> {Influences.Duke}</span>
+                          <span> {t(Influences.Duke)}</span>
                         </td>
-                        <td>{Actions.Tax}</td>
+                        <td>{t(Actions.Tax)}</td>
                         <td>{t('collectCoins', { count: 3 })}</td>
-                        <td>Foreign Aid</td>
+                        <td>{t(Actions.ForeignAid)}</td>
                       </tr>
                       <tr style={{
                         background: influenceColors[Influences.Assassin]
                       }}>
                         <td>
                           <InfluenceIcon influence={Influences.Assassin} />
-                          <span> {Influences.Assassin}</span>
+                          <span> {t(Influences.Assassin)}</span>
                         </td>
-                        <td>{Actions.Assassinate}</td>
-                        <td>Pay 3 coins - Kill an influence</td>
+                        <td>{t(Actions.Assassinate)}</td>
+                        <td>{t('payCoins', { count: 3 })} - {t('killAnInfluence')}</td>
                         <td>{noneIndicator}</td>
                       </tr>
                       <tr style={{
@@ -245,33 +245,33 @@ function Rules() {
                       }}>
                         <td>
                           <InfluenceIcon influence={Influences.Ambassador} />
-                          <span> {Influences.Ambassador}</span>
+                          <span> {t(Influences.Ambassador)}</span>
                         </td>
-                        <td>{Actions.Exchange}</td>
-                        <td>Draw 2 influences - Discard 2</td>
-                        <td>Stealing</td>
+                        <td>{t(Actions.Exchange)}</td>
+                        <td>{t('draw2InfluencesAndDiscard2')}</td>
+                        <td>{t(Actions.Steal)}</td>
                       </tr>
                       <tr style={{
                         background: influenceColors[Influences.Captain]
                       }}>
                         <td>
                           <InfluenceIcon influence={Influences.Captain} />
-                          <span> {Influences.Captain}</span>
+                          <span> {t(Influences.Captain)}</span>
                         </td>
-                        <td>{Actions.Steal}</td>
-                        <td>Steal 2 coins from someone</td>
-                        <td>Stealing</td>
+                        <td>{t(Actions.Steal)}</td>
+                        <td>{t('steal2CoinsFromSomeone')}</td>
+                        <td>{t(Actions.Steal)}</td>
                       </tr>
                       <tr style={{
                         background: influenceColors[Influences.Contessa]
                       }}>
                         <td>
                           <InfluenceIcon influence={Influences.Contessa} />
-                          <span> {Influences.Contessa}</span>
+                          <span> {t(Influences.Contessa)}</span>
                         </td>
                         <td>{noneIndicator}</td>
                         <td>{noneIndicator}</td>
-                        <td>Assassination</td>
+                        <td>{t(Actions.Assassinate)}</td>
                       </tr>
                     </tbody>
                   </table>
