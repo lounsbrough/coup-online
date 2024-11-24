@@ -27,8 +27,12 @@ function JoinGame() {
     <>
       <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link to='/'>Home</Link>
-        <Typography>{t('joinExistingGame')}</Typography>
+        <Link to='/'>
+          {t('home')}
+        </Link>
+        <Typography>
+          {t('joinExistingGame')}
+        </Typography>
       </Breadcrumbs>
       <Typography variant="h5" sx={{ m: 5 }}>
         {t('joinExistingGame')}
@@ -52,7 +56,7 @@ function JoinGame() {
                 onChange={(event) => {
                   setRoomId(event.target.value.slice(0, 6).toUpperCase())
                 }}
-                label="Room Id"
+                label={t('room')}
                 variant="standard"
                 required
               />
@@ -66,7 +70,7 @@ function JoinGame() {
                 onChange={(event) => {
                   setPlayerName(event.target.value.slice(0, 10))
                 }}
-                label="What is your name?"
+                label={t('whatIsYourName')}
                 variant="standard"
                 required
               />

@@ -26,7 +26,9 @@ function CreateGame() {
     <>
       <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link to='/'>Home</Link>
+        <Link to='/'>
+          {t('home')}
+        </Link>
         <Typography>
           {t('createNewGame')}
         </Typography>

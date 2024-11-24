@@ -52,7 +52,7 @@ function App() {
             } />
             <Route path="join-game" element={<JoinGame />} />
             <Route path="create-game" element={<CreateGame />} />
-            <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>Page not found 😱 - Go <Link to={'/'}>Home</Link></Typography>} />
+            <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link to={'/'}>{t('home')}</Link></Typography>} />
           </Route>
         </Routes>
       </WebSocketContextProvider>
