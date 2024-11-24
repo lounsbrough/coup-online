@@ -337,11 +337,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Assassinate]: '{{primaryPlayer}} está tentando {{action[[assassinar]]}} {{secondaryPlayer}}',
       [Actions.Exchange]: '{{primaryPlayer}} está tentando {{action[[trocar]]}} influências',
       [Actions.ForeignAid]: '{{primaryPlayer}} está tentando receber {{action[[ajuda externa]]}}',
-      [Actions.Steal]: '{{primaryPlayer}} está tentando {{action[[Roubar]]}} de {{secondaryPlayer}}',
+      [Actions.Steal]: '{{primaryPlayer}} está tentando {{action[[roubar]]}} de {{secondaryPlayer}}',
       [Actions.Tax]: '{{primaryPlayer}} está tentando cobrar {{action[[imposto]]}}',
     },
     [EventMessages.ActionProcessed]: {
-      [Actions.Assassinate]: '{{primaryPlayer}} {{action[[Assassinou]]}} {{secondaryPlayer}}',
+      [Actions.Assassinate]: '{{primaryPlayer}} {{action[[assassinou]]}} {{secondaryPlayer}}',
       [Actions.Coup]: '{{primaryPlayer}} {{action[[golpeou]]}} {{secondaryPlayer}}',
       [Actions.Exchange]: '{{primaryPlayer}} {{action[[trocou]]}} influências',
       [Actions.ForeignAid]: '{{primaryPlayer}} recebeu {{action[[ajuda externa]]}}',
