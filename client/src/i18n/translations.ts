@@ -59,6 +59,7 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerReplacedInfluence]: string
   fullRules: string
   goal: string
+  home: string
   honesty: string
   influence: string
   influenceWasClaimed: string
@@ -81,6 +82,7 @@ export type Translations = ActionMessages & {
   none: string
   notEnoughCoins: string
   numberOfPlayers: string
+  pageNotFound: string
   payCoins: string
   playAgain: string
   playerTurn: string
@@ -212,6 +214,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revealed and replaced {{primaryInfluence}}',
     fullRules: 'Complete Rules',
     goal: 'Goal',
+    home: 'Home',
     honesty: 'Honesty',
     influence: 'Influence',
     influenceWasClaimed: '{{primaryInfluence}} was claimed',
@@ -234,6 +237,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     none: 'None',
     notEnoughCoins: 'Not enough coins',
     numberOfPlayers: 'Number of Players',
+    pageNotFound: 'Page not found',
     payCoins: 'Pay {{count}} coin{{plural[[s]]}}',
     playAgain: 'Play Again',
     playerTurn: '{{primaryPlayer}}\'s Turn',
@@ -363,6 +367,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}',
     fullRules: 'Regras completas',
     goal: 'Meta',
+    home: 'Inicio',
     honesty: 'Honestidade',
     influence: 'Influência',
     influenceWasClaimed: '{{primaryInfluence}} foi declarado',
@@ -385,6 +390,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     none: 'Nenhum',
     notEnoughCoins: 'Moedas insuficientes',
     numberOfPlayers: 'Número de jogadores',
+    pageNotFound: 'Página não encontrada',
     payCoins: 'Pague {{count}} moeda{{plural[[s]]}}',
     playAgain: 'Jogar novamente',
     playerTurn: 'A vez de {{primaryPlayer}}',
