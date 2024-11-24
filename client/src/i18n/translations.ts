@@ -367,7 +367,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}',
     fullRules: 'Regras completas',
     goal: 'Meta',
-    home: 'Inicio',
+    home: 'Início',
     honesty: 'Honestidade',
     influence: 'Influência',
     influenceWasClaimed: '{{primaryInfluence}} foi declarado',
