@@ -93,6 +93,7 @@ export type Translations = ActionMessages & {
   [Responses.Block]: string
   [Responses.Challenge]: string
   [Responses.Pass]: string
+  revealInfluence: string
   room: string
   rules: string
   rulesActions: string
@@ -245,6 +246,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Block]: 'Block',
     [Responses.Challenge]: 'Challenge',
     [Responses.Pass]: 'Pass',
+    revealInfluence: 'Reveal {{primaryInfluence}}',
     room: 'Room',
     rules: 'Rules',
     rulesActions: 'Players take turns performing one of these available actions:',
@@ -337,11 +339,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Assassinate]: '{{primaryPlayer}} está tentando {{action[[assassinar]]}} {{secondaryPlayer}}',
       [Actions.Exchange]: '{{primaryPlayer}} está tentando {{action[[trocar]]}} influências',
       [Actions.ForeignAid]: '{{primaryPlayer}} está tentando receber {{action[[ajuda externa]]}}',
-      [Actions.Steal]: '{{primaryPlayer}} está tentando {{action[[Roubar]]}} de {{secondaryPlayer}}',
+      [Actions.Steal]: '{{primaryPlayer}} está tentando {{action[[roubar]]}} de {{secondaryPlayer}}',
       [Actions.Tax]: '{{primaryPlayer}} está tentando cobrar {{action[[imposto]]}}',
     },
     [EventMessages.ActionProcessed]: {
-      [Actions.Assassinate]: '{{primaryPlayer}} {{action[[Assassinou]]}} {{secondaryPlayer}}',
+      [Actions.Assassinate]: '{{primaryPlayer}} {{action[[assassinou]]}} {{secondaryPlayer}}',
       [Actions.Coup]: '{{primaryPlayer}} {{action[[golpeou]]}} {{secondaryPlayer}}',
       [Actions.Exchange]: '{{primaryPlayer}} {{action[[trocou]]}} influências',
       [Actions.ForeignAid]: '{{primaryPlayer}} recebeu {{action[[ajuda externa]]}}',
@@ -395,6 +397,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Block]: 'Bloquear',
     [Responses.Challenge]: 'Desafiar',
     [Responses.Pass]: 'Passar',
+    revealInfluence: 'Revelar {{primaryInfluence}}',
     room: 'Sala',
     rules: 'Regras',
     rulesActions: 'Os jogadores se revezam realizando uma destas ações disponíveis:',
