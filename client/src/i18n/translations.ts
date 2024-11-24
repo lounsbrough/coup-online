@@ -93,6 +93,7 @@ export type Translations = ActionMessages & {
   [Responses.Block]: string
   [Responses.Challenge]: string
   [Responses.Pass]: string
+  revealInfluence: string
   room: string
   rules: string
   rulesActions: string
@@ -245,6 +246,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Block]: 'Block',
     [Responses.Challenge]: 'Challenge',
     [Responses.Pass]: 'Pass',
+    revealInfluence: 'Reveal {{primaryInfluence}}',
     room: 'Room',
     rules: 'Rules',
     rulesActions: 'Players take turns performing one of these available actions:',
@@ -395,6 +397,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Block]: 'Bloquear',
     [Responses.Challenge]: 'Desafiar',
     [Responses.Pass]: 'Passar',
+    revealInfluence: 'Revelar {{primaryInfluence}}',
     room: 'Sala',
     rules: 'Regras',
     rulesActions: 'Os jogadores se revezam realizando uma destas ações disponíveis:',
