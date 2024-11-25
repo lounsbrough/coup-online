@@ -13,12 +13,12 @@ const availableLanguages: AvailableLanguage[] = [
   {
     code: AvailableLanguageCode["en-US"],
     flag: '🇺🇸',
-    name: 'United States'
+    name: 'English'
   },
   {
     code: AvailableLanguageCode["pt-BR"],
     flag: '🇧🇷',
-    name: 'Brasil'
+    name: 'Português'
   }
 ]
 
