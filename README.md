@@ -6,7 +6,6 @@
 The frontend is a `React` web application. The app talks to the backend `Express` server via the `WebSockets` protocol, falling back to the `HTTPS` protocol if the socket connection fails. The game state is stored in a cloud `Redis` database.
 
 ## Internationalization
-
 New languages can be defined by doing the following:
   - Define the new language here: [availableLanguages.ts](./client/src/i18n/availableLanguages.ts)
   - Add translations for the new language here: [translations.ts](./client/src/i18n/translations.ts)
