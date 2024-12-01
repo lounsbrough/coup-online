@@ -41,7 +41,8 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     availablePlayerColors: chance.n(chance.color, 6),
     players: [],
     pendingInfluenceLoss: {},
-    roomId: chance.string()
+    roomId: chance.string(),
+    turn: chance.natural()
   }
 
   gameState.players = getRandomPlayers(gameState, playersCount)

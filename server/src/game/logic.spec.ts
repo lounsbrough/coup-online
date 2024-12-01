@@ -34,6 +34,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     players,
     pendingInfluenceLoss: {},
     roomId: chance.string(),
+    turn: chance.natural(),
     turnPlayer: chance.pickone(players).name
   }
 
@@ -60,6 +61,13 @@ describe('logic', () => {
       gameState.isStarted = false
       startGame(gameState)
       expect(gameState.players[0].coins).toBe(1)
+    })
+
+    it('should set turn to 1', () => {
+      const gameState = getRandomGameState({ playersCount: 2 })
+      gameState.isStarted = false
+      startGame(gameState)
+      expect(gameState.turn).toBe(1)
     })
   })
 

@@ -204,6 +204,7 @@ export type GameState = {
   }
   roomId: string
   turnPlayer?: string
+  turn: number
   resetGameRequest?: {
     player: string
   }
@@ -221,6 +222,7 @@ export type PublicGameState = Pick<GameState,
   'pendingBlock' |
   'pendingBlockChallenge' |
   'resetGameRequest' |
+  'turn' |
   'turnPlayer'
 >> & {
   players: PublicPlayer[]

@@ -14,7 +14,8 @@ export const getGameState = ({ players }: { players: Player[] }) => {
     players: [],
     pendingInfluenceLoss: {},
     lastEventTimestamp: chance.date(),
-    roomId: chance.string()
+    roomId: chance.string(),
+    turn: chance.natural()
   }
 
   players.forEach(({ influences }) => {
