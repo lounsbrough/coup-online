@@ -146,6 +146,7 @@ export type EventMessage = {
   primaryPlayer?: string
   secondaryPlayer?: string
   influence?: Influences
+  turn: number
 }
 
 export type AiPersonality = {
@@ -204,6 +205,7 @@ export type GameState = {
   }
   roomId: string
   turnPlayer?: string
+  turn: number
   resetGameRequest?: {
     player: string
   }
@@ -221,6 +223,7 @@ export type PublicGameState = Pick<GameState,
   'pendingBlock' |
   'pendingBlockChallenge' |
   'resetGameRequest' |
+  'turn' |
   'turnPlayer'
 >> & {
   players: PublicPlayer[]

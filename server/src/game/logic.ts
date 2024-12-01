@@ -131,7 +131,8 @@ const getNewGameState = (roomId: string): GameState => ({
   pendingInfluenceLoss: {},
   isStarted: false,
   eventLogs: [],
-  lastEventTimestamp: new Date()
+  lastEventTimestamp: new Date(),
+  turn: 1
 })
 
 export const addPlayerToGame = ({
@@ -182,6 +183,7 @@ export const startGame = async (gameState: GameState) => {
   if (gameState.players.length === 2) {
     gameState.players[0].coins = 1
   }
+  gameState.turn = 1
   gameState.turnPlayer = gameState.players[0].name
   logEvent(gameState, {
     event: EventMessages.GameStarted
@@ -239,6 +241,7 @@ export const moveTurnToNextPlayer = (state: GameState) => {
     nextIndex++
   }
 
+  state.turn++
   state.turnPlayer = state.players[nextIndex % state.players.length].name
 }
 
