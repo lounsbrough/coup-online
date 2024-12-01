@@ -65,7 +65,6 @@ describe('logic', () => {
 
     it('should set turn to 1', () => {
       const gameState = getRandomGameState({ playersCount: 2 })
-      gameState.isStarted = false
       startGame(gameState)
       expect(gameState.turn).toBe(1)
     })
