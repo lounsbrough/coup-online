@@ -144,8 +144,8 @@ export const drawCardFromDeck = (state: GameState): Influences => {
   return state.deck.pop()!
 }
 
-export const logEvent = (state: GameState, log: EventMessage) => {
-  state.eventLogs.push(log)
+export const logEvent = (state: GameState, log: Omit<EventMessage, 'turn'>) => {
+  state.eventLogs.push({ ...log, turn: state.turn })
   if (state.eventLogs.length > 100) {
     state.eventLogs.splice(0, 1)
   }
