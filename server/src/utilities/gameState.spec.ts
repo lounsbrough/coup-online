@@ -260,7 +260,8 @@ describe('gameState', () => {
     const gameState = getRandomGameState()
 
     const newLog = {
-      event: chance.pickone(Object.values(EventMessages))
+      event: chance.pickone(Object.values(EventMessages)),
+      turn: gameState.turn
     }
 
     let expectedEventLogs = [...gameState.eventLogs, newLog]
@@ -268,11 +269,13 @@ describe('gameState', () => {
     expect(gameState.eventLogs).toEqual(expectedEventLogs)
 
     gameState.eventLogs = chance.n(() => ({
-      event: chance.pickone(Object.values(EventMessages))
+      event: chance.pickone(Object.values(EventMessages)),
+      turn: chance.natural()
     }), 100)
 
     expectedEventLogs = [...gameState.eventLogs.slice(1), newLog]
     logEvent(gameState, newLog)
     expect(gameState.eventLogs).toEqual(expectedEventLogs)
+    expect(gameState.eventLogs.at(-1)?.turn).toBe(gameState.turn)
   })
 })
