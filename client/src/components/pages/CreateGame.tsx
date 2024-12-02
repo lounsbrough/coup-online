@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { getPlayerId } from "../../helpers/players"
 import { Link } from "react-router-dom"
 import { Analytics } from '@vercel/analytics/react'
-import { PlayerActions, PublicGameState } from '@shared'
+import { GameSettings, PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 
@@ -19,7 +19,7 @@ function CreateGame() {
   }, [navigate])
 
   const { trigger, isMutating, error } = useGameMutation<{
-    playerId: string, playerName: string
+    playerId: string, playerName: string, settings: GameSettings
   }>({ action: PlayerActions.createGame, callback: navigateToRoom })
 
   return (
@@ -41,7 +41,8 @@ function CreateGame() {
           event.preventDefault()
           trigger({
             playerId: getPlayerId(),
-            playerName: playerName.trim()
+            playerName: playerName.trim(),
+            settings: { eventLogRetentionTurns: 100 }
           })
         }}
       >

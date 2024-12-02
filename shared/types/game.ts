@@ -174,6 +174,10 @@ export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
   influenceCount: number
 }
 
+export type GameSettings = {
+  eventLogRetentionTurns: number
+}
+
 export type GameState = {
   deck: Influences[]
   eventLogs: EventMessage[]
@@ -209,6 +213,7 @@ export type GameState = {
   resetGameRequest?: {
     player: string
   }
+  settings: GameSettings
 }
 
 export type PublicGameState = Pick<GameState,

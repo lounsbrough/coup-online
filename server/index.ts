@@ -3,7 +3,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
-import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, AiPersonality } from '../shared/types/game'
+import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
@@ -91,13 +91,17 @@ const eventHandlers: {
       parseParams: (req) => {
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName
-        return { playerId, playerName }
+        const settings: GameSettings = req.body.settings
+        return { playerId, playerName, settings }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       playerId: Joi.string().required(),
-      playerName: playerNameRule
+      playerName: playerNameRule,
+      settings: Joi.object().keys({
+        eventLogRetentionTurns: Joi.number().integer().min(1).max(100).required()
+      }).required()
     })
   },
   [PlayerActions.joinGame]: {
