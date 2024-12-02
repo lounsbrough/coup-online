@@ -115,6 +115,15 @@ describe('index', () => {
         {
           body: {
             playerId: chance.string({ length: 10 }),
+            playerName: chance.string({ length: 10 }),
+            settings: { }
+          },
+          error: '"settings.eventLogRetentionTurns" is required',
+          status: 400
+        },
+        {
+          body: {
+            playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 11 }),
             settings: { eventLogRetentionTurns: 100 }
           },
