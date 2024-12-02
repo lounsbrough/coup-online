@@ -1,5 +1,5 @@
 import { shuffle } from "../utilities/array"
-import { ActionAttributes, Actions, AiPersonality, EventMessages, GameState, Influences, Player, Responses } from "../../../shared/types/game"
+import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, Influences, Player, Responses } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
 import { GameMutationInputError } from "../utilities/errors"
 
@@ -123,7 +123,7 @@ const buildGameDeck = () => {
     .flatMap((influence) => Array.from({ length: 3 }, () => influence))
 }
 
-const getNewGameState = (roomId: string): GameState => ({
+const getNewGameState = (roomId: string, settings: GameSettings): GameState => ({
   roomId,
   availablePlayerColors: shuffle(['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088']),
   players: [],
@@ -132,7 +132,8 @@ const getNewGameState = (roomId: string): GameState => ({
   isStarted: false,
   eventLogs: [],
   lastEventTimestamp: new Date(),
-  turn: 1
+  turn: 1,
+  settings
 })
 
 export const addPlayerToGame = ({
@@ -171,8 +172,8 @@ export const removePlayerFromGame = (state: GameState, playerName: string) => {
   state.deck.push(...player.influences, ...player.deadInfluences)
 }
 
-export const createNewGame = async (roomId: string, playerId: string, playerName: string) => {
-  const newGameState = getNewGameState(roomId)
+export const createNewGame = async (roomId: string, playerId: string, playerName: string, gameSettings: GameSettings) => {
+  const newGameState = getNewGameState(roomId, gameSettings)
   addPlayerToGame({ state: newGameState, playerId, playerName })
   await createGameState(roomId, newGameState)
 }
@@ -195,7 +196,7 @@ export const humanOpponentsRemain = (gameState: GameState, player: Player) =>
 
 export const resetGame = async (roomId: string) => {
   const oldGameState = await getGameState(roomId)
-  const newGameState = getNewGameState(roomId)
+  const newGameState = getNewGameState(roomId, oldGameState.settings)
   newGameState.players = oldGameState.players.map((player) => ({
     ...player,
     coins: 2,

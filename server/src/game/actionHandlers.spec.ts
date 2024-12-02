@@ -40,7 +40,10 @@ describe('actionHandlers', () => {
       influences?: Influences[],
       deadInfluences?: Influences[]
     }[]) => {
-      const { roomId } = await createGameHandler(players[0])
+      const { roomId } = await createGameHandler({
+        ...players[0],
+        settings: { eventLogRetentionTurns: 100 }
+      })
 
       for (const player of players) {
         await joinGameHandler({ roomId, ...player })
@@ -76,7 +79,10 @@ describe('actionHandlers', () => {
     }
 
     it('creating, joining, resetting game', async () => {
-      const { roomId } = await createGameHandler(harper)
+      const { roomId } = await createGameHandler({
+        ...harper,
+        settings: { eventLogRetentionTurns: 100 }
+      })
 
       await joinGameHandler({ roomId, ...hailey, playerName: 'not hailey' })
       await joinGameHandler({ roomId: roomId.toLowerCase(), ...hailey })

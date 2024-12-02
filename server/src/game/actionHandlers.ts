@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { GameMutationInputError } from "../utilities/errors"
-import { ActionAttributes, Actions, AiPersonality, EventMessages, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
+import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { addClaimedInfluence, addPlayerToGame, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
@@ -24,13 +24,14 @@ export const getGameStateHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
-export const createGameHandler = async ({ playerId, playerName }: {
+export const createGameHandler = async ({ playerId, playerName, settings }: {
   playerId: string
   playerName: string
+  settings: GameSettings
 }) => {
   const roomId = generateRoomId()
 
-  await createNewGame(roomId, playerId, playerName)
+  await createNewGame(roomId, playerId, playerName, settings)
 
   return { roomId, playerId }
 }

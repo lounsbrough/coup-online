@@ -15,6 +15,7 @@ export const getGameState = ({ players }: { players: Player[] }) => {
     pendingInfluenceLoss: {},
     lastEventTimestamp: chance.date(),
     roomId: chance.string(),
+    settings: { eventLogRetentionTurns: 100 },
     turn: chance.natural()
   }
 
