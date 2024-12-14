@@ -258,7 +258,10 @@ describe('gameState', () => {
   })
 
   describe('logEvent', () => {
-    const gameState = getRandomGameState()
+    const gameState = {
+      ...getRandomGameState(),
+      settings: { eventLogRetentionTurns: 50 }
+    }
 
     const newLog = {
       event: chance.pickone(Object.values(EventMessages)),
@@ -271,11 +274,14 @@ describe('gameState', () => {
 
     gameState.eventLogs = chance.n(() => ({
       event: chance.pickone(Object.values(EventMessages)),
-      turn: chance.natural()
+      turn: chance.natural({max: 100, min: 1})
     }), 100)
 
-    expectedEventLogs = [...gameState.eventLogs.slice(1), newLog]
+    expectedEventLogs = [...gameState.eventLogs.filter(({ turn }) =>
+      gameState.turn - turn < gameState.settings.eventLogRetentionTurns
+    ), newLog]
     logEvent(gameState, newLog)
+    expect(gameState.eventLogs.length).toBeLessThan(99)
     expect(gameState.eventLogs).toEqual(expectedEventLogs)
     expect(gameState.eventLogs.at(-1)?.turn).toBe(gameState.turn)
   })
