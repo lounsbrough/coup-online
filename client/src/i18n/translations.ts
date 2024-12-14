@@ -44,6 +44,7 @@ export type Translations = ActionMessages & {
   dark: string
   effect: string
   eventLog: string
+  eventLogRetentionTurns: string
   [EventMessages.ActionConfirm]: ActionMessages
   [EventMessages.ActionPending]: Partial<ActionMessages>
   [EventMessages.ActionProcessed]: ActionMessages
@@ -177,6 +178,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     draw2InfluencesAndDiscard2: 'Draw 2 influences & Discard 2',
     effect: 'Effect',
     eventLog: 'Event Log',
+    eventLogRetentionTurns: 'Event logs turns',
     [EventMessages.ActionConfirm]: {
       [Actions.Assassinate]: '{{action[[Assassinate]]}} {{secondaryPlayer}}',
       [Actions.Coup]: '{{action[[Coup]]}} {{secondaryPlayer}}',
@@ -330,6 +332,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     draw2InfluencesAndDiscard2: 'Ganhe 2 influências e descarte 2',
     effect: 'Efeito',
     eventLog: 'Registro de eventos',
+    eventLogRetentionTurns: 'Turnos para registros de eventos',
     [EventMessages.ActionConfirm]: {
       [Actions.Assassinate]: '{{action[[Assassinar]]}} {{secondaryPlayer}}',
       [Actions.Coup]: '{{action[[Golpear]]}} {{secondaryPlayer}}',

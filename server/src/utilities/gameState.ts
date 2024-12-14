@@ -146,7 +146,7 @@ export const drawCardFromDeck = (state: GameState): Influences => {
 
 export const logEvent = (state: GameState, log: Omit<EventMessage, 'turn'>) => {
   state.eventLogs.push({ ...log, turn: state.turn })
-  if (state.eventLogs.length > 100) {
+  if (state.eventLogs.length > state.settings.eventLogRetentionTurns) {
     state.eventLogs.splice(0, 1)
   }
 }

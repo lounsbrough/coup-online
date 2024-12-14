@@ -2,7 +2,7 @@ describe('Waiting Room', () => {
   it('should allow players to create, join, leave, and start games', () => {
     cy.loadPlayer('/', 'player1')
     cy.contains('button', 'Create New Game').click()
-    cy.get('input').should('not.be.disabled').type('Player 1')
+    cy.get('[data-testid="playerNameInput"]').should('not.be.disabled').type('Player 1')
     cy.contains('button', 'Create Game').click()
 
     cy.contains(/Room: .+/).then((el) => {
@@ -13,8 +13,8 @@ describe('Waiting Room', () => {
     cy.contains('button', 'Join Existing Game').click()
 
     cy.getCookie('cypressRoomId').then((cookie) => {
-      cy.get('input').eq(0).should('not.be.disabled').type(cookie!.value)
-      cy.get('input').eq(1).should('not.be.disabled').type('Player 2')
+      cy.get('[data-testid="roomIdInput"]').should('not.be.disabled').type(cookie!.value)
+      cy.get('[data-testid="playerNameInput"]').should('not.be.disabled').type('Player 2')
     })
 
     cy.contains('button', 'Join Game').click()
@@ -27,8 +27,8 @@ describe('Waiting Room', () => {
     cy.contains('button', 'Join Existing Game').click()
 
     cy.getCookie('cypressRoomId').then((cookie) => {
-      cy.get('input').eq(0).should('not.be.disabled').type(cookie!.value)
-      cy.get('input').eq(1).should('not.be.disabled').type('Player One')
+      cy.get('[data-testid="roomIdInput"]').should('not.be.disabled').type(cookie!.value)
+      cy.get('[data-testid="playerNameInput"]').should('not.be.disabled').type('Player One')
     })
 
     cy.contains('button', 'Join Game').click()

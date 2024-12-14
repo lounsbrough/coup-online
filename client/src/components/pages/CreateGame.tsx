@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
+import { Box, Breadcrumbs, Button, Grid2, Slider, TextField, Typography } from "@mui/material"
 import { AccountCircle } from "@mui/icons-material"
 import { useNavigate } from "react-router-dom"
 import { getPlayerId } from "../../helpers/players"
@@ -11,6 +11,7 @@ import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
+  const [eventLogRetentionTurns, setEventLogRetentionTurns] = useState(3)
   const navigate = useNavigate()
   const { t } = useTranslationContext()
 
@@ -42,15 +43,16 @@ function CreateGame() {
           trigger({
             playerId: getPlayerId(),
             playerName: playerName.trim(),
-            settings: { eventLogRetentionTurns: 100 }
+            settings: { eventLogRetentionTurns }
           })
         }}
       >
-        <Grid2 container direction="column" alignContent='center'>
+        <Grid2 container direction="column" alignItems='center'>
           <Grid2>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
+                data-testid='playerNameInput'
                 value={playerName}
                 onChange={(event) => {
                   setPlayerName(event.target.value.slice(0, 10))
@@ -58,6 +60,26 @@ function CreateGame() {
                 label={t('whatIsYourName')}
                 variant="standard"
                 required
+              />
+            </Box>
+          </Grid2>
+
+          <Grid2 sx={{ maxWidth: '300px', width: '90%' }}>
+            <Box p={2} mt={2}>
+              <Typography mt={2}>
+                {t('eventLogRetentionTurns')}
+                {`: ${eventLogRetentionTurns}`}
+              </Typography>
+              <Slider
+                data-testid='eventLogRetentionTurnsInput'
+                step={1}
+                value={eventLogRetentionTurns}
+                valueLabelDisplay="auto"
+                min={1}
+                max={100}
+                onChange={(_: Event, value: number | number[]) => {
+                  setEventLogRetentionTurns(value as number)
+                }}
               />
             </Box>
           </Grid2>
