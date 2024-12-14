@@ -38,7 +38,8 @@ describe('Games', () => {
         ...gameState,
         isStarted: true,
         turnPlayer: david,
-        eventLogs: []
+        eventLogs: [],
+        settings: { eventLogRetentionTurns: 100 }
       }
     })
 

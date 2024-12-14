@@ -1,5 +1,5 @@
 import { useState, forwardRef, useMemo } from "react"
-import { AppBar, Box, Button, Dialog, DialogContent, DialogContentText, Divider, IconButton, Toolbar, Typography, Slide, useTheme } from "@mui/material"
+import { AppBar, Box, Button, Dialog, DialogContent, DialogContentText, Divider, IconButton, Toolbar, Typography, Slide, useTheme, DialogActions } from "@mui/material"
 import { Block, Close, Gavel, Group } from "@mui/icons-material"
 import { TransitionProps } from '@mui/material/transitions'
 import { ActionAttributes, Actions, Influences } from '@shared'
@@ -312,6 +312,11 @@ function Rules() {
             </Box>
           </DialogContentText>
         </DialogContent>
+        <DialogActions>
+          <Button variant='contained' onClick={() => { setModalOpen(false) }}>
+            {t('close')}
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   )

@@ -47,11 +47,12 @@ function JoinGame() {
           })
         }}
       >
-        <Grid2 container direction="column" alignContent='center'>
+        <Grid2 container direction="column" alignItems='center'>
           <Grid2>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Group sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
+                data-testid='roomIdInput'
                 value={roomId}
                 onChange={(event) => {
                   setRoomId(event.target.value.slice(0, 6).toUpperCase())
@@ -66,6 +67,7 @@ function JoinGame() {
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
+                data-testid='playerNameInput'
                 value={playerName}
                 onChange={(event) => {
                   setPlayerName(event.target.value.slice(0, 10))
