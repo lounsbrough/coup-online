@@ -1,4 +1,4 @@
-import { Button, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
+import { Grid2, Tooltip, Typography, useTheme } from "@mui/material"
 import { ActionAttributes, Actions, PlayerActions, EventMessages } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -6,6 +6,7 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseAction() {
   const [selectedAction, setSelectedAction] = useState<Actions>()
@@ -22,14 +23,14 @@ function ChooseAction() {
     return <PlayerActionConfirmation
       message={t(EventMessages.ActionConfirm, {
         action: selectedAction,
-        secondaryPlayer: selectedTargetPlayer,
-        gameState
+        gameState,
+        secondaryPlayer: selectedTargetPlayer
       })}
       action={PlayerActions.action}
       variables={{
-        roomId: gameState.roomId,
-        playerId: getPlayerId(),
         action: selectedAction,
+        playerId: getPlayerId(),
+        roomId: gameState.roomId,
         targetPlayer: selectedTargetPlayer
       }}
       onCancel={() => {
@@ -61,20 +62,20 @@ function ChooseAction() {
               color: { main: player.color }
             })
 
-            return <Button
+            return <GrowingButton
               key={player.name}
               onClick={() => {
                 setSelectedTargetPlayer(player.name)
               }}
               sx={{
-                color: paletteColor.contrastText,
-                background: paletteColor.main,
                 '&:hover': {
                   background: paletteColor.dark
-                }
+                },
+                background: paletteColor.main,
+                color: paletteColor.contrastText
               }}
               variant="contained"
-            >{player.name}</Button>
+            >{player.name}</GrowingButton>
           })}
         </Grid2>
       </>
@@ -83,7 +84,7 @@ function ChooseAction() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
         {t('chooseAnAction')}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
@@ -100,7 +101,7 @@ function ChooseAction() {
               <Grid2 key={index}>
                 <Tooltip title={lackingCoins && t('notEnoughCoins')}>
                   <span>
-                    <Button
+                    <GrowingButton
                       onClick={() => {
                         setSelectedAction(action as Actions)
                       }}
@@ -109,7 +110,7 @@ function ChooseAction() {
                       disabled={lackingCoins}
                     >
                       {t(action as Actions)}
-                    </Button>
+                    </GrowingButton>
                   </span>
                 </Tooltip>
               </Grid2>

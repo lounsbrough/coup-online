@@ -22,8 +22,8 @@ function PlayAgain() {
       <Button
         onClick={() => {
           trigger({
-            roomId: gameState.roomId,
-            playerId: getPlayerId()
+            playerId: getPlayerId(),
+            roomId: gameState.roomId
           })
         }}
         variant="contained"
@@ -31,7 +31,7 @@ function PlayAgain() {
       >
         {t('playAgain')}
       </Button>
-      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
+      {error && <Typography color='error' sx={{ fontWeight: 700, mt: 3 }}>{error}</Typography>}
     </>
   )
 }
