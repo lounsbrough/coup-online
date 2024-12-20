@@ -1,10 +1,11 @@
-import { Button, Grid2, Typography } from "@mui/material"
+import { Grid2, Typography } from "@mui/material"
 import { EventMessages, Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseChallengeResponse() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
@@ -20,14 +21,14 @@ function ChooseChallengeResponse() {
   if (selectedInfluence) {
     return <PlayerActionConfirmation
       message={t('revealInfluence', {
-        primaryInfluence: selectedInfluence,
-        gameState
+        gameState,
+        primaryInfluence: selectedInfluence
       })}
       action={gameState?.pendingActionChallenge ? PlayerActions.actionChallengeResponse : PlayerActions.blockChallengeResponse}
       variables={{
-        roomId: gameState.roomId,
+        influence: selectedInfluence,
         playerId: getPlayerId(),
-        influence: selectedInfluence
+        roomId: gameState.roomId
       }}
       onCancel={() => {
         setSelectedInfluence(undefined)
@@ -40,21 +41,21 @@ function ChooseChallengeResponse() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
         {t(EventMessages.ChallengePending, {
+          gameState,
           primaryPlayer: challengingPlayer,
-          secondaryPlayer: challengedPlayer,
-          gameState
+          secondaryPlayer: challengedPlayer
         })}
       </Typography>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
         {t('chooseInfluenceToReveal')}
       </Typography>
       {gameState.pendingBlock?.claimedInfluence && (
-        <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
           {t('influenceWasClaimed', {
-            primaryInfluence: gameState.pendingBlock?.claimedInfluence,
-            gameState
+            gameState,
+            primaryInfluence: gameState.pendingBlock?.claimedInfluence
           })}
         </Typography>
       )}
@@ -62,7 +63,7 @@ function ChooseChallengeResponse() {
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
-            return <Button
+            return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedInfluence(influence as Influences)
@@ -71,7 +72,7 @@ function ChooseChallengeResponse() {
               variant="contained"
             >
               {t(influence as Influences)}
-            </Button>
+            </GrowingButton>
           })}
       </Grid2>
     </>

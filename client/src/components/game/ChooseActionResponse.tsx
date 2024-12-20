@@ -1,4 +1,4 @@
-import { Button, Grid2, Typography } from "@mui/material"
+import { Grid2, Typography } from "@mui/material"
 import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -6,6 +6,7 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
@@ -21,16 +22,16 @@ function ChooseActionResponse() {
     return <PlayerActionConfirmation
       message={selectedInfluence
         ? t('blockAsInfluence', {
-          primaryInfluence: selectedInfluence,
-          gameState
+          gameState,
+          primaryInfluence: selectedInfluence
         })
         : t(selectedResponse)}
       action={PlayerActions.actionResponse}
       variables={{
-        roomId: gameState.roomId,
+        claimedInfluence: selectedInfluence,
         playerId: getPlayerId(),
         response: selectedResponse,
-        claimedInfluence: selectedInfluence
+        roomId: gameState.roomId
       }}
       onCancel={() => {
         setSelectedResponse(undefined)
@@ -58,14 +59,14 @@ function ChooseActionResponse() {
                 return null
               }
 
-              return <Button
+              return <GrowingButton
                 key={influence}
                 onClick={() => {
                   setSelectedInfluence(influence as Influences)
                 }}
                 color={influence as Influences}
                 variant="contained"
-              >{t(influence as Influences)}</Button>
+              >{t(influence as Influences)}</GrowingButton>
             })}
         </Grid2>
       </>
@@ -74,12 +75,12 @@ function ChooseActionResponse() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
         {t(EventMessages.ActionPending, {
           action: gameState.pendingAction.action,
+          gameState,
           primaryPlayer: gameState.turnPlayer!,
-          secondaryPlayer: gameState.pendingAction.targetPlayer,
-          gameState
+          secondaryPlayer: gameState.pendingAction.targetPlayer
         })}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
@@ -101,14 +102,14 @@ function ChooseActionResponse() {
               return null
             }
 
-            return <Button
+            return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
             >
               {t(response)}
-            </Button>
+            </GrowingButton>
           })}
       </Grid2>
     </>

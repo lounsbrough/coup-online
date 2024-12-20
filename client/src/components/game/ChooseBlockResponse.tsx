@@ -1,10 +1,11 @@
-import { Button, Grid2, Typography } from "@mui/material"
+import { Grid2, Typography } from "@mui/material"
 import { EventMessages, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseBlockResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
@@ -20,9 +21,9 @@ function ChooseBlockResponse() {
       message={t(selectedResponse)}
       action={PlayerActions.blockResponse}
       variables={{
-        roomId: gameState.roomId,
         playerId: getPlayerId(),
-        response: selectedResponse
+        response: selectedResponse,
+        roomId: gameState.roomId
       }}
       onCancel={() => {
         setSelectedResponse(undefined)
@@ -32,12 +33,12 @@ function ChooseBlockResponse() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
         {t(EventMessages.BlockPending, {
-          primaryPlayer: gameState.pendingBlock.sourcePlayer,
-          secondaryPlayer: gameState.turnPlayer,
+          gameState,
           primaryInfluence: gameState.pendingBlock.claimedInfluence,
-          gameState
+          primaryPlayer: gameState.pendingBlock.sourcePlayer,
+          secondaryPlayer: gameState.turnPlayer
         })}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
@@ -48,14 +49,14 @@ function ChooseBlockResponse() {
               return null
             }
 
-            return <Button
+            return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
             >
               {t(response)}
-            </Button>
+            </GrowingButton>
           })}
       </Grid2>
     </>

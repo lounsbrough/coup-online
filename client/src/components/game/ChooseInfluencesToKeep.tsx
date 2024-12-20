@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { Button, Checkbox, Grid2, Typography } from "@mui/material"
+import { Checkbox, Grid2, Typography } from "@mui/material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { PlayerActions } from "@shared"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseInfluencesToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
@@ -23,18 +24,17 @@ function ChooseInfluencesToKeep() {
     const influencesToKeep = gameState.selfPlayer.influences.filter((_i, index) => checkedIndexes.includes(index))
     return <PlayerActionConfirmation
       message={t('keepInfluences', {
-        primaryInfluence: influencesToKeep[0],
-        secondaryInfluence: influencesToKeep[1],
         count: influenceCountToKeep,
-        gameState
+        gameState,
+        primaryInfluence: influencesToKeep[0],
+        secondaryInfluence: influencesToKeep[1]
       })}
-      // message={`Keep ${influencesToKeep.join(' and ')}`}
       action={PlayerActions.loseInfluences}
       variables={{
-        roomId: gameState.roomId,
-        playerId: getPlayerId(),
         influences: gameState.selfPlayer.influences.filter((_i, index) =>
-          !checkedIndexes.includes(index))
+          !checkedIndexes.includes(index)),
+        playerId: getPlayerId(),
+        roomId: gameState.roomId
       }}
       onCancel={() => {
         setCheckedIndexes([])
@@ -44,7 +44,7 @@ function ChooseInfluencesToKeep() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
         {t('chooseInfluencesToKeep', {
           count: influenceCountToKeep
         })}
@@ -53,7 +53,7 @@ function ChooseInfluencesToKeep() {
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
-            return <Button
+            return <GrowingButton
               key={index}
               disabled={checkedIndexes.length === 2 && !checkedIndexes.includes(index)}
               onClick={() => {
@@ -75,7 +75,7 @@ function ChooseInfluencesToKeep() {
                 checked={checkedIndexes.includes(index)}
               />
               {t(influence)}
-            </Button>
+            </GrowingButton>
           })}
       </Grid2>
     </>
