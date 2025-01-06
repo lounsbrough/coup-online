@@ -1,9 +1,8 @@
 import { useCallback, useState } from "react"
 import { Box, Breadcrumbs, Button, Grid2, Slider, TextField, Typography } from "@mui/material"
 import { AccountCircle } from "@mui/icons-material"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { getPlayerId } from "../../helpers/players"
-import { Link } from "react-router"
 import { Analytics } from '@vercel/analytics/react'
 import { GameSettings, PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
