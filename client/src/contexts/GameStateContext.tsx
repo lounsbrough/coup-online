@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import { PlayerActions, PublicGameState, ServerEvents } from '@shared'
 import { getPlayerId } from '../helpers/players'
 import { Typography } from '@mui/material'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 import { useWebSocketContext } from './WebSocketContext'
 import { getBaseUrl } from '../helpers/api'
 

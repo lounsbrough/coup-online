@@ -1,5 +1,5 @@
 import { Button, Grid2, Typography } from "@mui/material"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import GitHubLinks from "../GitHubLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 

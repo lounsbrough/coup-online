@@ -2,7 +2,7 @@ import { Button, Grid2, Typography } from "@mui/material"
 import GameBoard from "../game/GameBoard"
 import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Link } from "react-router-dom"
+import { Link } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function Game() {

@@ -4,7 +4,7 @@ import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
 import ColorModeToggle from "./ColorModeToggle"
 import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router"
 import LanguageSelector from "./LanguageSelector"
 import { useTranslationContext } from "../contexts/TranslationsContext"
 
