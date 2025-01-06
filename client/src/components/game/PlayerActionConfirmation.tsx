@@ -20,7 +20,7 @@ function PlayerActionConfirmation({
   onCancel: () => void
 }) {
   const [autoSubmitProgress, setAutoSubmitProgress] = useState(0)
-  const autoSubmitInterval = useRef<ReturnType<typeof setInterval>>()
+  const autoSubmitInterval = useRef<ReturnType<typeof setInterval>>(undefined)
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const theme = useTheme()
