@@ -1,8 +1,8 @@
 import { useState, createContext, useContext, ReactNode, useEffect } from 'react'
 import useSWR from 'swr'
-import { PlayerActions, PublicGameState, ServerEvents } from '@shared'
-import { getPlayerId } from '../helpers/players'
+import { PlayerActions, PublicGameState, ServerEvents, isSameState } from '@shared'
 import { Typography } from '@mui/material'
+import { getPlayerId } from '../helpers/players'
 import { useSearchParams } from 'react-router'
 import { useWebSocketContext } from './WebSocketContext'
 import { getBaseUrl } from '../helpers/api'
@@ -36,9 +36,8 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
           setError('')
           const { gameState: newState } = await res.json()
 
-          if (JSON.stringify(newState) !== JSON.stringify(gameState)) {
-            setGameState(newState)
-          }
+          setGameState((prevState) =>
+            prevState && isSameState(prevState, newState) ? prevState : newState)
         } else {
           setError((await res.json()).error)
         }
@@ -57,11 +56,18 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
     setError('')
     socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
-    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
+    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (newState) => {
       setError('')
-      setGameState(gameState)
+      setGameState((prevState) =>
+        prevState && isSameState(prevState, newState) ? prevState : newState)
     })
     socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
+
+    const intervalId = setInterval(() => {
+      socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
+    }, 5000)
+
+    return () => { clearInterval(intervalId) }
   }, [roomId, socket, isConnected])
 
   const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)

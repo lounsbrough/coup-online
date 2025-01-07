@@ -1,3 +1,4 @@
+import { isSameState } from '../../../shared/helpers/state'
 import { EventMessage, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { shuffle } from './array'
 import { GameMutationInputError } from './errors'
@@ -117,13 +118,13 @@ export const mutateGameState = async (
 ) => {
   const gameState = await getGameState(validatedState.roomId)
 
-  if (JSON.stringify(gameState) !== JSON.stringify(validatedState)) {
+  if (!isSameState(gameState, validatedState)) {
     throw new GameMutationInputError('State has changed since validation, rejecting mutation')
   }
 
   mutation(gameState)
 
-  if (JSON.stringify(gameState) === JSON.stringify(validatedState)) {
+  if (isSameState(gameState, validatedState)) {
     return
   }
 
