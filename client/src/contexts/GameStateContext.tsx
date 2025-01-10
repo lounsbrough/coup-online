@@ -1,7 +1,6 @@
-import { useState, createContext, useContext, ReactNode, useEffect } from 'react'
+import { useState, createContext, useContext, ReactNode, useEffect, useCallback } from 'react'
 import useSWR from 'swr'
 import { PlayerActions, PublicGameState, ServerEvents, isSameState } from '@shared'
-import { Typography } from '@mui/material'
 import { getPlayerId } from '../helpers/players'
 import { useSearchParams } from 'react-router'
 import { useWebSocketContext } from './WebSocketContext'
@@ -17,12 +16,22 @@ export const GameStateContext = createContext<GameStateContextType>({
 })
 
 export function GameStateContextProvider({ children }: { children: ReactNode }) {
-  const [error, setError] = useState('')
   const [gameState, setGameState] = useState<PublicGameState>()
   const [searchParams] = useSearchParams()
   const { socket, isConnected } = useWebSocketContext()
 
   const roomId = searchParams.get('roomId')
+
+  const setGameStateIfChanged = useCallback((newState: PublicGameState) => {
+    setGameState((prevState) => prevState && isSameState(prevState, newState) ? prevState : newState)
+  }, [setGameState])
+
+  const handleGameStateResponse = useCallback(async (response: Response) => {
+    if (response.ok) {
+      const { gameState: newState } = await response.json()
+      setGameStateIfChanged(newState)
+    }
+  }, [setGameStateIfChanged])
 
   useSWR<void, Error>(
     roomId
@@ -30,20 +39,10 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
       : null,
     async function (input: RequestInfo, init?: RequestInit) {
       try {
-        const res = await fetch(input, init)
-
-        if (res.ok) {
-          setError('')
-          const { gameState: newState } = await res.json()
-
-          setGameState((prevState) =>
-            prevState && isSameState(prevState, newState) ? prevState : newState)
-        } else {
-          setError((await res.json()).error)
-        }
+        const response = await fetch(input, init)
+        handleGameStateResponse(response)
       } catch (error) {
         console.error(error)
-        setError('Unexpected error processing request')
       }
     },
     { refreshInterval: 2000, isPaused: () => !roomId || isConnected }
@@ -54,13 +53,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
       return
     }
 
-    setError('')
-    socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => { setError(error) })
-    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (newState) => {
-      setError('')
-      setGameState((prevState) =>
-        prevState && isSameState(prevState, newState) ? prevState : newState)
-    })
+    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, setGameStateIfChanged)
     socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
 
     const intervalId = setInterval(() => {
@@ -68,7 +61,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     }, 5000)
 
     return () => { clearInterval(intervalId) }
-  }, [roomId, socket, isConnected])
+  }, [roomId, socket, isConnected, setGameStateIfChanged])
 
   const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)
   const gameIsOver = playersLeft?.length === 1
@@ -85,20 +78,23 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
         socket.emit(PlayerActions.checkAiMove, { roomId, playerId: getPlayerId() })
       } else {
         fetch(`${getBaseUrl()}/${PlayerActions.checkAiMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
+          .then(handleGameStateResponse)
+          .catch((error) => {
+            console.error(error)
+          })
       }
     }, isConnected ? 1000 : 2000)
 
     return () => {
       clearInterval(interval)
     }
-  }, [roomId, socket, isConnected, aiPlayersActive])
+  }, [roomId, socket, isConnected, aiPlayersActive, handleGameStateResponse])
 
   const contextValue = { gameState, setGameState }
 
   return (
     <GameStateContext.Provider value={contextValue}>
       {children}
-      {!!error && <Typography color='error' sx={{ m: 5 }}>{error}</Typography>}
     </GameStateContext.Provider>
   )
 }

@@ -231,13 +231,13 @@ const eventHandlers: {
   [PlayerActions.checkAiMove]: {
     handler: checkAiMoveHandler,
     express: {
-      method: 'post',
+      method: 'get',
       parseParams: (req) => {
-        const roomId: string = req.body.roomId
-        const playerId: string = req.body.playerId
+        const roomId: string = req.query.roomId as string
+        const playerId: string = req.query.playerId as string
         return { roomId, playerId }
       },
-      validator: validateExpressBody
+      validator: validateExpressQuery
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
