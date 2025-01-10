@@ -250,11 +250,8 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   const playersLeft = gameState.players.filter(({ influences }) => influences.length)
   const gameIsOver = playersLeft.length === 1
 
-  if (gameIsOver) {
-    return unchangedResponse
-  }
-
-  if (new Date() < new Date(gameState.lastEventTimestamp.getTime() + 1000 + Math.floor(Math.random() * 2000))) {
+  const timeToPonderLifeChoices = 500 + Math.floor(Math.random() * 1000)
+  if (gameIsOver || new Date() < new Date(gameState.lastEventTimestamp.getTime() + timeToPonderLifeChoices)) {
     return unchangedResponse
   }
 
