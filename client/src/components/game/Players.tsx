@@ -6,7 +6,7 @@ import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
-import { PlayerActions } from "@shared"
+import { Influences, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
@@ -128,7 +128,17 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                             padding: 0.5,
                             borderRadius: 2
                           }}>
-                          <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
+                          <Tooltip
+                            title={
+                              <Typography variant="h6">
+                                {t(influence as Influences)}
+                              </Typography>
+                            }
+                          >
+                            <span>
+                              <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
+                            </span>
+                          </Tooltip>
                         </Grid2>
                       )
                     })}
