@@ -18,6 +18,7 @@ runs:
       cache: pnpm
       cache-dependency-path: client/pnpm-lock.yaml
   - run: |
+      pnpm i -g vercel
       cd server
       pnpm i
       cd ../client
