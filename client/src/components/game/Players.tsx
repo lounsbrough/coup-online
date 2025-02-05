@@ -130,9 +130,11 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                           }}>
                           <Tooltip
                             title={
-                              <Typography variant="h6">
-                                {t(influence as Influences)}
-                              </Typography>
+                              influence && (
+                                <Typography variant="h6">
+                                  {t(influence as Influences)}
+                                </Typography>
+                              )
                             }
                           >
                             <span>
