@@ -2,7 +2,7 @@ name: Deploy Preview
 
 on:
   push:
-    branches: [install-vercel-cli]
+    branches: [main]
 
 jobs:
   call-deploy:
