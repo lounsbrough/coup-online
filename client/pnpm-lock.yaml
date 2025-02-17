@@ -45,8 +45,8 @@ importers:
         specifier: ^19.0.3
         version: 19.0.3(@types/react@19.0.8)
       '@vercel/analytics':
-        specifier: ^1.4.1
-        version: 1.4.1(react@19.0.0)
+        specifier: ^1.5.0
+        version: 1.5.0(react@19.0.0)
       colord:
         specifier: ^2.9.3
         version: 2.9.3
@@ -1730,8 +1730,8 @@ packages:
     resolution: {integrity: sha512-oWWhcWDLwDfu++BGTZcmXWqpwtkwb5o7fxUIGksMQQDSdPW9prsSnfIOZMlsj4vBOSrcnjIUZMiIjODgGosFhQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@vercel/analytics@1.4.1':
-    resolution: {integrity: sha512-ekpL4ReX2TH3LnrRZTUKjHHNpNy9S1I7QmS+g/RQXoSUQ8ienzosuX7T9djZ/s8zPhBx1mpHP/Rw5875N+zQIQ==}
+  '@vercel/analytics@1.5.0':
+    resolution: {integrity: sha512-MYsBzfPki4gthY5HnYN7jgInhAZ7Ac1cYDoRWFomwGHWEX7odTEzbtg9kf/QSo7XEsEAqlQugA6gJ2WS2DEa3g==}
     peerDependencies:
       '@remix-run/react': ^2
       '@sveltejs/kit': ^1 || ^2
@@ -8413,7 +8413,7 @@ snapshots:
       '@typescript-eslint/types': 8.23.0
       eslint-visitor-keys: 4.2.0
 
-  '@vercel/analytics@1.4.1(react@19.0.0)':
+  '@vercel/analytics@1.5.0(react@19.0.0)':
     optionalDependencies:
       react: 19.0.0
 
