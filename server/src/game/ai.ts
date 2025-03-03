@@ -1,5 +1,6 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
+import { randomlyDecideToBluff, randomlyDecideToNotUseClaimedInfluence } from "./aiRandomness"
 
 const getProbabilityOfHiddenCardBeingInfluence = (
   gameState: PublicGameState,
@@ -187,13 +188,21 @@ export const decideAction = (gameState: PublicGameState): {
 
   const selfEffectiveInfluences = new Set([...gameState.selfPlayer.influences, ...gameState.selfPlayer.claimedInfluences])
 
-  if ((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Duke))
-    || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Duke) > 0)) {
+  if (
+    getProbabilityOfPlayerInfluence(gameState, Influences.Duke) > 0 && (
+      (!randomlyDecideToNotUseClaimedInfluence() && selfEffectiveInfluences.has(Influences.Duke))
+      || randomlyDecideToBluff(bluffMargin)
+    )
+  ) {
     return { action: Actions.Tax }
   }
 
-  if ((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Captain))
-    || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Captain) > 0)) {
+  if (
+    getProbabilityOfPlayerInfluence(gameState, Influences.Captain) > 0 && (
+      (!randomlyDecideToNotUseClaimedInfluence() && selfEffectiveInfluences.has(Influences.Captain))
+      || randomlyDecideToBluff(bluffMargin)
+    )
+  ) {
     const getProbabilityOfBlockingSteal = (playerName: string) =>
       getProbabilityOfPlayerInfluence(gameState, Influences.Captain, playerName)
       + getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador, playerName)
@@ -223,14 +232,22 @@ export const decideAction = (gameState: PublicGameState): {
     }
   }
 
-  if ((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Ambassador))
-    || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador) > 0)) {
+  if (
+    getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador) > 0 && (
+      (!randomlyDecideToNotUseClaimedInfluence() && selfEffectiveInfluences.has(Influences.Ambassador))
+      || randomlyDecideToBluff(bluffMargin)
+    )
+  ) {
     return { action: Actions.Exchange }
   }
 
-  if (((Math.random() > 0.05 && selfEffectiveInfluences.has(Influences.Assassin))
-    || (Math.random() < bluffMargin && getProbabilityOfPlayerInfluence(gameState, Influences.Assassin) > 0))
-    && gameState.selfPlayer.coins >= 3) {
+  if (
+    getProbabilityOfPlayerInfluence(gameState, Influences.Assassin) > 0
+    && gameState.selfPlayer.coins >= 3 && (
+      (!randomlyDecideToNotUseClaimedInfluence() && selfEffectiveInfluences.has(Influences.Assassin))
+      || randomlyDecideToBluff(bluffMargin)
+    )
+  ) {
     const targetPlayer = decideAssasinationTarget(gameState)
     return { action: Actions.Assassinate, targetPlayer: targetPlayer.name }
   }

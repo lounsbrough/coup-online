@@ -1,14 +1,18 @@
 import { Chance } from 'chance'
 import { Actions, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { decideAction, getOpponents, getPlayerDangerFactor, getProbabilityOfPlayerInfluence } from './ai'
+import { randomlyDecideToNotUseClaimedInfluence } from './aiRandomness'
 
 const chance = new Chance()
+jest.mock('./aiRandomness')
+
+const randomlyDecideToNotUseClaimedInfluenceMock = jest.mocked(randomlyDecideToNotUseClaimedInfluence)
 
 describe('ai', () => {
   const getRandomPlayer = (): Player => ({
     id: chance.guid(),
     name: chance.string(),
-    coins: chance.natural(),
+    coins: chance.natural({ min: 0, max: 5 }),
     influences: [],
     claimedInfluences: [],
     deadInfluences: [],
@@ -19,7 +23,7 @@ describe('ai', () => {
 
   const getRandomPublicPlayer = (): PublicPlayer => ({
     name: chance.string(),
-    coins: chance.natural(),
+    coins: chance.natural({ min: 0, max: 5 }),
     influenceCount: 2,
     claimedInfluences: [],
     deadInfluences: [],
@@ -316,6 +320,96 @@ describe('ai', () => {
         action: Actions.Coup,
         targetPlayer: 'david'
       })
+    })
+
+    it('should choose previously claimed influence with some randomness', () => {
+      randomlyDecideToNotUseClaimedInfluenceMock.mockReturnValue(false)
+
+      const decidedAction = decideAction({
+        roomId: chance.string(),
+        isStarted: chance.bool(),
+        eventLogs: [],
+        lastEventTimestamp: chance.date(),
+        players: [
+          {
+            ...getRandomPublicPlayer(),
+            name: 'harper',
+            influenceCount: 1,
+            deadInfluences: [Influences.Assassin],
+            claimedInfluences: [Influences.Duke]
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'hailey',
+            influenceCount: 1,
+            deadInfluences: [Influences.Duke]
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'david',
+            influenceCount: 1,
+            deadInfluences: [Influences.Duke]
+          }
+        ],
+        selfPlayer: {
+          ...getRandomPublicPlayer(),
+          id: chance.string(),
+          name: 'harper',
+          coins: 4,
+          influences: [Influences.Ambassador],
+          deadInfluences: [Influences.Assassin],
+          claimedInfluences: [Influences.Duke]
+        },
+        pendingInfluenceLoss: {},
+        deckCount: 11
+      })
+
+      expect(decidedAction.action).toBe(Actions.Tax)
+    })
+
+    it('should not choose previously claimed influence if all are dead', () => {
+      randomlyDecideToNotUseClaimedInfluenceMock.mockReturnValue(false)
+
+      const decidedAction = decideAction({
+        roomId: chance.string(),
+        isStarted: chance.bool(),
+        eventLogs: [],
+        lastEventTimestamp: chance.date(),
+        players: [
+          {
+            ...getRandomPublicPlayer(),
+            name: 'harper',
+            influenceCount: 1,
+            deadInfluences: [Influences.Assassin],
+            claimedInfluences: [Influences.Duke]
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'hailey',
+            influenceCount: 1,
+            deadInfluences: [Influences.Duke]
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'david',
+            influenceCount: 0,
+            deadInfluences: [Influences.Duke, Influences.Duke]
+          }
+        ],
+        selfPlayer: {
+          ...getRandomPublicPlayer(),
+          id: chance.string(),
+          name: 'harper',
+          coins: 4,
+          influences: [Influences.Ambassador],
+          deadInfluences: [Influences.Assassin],
+          claimedInfluences: [Influences.Duke]
+        },
+        pendingInfluenceLoss: {},
+        deckCount: 11
+      })
+
+      expect(decidedAction.action).not.toBe(Actions.Tax)
     })
   })
 })
