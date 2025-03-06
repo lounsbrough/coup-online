@@ -16,7 +16,6 @@ const decompressStringMock = jest.mocked(decompressString)
 const getCurrentTimestampMock = jest.mocked(getCurrentTimestamp)
 
 const chance = new Chance()
-const oneDay = 86400
 
 const getRandomPlayers = (state: GameState, count?: number) =>
   chance.n(() => ({
@@ -159,7 +158,8 @@ describe('gameState', () => {
       expect(compressStringMock).toHaveBeenCalledTimes(1)
       expect(JSON.parse(actualStateString)).toEqual(expectedState)
       expect(setValueMock).toHaveBeenCalledTimes(1)
-      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), compressedStateString, oneDay)
+      const oneMonth = 2678400
+      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), compressedStateString, oneMonth)
     })
 
     it('should not update storage if state unchanged', async () => {
