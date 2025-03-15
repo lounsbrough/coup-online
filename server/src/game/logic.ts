@@ -92,6 +92,7 @@ export const processPendingAction = (state: GameState) => {
     promptPlayerToLoseInfluence(state, targetPlayer.name)
   } else if (state.pendingAction.action === Actions.Exchange) {
     removeClaimedInfluence(actionPlayer)
+    removeUnclaimedInfluence(actionPlayer)
     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state))
     state.deck = shuffle(state.deck)
     promptPlayerToLoseInfluence(state, actionPlayer.name, true)
