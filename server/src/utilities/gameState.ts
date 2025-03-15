@@ -19,6 +19,12 @@ export const getGameState = async (
 
   const state = JSON.parse(decompressString(compressed))
 
+  // TODO: once all existing states have updated, this can be removed
+  state.players.forEach((player: Player) => {
+    if (!player.unclaimedInfluences) player.unclaimedInfluences = []
+  })
+
+
   state.lastEventTimestamp = new Date(state.lastEventTimestamp ?? null)
 
   return state
@@ -39,6 +45,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
       influenceCount: player.influences.length - pendingInfluenceCountToPutBack,
       deadInfluences: player.deadInfluences,
       claimedInfluences: player.claimedInfluences,
+      unclaimedInfluences: player.unclaimedInfluences,
       color: player.color,
       ai: player.ai,
       grudges: player.grudges,

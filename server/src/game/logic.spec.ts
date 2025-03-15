@@ -1,6 +1,6 @@
 import { Chance } from "chance"
 import { drawCardFromDeck } from "../utilities/gameState"
-import { GameState, Influences } from '../../../shared/types/game'
+import { GameState, Influences, Player } from '../../../shared/types/game'
 import { shuffle } from "../utilities/array"
 import { moveTurnToNextPlayer, startGame } from "./logic"
 
@@ -8,7 +8,7 @@ jest.mock("../utilities/storage")
 
 const chance = new Chance()
 
-const getRandomPlayers = (count?: number) =>
+const getRandomPlayers = (count?: number) : Player[] =>
   chance.n(() => ({
     id: chance.string(),
     name: chance.string(),
@@ -16,6 +16,7 @@ const getRandomPlayers = (count?: number) =>
     coins: 2,
     influences: [],
     claimedInfluences: [],
+    unclaimedInfluences: [],
     deadInfluences: [],
     ai: false,
     grudges: {}

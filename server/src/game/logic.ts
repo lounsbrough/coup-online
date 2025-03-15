@@ -92,6 +92,7 @@ export const processPendingAction = (state: GameState) => {
     promptPlayerToLoseInfluence(state, targetPlayer.name)
   } else if (state.pendingAction.action === Actions.Exchange) {
     removeClaimedInfluence(actionPlayer)
+    removeUnclaimedInfluence(actionPlayer)
     actionPlayer.influences.push(drawCardFromDeck(state), drawCardFromDeck(state))
     state.deck = shuffle(state.deck)
     promptPlayerToLoseInfluence(state, actionPlayer.name, true)
@@ -156,6 +157,7 @@ export const addPlayerToGame = ({
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
     deadInfluences: [],
     claimedInfluences: [],
+    unclaimedInfluences: [],
     color: state.availablePlayerColors.shift()!,
     ai,
     grudges: {},
@@ -202,6 +204,7 @@ export const resetGame = async (roomId: string) => {
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
     claimedInfluences: [],
+    unclaimedInfluences: [],
     deadInfluences: [],
     grudges: {}
   }))
@@ -278,4 +281,19 @@ export const removeClaimedInfluence = (player: Player, influence?: Influences) =
   }
 
   player.claimedInfluences = player.claimedInfluences.filter((i) => i !== influence)
+}
+
+export const addUnclaimedInfluence = (player: Player, influence: Influences) => {
+  if (!player.unclaimedInfluences.some((i) => i === influence)) {
+    player.unclaimedInfluences.push(influence)
+  }
+}
+
+export const removeUnclaimedInfluence = (player: Player, influence?: Influences) => {
+  if (!influence) {
+    player.unclaimedInfluences = []
+    return
+  }
+
+  player.unclaimedInfluences = player.unclaimedInfluences.filter((i) => i !== influence)
 }

@@ -1,6 +1,6 @@
 import { Chance } from "chance"
 import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, mutateGameState, validateGameState } from "./gameState"
-import { Actions, EventMessages, GameState, Influences, PublicGameState } from '../../../shared/types/game'
+import { Actions, EventMessages, GameState, Influences, Player, PublicGameState } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 import { compressString, decompressString } from "./compression"
@@ -17,7 +17,7 @@ const getCurrentTimestampMock = jest.mocked(getCurrentTimestamp)
 
 const chance = new Chance()
 
-const getRandomPlayers = (state: GameState, count?: number) =>
+const getRandomPlayers = (state: GameState, count?: number): Player[] =>
   chance.n(() => ({
     id: chance.string(),
     name: chance.string(),
@@ -25,6 +25,7 @@ const getRandomPlayers = (state: GameState, count?: number) =>
     coins: 2,
     influences: [...Array.from({ length: 2 }, () => drawCardFromDeck(state))],
     claimedInfluences: [],
+    unclaimedInfluences: [],
     deadInfluences: [],
     ai: false,
     grudges: {}
@@ -93,6 +94,7 @@ describe('gameState', () => {
           coins: selfPlayer.coins,
           influences: selfPlayer.influences,
           claimedInfluences: selfPlayer.claimedInfluences,
+          unclaimedInfluences: selfPlayer.unclaimedInfluences,
           deadInfluences: selfPlayer.deadInfluences,
           ai: selfPlayer.ai,
           grudges: selfPlayer.grudges
@@ -103,6 +105,7 @@ describe('gameState', () => {
           coins: player.coins,
           influenceCount: player.influences.length,
           claimedInfluences: player.claimedInfluences,
+          unclaimedInfluences: player.unclaimedInfluences,
           deadInfluences: player.deadInfluences,
           ai: player.ai,
           grudges: player.grudges

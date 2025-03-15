@@ -3,7 +3,7 @@ import { GameMutationInputError } from "../utilities/errors"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addClaimedInfluence, addPlayerToGame, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
@@ -506,6 +506,19 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
 
       if (!actionPlayer) {
         throw new GameMutationInputError('Unable to find action player')
+      }
+
+      if (state.pendingAction.action === Actions.ForeignAid) {
+        addUnclaimedInfluence(player, Influences.Duke)
+      }
+
+      if (state.pendingAction.targetPlayer === player.name) {
+        if (state.pendingAction.action === Actions.Steal) {
+          addUnclaimedInfluence(player, Influences.Captain)
+          addUnclaimedInfluence(player, Influences.Ambassador)
+        } else if (state.pendingAction.action === Actions.Assassinate) {
+          addUnclaimedInfluence(player, Influences.Contessa)
+        }
       }
 
       if (state.pendingAction.pendingPlayers.length === 1) {
