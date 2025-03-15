@@ -19,6 +19,9 @@ export const getGameState = async (
 
   const state = JSON.parse(decompressString(compressed))
 
+  // TODO: once all existing states have updated, this can be removed
+  if (!state.unclaimedInfluences) state.unclaimedInfluences = []
+
   state.lastEventTimestamp = new Date(state.lastEventTimestamp ?? null)
 
   return state
