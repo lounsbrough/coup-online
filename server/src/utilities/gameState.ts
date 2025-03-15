@@ -39,6 +39,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
       influenceCount: player.influences.length - pendingInfluenceCountToPutBack,
       deadInfluences: player.deadInfluences,
       claimedInfluences: player.claimedInfluences,
+      unclaimedInfluences: player.unclaimedInfluences,
       color: player.color,
       ai: player.ai,
       grudges: player.grudges,

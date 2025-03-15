@@ -161,6 +161,7 @@ export type Player = {
   id: string
   influences: Influences[]
   claimedInfluences: Influences[]
+  unclaimedInfluences: Influences[]
   deadInfluences: Influences[]
   name: string
   ai: boolean
