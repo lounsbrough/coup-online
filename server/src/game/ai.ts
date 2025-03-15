@@ -219,7 +219,10 @@ export const decideAction = (gameState: PublicGameState): {
       const blockingAbility =
         (possibleTarget.claimedInfluences.includes(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
         + (possibleTarget.claimedInfluences.includes(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
+        - (possibleTarget.unclaimedInfluences.includes(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
+        - (possibleTarget.unclaimedInfluences.includes(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
         + getProbabilityOfBlockingSteal(possibleTarget.name)
+
       if (blockingAbility < minBlockingAbility) {
         minBlockingAbility = blockingAbility
         bestTargets.length = 0
@@ -313,10 +316,16 @@ export const decideActionResponse = (gameState: PublicGameState): {
   const skepticismMargin = skepticism ** 2 * ((isSelfTarget ? 0.8 : 0.4) + Math.random() * 0.1)
 
   const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
+  const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
   if (!gameState.pendingAction?.claimConfirmed
     && requiredInfluenceForAction
     && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) <= skepticismMargin
-    && (!gameState.players.find(({ name }) => name === gameState.turnPlayer)?.claimedInfluences.includes(requiredInfluenceForAction) || Math.random() < skepticismMargin)) {
+    && (
+      !turnPlayer?.claimedInfluences.includes(requiredInfluenceForAction)
+      || turnPlayer?.unclaimedInfluences.includes(requiredInfluenceForAction)
+      || Math.random() < skepticismMargin
+    )
+  ) {
     return { response: Responses.Challenge }
   }
 
