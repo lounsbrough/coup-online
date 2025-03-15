@@ -24,7 +24,6 @@ export const getGameState = async (
     if (!player.unclaimedInfluences) player.unclaimedInfluences = []
   })
 
-
   state.lastEventTimestamp = new Date(state.lastEventTimestamp ?? null)
 
   return state

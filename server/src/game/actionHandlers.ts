@@ -503,21 +503,32 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       }
 
       const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
+      const respondingPlayer = state.players.find(({ name }) => name === player.name)
 
       if (!actionPlayer) {
         throw new GameMutationInputError('Unable to find action player')
       }
 
+      if (!respondingPlayer) {
+        throw new GameMutationInputError('Unable to find responding player')
+      }
+
       if (state.pendingAction.action === Actions.ForeignAid) {
-        addUnclaimedInfluence(player, Influences.Duke)
+        addUnclaimedInfluence(respondingPlayer, Influences.Duke)
       }
 
       if (state.pendingAction.targetPlayer === player.name) {
+        const targetPlayer = state.players.find(({ name }) => name === state.pendingAction?.targetPlayer)
+
+        if (!targetPlayer) {
+          throw new GameMutationInputError('Unable to find target player')
+        }
+
         if (state.pendingAction.action === Actions.Steal) {
-          addUnclaimedInfluence(player, Influences.Captain)
-          addUnclaimedInfluence(player, Influences.Ambassador)
+          addUnclaimedInfluence(targetPlayer, Influences.Captain)
+          addUnclaimedInfluence(targetPlayer, Influences.Ambassador)
         } else if (state.pendingAction.action === Actions.Assassinate) {
-          addUnclaimedInfluence(player, Influences.Contessa)
+          addUnclaimedInfluence(targetPlayer, Influences.Contessa)
         }
       }
 

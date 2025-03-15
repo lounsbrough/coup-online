@@ -1,6 +1,6 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
-import { randomlyDecideToBluff, randomlyDecideToNotUseClaimedInfluence } from "./aiRandomness"
+import { randomlyDecideToBluff, randomlyDecideToNotUseEffectiveInfluence } from "./aiRandomness"
 
 const getProbabilityOfHiddenCardBeingInfluence = (
   gameState: PublicGameState,
@@ -184,14 +184,18 @@ export const decideAction = (gameState: PublicGameState): {
 
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100
-  const bluffMargin = (1 - honesty) ** 1.5 * 0.5
 
   const selfEffectiveInfluences = new Set([...gameState.selfPlayer.influences, ...gameState.selfPlayer.claimedInfluences])
+  const unclaimedInfluences = new Set(gameState.selfPlayer.unclaimedInfluences)
+
+  const baseBluffMargin = (1 - honesty) ** 1.5 * 0.5
+  const getFinalBluffMargin = (influence: Influences) =>
+    unclaimedInfluences.has(influence) ? baseBluffMargin * 0.2 : baseBluffMargin
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Duke) > 0 && (
-      (!randomlyDecideToNotUseClaimedInfluence() && selfEffectiveInfluences.has(Influences.Duke))
-      || randomlyDecideToBluff(bluffMargin)
+      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Duke))
+      || randomlyDecideToBluff(getFinalBluffMargin(Influences.Duke))
     )
   ) {
     return { action: Actions.Tax }
@@ -199,8 +203,8 @@ export const decideAction = (gameState: PublicGameState): {
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Captain) > 0 && (
-      (!randomlyDecideToNotUseClaimedInfluence() && selfEffectiveInfluences.has(Influences.Captain))
-      || randomlyDecideToBluff(bluffMargin)
+      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Captain))
+      || randomlyDecideToBluff(getFinalBluffMargin(Influences.Captain))
     )
   ) {
     const getProbabilityOfBlockingSteal = (playerName: string) =>
@@ -215,7 +219,10 @@ export const decideAction = (gameState: PublicGameState): {
       const blockingAbility =
         (possibleTarget.claimedInfluences.includes(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
         + (possibleTarget.claimedInfluences.includes(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
+        - (possibleTarget.unclaimedInfluences.includes(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
+        - (possibleTarget.unclaimedInfluences.includes(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
         + getProbabilityOfBlockingSteal(possibleTarget.name)
+
       if (blockingAbility < minBlockingAbility) {
         minBlockingAbility = blockingAbility
         bestTargets.length = 0
@@ -234,8 +241,8 @@ export const decideAction = (gameState: PublicGameState): {
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador) > 0 && (
-      (!randomlyDecideToNotUseClaimedInfluence() && selfEffectiveInfluences.has(Influences.Ambassador))
-      || randomlyDecideToBluff(bluffMargin)
+      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Ambassador))
+      || randomlyDecideToBluff(getFinalBluffMargin(Influences.Ambassador))
     )
   ) {
     return { action: Actions.Exchange }
@@ -244,8 +251,8 @@ export const decideAction = (gameState: PublicGameState): {
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Assassin) > 0
     && gameState.selfPlayer.coins >= 3 && (
-      (!randomlyDecideToNotUseClaimedInfluence() && selfEffectiveInfluences.has(Influences.Assassin))
-      || randomlyDecideToBluff(bluffMargin)
+      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Assassin))
+      || randomlyDecideToBluff(getFinalBluffMargin(Influences.Assassin))
     )
   ) {
     const targetPlayer = decideAssasinationTarget(gameState)
@@ -309,10 +316,16 @@ export const decideActionResponse = (gameState: PublicGameState): {
   const skepticismMargin = skepticism ** 2 * ((isSelfTarget ? 0.8 : 0.4) + Math.random() * 0.1)
 
   const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
+  const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
   if (!gameState.pendingAction?.claimConfirmed
     && requiredInfluenceForAction
     && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) <= skepticismMargin
-    && (!gameState.players.find(({ name }) => name === gameState.turnPlayer)?.claimedInfluences.includes(requiredInfluenceForAction) || Math.random() < skepticismMargin)) {
+    && (
+      !turnPlayer?.claimedInfluences.includes(requiredInfluenceForAction)
+      || turnPlayer?.unclaimedInfluences.includes(requiredInfluenceForAction)
+      || Math.random() < skepticismMargin
+    )
+  ) {
     return { response: Responses.Challenge }
   }
 
