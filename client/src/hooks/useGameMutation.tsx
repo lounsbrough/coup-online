@@ -1,4 +1,4 @@
-import { PlayerActions, PublicGameState, ServerEvents } from "@shared"
+import { PlayerActions, PublicGameState } from "@shared"
 import { useMemo, useState } from "react"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useGameStateContext } from "../contexts/GameStateContext"
@@ -14,13 +14,14 @@ function useGameMutation<ParamsType>({ action, callback }: {
   const { setGameState } = useGameStateContext()
 
   const { trigger: triggerSwr, isMutating } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
+    setError('')
     return fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(arg)
     }).then(async (res) => {
       if (res.ok) {
-        const gameState = await res.json()
+        const { gameState } = await res.json()
         setGameState(gameState)
         callback?.(gameState)
       } else {
@@ -31,17 +32,17 @@ function useGameMutation<ParamsType>({ action, callback }: {
 
   const trigger = useMemo(() => socket && isConnected
     ? (params: ParamsType) => {
-      socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => {
-        setError(error)
+      setError('')
+      socket.emit(action, params, ({ error, gameState }: { error: string, gameState: PublicGameState }) => {
+        if (error) {
+          setError(error)
+        } else {
+          callback?.(gameState)
+          setGameState(gameState)
+        }
       })
-      if (callback) {
-        socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState) => {
-          callback(gameState)
-        })
-      }
-      socket.emit(action, params)
     }
-    : triggerSwr, [socket, isConnected, action, callback, triggerSwr])
+    : triggerSwr, [socket, isConnected, action, callback, triggerSwr, setGameState])
 
   return { trigger, error, isMutating }
 }

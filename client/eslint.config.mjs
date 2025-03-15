@@ -4,13 +4,18 @@ import tseslint from "typescript-eslint"
 
 export default [
   { files: ["**/*.{js,jsx,ts,tsx}"] },
+  { ignores: ["build/*"] },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
     rules: {
-      semi: ['error', 'never'],
-      "@typescript-eslint/no-empty-object-type": ['error', { allowInterfaces: 'with-single-extends' }]
+      '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
+      semi: ['error', 'never']
     }
+  },
+  {
+    files: ['**/translations.ts'],
+    rules: { 'sort-keys': ['error', 'asc'] }
   }
 ]

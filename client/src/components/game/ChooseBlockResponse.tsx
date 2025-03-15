@@ -1,14 +1,16 @@
-import { Button, Grid2 } from "@mui/material"
-import { PlayerActions, Responses } from '@shared'
+import { Grid2, Typography } from "@mui/material"
+import { EventMessages, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseBlockResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.pendingBlock) {
     return null
@@ -16,12 +18,12 @@ function ChooseBlockResponse() {
 
   if (selectedResponse) {
     return <PlayerActionConfirmation
-      message={selectedResponse}
+      message={t(selectedResponse)}
       action={PlayerActions.blockResponse}
       variables={{
-        roomId: gameState.roomId,
         playerId: getPlayerId(),
-        response: selectedResponse
+        response: selectedResponse,
+        roomId: gameState.roomId
       }}
       onCancel={() => {
         setSelectedResponse(undefined)
@@ -31,9 +33,14 @@ function ChooseBlockResponse() {
 
   return (
     <>
-      <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {`${gameState.pendingBlock.sourcePlayer} is trying to block ${gameState.turnPlayer} as ${gameState.pendingBlock.claimedInfluence}`}
-      </ColoredTypography>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+        {t(EventMessages.BlockPending, {
+          gameState,
+          primaryInfluence: gameState.pendingBlock.claimedInfluence,
+          primaryPlayer: gameState.pendingBlock.sourcePlayer,
+          secondaryPlayer: gameState.turnPlayer
+        })}
+      </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
@@ -42,14 +49,14 @@ function ChooseBlockResponse() {
               return null
             }
 
-            return <Button
+            return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
             >
-              {response}
-            </Button>
+              {t(response)}
+            </GrowingButton>
           })}
       </Grid2>
     </>

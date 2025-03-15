@@ -1,41 +1,49 @@
 import { Chance } from "chance"
-import { drawCardFromDeck, getGameState, getPublicGameState, mutateGameState, validateGameState } from "./gameState"
-import { Actions, GameState, Influences, PublicGameState } from '../../../shared/types/game'
+import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, mutateGameState, validateGameState } from "./gameState"
+import { Actions, EventMessages, GameState, Influences, Player, PublicGameState } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 import { compressString, decompressString } from "./compression"
+import { getCurrentTimestamp } from "./time"
 
 jest.mock("./storage")
 jest.mock("./compression")
+jest.mock("./time")
 const getValueMock = jest.mocked(getValue)
 const setValueMock = jest.mocked(setValue)
 const compressStringMock = jest.mocked(compressString)
 const decompressStringMock = jest.mocked(decompressString)
+const getCurrentTimestampMock = jest.mocked(getCurrentTimestamp)
 
 const chance = new Chance()
-const oneDay = 86400
 
-const getRandomPlayers = (state: GameState, count?: number) =>
+const getRandomPlayers = (state: GameState, count?: number): Player[] =>
   chance.n(() => ({
     id: chance.string(),
     name: chance.string(),
     color: chance.color(),
     coins: 2,
     influences: [...Array.from({ length: 2 }, () => drawCardFromDeck(state))],
+    claimedInfluences: [],
+    unclaimedInfluences: [],
     deadInfluences: [],
-    ai: false
+    ai: false,
+    grudges: {}
   }), count ?? chance.natural({ min: 2, max: 6 }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
   const gameState: GameState = {
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
-    eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
+    eventLogs: [],
+    lastEventTimestamp: chance.date(),
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, 6),
     players: [],
     pendingInfluenceLoss: {},
-    roomId: chance.string()
+    roomId: chance.string(),
+    turn: chance.natural(),
+    settings: { eventLogRetentionTurns: 100 }
   }
 
   gameState.players = getRandomPlayers(gameState, playersCount)
@@ -60,40 +68,47 @@ describe('gameState', () => {
       decompressStringMock.mockReturnValue(JSON.stringify(gameState))
 
       expect(await getGameState(roomId)).toEqual(gameState)
-      expect(decompressString).toHaveBeenCalledTimes(1)
-      expect(decompressString).toHaveBeenCalledWith(compressedStateString)
+      expect(decompressStringMock).toHaveBeenCalledTimes(1)
+      expect(decompressStringMock).toHaveBeenCalledWith(compressedStateString)
       expect(getValueMock).toHaveBeenCalledTimes(1)
       expect(getValueMock).toHaveBeenCalledWith(roomId.toUpperCase())
     })
   })
 
   describe('getPublicGameState', () => {
-    it('should get portion of game state that is accessible to player', async () => {
+    it('should get portion of game state that is accessible to player', () => {
       const gameState = getRandomGameState()
       const selfPlayer = chance.pickone(gameState.players)
-      getValueMock.mockResolvedValue(JSON.stringify(gameState))
 
       const publicGameState: PublicGameState = {
         eventLogs: gameState.eventLogs,
+        lastEventTimestamp: gameState.lastEventTimestamp,
         isStarted: gameState.isStarted,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
         roomId: gameState.roomId,
+        deckCount: 15 - gameState.players.length * 2,
         selfPlayer: {
           id: selfPlayer.id,
           name: selfPlayer.name,
           color: selfPlayer.color,
           coins: selfPlayer.coins,
           influences: selfPlayer.influences,
+          claimedInfluences: selfPlayer.claimedInfluences,
+          unclaimedInfluences: selfPlayer.unclaimedInfluences,
           deadInfluences: selfPlayer.deadInfluences,
-          ai: selfPlayer.ai
+          ai: selfPlayer.ai,
+          grudges: selfPlayer.grudges
         },
         players: gameState.players.map((player) => ({
           name: player.name,
           color: player.color,
           coins: player.coins,
           influenceCount: player.influences.length,
+          claimedInfluences: player.claimedInfluences,
+          unclaimedInfluences: player.unclaimedInfluences,
           deadInfluences: player.deadInfluences,
-          ai: player.ai
+          ai: player.ai,
+          grudges: player.grudges
         })),
         ...(gameState.pendingAction && { pendingAction: gameState.pendingAction }),
         ...(gameState.pendingActionChallenge && { pendingActionChallenge: gameState.pendingActionChallenge }),
@@ -102,7 +117,7 @@ describe('gameState', () => {
         ...(gameState.turnPlayer && { turnPlayer: gameState.turnPlayer })
       }
 
-      expect(await getPublicGameState({ gameState, playerId: selfPlayer.id }))
+      expect(getPublicGameState({ gameState, playerId: selfPlayer.id }))
         .toStrictEqual(publicGameState)
     })
   })
@@ -126,22 +141,42 @@ describe('gameState', () => {
       getValueMock.mockResolvedValue(JSON.stringify(gameState))
       compressStringMock.mockReturnValue(compressedStateString)
 
+      getCurrentTimestampMock.mockReturnValue(new Date(1, 22, 2020))
+
       await mutateGameState(gameState, (state) => {
         state.players[0].coins -= 1
       })
 
-      const expectedState = JSON.stringify({
+      const expectedState = {
         ...gameState,
+        lastEventTimestamp: new Date(1, 22, 2020).toISOString(),
         players: [
           { ...gameState.players[0], coins: gameState.players[0].coins - 1 },
           ...gameState.players.slice(1)
         ]
+      }
+
+      const actualStateString = compressStringMock.mock.calls[0][0]
+
+      expect(compressStringMock).toHaveBeenCalledTimes(1)
+      expect(JSON.parse(actualStateString)).toEqual(expectedState)
+      expect(setValueMock).toHaveBeenCalledTimes(1)
+      const oneMonth = 2678400
+      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), compressedStateString, oneMonth)
+    })
+
+    it('should not update storage if state unchanged', async () => {
+      const gameState = getRandomGameState()
+      const compressedStateString = 'some compressed base64'
+      getValueMock.mockResolvedValue(JSON.stringify(gameState))
+      compressStringMock.mockReturnValue(compressedStateString)
+
+      await mutateGameState(gameState, (state) => {
+        state.players = JSON.parse(JSON.stringify(state.players))
       })
 
-      expect(compressString).toHaveBeenCalledTimes(1)
-      expect(compressString).toHaveBeenCalledWith(expectedState)
-      expect(setValueMock).toHaveBeenCalledTimes(1)
-      expect(setValueMock).toHaveBeenCalledWith(gameState.roomId.toUpperCase(), compressedStateString, oneDay)
+      expect(compressStringMock).not.toHaveBeenCalled()
+      expect(setValueMock).not.toHaveBeenCalled()
     })
   })
 
@@ -211,5 +246,46 @@ describe('gameState', () => {
       mutation(gameState)
       expect(() => validateGameState(gameState)).toThrow(error)
     })
+  })
+
+  describe('drawCardFromDeck', () => {
+    it('should return top card and remove it from deck', () => {
+      const gameState = getRandomGameState()
+
+      const expectedCard = gameState.deck.at(-1)
+      const expectedDeckSize = gameState.deck.length - 1
+
+      expect(drawCardFromDeck(gameState)).toBe(expectedCard)
+      expect(gameState.deck.length).toBe(expectedDeckSize)
+    })
+  })
+
+  describe('logEvent', () => {
+    const gameState = {
+      ...getRandomGameState(),
+      settings: { eventLogRetentionTurns: 50 }
+    }
+
+    const newLog = {
+      event: chance.pickone(Object.values(EventMessages)),
+      turn: gameState.turn
+    }
+
+    let expectedEventLogs = [...gameState.eventLogs, newLog]
+    logEvent(gameState, newLog)
+    expect(gameState.eventLogs).toEqual(expectedEventLogs)
+
+    gameState.eventLogs = chance.n(() => ({
+      event: chance.pickone(Object.values(EventMessages)),
+      turn: chance.natural({max: 100, min: 1})
+    }), 100)
+
+    expectedEventLogs = [...gameState.eventLogs.filter(({ turn }) =>
+      gameState.turn - turn < gameState.settings.eventLogRetentionTurns
+    ), newLog]
+    logEvent(gameState, newLog)
+    expect(gameState.eventLogs.length).toBeLessThan(99)
+    expect(gameState.eventLogs).toEqual(expectedEventLogs)
+    expect(gameState.eventLogs.at(-1)?.turn).toBe(gameState.turn)
   })
 })

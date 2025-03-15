@@ -1,31 +1,33 @@
 import { Button, Grid2, Typography } from "@mui/material"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import GitHubLinks from "../GitHubLinks"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function Home() {
   const navigate = useNavigate()
+  const { t } = useTranslationContext()
 
   return (
     <>
       <Typography variant="h4" sx={{ m: 5 }}>
-        Welcome to Coup!
+        {t('welcomeToCoup')}
       </Typography>
       <Typography variant="h5" sx={{ m: 5 }}>
-        The game of deception, deduction, and luck.
+        {t('briefDescriptionOfCoup')}
       </Typography>
       <Grid2>
         <Button
           type="submit" sx={{ mt: 5 }}
           variant="contained"
           onClick={() => { navigate(`/create-game`) }}
-        >Create New Game</Button>
+        >{t('createNewGame')}</Button>
       </Grid2>
       <Grid2>
         <Button
           type="submit" sx={{ mt: 5 }}
           variant="contained"
           onClick={() => { navigate(`/join-game`) }}
-        >Join Existing Game</Button>
+        >{t('joinExistingGame')}</Button>
       </Grid2>
       <GitHubLinks />
     </>

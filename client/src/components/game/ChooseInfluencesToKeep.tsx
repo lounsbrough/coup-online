@@ -1,13 +1,16 @@
 import { useState } from "react"
-import { Button, Checkbox, Grid2, Typography } from "@mui/material"
+import { Checkbox, Grid2, Typography } from "@mui/material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { PlayerActions } from "@shared"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseInfluencesToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer) {
     return null
@@ -18,14 +21,20 @@ function ChooseInfluencesToKeep() {
       .filter(({ putBackInDeck }) => putBackInDeck).length
 
   if (checkedIndexes.length === influenceCountToKeep) {
+    const influencesToKeep = gameState.selfPlayer.influences.filter((_i, index) => checkedIndexes.includes(index))
     return <PlayerActionConfirmation
-      message={`Keep ${gameState.selfPlayer.influences.filter((_i, index) => checkedIndexes.includes(index)).join(' and ')}`}
+      message={t('keepInfluences', {
+        count: influenceCountToKeep,
+        gameState,
+        primaryInfluence: influencesToKeep[0],
+        secondaryInfluence: influencesToKeep[1]
+      })}
       action={PlayerActions.loseInfluences}
       variables={{
-        roomId: gameState.roomId,
-        playerId: getPlayerId(),
         influences: gameState.selfPlayer.influences.filter((_i, index) =>
-          !checkedIndexes.includes(index))
+          !checkedIndexes.includes(index)),
+        playerId: getPlayerId(),
+        roomId: gameState.roomId
       }}
       onCancel={() => {
         setCheckedIndexes([])
@@ -35,14 +44,16 @@ function ChooseInfluencesToKeep() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {`Choose ${influenceCountToKeep} Influence${influenceCountToKeep === 1 ? '' : 's'} to Keep`}
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+        {t('chooseInfluencesToKeep', {
+          count: influenceCountToKeep
+        })}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
-            return <Button
+            return <GrowingButton
               key={index}
               disabled={checkedIndexes.length === 2 && !checkedIndexes.includes(index)}
               onClick={() => {
@@ -63,8 +74,8 @@ function ChooseInfluencesToKeep() {
                 sx={{ color: 'inherit', p: 0, pr: 1 }}
                 checked={checkedIndexes.includes(index)}
               />
-              {influence}
-            </Button>
+              {t(influence)}
+            </GrowingButton>
           })}
       </Grid2>
     </>

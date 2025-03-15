@@ -1,13 +1,16 @@
-import { Button, Grid2, Typography } from "@mui/material"
+import { Grid2, Typography } from "@mui/material"
 import { Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseInfluenceToLose() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer) {
     return null
@@ -15,12 +18,15 @@ function ChooseInfluenceToLose() {
 
   if (selectedInfluence) {
     return <PlayerActionConfirmation
-      message={`Lose ${selectedInfluence}`}
+      message={t('loseInfluence', {
+        gameState,
+        primaryInfluence: selectedInfluence
+      })}
       action={PlayerActions.loseInfluences}
       variables={{
-        roomId: gameState.roomId,
+        influences: [selectedInfluence],
         playerId: getPlayerId(),
-        influences: [selectedInfluence]
+        roomId: gameState.roomId
       }}
       onCancel={() => {
         setSelectedInfluence(undefined)
@@ -30,14 +36,14 @@ function ChooseInfluenceToLose() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {'Choose an Influence to Lose'}
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+        {t('chooseInfluenceToLose')}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
-            return <Button
+            return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedInfluence(influence)
@@ -45,8 +51,8 @@ function ChooseInfluenceToLose() {
               color={influence}
               variant="contained"
             >
-              {influence}
-            </Button>
+              {t(influence)}
+            </GrowingButton>
           })}
       </Grid2>
     </>

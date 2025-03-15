@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react"
+import { ReactNode, useEffect, useRef, useState } from "react"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Button, Grid2, Typography, useTheme } from "@mui/material"
-import ColoredTypography from "../utilities/ColoredTypography"
 import { Cancel, Check } from "@mui/icons-material"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function PlayerActionConfirmation({
   message,
@@ -14,14 +14,15 @@ function PlayerActionConfirmation({
   variables,
   onCancel
 }: {
-  message: string,
+  message: ReactNode,
   action: PlayerActions,
   variables: object,
   onCancel: () => void
 }) {
   const [autoSubmitProgress, setAutoSubmitProgress] = useState(0)
-  const autoSubmitInterval = useRef<ReturnType<typeof setInterval>>()
+  const autoSubmitInterval = useRef<ReturnType<typeof setInterval>>(undefined)
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   const { trigger, isMutating, error } = useGameMutation<object>({ action })
@@ -57,7 +58,7 @@ function PlayerActionConfirmation({
 
   return (
     <>
-      <ColoredTypography variant="h6" my={1} fontWeight="bold">{message}</ColoredTypography>
+      <Typography variant="h6" my={1} fontWeight="bold">{message}</Typography>
       <Grid2 container spacing={2} justifyContent="center">
         <Grid2>
           <Button
@@ -70,7 +71,9 @@ function PlayerActionConfirmation({
               onCancel()
             }}
             disabled={isMutating}
-          >Cancel</Button>
+          >
+            {t('cancel')}
+          </Button>
         </Grid2>
         <Grid2>
           <Button
@@ -97,7 +100,7 @@ function PlayerActionConfirmation({
             }}
             disabled={isMutating}
           >
-            Confirm
+            {t('confirm')}
           </Button>
         </Grid2>
       </Grid2>

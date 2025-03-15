@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
 import { playerIdStorageKey } from './localStorageKeys'
 import { PublicGameState, PublicPlayer } from '@shared'
 
@@ -8,7 +7,7 @@ export const getPlayerId = () => {
     return existingPlayerId
   }
 
-  const playerId = uuidv4()
+  const playerId = window.crypto.randomUUID()
   localStorage.setItem(playerIdStorageKey, playerId)
   return playerId
 }
@@ -19,39 +18,33 @@ export const getWaitingOnPlayers = (gameState: PublicGameState): PublicPlayer[] 
     return []
   }
 
-  const waitingForPlayers = []
+  const waitingOnNames = new Set<string>()
 
   if (gameState.pendingBlockChallenge) {
-    const pendingBlockPlayer = gameState.players.find(({ name }) => gameState.pendingBlock?.sourcePlayer === name)
+    const pendingBlockPlayer = gameState.pendingBlock?.sourcePlayer
     if (pendingBlockPlayer) {
-      waitingForPlayers.push(pendingBlockPlayer)
+      waitingOnNames.add(pendingBlockPlayer)
     }
   } else if (gameState.pendingBlock) {
-    waitingForPlayers.push(...gameState.players.filter(({ name }) =>
-      gameState.pendingBlock?.pendingPlayers.includes(name)))
+    gameState.pendingBlock?.pendingPlayers.forEach(waitingOnNames.add, waitingOnNames)
   } else if (gameState.pendingActionChallenge) {
-    const turnPlayer = gameState.players.find(({ name }) => gameState.turnPlayer === name)
-    if (turnPlayer) {
-      waitingForPlayers.push(turnPlayer)
+    if (gameState.turnPlayer) {
+      waitingOnNames.add(gameState.turnPlayer)
     }
   } else if (gameState.pendingAction) {
-    waitingForPlayers.push(...gameState.players.filter(({ name }) =>
-      gameState.pendingAction?.pendingPlayers.includes(name)))
+    gameState.pendingAction?.pendingPlayers.forEach(waitingOnNames.add, waitingOnNames)
   }
 
   const pendingInfluenceLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
   if (pendingInfluenceLossPlayers.length) {
-    pendingInfluenceLossPlayers.forEach((pendingInfluenceLossPlayer) => {
-      waitingForPlayers.push(gameState.players.find(({ name }) => pendingInfluenceLossPlayer === name))
-    })
+    pendingInfluenceLossPlayers.forEach(waitingOnNames.add, waitingOnNames)
   }
 
-  if (!waitingForPlayers.length) {
-    const turnPlayer = gameState.players.find(({ name }) => gameState.turnPlayer === name)
-    if (turnPlayer) {
-      waitingForPlayers.push(turnPlayer)
+  if (!waitingOnNames.size) {
+    if (gameState.turnPlayer) {
+      waitingOnNames.add(gameState.turnPlayer)
     }
   }
 
-  return waitingForPlayers
+  return gameState.players.filter(({ name }) => waitingOnNames.has(name))
 }

@@ -1,14 +1,18 @@
-import { Button, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
-import { ActionAttributes, Actions, getActionMessage, PlayerActions } from '@shared'
+import { Grid2, Tooltip, Typography, useTheme } from "@mui/material"
+import { ActionAttributes, Actions, PlayerActions, EventMessages } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseAction() {
   const [selectedAction, setSelectedAction] = useState<Actions>()
   const [selectedTargetPlayer, setSelectedTargetPlayer] = useState<string>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   if (!gameState?.selfPlayer) {
@@ -17,17 +21,16 @@ function ChooseAction() {
 
   if (selectedAction && (!ActionAttributes[selectedAction].requiresTarget || selectedTargetPlayer)) {
     return <PlayerActionConfirmation
-      message={getActionMessage({
+      message={t(EventMessages.ActionConfirm, {
         action: selectedAction,
-        tense: 'confirm',
-        actionPlayer: gameState.turnPlayer!,
-        targetPlayer: selectedTargetPlayer
+        gameState,
+        secondaryPlayer: selectedTargetPlayer
       })}
       action={PlayerActions.action}
       variables={{
-        roomId: gameState.roomId,
-        playerId: getPlayerId(),
         action: selectedAction,
+        playerId: getPlayerId(),
+        roomId: gameState.roomId,
         targetPlayer: selectedTargetPlayer
       }}
       onCancel={() => {
@@ -40,9 +43,14 @@ function ChooseAction() {
   if (selectedAction) {
     return (
       <>
-        <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-          Choose a Target
-        </Typography>
+        <TypographyWithBackButton
+          my={1}
+          variant="h6"
+          fontWeight="bold"
+          onBack={() => { setSelectedAction(undefined) }}
+        >
+          {t('chooseATarget')}
+        </TypographyWithBackButton>
         <Grid2 container spacing={2} justifyContent="center">
           {gameState.players.map((player) => {
             if (player.name === gameState.selfPlayer?.name || !player.influenceCount
@@ -54,20 +62,20 @@ function ChooseAction() {
               color: { main: player.color }
             })
 
-            return <Button
+            return <GrowingButton
               key={player.name}
               onClick={() => {
                 setSelectedTargetPlayer(player.name)
               }}
               sx={{
-                color: paletteColor.contrastText,
-                background: paletteColor.main,
                 '&:hover': {
                   background: paletteColor.dark
-                }
+                },
+                background: paletteColor.main,
+                color: paletteColor.contrastText
               }}
               variant="contained"
-            >{player.name}</Button>
+            >{player.name}</GrowingButton>
           })}
         </Grid2>
       </>
@@ -76,8 +84,8 @@ function ChooseAction() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        Choose an Action
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+        {t('chooseAnAction')}
       </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.entries(ActionAttributes)
@@ -91,28 +99,20 @@ function ChooseAction() {
 
             return (
               <Grid2 key={index}>
-                {lackingCoins ? (
-                  <Tooltip title="Not enough coins">
-                    <span>
-                      <Button
-                        variant="contained"
-                        disabled
-                      >
-                        {action}
-                      </Button>
-                    </span>
-                  </Tooltip>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      setSelectedAction(action as Actions)
-                    }}
-                    color={action as Actions}
-                    variant="contained"
-                  >
-                    {action}
-                  </Button>
-                )}
+                <Tooltip title={lackingCoins && t('notEnoughCoins')}>
+                  <span>
+                    <GrowingButton
+                      onClick={() => {
+                        setSelectedAction(action as Actions)
+                      }}
+                      color={action as Actions}
+                      variant="contained"
+                      disabled={lackingCoins}
+                    >
+                      {t(action as Actions)}
+                    </GrowingButton>
+                  </span>
+                </Tooltip>
               </Grid2>
             )
           })}

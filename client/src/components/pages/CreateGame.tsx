@@ -1,63 +1,97 @@
 import { useCallback, useState } from "react"
-import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
+import { Box, Breadcrumbs, Button, Grid2, Slider, TextField, Typography } from "@mui/material"
 import { AccountCircle } from "@mui/icons-material"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router"
 import { getPlayerId } from "../../helpers/players"
-import { Link } from "react-router-dom"
 import { Analytics } from '@vercel/analytics/react'
-import { PlayerActions, PublicGameState } from '@shared'
+import { GameSettings, PlayerActions, PublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
+  const [eventLogRetentionTurns, setEventLogRetentionTurns] = useState(3)
   const navigate = useNavigate()
+  const { t } = useTranslationContext()
 
   const navigateToRoom = useCallback((gameState: PublicGameState) => {
     navigate(`/game?roomId=${gameState.roomId}`)
   }, [navigate])
 
   const { trigger, isMutating, error } = useGameMutation<{
-    playerId: string, playerName: string
+    playerId: string, playerName: string, settings: GameSettings
   }>({ action: PlayerActions.createGame, callback: navigateToRoom })
 
   return (
     <>
       <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link to='/'>Home</Link>
-        <Typography>Create Game</Typography>
+        <Link to='/'>
+          {t('home')}
+        </Link>
+        <Typography>
+          {t('createNewGame')}
+        </Typography>
       </Breadcrumbs>
-      <Typography variant="h5" sx={{ m: 5 }}>Create a New Game</Typography>
+      <Typography variant="h5" sx={{ m: 5 }}>
+        {t('createNewGame')}
+      </Typography>
       <form
         onSubmit={(event) => {
           event.preventDefault()
           trigger({
             playerId: getPlayerId(),
-            playerName: playerName.trim()
+            playerName: playerName.trim(),
+            settings: { eventLogRetentionTurns }
           })
-        }}>
-        <Grid2 container direction="column" alignContent='center'>
+        }}
+      >
+        <Grid2 container direction="column" alignItems='center'>
           <Grid2>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
+                data-testid='playerNameInput'
                 value={playerName}
                 onChange={(event) => {
                   setPlayerName(event.target.value.slice(0, 10))
                 }}
-                label="What is your name?"
+                label={t('whatIsYourName')}
                 variant="standard"
                 required
+              />
+            </Box>
+          </Grid2>
+
+          <Grid2 sx={{ maxWidth: '300px', width: '90%' }}>
+            <Box p={2} mt={2}>
+              <Typography mt={2}>
+                {t('eventLogRetentionTurns')}
+                {`: ${eventLogRetentionTurns}`}
+              </Typography>
+              <Slider
+                data-testid='eventLogRetentionTurnsInput'
+                step={1}
+                value={eventLogRetentionTurns}
+                valueLabelDisplay="auto"
+                min={1}
+                max={100}
+                onChange={(_: Event, value: number | number[]) => {
+                  setEventLogRetentionTurns(value as number)
+                }}
               />
             </Box>
           </Grid2>
         </Grid2>
         <Grid2>
           <Button
-            type="submit" sx={{ mt: 5 }}
+            type="submit"
+            sx={{ mt: 5 }}
             variant="contained"
             disabled={isMutating}
-          >Create Game</Button>
+          >
+            {t('createGame')}
+          </Button>
         </Grid2>
         {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>

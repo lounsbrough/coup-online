@@ -10,11 +10,15 @@ import { confirmActionsStorageKey, playerIdStorageKey } from "../../src/helpers/
 declare global {
   namespace Cypress {
     interface Chainable {
+      clickGameBoardButton(buttonText: string): Chainable<void>
       loadPlayer(url: string, playerId: string): Chainable<void>
     }
   }
 }
 
+Cypress.Commands.add('clickGameBoardButton', (buttonText: string) => {
+  cy.get('.game-board').contains('button', buttonText).click()
+})
 
 Cypress.Commands.add('loadPlayer', (url: string, playerId: string) => {
   cy.visit(url, {

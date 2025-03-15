@@ -3,9 +3,11 @@ import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function PlayAgain() {
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   const { trigger, isMutating, error } = useGameMutation<{
     roomId: string, playerId: string
@@ -20,14 +22,16 @@ function PlayAgain() {
       <Button
         onClick={() => {
           trigger({
-            roomId: gameState.roomId,
-            playerId: getPlayerId()
+            playerId: getPlayerId(),
+            roomId: gameState.roomId
           })
         }}
         variant="contained"
         disabled={isMutating}
-      >Play Again</Button>
-      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
+      >
+        {t('playAgain')}
+      </Button>
+      {error && <Typography color='error' sx={{ fontWeight: 700, mt: 3 }}>{error}</Typography>}
     </>
   )
 }

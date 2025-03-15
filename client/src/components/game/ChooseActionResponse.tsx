@@ -1,15 +1,18 @@
-import { Button, Grid2, Typography } from "@mui/material"
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, PlayerActions, Responses, getActionMessage } from '@shared'
+import { Grid2, Typography } from "@mui/material"
+import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import ColoredTypography from "../utilities/ColoredTypography"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
+import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
+import GrowingButton from "../utilities/GrowingButton"
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   if (!gameState?.selfPlayer || !gameState?.pendingAction) {
     return null
@@ -17,13 +20,18 @@ function ChooseActionResponse() {
 
   if (selectedResponse && (selectedResponse !== Responses.Block || selectedInfluence)) {
     return <PlayerActionConfirmation
-      message={`${selectedResponse}${selectedInfluence ? ` as ${selectedInfluence}` : ''}`}
+      message={selectedInfluence
+        ? t('blockAsInfluence', {
+          gameState,
+          primaryInfluence: selectedInfluence
+        })
+        : t(selectedResponse)}
       action={PlayerActions.actionResponse}
       variables={{
-        roomId: gameState.roomId,
+        claimedInfluence: selectedInfluence,
         playerId: getPlayerId(),
         response: selectedResponse,
-        claimedInfluence: selectedInfluence
+        roomId: gameState.roomId
       }}
       onCancel={() => {
         setSelectedResponse(undefined)
@@ -35,9 +43,14 @@ function ChooseActionResponse() {
   if (selectedResponse) {
     return (
       <>
-        <Typography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-          Claim an Influence
-        </Typography>
+        <TypographyWithBackButton
+          my={1}
+          variant="h6"
+          fontWeight="bold"
+          onBack={() => { setSelectedResponse(undefined) }}
+        >
+          {t('claimAnInfluence')}
+        </TypographyWithBackButton>
         <Grid2 container spacing={2} justifyContent="center">
           {Object.entries(InfluenceAttributes)
             .sort((a, b) => a[0].localeCompare(b[0]))
@@ -46,14 +59,14 @@ function ChooseActionResponse() {
                 return null
               }
 
-              return <Button
+              return <GrowingButton
                 key={influence}
                 onClick={() => {
                   setSelectedInfluence(influence as Influences)
                 }}
                 color={influence as Influences}
                 variant="contained"
-              >{influence}</Button>
+              >{t(influence as Influences)}</GrowingButton>
             })}
         </Grid2>
       </>
@@ -62,14 +75,14 @@ function ChooseActionResponse() {
 
   return (
     <>
-      <ColoredTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }}>
-        {getActionMessage({
+      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+        {t(EventMessages.ActionPending, {
           action: gameState.pendingAction.action,
-          tense: 'pending',
-          actionPlayer: gameState.turnPlayer!,
-          targetPlayer: gameState.pendingAction.targetPlayer
+          gameState,
+          primaryPlayer: gameState.turnPlayer!,
+          secondaryPlayer: gameState.pendingAction.targetPlayer
         })}
-      </ColoredTypography>
+      </Typography>
       <Grid2 container spacing={2} justifyContent="center">
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
@@ -89,14 +102,14 @@ function ChooseActionResponse() {
               return null
             }
 
-            return <Button
+            return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
             >
-              {response}
-            </Button>
+              {t(response)}
+            </GrowingButton>
           })}
       </Grid2>
     </>

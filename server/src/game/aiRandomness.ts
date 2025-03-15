@@ -1,0 +1,5 @@
+export const randomlyDecideToNotUseEffectiveInfluence = () =>
+  Math.random() < 0.05
+
+export const randomlyDecideToBluff = (bluffMargin: number) =>
+  Math.random() < bluffMargin

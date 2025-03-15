@@ -1,13 +1,12 @@
-import { Typography } from "@mui/material"
+import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '@shared'
 import ChooseAction from "./ChooseAction"
 import ChooseActionResponse from "./ChooseActionResponse"
 import ChooseChallengeResponse from "./ChooseChallengeResponse"
 import ChooseInfluenceToLose from "./ChooseInfluenceToLose"
 import ChooseBlockResponse from "./ChooseBlockResponse"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Circle } from "@mui/icons-material"
 import ChooseInfluencesToKeep from "./ChooseInfluencesToKeep"
-import { getWaitingOnPlayers } from "../../helpers/players"
+import WaitingOnOtherPlayers from "./WaitingOnOtherPlayers"
 
 function PlayerDecision() {
   const { gameState } = useGameStateContext()
@@ -15,8 +14,6 @@ function PlayerDecision() {
   if (!gameState?.selfPlayer?.influences.length) {
     return null
   }
-
-  const isMyTurn = gameState.turnPlayer === gameState.selfPlayer.name
 
   const pendingInfluenceLoss = gameState.pendingInfluenceLoss[gameState.selfPlayer.name]
   if (pendingInfluenceLoss) {
@@ -27,53 +24,28 @@ function PlayerDecision() {
     }
   }
 
-  if (isMyTurn &&
-    !gameState.pendingAction &&
-    !gameState.pendingActionChallenge &&
-    !gameState.pendingBlock &&
-    !gameState.pendingBlockChallenge &&
-    !Object.keys(gameState.pendingInfluenceLoss).length) {
+  if (canPlayerChooseAction(gameState)) {
     return <ChooseAction />
   }
 
-  if (!isMyTurn &&
-    gameState.pendingAction &&
-    !gameState.pendingActionChallenge &&
-    !gameState.pendingBlock &&
-    gameState.pendingAction.pendingPlayers.includes(gameState.selfPlayer.name)) {
+  if (canPlayerChooseActionResponse(gameState)) {
     return <ChooseActionResponse />
   }
 
-  if (isMyTurn &&
-    gameState.pendingActionChallenge) {
+  if (canPlayerChooseActionChallengeResponse(gameState)) {
     return <ChooseChallengeResponse />
   }
 
-  if (gameState.pendingBlock &&
-    !gameState.pendingBlockChallenge &&
-    gameState.selfPlayer.name !== gameState.pendingBlock.sourcePlayer &&
-    gameState.pendingBlock.pendingPlayers.includes(gameState.selfPlayer.name)
-  ) {
+  if (gameState.pendingBlock && canPlayerChooseBlockResponse(gameState)) {
     return <ChooseBlockResponse />
   }
 
-  if (
-    gameState.pendingBlock &&
-    gameState.pendingBlockChallenge &&
-    gameState.pendingBlock.sourcePlayer === gameState.selfPlayer.name
-  ) {
+  if (canPlayerChooseBlockChallengeResponse(gameState)) {
     return <ChooseChallengeResponse />
   }
 
   return (
-    <>
-      <Typography variant="h6" my={1} fontWeight="bold">Waiting for other players</Typography>
-      <Typography>
-        {getWaitingOnPlayers(gameState).map(({ color }) =>
-          <Circle key={color} sx={{ color }} />
-        )}
-      </Typography>
-    </>
+    <WaitingOnOtherPlayers />
   )
 }
 

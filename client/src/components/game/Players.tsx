@@ -1,4 +1,4 @@
-import { Badge, Button, Grid2, Paper, Typography, useTheme } from "@mui/material"
+import { Badge, Button, Grid2, Paper, Tooltip, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Close, MonetizationOn } from "@mui/icons-material"
@@ -6,11 +6,14 @@ import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
-import { PlayerActions } from "@shared"
+import { Influences, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
+import Bot from "../icons/Bot"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   const { trigger, isMutating, error } = useGameMutation<{
@@ -22,14 +25,14 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   }
 
   const colorModeFactor = theme.palette.mode === LIGHT_COLOR_MODE ? -1 : 1
-
   const waitingOnPlayers = getWaitingOnPlayers(gameState)
+  const humanPlayers = gameState.players.filter(({ ai }) => !ai)
 
   return (
     <>
       <Grid2 container justifyContent="center" spacing={3}>
         {gameState.players
-          .map(({ name, color, coins, influenceCount, deadInfluences }, index) => {
+          .map(({ name, color, coins, influenceCount, deadInfluences, ai, personality }, index) => {
             const playerColor = influenceCount ? color : '#777777'
             const cardTextColor = theme.palette.mode === LIGHT_COLOR_MODE ? 'white' : 'black'
             const isWaitingOnPlayer = waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
@@ -37,7 +40,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
             return (
               <Badge
                 key={index}
-                invisible={!inWaitingRoom}
+                invisible={!inWaitingRoom || (!ai && humanPlayers.length === 1)}
                 badgeContent={
                   <Button
                     sx={{
@@ -72,7 +75,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     p: 1,
                     width: '6rem',
                     transition: theme.transitions.create(['transform', 'box-shadow']),
-                    transform: isWaitingOnPlayer ? 'scale(1.06)' : undefined
+                    animation: isWaitingOnPlayer ? 'pulse 1.5s infinite' : undefined
                   }}>
                   <Typography variant="h6" sx={{
                     fontWeight: 'bold',
@@ -82,6 +85,26 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     <OverflowTooltip>{name}</OverflowTooltip>
                   </Typography>
                   <Typography variant="h6" sx={{ color: cardTextColor }}>
+                    {ai && (
+                      <Tooltip title={
+                        <>
+                          <Typography>
+                            {t('vengefulness')}
+                            {`: ${personality?.vengefulness}`}%
+                          </Typography>
+                          <Typography>
+                            {t('honesty')}
+                            {`: ${personality?.honesty}`}%
+                          </Typography>
+                          <Typography>
+                            {t('skepticism')}
+                            {`: ${personality?.skepticism}`}%
+                          </Typography>
+                        </>
+                      }>
+                        <Bot sx={{ verticalAlign: 'text-bottom' }} />
+                      </Tooltip>
+                    )}
                     <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                   </Typography>
                   <Grid2
@@ -105,7 +128,19 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                             padding: 0.5,
                             borderRadius: 2
                           }}>
-                          <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
+                          <Tooltip
+                            title={
+                              influence && (
+                                <Typography variant="h6">
+                                  {t(influence as Influences)}
+                                </Typography>
+                              )
+                            }
+                          >
+                            <span>
+                              <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
+                            </span>
+                          </Tooltip>
                         </Grid2>
                       )
                     })}

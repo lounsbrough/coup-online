@@ -4,7 +4,7 @@ import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import ColoredTypography from "../utilities/ColoredTypography"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 const ResetIcon = Delete
 
@@ -22,6 +22,7 @@ function RequestReset() {
   }>({ action: PlayerActions.resetGame })
 
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   if (!gameState) {
@@ -30,11 +31,12 @@ function RequestReset() {
 
   const isResetPending = !!gameState.resetGameRequest
   const isResetMine = isResetPending && gameState.resetGameRequest?.player === gameState.selfPlayer?.name
+  const playerIsDead = !gameState.selfPlayer?.influences.length
 
   return (
     <>
       <Box mt={1}>
-        {(!isResetPending || isResetMine) && (
+        {(!isResetPending || isResetMine || playerIsDead) && (
           <>
             <Button
               size="small"
@@ -48,17 +50,20 @@ function RequestReset() {
               }}
               disabled={resetGameRequest.isMutating || isResetPending}
             >
-              {!isResetPending ? 'Reset Game' : 'Waiting For Others'}
+              {!isResetPending ? t('resetGame') : t('waitingOnOtherPlayers')}
             </Button>
             {resetGameRequest.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGameRequest.error}</Typography>}
           </>
         )}
       </Box>
-      {isResetPending && !isResetMine && (
+      {isResetPending && !isResetMine && !playerIsDead && (
         <>
-          <ColoredTypography>
-            {`${gameState.resetGameRequest!.player} wants to reset the game`}
-          </ColoredTypography>
+          <Typography>
+            {t('playerWantToReset', {
+              primaryPlayer: gameState.resetGameRequest!.player,
+              gameState
+            })}
+          </Typography>
           <Grid2 mt={1} container spacing={1}
             sx={{
               justifyContent: 'center',
@@ -77,7 +82,7 @@ function RequestReset() {
                   })
                 }}
               >
-                Cancel
+                {t('cancel')}
               </Button>
               {resetGameRequestCancel.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGameRequestCancel.error}</Typography>}
             </Grid2>
@@ -95,7 +100,7 @@ function RequestReset() {
                   })
                 }}
               >
-                Reset
+                {t('resetGame')}
               </Button>
               {resetGame.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGame.error}</Typography>}
             </Grid2>

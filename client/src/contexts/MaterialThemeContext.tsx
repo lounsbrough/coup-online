@@ -54,6 +54,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
+  const isLargeScreen = useMediaQuery('screen and (min-width: 1200px)')
 
   let activeColorMode: PaletteMode
   if (mode === SYSTEM_COLOR_MODE) {
@@ -110,33 +111,36 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
       isSmallScreen,
       actionColors,
       influenceColors,
-      spacing: isSmallScreen ? 4 : 8,
+      spacing: isLargeScreen ? 8 : 4,
       components: {
+        MuiTooltip: {
+          defaultProps: { enterTouchDelay: 50, leaveTouchDelay: 3000 }
+        },
         MuiTypography: {
           styleOverrides: {
             body1: {
-              fontSize: isSmallScreen ? '1rem' : undefined
+              fontSize: isLargeScreen ? undefined : '1rem'
             },
             body2: {
-              fontSize: isSmallScreen ? '0.9rem' : undefined
+              fontSize: isLargeScreen ? undefined : '0.9rem'
             },
             h1: {
-              fontSize: isSmallScreen ? '1.7rem' : undefined
+              fontSize: isLargeScreen ? undefined : '1.7rem'
             },
             h2: {
-              fontSize: isSmallScreen ? '1.6rem' : undefined
+              fontSize: isLargeScreen ? undefined : '1.6rem'
             },
             h3: {
-              fontSize: isSmallScreen ? '1.5rem' : undefined
+              fontSize: isLargeScreen ? undefined : '1.5rem'
             },
             h4: {
-              fontSize: isSmallScreen ? '1.4rem' : undefined
+              fontSize: isLargeScreen ? undefined : '1.4rem'
             },
             h5: {
-              fontSize: isSmallScreen ? '1.3rem' : undefined
+              fontSize: isLargeScreen ? undefined : '1.3rem'
             },
             h6: {
-              fontSize: isSmallScreen ? '1.2rem' : undefined
+              fontSize: isLargeScreen ? undefined : '1.2rem'
             }
           }
         }
@@ -171,7 +175,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
     })
 
     return theme
-  }, [isLightMode, activeColorMode, isSmallScreen])
+  }, [isLightMode, activeColorMode, isSmallScreen, isLargeScreen])
 
   return (
     <>

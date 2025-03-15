@@ -1,4 +1,4 @@
-import { Box, Grid2, Typography, useTheme } from "@mui/material"
+import { Box, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
@@ -8,9 +8,12 @@ import SnarkyDeadComment from "./SnarkyDeadComment"
 import Victory from "./Victory"
 import PlayAgain from "./PlayAgain"
 import { useGameStateContext } from "../../contexts/GameStateContext"
+import CardDeck from "../icons/CardDeck"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
 function GameBoard() {
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
   const theme = useTheme()
 
   if (!gameState?.selfPlayer) {
@@ -23,8 +26,17 @@ function GameBoard() {
   const playersLeft = gameState.players.filter(({ influenceCount }) => influenceCount)
   const gameIsOver = playersLeft.length === 1
 
+  const centeredOnSmallScreen = {
+    justifyContent: 'center',
+    textAlign: 'center',
+    [theme.breakpoints.up('md')]: {
+      justifyContent: 'flex-end',
+      textAlign: 'right'
+    }
+  }
+
   return (
-    <Grid2 container>
+    <Grid2 container className="game-board">
       <Grid2 size={{ xs: 12, sm: 12, md: 0, lg: 3 }} />
       <Grid2
         p={2}
@@ -47,10 +59,12 @@ function GameBoard() {
         )}
         {turnPlayer && !gameIsOver && (
           <Box my={2}>
-            <Typography component="span" variant="h4" sx={{
-              fontWeight: 'bold', color: turnPlayer.color
-            }}>{gameState.turnPlayer}</Typography>
-            <Typography component="span" variant="h4">'s Turn</Typography>
+            <Typography variant="h4">
+              {t('playerTurn', {
+                primaryPlayer: gameState.turnPlayer,
+                gameState
+              })}
+            </Typography>
           </Box>
         )}
         {!!gameState?.selfPlayer?.influences?.length && (
@@ -76,24 +90,43 @@ function GameBoard() {
         <Grid2
           container
           p={1}
-          spacing={1}
-          sx={{
-            justifyContent: 'center',
-            textAlign: 'center',
-            [theme.breakpoints.up('md')]: {
-              justifyContent: 'flex-end',
-              textAlign: 'right'
-            },
-          }}>
+          spacing={0.5}
+          sx={centeredOnSmallScreen}
+        >
           <Grid2 size={12}>
             <EventLog />
+          </Grid2>
+          <Grid2
+            container
+            size={12}
+            alignItems='center'
+            sx={{
+              ...centeredOnSmallScreen,
+              fontSize: '2rem'
+            }}>
+            <Tooltip
+              placement="top"
+              title={
+                <Typography variant="h6">
+                  {t('cardCountInDeck', {
+                    count: gameState.deckCount
+                  })}
+                </Typography>
+              }>
+              <Typography
+                display='flex'
+                alignItems='center'
+                component='span'
+                fontSize='smaller'
+              >{gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} /></Typography>
+            </Tooltip>
           </Grid2>
           <Grid2 size={12}>
             <RequestReset />
           </Grid2>
         </Grid2>
       </Grid2>
-    </Grid2>
+    </Grid2 >
   )
 }
 

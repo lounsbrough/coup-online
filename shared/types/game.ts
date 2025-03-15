@@ -20,11 +20,13 @@ export enum PlayerActions {
   gameState = 'gameState',
   createGame = 'createGame',
   joinGame = 'joinGame',
+  addAiPlayer = 'addAiPlayer',
   removeFromGame = 'removeFromGame',
   startGame = 'startGame',
   resetGame = 'resetGame',
   resetGameRequest = 'resetGameRequest',
   resetGameRequestCancel = "resetGameRequestCancel",
+  checkAiMove = "checkAiMove",
   action = 'action',
   actionResponse = 'actionResponse',
   actionChallengeResponse = 'actionChallengeResponse',
@@ -69,88 +71,50 @@ export const ActionAttributes: {
     blockable: boolean
     challengeable: boolean
     coinsRequired?: number
+    influenceRequired?: Influences
     requiresTarget: boolean
-    wordVariations?: string[]
-    messageTemplates: {
-      confirm: string
-      pending?: string
-      complete: string
-    }
   }
 } = {
   [Actions.Assassinate]: {
     blockable: true,
     challengeable: true,
     coinsRequired: 3,
-    requiresTarget: true,
-    wordVariations: ['Assassinated'],
-    messageTemplates: {
-      confirm: 'Assassinate <targetPlayer>',
-      pending: `<actionPlayer> is trying to Assassinate <targetPlayer>`,
-      complete: `<actionPlayer> Assassinated <targetPlayer>`
-    }
+    influenceRequired: Influences.Assassin,
+    requiresTarget: true
   },
   [Actions.Steal]: {
     blockable: true,
     challengeable: true,
-    requiresTarget: true,
-    wordVariations: ['Stole'],
-    messageTemplates: {
-      confirm: 'Steal from <targetPlayer>',
-      pending: `<actionPlayer> is trying to Steal from <targetPlayer>`,
-      complete: `<actionPlayer> Stole from <targetPlayer>`
-    }
+    influenceRequired: Influences.Captain,
+    requiresTarget: true
   },
   [Actions.Coup]: {
     blockable: false,
     challengeable: false,
     coinsRequired: 7,
-    requiresTarget: true,
-    wordVariations: ['Couped'],
-    messageTemplates: {
-      confirm: 'Coup <targetPlayer>',
-      complete: `<actionPlayer> Couped <targetPlayer>`
-    }
+    requiresTarget: true
   },
   [Actions.Tax]: {
     blockable: false,
     challengeable: true,
-    requiresTarget: false,
-    messageTemplates: {
-      confirm: 'Collect Tax',
-      pending: `<actionPlayer> is trying to collect Tax`,
-      complete: `<actionPlayer> collected Tax`
-    }
+    influenceRequired: Influences.Duke,
+    requiresTarget: false
   },
   [Actions.ForeignAid]: {
     blockable: true,
     challengeable: false,
-    requiresTarget: false,
-    messageTemplates: {
-      confirm: 'Collect Foreign Aid',
-      pending: `<actionPlayer> is trying to collect Foreign Aid`,
-      complete: `<actionPlayer> collected Foreign Aid`
-    }
+    requiresTarget: false
   },
   [Actions.Income]: {
     blockable: false,
     challengeable: false,
-    requiresTarget: false,
-    messageTemplates: {
-      confirm: 'Collect Income',
-      complete: `<actionPlayer> collected Income`
-    }
+    requiresTarget: false
   },
   [Actions.Exchange]: {
     blockable: false,
     challengeable: true,
-    requiresTarget: false,
-    wordVariations: ['Exchanged'],
-    messageTemplates: {
-      confirm: 'Exchange influences',
-      pending: `<actionPlayer> is trying to Exchange influences`,
-      complete: `<actionPlayer> Exchanged influences`
-    }
+    influenceRequired: Influences.Ambassador,
+    requiresTarget: false
   }
 }
 
@@ -160,23 +124,65 @@ export enum Responses {
   Block = 'Block'
 }
 
+export enum EventMessages {
+  GameStarted = 'GameStarted',
+  PlayerDied = 'PlayerDied',
+  PlayerLostInfluence = 'PlayerLostInfluence',
+  PlayerReplacedInfluence = 'PlayerReplacedInfluence',
+  ActionConfirm = 'ActionConfirm',
+  ActionPending = 'ActionPending',
+  ActionProcessed = 'ActionProcessed',
+  ChallengePending = 'ChallengePending',
+  ChallengeSuccessful = 'ChallengeSuccessful',
+  ChallengeFailed = 'ChallengeFailed',
+  BlockPending = 'BlockPending',
+  BlockSuccessful = 'BlockSuccessful',
+  BlockFailed = 'BlockFailed'
+}
+
+export type EventMessage = {
+  event: EventMessages
+  action?: Actions
+  primaryPlayer?: string
+  secondaryPlayer?: string
+  influence?: Influences
+  turn: number
+}
+
+export type AiPersonality = {
+  vengefulness: number
+  honesty: number
+  skepticism: number
+}
+
 export type Player = {
   coins: number
   color: string
   id: string
   influences: Influences[]
+  claimedInfluences: Influences[]
+  unclaimedInfluences: Influences[]
   deadInfluences: Influences[]
   name: string
   ai: boolean
+  personality?: AiPersonality
+  grudges: {
+    [playerName: string]: number
+  }
 }
 
 export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
   influenceCount: number
 }
 
+export type GameSettings = {
+  eventLogRetentionTurns: number
+}
+
 export type GameState = {
   deck: Influences[]
-  eventLogs: string[]
+  eventLogs: EventMessage[]
+  lastEventTimestamp: Date
   isStarted: boolean
   availablePlayerColors: string[]
   players: Player[]
@@ -204,14 +210,17 @@ export type GameState = {
   }
   roomId: string
   turnPlayer?: string
+  turn: number
   resetGameRequest?: {
     player: string
   }
+  settings: GameSettings
 }
 
 export type PublicGameState = Pick<GameState,
   'eventLogs' |
   'isStarted' |
+  'lastEventTimestamp' |
   'pendingInfluenceLoss' |
   'roomId'
 > & Partial<Pick<GameState,
@@ -219,9 +228,11 @@ export type PublicGameState = Pick<GameState,
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
-  'turnPlayer' |
-  'resetGameRequest'
+  'resetGameRequest' |
+  'turn' |
+  'turnPlayer'
 >> & {
   players: PublicPlayer[]
   selfPlayer?: Player
+  deckCount: number
 }

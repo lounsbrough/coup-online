@@ -1,11 +1,13 @@
+import crypto from 'crypto'
 import { GameMutationInputError } from "../utilities/errors"
-import { ActionAttributes, Actions, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
-import { getActionMessage } from '../../../shared/utilities/message'
-import { getGameState, logEvent, mutateGameState } from "../utilities/gameState"
+import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
+import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
-import { addPlayerToGame, createNewGame, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
+import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
-const getPlayerInRoom = (gameState: GameState, roomId: string, playerId: string) => {
+const getPlayerInRoom = (gameState: GameState, playerId: string) => {
   const player = gameState.players.find(({ id }) => id === playerId)
 
   if (!player) {
@@ -22,13 +24,14 @@ export const getGameStateHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
-export const createGameHandler = async ({ playerId, playerName }: {
+export const createGameHandler = async ({ playerId, playerName, settings }: {
   playerId: string
   playerName: string
+  settings: GameSettings
 }) => {
   const roomId = generateRoomId()
 
-  await createNewGame(roomId, playerId, playerName)
+  await createNewGame(roomId, playerId, playerName, settings)
 
   return { roomId, playerId }
 }
@@ -44,12 +47,12 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
 
   if (player) {
     if (player.name.toUpperCase() !== playerName.toUpperCase()) {
-      if (gameState.isStarted) {
-        throw new GameMutationInputError(`You can join the game as "${player.name}"`)
-      }
-
       await mutateGameState(gameState, (state) => {
-        const oldPlayer = gameState.players.find((player) => player.id === playerId)
+        if (state.isStarted) {
+          throw new GameMutationInputError(`You can join the game as "${player.name}"`)
+        }
+
+        const oldPlayer = state.players.find((player) => player.id === playerId)
         if (!oldPlayer) {
           throw new GameMutationInputError('Unable to find player')
         }
@@ -60,24 +63,63 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
       })
     }
   } else {
-    if (gameState.players.length >= 6) {
+    await mutateGameState(gameState, (state) => {
+      if (state.players.length >= 6) {
+        throw new GameMutationInputError(`Room ${roomId} is full`)
+      }
+
+      if (state.isStarted) {
+        throw new GameMutationInputError('Game has already started')
+      }
+
+      if (state.players.some((existingPlayer) =>
+        existingPlayer.name.toUpperCase() === playerName.toUpperCase()
+      )) {
+        throw new GameMutationInputError(`Room ${roomId} already has player named ${playerName}`)
+      }
+
+      addPlayerToGame({ state, playerId, playerName })
+    })
+  }
+
+  return { roomId, playerId }
+}
+
+export const addAiPlayerHandler = async ({ roomId, playerId, playerName, personality }: {
+  roomId: string
+  playerId: string
+  playerName: string
+  personality: AiPersonality
+}) => {
+  const gameState = await getGameState(roomId)
+
+  getPlayerInRoom(gameState, playerId)
+
+  await mutateGameState(gameState, (state) => {
+    if (state.players.length >= 6) {
       throw new GameMutationInputError(`Room ${roomId} is full`)
     }
 
-    if (gameState.isStarted) {
+    if (state.isStarted) {
       throw new GameMutationInputError('Game has already started')
     }
 
-    if (gameState.players.some((existingPlayer) =>
+    if (state.players.some((existingPlayer) =>
       existingPlayer.name.toUpperCase() === playerName.toUpperCase()
     )) {
       throw new GameMutationInputError(`Room ${roomId} already has player named ${playerName}`)
     }
 
-    await mutateGameState(gameState, (state) => {
-      addPlayerToGame(state, playerId, playerName)
+    const aiPlayerId = crypto.randomUUID()
+
+    addPlayerToGame({
+      state,
+      playerId: aiPlayerId,
+      playerName,
+      ai: true,
+      aiPersonality: personality
     })
-  }
+  })
 
   return { roomId, playerId }
 }
@@ -89,7 +131,7 @@ export const removeFromGameHandler = async ({ roomId, playerId, playerName }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  getPlayerInRoom(gameState, roomId, playerId)
+  getPlayerInRoom(gameState, playerId)
 
   if (gameState.isStarted) {
     throw new GameMutationInputError('Game has already started')
@@ -114,11 +156,17 @@ export const resetGameRequestHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
-  if (gameState.isStarted && !gameState.resetGameRequest) {
+  const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
+
+  if (gameIsOver || !humanOpponentsRemain(gameState, player)) {
+    await resetGame(roomId)
+  } else {
     await mutateGameState(gameState, (state) => {
-      state.resetGameRequest = { player: player.name }
+      if (state.isStarted && !state.resetGameRequest) {
+        state.resetGameRequest = { player: player.name }
+      }
     })
   }
 
@@ -131,13 +179,11 @@ export const resetGameRequestCancelHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  getPlayerInRoom(gameState, roomId, playerId)
+  getPlayerInRoom(gameState, playerId)
 
-  if (gameState.isStarted && gameState.resetGameRequest) {
-    await mutateGameState(gameState, (state) => {
-      delete state.resetGameRequest
-    })
-  }
+  await mutateGameState(gameState, (state) => {
+    delete state.resetGameRequest
+  })
 
   return { roomId, playerId }
 }
@@ -148,17 +194,20 @@ export const resetGameHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const resetPlayer = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
-  const pendingResetFromOtherPlayer = gameState.resetGameRequest && gameState.resetGameRequest?.player !== resetPlayer.name
-
-  if (!gameState.isStarted && !pendingResetFromOtherPlayer) {
+  if (!gameState.isStarted) {
     throw new GameMutationInputError('Game is not started')
   }
 
   const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
-  if (!gameIsOver && !pendingResetFromOtherPlayer) {
-    throw new GameMutationInputError('Current game is in progress')
+  if (!gameIsOver) {
+    const pendingResetFromOtherPlayer = player.influences.length
+      && gameState.resetGameRequest
+      && gameState.resetGameRequest?.player !== player.name
+    if (humanOpponentsRemain(gameState, player) && !pendingResetFromOtherPlayer) {
+      throw new GameMutationInputError('Current game is in progress')
+    }
   }
 
   await resetGame(roomId)
@@ -172,7 +221,7 @@ export const startGameHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  getPlayerInRoom(gameState, roomId, playerId)
+  getPlayerInRoom(gameState, playerId)
 
   if (gameState.players.length < 2) {
     throw new GameMutationInputError('Game must have at least 2 players to start')
@@ -182,31 +231,142 @@ export const startGameHandler = async ({ roomId, playerId }: {
     throw new GameMutationInputError('Game has already started')
   }
 
-  await startGame(gameState)
+  await mutateGameState(gameState, startGame)
 
   return { roomId, playerId }
+}
+
+export const checkAiMoveHandler = async ({ roomId, playerId }: {
+  roomId: string
+  playerId: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  getPlayerInRoom(gameState, playerId)
+
+  const unchangedResponse = { roomId, playerId, stateUnchanged: true }
+  const changedResponse = { roomId, playerId }
+
+  const playersLeft = gameState.players.filter(({ influences }) => influences.length)
+  const gameIsOver = playersLeft.length === 1
+
+  const timeToPonderLifeChoices = 500 + Math.floor(Math.random() * 1000)
+  if (gameIsOver || new Date() < new Date(gameState.lastEventTimestamp.getTime() + timeToPonderLifeChoices)) {
+    return unchangedResponse
+  }
+
+  const pendingLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
+  const nextPendingLossAiPlayer = gameState.players.find(({ ai, name }) =>
+    ai && pendingLossPlayers.includes(name))
+  if (nextPendingLossAiPlayer) {
+    const { influences } = decideInfluencesToLose(
+      getPublicGameState({ gameState, playerId: nextPendingLossAiPlayer.id })
+    )
+
+    await loseInfluencesHandler({
+      roomId,
+      playerId: nextPendingLossAiPlayer.id,
+      influences
+    })
+
+    return changedResponse
+  }
+
+  const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
+
+  const turnPlayerState = getPublicGameState({ gameState, playerId: turnPlayer!.id })
+
+  if (turnPlayer?.ai && canPlayerChooseAction(turnPlayerState)) {
+    const { action, targetPlayer } = decideAction(turnPlayerState)
+
+    await actionHandler({
+      roomId,
+      playerId: turnPlayer.id,
+      action,
+      ...(targetPlayer && { targetPlayer })
+    })
+
+    return changedResponse
+  }
+
+  let nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
+    ai && canPlayerChooseActionResponse(getPublicGameState({ gameState, playerId: id })))
+  if (nextPendingAiPlayer) {
+    const { response, claimedInfluence } = decideActionResponse(
+      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+    )
+
+    await actionResponseHandler({
+      roomId,
+      playerId: nextPendingAiPlayer.id,
+      response,
+      ...(claimedInfluence && { claimedInfluence })
+    })
+
+    return changedResponse
+  }
+
+  if (turnPlayer?.ai && canPlayerChooseActionChallengeResponse(turnPlayerState)) {
+    const { influence } = decideActionChallengeResponse(
+      getPublicGameState({ gameState, playerId: turnPlayer.id })
+    )
+
+    await actionChallengeResponseHandler({
+      roomId,
+      playerId: turnPlayer.id,
+      influence
+    })
+
+    return changedResponse
+  }
+
+  nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
+    ai && canPlayerChooseBlockResponse(getPublicGameState({ gameState, playerId: id })))
+  if (nextPendingAiPlayer) {
+    const { response } = decideBlockResponse(
+      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+    )
+
+    await blockResponseHandler({
+      roomId,
+      playerId: nextPendingAiPlayer.id,
+      response
+    })
+
+    return changedResponse
+  }
+
+  nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
+    ai && canPlayerChooseBlockChallengeResponse(getPublicGameState({ gameState, playerId: id })))
+  if (nextPendingAiPlayer) {
+    const { influence } = decideBlockChallengeResponse(
+      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
+    )
+
+    await blockChallengeResponseHandler({
+      roomId,
+      playerId: nextPendingAiPlayer.id,
+      influence
+    })
+
+    return changedResponse
+  }
+
+  return unchangedResponse
 }
 
 export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: {
   roomId: string
   playerId: string
-  action: Actions,
+  action: Actions
   targetPlayer?: string
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
-  }
-
-  if (gameState.turnPlayer !== player.name
-    || gameState.pendingAction
-    || gameState.pendingActionChallenge
-    || gameState.pendingBlock
-    || gameState.pendingBlockChallenge) {
-    throw new GameMutationInputError('You can\'t choose an action right now')
   }
 
   if ((ActionAttributes[action].coinsRequired ?? 0) > player.coins) {
@@ -229,6 +389,10 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     throw new GameMutationInputError('Target player is not allowed for this action')
   }
 
+  if (targetPlayer === player.name) {
+    throw new GameMutationInputError('You can\'t target yourself')
+  }
+
   if (!ActionAttributes[action].blockable && !ActionAttributes[action].challengeable) {
     if (action === Actions.Coup) {
       await mutateGameState(gameState, (state) => {
@@ -246,13 +410,18 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unexpected player state, refusing mutation')
         }
 
+        if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: coupingPlayer.id }))) {
+          throw new GameMutationInputError('You can\'t choose an action right now')
+        }
+
         coupingPlayer.coins -= ActionAttributes.Coup.coinsRequired!
-        logEvent(state, getActionMessage({
+        logEvent(state, {
+          event: EventMessages.ActionProcessed,
           action,
-          tense: 'complete',
-          actionPlayer: player.name,
-          targetPlayer
-        }))
+          primaryPlayer: player.name,
+          secondaryPlayer: targetPlayer
+        })
+        holdGrudge({ state, offended: targetPlayer, offender: coupingPlayer.name, weight: grudgeSizes[Actions.Coup] })
         promptPlayerToLoseInfluence(state, targetPlayer)
       })
     } else if (action === Actions.Income) {
@@ -267,23 +436,27 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unexpected player state, refusing mutation')
         }
 
+        if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: incomePlayer.id }))) {
+          throw new GameMutationInputError('You can\'t choose an action right now')
+        }
+
         incomePlayer.coins += 1
         moveTurnToNextPlayer(state)
-        logEvent(state, getActionMessage({
+        logEvent(state, {
+          event: EventMessages.ActionProcessed,
           action,
-          tense: 'complete',
-          actionPlayer: player.name
-        }))
+          primaryPlayer: player.name
+        })
       })
     }
   } else {
     await mutateGameState(gameState, (state) => {
-      if (state.pendingAction) {
-        throw new GameMutationInputError('There is already a pending action')
+      if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: player.id }))) {
+        throw new GameMutationInputError('You can\'t choose an action right now')
       }
 
       state.pendingAction = {
-        action: action,
+        action,
         pendingPlayers: state.players.reduce((agg: string[], cur) => {
           if (cur.influences.length && cur.name !== player.name) {
             agg.push(cur.name)
@@ -293,12 +466,12 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         ...(targetPlayer && { targetPlayer }),
         claimConfirmed: false
       }
-      logEvent(state, getActionMessage({
+      logEvent(state, {
+        event: EventMessages.ActionPending,
         action,
-        tense: 'pending',
-        actionPlayer: player.name,
-        targetPlayer
-      }))
+        primaryPlayer: player.name,
+        ...(targetPlayer && {secondaryPlayer: targetPlayer})
+      })
     })
   }
 
@@ -308,20 +481,18 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
 export const actionResponseHandler = async ({ roomId, playerId, response, claimedInfluence }: {
   roomId: string
   playerId: string
-  response: Responses,
+  response: Responses
   claimedInfluence?: Influences
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingAction
-    || gameState.pendingActionChallenge
-    || !gameState.pendingAction.pendingPlayers.includes(player.name)) {
+  if (!canPlayerChooseActionResponse(getPublicGameState({ gameState, playerId: player.id }))) {
     throw new GameMutationInputError('You can\'t choose an action response right now')
   }
 
@@ -331,7 +502,41 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
         throw new GameMutationInputError('Unable to find pending action')
       }
 
+      const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
+      const respondingPlayer = state.players.find(({ name }) => name === player.name)
+
+      if (!actionPlayer) {
+        throw new GameMutationInputError('Unable to find action player')
+      }
+
+      if (!respondingPlayer) {
+        throw new GameMutationInputError('Unable to find responding player')
+      }
+
+      if (state.pendingAction.action === Actions.ForeignAid) {
+        addUnclaimedInfluence(respondingPlayer, Influences.Duke)
+      }
+
+      if (state.pendingAction.targetPlayer === player.name) {
+        const targetPlayer = state.players.find(({ name }) => name === state.pendingAction?.targetPlayer)
+
+        if (!targetPlayer) {
+          throw new GameMutationInputError('Unable to find target player')
+        }
+
+        if (state.pendingAction.action === Actions.Steal) {
+          addUnclaimedInfluence(targetPlayer, Influences.Captain)
+          addUnclaimedInfluence(targetPlayer, Influences.Ambassador)
+        } else if (state.pendingAction.action === Actions.Assassinate) {
+          addUnclaimedInfluence(targetPlayer, Influences.Contessa)
+        }
+      }
+
       if (state.pendingAction.pendingPlayers.length === 1) {
+        const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
+        if (claimedInfluence) {
+          addClaimedInfluence(actionPlayer, claimedInfluence)
+        }
         processPendingAction(state)
       } else {
         state.pendingAction.pendingPlayers.splice(
@@ -341,27 +546,35 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       }
     })
   } else if (response === Responses.Challenge) {
-    if (gameState.pendingAction.claimConfirmed) {
+    if (gameState.pendingAction!.claimConfirmed) {
       throw new GameMutationInputError(`${gameState.turnPlayer} has already confirmed their claim`)
+    }
+
+    if (!ActionAttributes[gameState.pendingAction!.action].challengeable) {
+      throw new GameMutationInputError(`${gameState.pendingAction!.action} is not challengeable`)
     }
 
     await mutateGameState(gameState, (state) => {
       state.pendingActionChallenge = {
         sourcePlayer: player.name
       }
-      logEvent(state, `${player.name} is challenging ${state.turnPlayer}`)
+      logEvent(state, {
+        event: EventMessages.ChallengePending,
+        primaryPlayer: player.name,
+        secondaryPlayer: state.turnPlayer!
+      })
     })
   } else if (response === Responses.Block) {
     if (!claimedInfluence) {
       throw new GameMutationInputError('claimedInfluence is required when blocking')
     }
 
-    if (InfluenceAttributes[claimedInfluence as Influences].legalBlock !== gameState.pendingAction.action) {
+    if (InfluenceAttributes[claimedInfluence as Influences].legalBlock !== gameState.pendingAction!.action) {
       throw new GameMutationInputError('claimedInfluence can\'t block this action')
     }
 
-    if (gameState.pendingAction.targetPlayer &&
-      player.name !== gameState.pendingAction.targetPlayer
+    if (gameState.pendingAction!.targetPlayer &&
+      player.name !== gameState.pendingAction!.targetPlayer
     ) {
       throw new GameMutationInputError(`You are not the target of the pending action`)
     }
@@ -382,7 +595,12 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
           return agg
         }, []),
       }
-      logEvent(state, `${player.name} is trying to block ${state.turnPlayer} as ${claimedInfluence}`)
+      logEvent(state, {
+        event: EventMessages.BlockPending,
+        primaryPlayer: player.name,
+        secondaryPlayer: state.turnPlayer!,
+        influence: claimedInfluence
+      })
     })
   }
 
@@ -396,13 +614,13 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingAction || !gameState.pendingActionChallenge || gameState.turnPlayer !== player.name) {
+  if (!canPlayerChooseActionChallengeResponse(getPublicGameState({ gameState, playerId: player.id }))) {
     throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
@@ -410,7 +628,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     throw new GameMutationInputError('You don\'t have that influence')
   }
 
-  if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction.action) {
+  if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction!.action) {
     await mutateGameState(gameState, (state) => {
       if (!state.pendingAction || !state.pendingActionChallenge) {
         throw new GameMutationInputError('Unable to find pending action or pending action challenge')
@@ -423,18 +641,23 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       }
 
       revealAndReplaceInfluence(state, state.turnPlayer, influence)
-      logEvent(state, `${challengePlayer.name} failed to challenge ${state.turnPlayer}`)
+      logEvent(state, {
+        event: EventMessages.ChallengeFailed,
+        primaryPlayer: challengePlayer.name,
+        secondaryPlayer: state.turnPlayer!
+      })
       promptPlayerToLoseInfluence(state, challengePlayer.name)
       delete state.pendingActionChallenge
       state.pendingAction.claimConfirmed = true
       if (state.pendingAction.targetPlayer) {
-        const targetPlayer = gameState.players.find(({ name }) => name === state.pendingAction!.targetPlayer)
+        const targetPlayer = state.players.find(({ name }) => name === state.pendingAction!.targetPlayer)
 
         if (!targetPlayer) {
           throw new GameMutationInputError('Unable to find target player')
         }
 
-        if (targetPlayer.influences.length > 1 - (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)) {
+        const remainingInfluenceCount = targetPlayer.influences.length - (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)
+        if (remainingInfluenceCount > 0) {
           state.pendingAction.pendingPlayers = [state.pendingAction.targetPlayer]
         } else {
           processPendingAction(state)
@@ -459,7 +682,16 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
         throw new GameMutationInputError('Unable to find action player or challenge player')
       }
 
-      logEvent(state, `${challengePlayer.name} successfully challenged ${state.turnPlayer}`)
+      logEvent(state, {
+        event: EventMessages.ChallengeSuccessful,
+        primaryPlayer: challengePlayer.name,
+        secondaryPlayer: state.turnPlayer!
+      })
+      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      if (claimedInfluence) {
+        removeClaimedInfluence(actionPlayer, claimedInfluence)
+      }
+      holdGrudge({ state, offended: state.turnPlayer!, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, actionPlayer.name, influence)
       moveTurnToNextPlayer(state)
       delete state.pendingActionChallenge
@@ -477,16 +709,13 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingBlock
-    || gameState.pendingBlockChallenge
-    || !gameState.pendingBlock.pendingPlayers.includes(player.name)
-  ) {
+  if (!canPlayerChooseBlockResponse(getPublicGameState({ gameState, playerId: player.id }))) {
     throw new GameMutationInputError('You can\'t choose a block response right now')
   }
 
@@ -502,7 +731,11 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
         throw new GameMutationInputError('Unable to find blocking player')
       }
 
-      logEvent(state, `${player.name} is challenging ${blockPlayer.name}`)
+      logEvent(state, {
+        event: EventMessages.ChallengePending,
+        primaryPlayer: player.name,
+        secondaryPlayer: blockPlayer.name
+      })
       state.pendingBlockChallenge = { sourcePlayer: player.name }
     })
   } else if (response === Responses.Pass) {
@@ -512,13 +745,27 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
       }
 
       if (state.pendingBlock.pendingPlayers.length === 1) {
+        const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
         const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
+
+        if (!actionPlayer) {
+          throw new GameMutationInputError('Unable to find action player')
+        }
 
         if (!blockPlayer) {
           throw new GameMutationInputError('Unable to find blocking player')
         }
 
-        logEvent(state, `${blockPlayer.name} successfully blocked ${state.turnPlayer}`)
+        const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+        if (claimedInfluence) {
+          addClaimedInfluence(actionPlayer, claimedInfluence)
+        }
+        addClaimedInfluence(blockPlayer, state.pendingBlock?.claimedInfluence)
+        logEvent(state, {
+          event: EventMessages.BlockSuccessful,
+          primaryPlayer: blockPlayer.name,
+          secondaryPlayer: state.turnPlayer!
+        })
         if (state.pendingAction.action === Actions.Assassinate) {
           const assassin = state.players.find(({ name }) => name === state.turnPlayer)
 
@@ -551,13 +798,13 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')
   }
 
-  if (!gameState.pendingBlockChallenge || gameState.pendingBlock?.sourcePlayer !== player.name) {
+  if (!canPlayerChooseBlockChallengeResponse(getPublicGameState({ gameState, playerId: player.id }))) {
     throw new GameMutationInputError('You can\'t choose a challenge response right now')
   }
 
@@ -565,20 +812,34 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     throw new GameMutationInputError('You don\'t have that influence')
   }
 
-  if (influence === gameState.pendingBlock.claimedInfluence) {
+  if (influence === gameState.pendingBlock!.claimedInfluence) {
     await mutateGameState(gameState, (state) => {
       if (!state.pendingAction || !state.pendingBlock) {
         throw new GameMutationInputError('Unable to find pending action or pending block')
       }
 
+      const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
       const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge?.sourcePlayer)
+
+      if (!actionPlayer) {
+        throw new GameMutationInputError('Unable to find action player')
+      }
 
       if (!challengePlayer) {
         throw new GameMutationInputError('Unable to find challenging player')
       }
 
+      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      if (claimedInfluence) {
+        addClaimedInfluence(actionPlayer, claimedInfluence)
+      }
+
       revealAndReplaceInfluence(state, state.pendingBlock.sourcePlayer, influence)
-      logEvent(state, `${state.pendingBlock.sourcePlayer} successfully blocked ${state.turnPlayer}`)
+      logEvent(state, {
+        event: EventMessages.BlockSuccessful,
+        primaryPlayer: state.pendingBlock.sourcePlayer,
+        secondaryPlayer: state.turnPlayer!
+      })
       if (state.pendingAction.action === Actions.Assassinate) {
         const assassin = state.players.find(({ name }) => name === state.turnPlayer)
 
@@ -597,13 +858,38 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     })
   } else {
     await mutateGameState(gameState, (state) => {
+      const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
       const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
+      const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge?.sourcePlayer)
+
+      if (!actionPlayer) {
+        throw new GameMutationInputError('Unable to find action player')
+      }
 
       if (!blockPlayer) {
         throw new GameMutationInputError('Unable to find blocking player')
       }
 
-      logEvent(state, `${blockPlayer.name} failed to block ${state.turnPlayer}`)
+      if (!challengePlayer) {
+        throw new GameMutationInputError('Unable to find challenging player')
+      }
+
+      logEvent(state, {
+        event: EventMessages.ChallengeSuccessful,
+        primaryPlayer: challengePlayer.name,
+        secondaryPlayer: blockPlayer.name
+      })
+      logEvent(state, {
+        event: EventMessages.BlockFailed,
+        primaryPlayer: blockPlayer.name,
+        secondaryPlayer: state.turnPlayer!
+      })
+      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      if (claimedInfluence) {
+        addClaimedInfluence(actionPlayer, claimedInfluence)
+      }
+      removeClaimedInfluence(blockPlayer, state.pendingBlock!.claimedInfluence)
+      holdGrudge({ state, offended: blockPlayer.name, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, blockPlayer.name, influence)
       processPendingAction(state)
       delete state.pendingBlockChallenge
@@ -623,7 +909,7 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const player = getPlayerInRoom(gameState, roomId, playerId)
+  const player = getPlayerInRoom(gameState, playerId)
 
   if (!player.influences.length) {
     throw new GameMutationInputError('You had your chance')

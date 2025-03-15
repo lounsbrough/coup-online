@@ -3,12 +3,14 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
-import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, ActionAttributes } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
+import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
+
+export type PublicGameStateOrError = { gameState: PublicGameState, error?: never } | { error: string, gameState?: never }
 
 type ServerToClientEvents = {
   [ServerEvents.gameStateChanged]: (gameState: PublicGameState) => void
@@ -16,12 +18,17 @@ type ServerToClientEvents = {
 }
 
 type ClientToServerEvents = {
-  [action in PlayerActions]: (params: unknown) => Promise<void>
+  [action in PlayerActions]: (
+    params: unknown,
+    callback?: (response: PublicGameStateOrError) => void
+  ) => Promise<void>
 }
 
 type InterServerEvents = object
 
 type SocketData = { playerId: string }
+
+const genericErrorMessage = 'Unexpected error processing request'
 
 const port = process.env.EXPRESS_PORT || 8008
 
@@ -33,11 +40,7 @@ const io = new ioServer<ClientToServerEvents, ServerToClientEvents, InterServerE
   cors: { origin: "*" }
 })
 
-const playerNameRule = Joi.string().min(1).max(10).disallow(
-  ...Object.values(Influences),
-  ...Object.values(Actions),
-  ...Object.values(ActionAttributes).flatMap(({ wordVariations }) => wordVariations ?? [])
-).required()
+const playerNameRule = Joi.string().min(1).max(10).required()
 
 const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -56,7 +59,7 @@ const validateExpressQuery = (schema: ObjectSchema) => validateExpressRequest(sc
 
 const eventHandlers: {
   [event in PlayerActions]: {
-    handler: (args: unknown) => Promise<{ roomId: string, playerId: string }>
+    handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean }>
     express: {
       method: 'post' | 'get'
       parseParams: (req: Request) => unknown
@@ -65,7 +68,7 @@ const eventHandlers: {
     joiSchema: Joi.ObjectSchema
   }
 } = {
-  gameState: {
+  [PlayerActions.gameState]: {
     handler: getGameStateHandler,
     express: {
       method: 'get',
@@ -81,23 +84,27 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  createGame: {
+  [PlayerActions.createGame]: {
     handler: createGameHandler,
     express: {
       method: 'post',
       parseParams: (req) => {
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName
-        return { playerId, playerName }
+        const settings: GameSettings = req.body.settings
+        return { playerId, playerName, settings }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       playerId: Joi.string().required(),
-      playerName: playerNameRule
+      playerName: playerNameRule,
+      settings: Joi.object().keys({
+        eventLogRetentionTurns: Joi.number().integer().min(1).max(100).required()
+      }).required()
     })
   },
-  joinGame: {
+  [PlayerActions.joinGame]: {
     handler: joinGameHandler,
     express: {
       method: 'post',
@@ -115,7 +122,31 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  removeFromGame: {
+  [PlayerActions.addAiPlayer]: {
+    handler: addAiPlayerHandler,
+    express: {
+      method: 'post',
+      parseParams: (req) => {
+        const roomId: string = req.body.roomId
+        const playerId: string = req.body.playerId
+        const playerName: string = req.body.playerName.trim()
+        const personality: AiPersonality = req.body.personality
+        return { roomId, playerId, playerName, personality }
+      },
+      validator: validateExpressBody
+    },
+    joiSchema: Joi.object().keys({
+      roomId: Joi.string().required(),
+      playerId: Joi.string().required(),
+      playerName: playerNameRule,
+      personality: Joi.object().keys({
+        vengefulness: Joi.number().integer().min(0).max(100).required(),
+        honesty: Joi.number().integer().min(0).max(100).required(),
+        skepticism: Joi.number().integer().min(0).max(100).required()
+      }).required()
+    })
+  },
+  [PlayerActions.removeFromGame]: {
     handler: removeFromGameHandler,
     express: {
       method: 'post',
@@ -133,7 +164,7 @@ const eventHandlers: {
       playerName: playerNameRule
     })
   },
-  startGame: {
+  [PlayerActions.startGame]: {
     handler: startGameHandler,
     express: {
       method: 'post',
@@ -149,7 +180,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGameRequest: {
+  [PlayerActions.resetGameRequest]: {
     handler: resetGameRequestHandler,
     express: {
       method: 'post',
@@ -165,7 +196,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGameRequestCancel: {
+  [PlayerActions.resetGameRequestCancel]: {
     handler: resetGameRequestCancelHandler,
     express: {
       method: 'post',
@@ -181,7 +212,7 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  resetGame: {
+  [PlayerActions.resetGame]: {
     handler: resetGameHandler,
     express: {
       method: 'post',
@@ -197,7 +228,23 @@ const eventHandlers: {
       playerId: Joi.string().required()
     })
   },
-  action: {
+  [PlayerActions.checkAiMove]: {
+    handler: checkAiMoveHandler,
+    express: {
+      method: 'get',
+      parseParams: (req) => {
+        const roomId: string = req.query.roomId as string
+        const playerId: string = req.query.playerId as string
+        return { roomId, playerId }
+      },
+      validator: validateExpressQuery
+    },
+    joiSchema: Joi.object().keys({
+      roomId: Joi.string().required(),
+      playerId: Joi.string().required()
+    })
+  },
+  [PlayerActions.action]: {
     handler: actionHandler,
     express: {
       method: 'post',
@@ -217,7 +264,7 @@ const eventHandlers: {
       targetPlayer: Joi.string()
     })
   },
-  actionResponse: {
+  [PlayerActions.actionResponse]: {
     handler: actionResponseHandler,
     express: {
       method: 'post',
@@ -237,7 +284,7 @@ const eventHandlers: {
       claimedInfluence: Joi.string().allow(...Object.values(Influences))
     })
   },
-  actionChallengeResponse: {
+  [PlayerActions.actionChallengeResponse]: {
     handler: actionChallengeResponseHandler,
     express: {
       method: 'post',
@@ -255,7 +302,7 @@ const eventHandlers: {
       influence: Joi.string().allow(...Object.values(Influences)).required()
     })
   },
-  blockResponse: {
+  [PlayerActions.blockResponse]: {
     handler: blockResponseHandler,
     express: {
       method: 'post',
@@ -273,7 +320,7 @@ const eventHandlers: {
       response: Joi.string().allow(...Object.values(Responses)).required()
     })
   },
-  blockChallengeResponse: {
+  [PlayerActions.blockChallengeResponse]: {
     handler: blockChallengeResponseHandler,
     express: {
       method: 'post',
@@ -291,7 +338,7 @@ const eventHandlers: {
       influence: Joi.string().allow(...Object.values(Influences)).required()
     })
   },
-  loseInfluences: {
+  [PlayerActions.loseInfluences]: {
     handler: loseInfluencesHandler,
     express: {
       method: 'post',
@@ -315,14 +362,16 @@ const eventHandlers: {
 
 io.on('connection', (socket) => {
   getObjectEntries(eventHandlers).forEach(([event, { handler, joiSchema }]) => {
-    socket.on(event, async (params) => {
+    socket.on(event, async (params, callback) => {
       const result = joiSchema.validate(params, { abortEarly: false })
 
       if (result.error) {
-        socket.emit(ServerEvents.error, result.error.details.map(({ message }) => message).join(', '))
+        const error = result.error.details.map(({ message }) => message).join(', ')
+        socket.emit(ServerEvents.error, error)
+        callback?.({ error })
       } else {
         try {
-          const { roomId, playerId } = await handler(params)
+          const { roomId, playerId, stateUnchanged } = await handler(params)
           if (!socket.data.playerId && playerId) {
             socket.data.playerId = playerId
           }
@@ -331,26 +380,37 @@ io.on('connection', (socket) => {
           }
           const roomPrefix = 'coup-game-'
           const socketRoom = `${roomPrefix}${roomId}`
-          if (![...socket.rooms].some((room) => room.startsWith(roomPrefix)) && roomId) {
+          const currentRooms = [...socket.rooms]
+          if (roomId && !currentRooms.some((room) => room === socketRoom)) {
+            await Promise.all(currentRooms.map((currentRoom) => socket.leave(currentRoom)))
             await socket.join(socketRoom)
           }
           const fullGameState = await getGameState(roomId)
           const emitGameStateChanged = async (pushToSocket: Socket) => {
+            const isCallerSocket = pushToSocket.data.playerId === playerId
             try {
-              const publicGameState = await getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId })
+              const publicGameState = getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId })
               pushToSocket.emit(ServerEvents.gameStateChanged, publicGameState)
+              if (isCallerSocket) callback?.({ gameState: publicGameState })
             } catch (error) {
+              console.error(error, { event, params })
+              if (event === PlayerActions.checkAiMove) {
+                return
+              }
               if (error instanceof GameMutationInputError) {
-                if (error.httpCode >= 500 && error.httpCode <= 599) {
-                  console.error(error)
-                }
                 pushToSocket.emit(ServerEvents.error, error.message)
+                if (isCallerSocket) callback?.({ error: error.message })
               } else {
-                console.error(error)
-                pushToSocket.emit(ServerEvents.error, 'Unexpected error processing request')
+                pushToSocket.emit(ServerEvents.error, genericErrorMessage)
+                if (isCallerSocket) callback?.({ error: genericErrorMessage })
               }
             }
           }
+
+          if (stateUnchanged) {
+            return
+          }
+
           if (event !== PlayerActions.gameState) {
             const roomSocketIds = io.of('/').adapter.rooms.get(socketRoom)
             if (roomSocketIds) {
@@ -361,14 +421,16 @@ io.on('connection', (socket) => {
             await emitGameStateChanged(socket)
           }
         } catch (error) {
+          console.error(error, { event, params })
+          if (event === PlayerActions.checkAiMove) {
+            return
+          }
           if (error instanceof GameMutationInputError) {
-            if (error.httpCode >= 500 && error.httpCode <= 599) {
-              console.error(error)
-            }
             socket.emit(ServerEvents.error, error.message)
+            callback?.({ error: error.message })
           } else {
-            console.error(error)
-            socket.emit(ServerEvents.error, 'Unexpected error processing request')
+            socket.emit(ServerEvents.error, genericErrorMessage)
+            callback?.({ error: genericErrorMessage })
           }
         }
       }
@@ -376,25 +438,33 @@ io.on('connection', (socket) => {
   })
 })
 
-type PublicGameStateOrError = PublicGameState | { error: string }
-
-const responseHandler = <T>(handler: (props: T) =>
-  Promise<{ roomId: string, playerId: string }>) => async (res: Response<PublicGameStateOrError>, props: T) => {
-    try {
-      const publicGameState = await getPublicGameState(await handler(props))
-      res.status(200).json(publicGameState)
-    } catch (error) {
-      if (error instanceof GameMutationInputError) {
-        res.status(error.httpCode).send({ error: error.message })
-      } else {
-        res.status(500).send({ error: 'Unexpected error processing request' })
-      }
+const responseHandler = <T>(
+  event: PlayerActions,
+  handler: (props: T) => Promise<{ roomId: string, playerId: string }>
+) => async (res: Response<PublicGameStateOrError>, props: T) => {
+  try {
+    const { roomId, playerId } = await handler(props)
+    const publicGameState = getPublicGameState({
+      gameState: await getGameState(roomId),
+      playerId
+    })
+    res.status(200).json({ gameState: publicGameState })
+  } catch (error) {
+    console.error(error, { event, props })
+    if (event === PlayerActions.checkAiMove) {
+      return
+    }
+    if (error instanceof GameMutationInputError) {
+      res.status(error.httpCode).send({ error: error.message })
+    } else {
+      res.status(500).send({ error: genericErrorMessage })
     }
   }
+}
 
 getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }]) => {
   app[express.method](`/${event}`, express.validator(joiSchema), (req, res) => {
-    return responseHandler(handler)(res, express.parseParams(req))
+    return responseHandler(event, handler)(res, express.parseParams(req))
   })
 })
 

@@ -1,8 +1,12 @@
-import { GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
+import { isSameState } from '../../../shared/helpers/state'
+import { EventMessage, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { shuffle } from './array'
 import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
+import { getCurrentTimestamp } from './time'
+
+export const countOfEachInfluenceInDeck = 3
 
 export const getGameState = async (
   roomId: string
@@ -13,32 +17,38 @@ export const getGameState = async (
     throw new GameMutationInputError(`Room ${roomId} does not exist`, 404)
   }
 
-  return JSON.parse(decompressString(compressed))
+  const state = JSON.parse(decompressString(compressed))
+
+  // TODO: once all existing states have updated, this can be removed
+  state.players.forEach((player: Player) => {
+    if (!player.unclaimedInfluences) player.unclaimedInfluences = []
+  })
+
+  state.lastEventTimestamp = new Date(state.lastEventTimestamp ?? null)
+
+  return state
 }
 
-export const getPublicGameState = async ({ roomId, gameState, playerId }: {
-  roomId?: string
-  gameState?: GameState
+export const getPublicGameState = ({ gameState, playerId }: {
+  gameState: GameState
   playerId: string
-}): Promise<PublicGameState> => {
-  if ([roomId, gameState].filter(Boolean).length !== 1) {
-    throw new GameMutationInputError('Please provide roomId or gameState')
-  }
-
-  const fullGameState = gameState || await getGameState(roomId!)
-
+}): PublicGameState => {
   let selfPlayer: Player | undefined
   const publicPlayers: PublicPlayer[] = []
-  fullGameState.players.forEach((player) => {
-    const pendingInfluenceCountToPutBack = fullGameState.pendingInfluenceLoss[player.name]
+  gameState.players.forEach((player) => {
+    const pendingInfluenceCountToPutBack = gameState.pendingInfluenceLoss[player.name]
       ?.filter(({ putBackInDeck }) => putBackInDeck)?.length ?? 0
     publicPlayers.push({
       name: player.name,
       coins: player.coins,
       influenceCount: player.influences.length - pendingInfluenceCountToPutBack,
       deadInfluences: player.deadInfluences,
+      claimedInfluences: player.claimedInfluences,
+      unclaimedInfluences: player.unclaimedInfluences,
       color: player.color,
-      ai: player.ai
+      ai: player.ai,
+      grudges: player.grudges,
+      ...(player.personality && { personality: player.personality })
     })
     if (player.id === playerId) {
       selfPlayer = player
@@ -46,18 +56,20 @@ export const getPublicGameState = async ({ roomId, gameState, playerId }: {
   })
 
   return {
-    eventLogs: fullGameState.eventLogs,
-    isStarted: fullGameState.isStarted,
-    pendingInfluenceLoss: fullGameState.pendingInfluenceLoss,
+    eventLogs: gameState.eventLogs,
+    lastEventTimestamp: gameState.lastEventTimestamp,
+    isStarted: gameState.isStarted,
+    pendingInfluenceLoss: gameState.pendingInfluenceLoss,
     players: publicPlayers,
-    roomId: fullGameState.roomId,
+    roomId: gameState.roomId,
+    deckCount: gameState.deck.length,
     ...(selfPlayer && { selfPlayer }),
-    ...(fullGameState.pendingAction && { pendingAction: fullGameState.pendingAction }),
-    ...(fullGameState.pendingActionChallenge && { pendingActionChallenge: fullGameState.pendingActionChallenge }),
-    ...(fullGameState.pendingBlock && { pendingBlock: fullGameState.pendingBlock }),
-    ...(fullGameState.pendingBlockChallenge && { pendingBlockChallenge: fullGameState.pendingBlockChallenge }),
-    ...(fullGameState.turnPlayer && { turnPlayer: fullGameState.turnPlayer }),
-    ...(fullGameState.resetGameRequest && { resetGameRequest: fullGameState.resetGameRequest })
+    ...(gameState.pendingAction && { pendingAction: gameState.pendingAction }),
+    ...(gameState.pendingActionChallenge && { pendingActionChallenge: gameState.pendingActionChallenge }),
+    ...(gameState.pendingBlock && { pendingBlock: gameState.pendingBlock }),
+    ...(gameState.pendingBlockChallenge && { pendingBlockChallenge: gameState.pendingBlockChallenge }),
+    ...(gameState.turnPlayer && { turnPlayer: gameState.turnPlayer }),
+    ...(gameState.resetGameRequest && { resetGameRequest: gameState.resetGameRequest })
   }
 }
 
@@ -81,7 +93,7 @@ export const validateGameState = (state: GameState) => {
     influences.forEach((card) => cardCounts[card]++)
     deadInfluences.forEach((card) => cardCounts[card]++)
   })
-  if (Object.values(cardCounts).some((count) => count !== 3)) {
+  if (Object.values(cardCounts).some((count) => count !== countOfEachInfluenceInDeck)) {
     throw new GameMutationInputError("Incorrect total card count in game")
   }
   if (state.pendingAction?.pendingPlayers?.length === 0
@@ -96,10 +108,10 @@ export const validateGameState = (state: GameState) => {
 }
 
 const setGameState = async (roomId: string, newState: GameState) => {
-  const oneDay = 86400
+  const oneMonth = 2678400
   validateGameState(newState)
   const compressed = compressString(JSON.stringify(newState))
-  await setValue(roomId.toUpperCase(), compressed, oneDay)
+  await setValue(roomId.toUpperCase(), compressed, oneMonth)
 }
 
 export const createGameState = async (roomId: string, gameState: GameState) => {
@@ -112,11 +124,18 @@ export const mutateGameState = async (
 ) => {
   const gameState = await getGameState(validatedState.roomId)
 
-  if (JSON.stringify(gameState) !== JSON.stringify(validatedState)) {
+  if (!isSameState(gameState, validatedState)) {
     throw new GameMutationInputError('State has changed since validation, rejecting mutation')
   }
 
   mutation(gameState)
+
+  if (isSameState(gameState, validatedState)) {
+    return
+  }
+
+  gameState.lastEventTimestamp = getCurrentTimestamp()
+
   await setGameState(validatedState.roomId, gameState)
 }
 
@@ -132,9 +151,9 @@ export const drawCardFromDeck = (state: GameState): Influences => {
   return state.deck.pop()!
 }
 
-export const logEvent = (state: GameState, log: string) => {
-  state.eventLogs.push(log)
-  if (state.eventLogs.length > 100) {
-    state.eventLogs.splice(0, 1)
-  }
+export const logEvent = (state: GameState, log: Omit<EventMessage, 'turn'>) => {
+  state.eventLogs.push({ ...log, turn: state.turn })
+  state.eventLogs = state.eventLogs.filter(({ turn }) =>
+    state.turn - turn < state.settings.eventLogRetentionTurns
+  )
 }

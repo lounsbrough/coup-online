@@ -13,7 +13,10 @@ export const getGameState = ({ players }: { players: Player[] }) => {
     availablePlayerColors: chance.n(chance.color, 6),
     players: [],
     pendingInfluenceLoss: {},
-    roomId: chance.string()
+    lastEventTimestamp: chance.date(),
+    roomId: chance.string(),
+    settings: { eventLogRetentionTurns: 100 },
+    turn: chance.natural()
   }
 
   players.forEach(({ influences }) => {
