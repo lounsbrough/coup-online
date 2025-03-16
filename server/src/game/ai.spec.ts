@@ -1,6 +1,6 @@
 import { Chance } from 'chance'
-import { Actions, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
-import { decideAction, getOpponents, getPlayerDangerFactor, getProbabilityOfPlayerInfluence } from './ai'
+import { Actions, Influences, Player, PublicGameState, PublicPlayer, Responses } from '../../../shared/types/game'
+import { decideAction, decideActionResponse, getOpponents, getPlayerDangerFactor, getProbabilityOfPlayerInfluence } from './ai'
 import { randomlyDecideToNotUseEffectiveInfluence } from './aiRandomness'
 
 const chance = new Chance()
@@ -412,6 +412,54 @@ describe('ai', () => {
       })
 
       expect(decidedAction.action).not.toBe(Actions.Tax)
+    })
+  })
+
+  describe('decideActionResponse', () => {
+    it('should not block when player holds or claims last influence, challenge makes more sense', () => {
+      expect(decideActionResponse({
+        roomId: chance.string(),
+        isStarted: chance.bool(),
+        eventLogs: [],
+        lastEventTimestamp: chance.date(),
+        players: [
+          {
+            ...getRandomPublicPlayer(),
+            name: 'hailey',
+            influenceCount: 2,
+            deadInfluences: []
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'harper',
+            influenceCount: 0,
+            deadInfluences: [Influences.Captain, Influences.Captain]
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'david',
+            influenceCount: 2,
+            deadInfluences: []
+          }
+        ],
+        selfPlayer: {
+          ...getRandomPublicPlayer(),
+          id: chance.string(),
+          name: 'david',
+          coins: 3,
+          influences: [Influences.Captain, Influences.Contessa],
+          deadInfluences: []
+        },
+        pendingAction: {
+          action: Actions.Steal,
+          targetPlayer: 'david',
+          claimConfirmed: false,
+          pendingPlayers: ['david']
+        },
+        turnPlayer: 'hailey',
+        pendingInfluenceLoss: {},
+        deckCount: 11
+      })).toEqual({ response: Responses.Challenge })
     })
   })
 })
