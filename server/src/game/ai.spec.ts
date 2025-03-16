@@ -445,7 +445,7 @@ describe('ai', () => {
         selfPlayer: {
           ...getRandomPublicPlayer(),
           id: chance.string(),
-          name: 'hailey',
+          name: 'david',
           coins: 3,
           influences: [Influences.Captain, Influences.Contessa],
           deadInfluences: []
@@ -456,6 +456,7 @@ describe('ai', () => {
           claimConfirmed: false,
           pendingPlayers: ['david']
         },
+        turnPlayer: 'hailey',
         pendingInfluenceLoss: {},
         deckCount: 11
       })).toEqual({ response: Responses.Challenge })

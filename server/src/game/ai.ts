@@ -2,24 +2,13 @@ import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 import { randomlyDecideToBluff, randomlyDecideToNotUseEffectiveInfluence } from "./aiRandomness"
 
-const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
-  gameState.players.reduce((agg: Influences[], { deadInfluences }) => {
-    deadInfluences.forEach((i) => {
-      if (!influence || i === influence) agg.push(i)
-    })
-    return agg
-  }, [])
-
-const getRevealedInfluenceCount = (gameState: PublicGameState, influence?: Influences) =>
-  getRevealedInfluences(gameState, influence).length
-
 const getProbabilityOfHiddenCardBeingInfluence = (
   gameState: PublicGameState,
   influence: Influences
 ) => {
   const knownInfluences = [
     ...gameState.selfPlayer?.influences ?? [],
-    ...getRevealedInfluences(gameState)
+    ...gameState.players.flatMap(({ deadInfluences }) => deadInfluences)
   ]
 
   const knownMatchedInfluenceCount = knownInfluences.filter((i) => i === influence).length
@@ -282,7 +271,6 @@ export const decideActionResponse = (gameState: PublicGameState): {
   response: Responses
   claimedInfluence?: Influences
 } => {
-  const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
   const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer
   const honesty = (gameState.selfPlayer?.personality?.honesty ?? 50) / 100
   const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
@@ -300,26 +288,11 @@ export const decideActionResponse = (gameState: PublicGameState): {
       return agg
     }, [] as Influences[])
 
+    const randomForBlockBluff = Math.random()
     for (const legalBlockInfluence of legalBlockInfluences) {
-      const hasLegalBlockingInfluence = gameState.selfPlayer?.influences.some((i) => i === legalBlockInfluence)
-      if (
-        hasLegalBlockingInfluence
-        || (
-          randomlyDecideToBluff(bluffMargin)
-          && getProbabilityOfPlayerInfluence(gameState, legalBlockInfluence) > 0
-        )
-      ) {
-        const blockResponse = { response: Responses.Block, claimedInfluence: legalBlockInfluence }
-
-        if (legalBlockInfluence === requiredInfluenceForAction) {
-          const isLastHiddenInfluence = getRevealedInfluenceCount(gameState, legalBlockInfluence) === 2
-          // If you have or claim to have the last hidden influence, and you're considering blocking with the same influence as the action player has claimed, a challenge would probably make more sense.
-          if (!isLastHiddenInfluence) {
-            return blockResponse
-          }
-        } else {
-          return blockResponse
-        }
+      if (gameState.selfPlayer?.influences.some((i) => i === legalBlockInfluence)
+        || (randomForBlockBluff < bluffMargin && getProbabilityOfPlayerInfluence(gameState, legalBlockInfluence) > 0)) {
+        return { response: Responses.Block, claimedInfluence: legalBlockInfluence }
       }
     }
   }
@@ -342,6 +315,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
 
   const skepticismMargin = skepticism ** 2 * ((isSelfTarget ? 0.8 : 0.4) + Math.random() * 0.1)
 
+  const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
   const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
   if (!gameState.pendingAction?.claimConfirmed
     && requiredInfluenceForAction
