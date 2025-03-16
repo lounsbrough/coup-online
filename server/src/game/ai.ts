@@ -312,9 +312,9 @@ export const decideActionResponse = (gameState: PublicGameState): {
         const blockResponse = { response: Responses.Block, claimedInfluence: legalBlockInfluence }
 
         if (legalBlockInfluence === requiredInfluenceForAction) {
-          const isBluffingLastInfluence = !hasLegalBlockingInfluence && getRevealedInfluenceCount(gameState, legalBlockInfluence) === 2
-          // If you claim to have the last hidden influence, and you're blocking with the same influence as the action player has claimed, don't block since a challenge would almost always make more sense.
-          if (!isBluffingLastInfluence) {
+          const isLastHiddenInfluence = getRevealedInfluenceCount(gameState, legalBlockInfluence) === 2
+          // If you have or claim to have the last hidden influence, and you're considering blocking with the same influence as the action player has claimed, a challenge would probably make more sense.
+          if (!isLastHiddenInfluence) {
             return blockResponse
           }
         } else {
