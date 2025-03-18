@@ -1,12 +1,12 @@
 import { Chance } from 'chance'
 import { Actions, Influences, Player, PublicGameState, PublicPlayer, Responses } from '../../../shared/types/game'
 import { decideAction, decideActionResponse, getOpponents, getPlayerDangerFactor, getProbabilityOfPlayerInfluence } from './ai'
-import { randomlyDecideToNotUseEffectiveInfluence } from './aiRandomness'
+import { randomlyDecideToBluff } from './aiRandomness'
 
 const chance = new Chance()
 jest.mock('./aiRandomness')
 
-const randomlyDecideToNotUseClaimedInfluenceMock = jest.mocked(randomlyDecideToNotUseEffectiveInfluence)
+const randomlyDecideToBluffMock = jest.mocked(randomlyDecideToBluff)
 
 describe('ai', () => {
   const getRandomPlayer = (): Player => ({
@@ -324,8 +324,8 @@ describe('ai', () => {
       })
     })
 
-    it('should choose previously claimed influence with some randomness', () => {
-      randomlyDecideToNotUseClaimedInfluenceMock.mockReturnValue(false)
+    it('should bluff influence on actions with some randomness', () => {
+      randomlyDecideToBluffMock.mockReturnValue(true)
 
       const decidedAction = decideAction({
         roomId: chance.string(),
@@ -369,8 +369,8 @@ describe('ai', () => {
       expect(decidedAction.action).toBe(Actions.Tax)
     })
 
-    it('should not choose previously claimed influence if all are dead', () => {
-      randomlyDecideToNotUseClaimedInfluenceMock.mockReturnValue(false)
+    it('should not bluff influence if all are dead', () => {
+      randomlyDecideToBluffMock.mockReturnValue(true)
 
       const decidedAction = decideAction({
         roomId: chance.string(),

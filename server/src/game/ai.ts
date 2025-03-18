@@ -1,6 +1,6 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
-import { randomlyDecideToBluff, randomlyDecideToNotUseEffectiveInfluence } from "./aiRandomness"
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
+import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
   gameState.players.reduce((agg: Influences[], { deadInfluences }) => {
@@ -165,6 +165,22 @@ const checkEndGameBlockResponse = (gameState: PublicGameState): {
   return null
 }
 
+const getFinalBluffMargin = (
+  baseBluffMargin: number,
+  influence: Influences,
+  self: Player
+) => {
+  let finalBluffMargin = baseBluffMargin
+  if (self.unclaimedInfluences.includes(influence)) {
+    finalBluffMargin *= 0.2
+  }
+  if (self.claimedInfluences.includes(influence)) {
+    finalBluffMargin *= 5
+  }
+  return finalBluffMargin
+}
+
+
 export const decideAction = (gameState: PublicGameState): {
   action: Actions
   targetPlayer?: string
@@ -193,17 +209,14 @@ export const decideAction = (gameState: PublicGameState): {
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100
 
-  const selfEffectiveInfluences = new Set([...gameState.selfPlayer.influences, ...gameState.selfPlayer.claimedInfluences])
-  const unclaimedInfluences = new Set(gameState.selfPlayer.unclaimedInfluences)
-
   const baseBluffMargin = (1 - honesty) ** 1.5 * 0.5
-  const getFinalBluffMargin = (influence: Influences) =>
-    unclaimedInfluences.has(influence) ? baseBluffMargin * 0.2 : baseBluffMargin
+  const getFinalBluffMarginForAction = (influence: Influences) =>
+    getFinalBluffMargin(baseBluffMargin, influence, gameState.selfPlayer!)
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Duke) > 0 && (
-      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Duke))
-      || randomlyDecideToBluff(getFinalBluffMargin(Influences.Duke))
+      (!randomlyDecideToNotUseOwnedInfluence() && gameState.selfPlayer.influences.includes(Influences.Duke))
+      || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Duke))
     )
   ) {
     return { action: Actions.Tax }
@@ -211,8 +224,8 @@ export const decideAction = (gameState: PublicGameState): {
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Captain) > 0 && (
-      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Captain))
-      || randomlyDecideToBluff(getFinalBluffMargin(Influences.Captain))
+      (!randomlyDecideToNotUseOwnedInfluence() && gameState.selfPlayer.influences.includes(Influences.Captain))
+      || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Captain))
     )
   ) {
     const getProbabilityOfBlockingSteal = (playerName: string) =>
@@ -249,8 +262,8 @@ export const decideAction = (gameState: PublicGameState): {
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador) > 0 && (
-      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Ambassador))
-      || randomlyDecideToBluff(getFinalBluffMargin(Influences.Ambassador))
+      (!randomlyDecideToNotUseOwnedInfluence() && gameState.selfPlayer.influences.includes(Influences.Ambassador))
+      || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Ambassador))
     )
   ) {
     return { action: Actions.Exchange }
@@ -259,8 +272,8 @@ export const decideAction = (gameState: PublicGameState): {
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Assassin) > 0
     && gameState.selfPlayer.coins >= 3 && (
-      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Assassin))
-      || randomlyDecideToBluff(getFinalBluffMargin(Influences.Assassin))
+      (!randomlyDecideToNotUseOwnedInfluence() && gameState.selfPlayer.influences.includes(Influences.Assassin))
+      || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Assassin))
     )
   ) {
     const targetPlayer = decideAssasinationTarget(gameState)
@@ -279,10 +292,14 @@ export const decideActionResponse = (gameState: PublicGameState): {
   response: Responses
   claimedInfluence?: Influences
 } => {
+  if (!gameState.selfPlayer) {
+    throw new Error('AI could not determine self player')
+  }
+
   const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
-  const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer
-  const honesty = (gameState.selfPlayer?.personality?.honesty ?? 50) / 100
-  const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
+  const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer.name
+  const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
+  const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100
 
   const skepticismMargin = skepticism ** 2 * ((isSelfTarget ? 0.8 : 0.4) + Math.random() * 0.1)
 
@@ -299,9 +316,8 @@ export const decideActionResponse = (gameState: PublicGameState): {
     return { response: Responses.Challenge }
   }
 
-  const bluffMargin = (1 - honesty) ** 1.5 * ((isSelfTarget ? 0.4 : 0.2) + Math.random() * 0.1)
   if (ActionAttributes[gameState.pendingAction!.action].blockable
-    && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer?.name
+    && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer.name
       || gameState.pendingAction!.action === Actions.ForeignAid
     )) {
     const legalBlockInfluences = Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
@@ -313,10 +329,13 @@ export const decideActionResponse = (gameState: PublicGameState): {
 
     for (const legalBlockInfluence of legalBlockInfluences) {
       const hasLegalBlockingInfluence = gameState.selfPlayer?.influences.some((i) => i === legalBlockInfluence)
+      const baseBluffMargin = (1 - honesty) ** 1.5 * ((isSelfTarget ? 0.4 : 0.2) + Math.random() * 0.1)
+      const finalBluffMargin = getFinalBluffMargin(baseBluffMargin, legalBlockInfluence, gameState.selfPlayer)
+
       if (
         hasLegalBlockingInfluence
         || (
-          randomlyDecideToBluff(bluffMargin)
+          randomlyDecideToBluff(finalBluffMargin)
           && getProbabilityOfPlayerInfluence(gameState, legalBlockInfluence) > 0
         )
       ) {
