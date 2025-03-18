@@ -1,6 +1,6 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
-import { randomlyDecideToBluff, randomlyDecideToNotUseEffectiveInfluence } from "./aiRandomness"
+import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
   gameState.players.reduce((agg: Influences[], { deadInfluences }) => {
@@ -175,7 +175,7 @@ const getFinalBluffMargin = (
     finalBluffMargin *= 0.2
   }
   if (self.claimedInfluences.includes(influence)) {
-    finalBluffMargin *= 1.2
+    finalBluffMargin *= 5
   }
   return finalBluffMargin
 }
@@ -209,15 +209,13 @@ export const decideAction = (gameState: PublicGameState): {
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100
 
-  const selfEffectiveInfluences = new Set([...gameState.selfPlayer.influences, ...gameState.selfPlayer.claimedInfluences])
-
   const baseBluffMargin = (1 - honesty) ** 1.5 * 0.5
   const getFinalBluffMarginForAction = (influence: Influences) =>
     getFinalBluffMargin(baseBluffMargin, influence, gameState.selfPlayer!)
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Duke) > 0 && (
-      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Duke))
+      (!randomlyDecideToNotUseOwnedInfluence() && gameState.selfPlayer.influences.includes(Influences.Duke))
       || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Duke))
     )
   ) {
@@ -226,7 +224,7 @@ export const decideAction = (gameState: PublicGameState): {
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Captain) > 0 && (
-      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Captain))
+      (!randomlyDecideToNotUseOwnedInfluence() && gameState.selfPlayer.influences.includes(Influences.Captain))
       || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Captain))
     )
   ) {
@@ -264,7 +262,7 @@ export const decideAction = (gameState: PublicGameState): {
 
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Ambassador) > 0 && (
-      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Ambassador))
+      (!randomlyDecideToNotUseOwnedInfluence() && gameState.selfPlayer.influences.includes(Influences.Ambassador))
       || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Ambassador))
     )
   ) {
@@ -274,7 +272,7 @@ export const decideAction = (gameState: PublicGameState): {
   if (
     getProbabilityOfPlayerInfluence(gameState, Influences.Assassin) > 0
     && gameState.selfPlayer.coins >= 3 && (
-      (!randomlyDecideToNotUseEffectiveInfluence() && selfEffectiveInfluences.has(Influences.Assassin))
+      (!randomlyDecideToNotUseOwnedInfluence() && gameState.selfPlayer.influences.includes(Influences.Assassin))
       || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Assassin))
     )
   ) {

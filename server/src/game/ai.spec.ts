@@ -1,12 +1,12 @@
 import { Chance } from 'chance'
 import { Actions, Influences, Player, PublicGameState, PublicPlayer, Responses } from '../../../shared/types/game'
 import { decideAction, decideActionResponse, getOpponents, getPlayerDangerFactor, getProbabilityOfPlayerInfluence } from './ai'
-import { randomlyDecideToNotUseEffectiveInfluence } from './aiRandomness'
+import { randomlyDecideToNotUseOwnedInfluence } from './aiRandomness'
 
 const chance = new Chance()
 jest.mock('./aiRandomness')
 
-const randomlyDecideToNotUseClaimedInfluenceMock = jest.mocked(randomlyDecideToNotUseEffectiveInfluence)
+const randomlyDecideToNotUseClaimedInfluenceMock = jest.mocked(randomlyDecideToNotUseOwnedInfluence)
 
 describe('ai', () => {
   const getRandomPlayer = (): Player => ({
