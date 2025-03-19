@@ -1,6 +1,7 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
+import { shuffle } from "../utilities/array"
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
   gameState.players.reduce((agg: Influences[], { deadInfluences }) => {
@@ -66,12 +67,29 @@ export const getOpponents = (gameState: PublicGameState): PublicPlayer[] =>
   gameState.players.filter(({ name, influenceCount }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
 
+const checkRequiredTargetPlayer = (gameState: PublicGameState) => {
+  const opponents = getOpponents(gameState)
+
+  // If only one opponent would remain, target the one who could Coup you on the next round.
+  if (opponents.length === 2 && opponents[0].influenceCount === 1 && opponents[1].influenceCount === 1) {
+    if (opponents[0].coins >= 7 && opponents[1].coins < 7) {
+      return opponents[0]
+    }
+    if (opponents[1].coins >= 7 && opponents[0].coins < 7) {
+      return opponents[1]
+    }
+  }
+}
+
 const getPossibleTargetPlayers = (
   gameState: PublicGameState,
   condition: (player: PublicPlayer) => boolean
 ) => getOpponents(gameState).filter(condition)
 
 const decideCoupTarget = (gameState: PublicGameState) => {
+  const requiredTarget = checkRequiredTargetPlayer(gameState)
+  if (requiredTarget) return requiredTarget
+
   const opponents = getOpponents(gameState)
 
   const vengefulness = (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100
@@ -85,6 +103,9 @@ const decideCoupTarget = (gameState: PublicGameState) => {
 }
 
 const decideAssasinationTarget = (gameState: PublicGameState) => {
+  const requiredTarget = checkRequiredTargetPlayer(gameState)
+  if (requiredTarget) return requiredTarget
+
   const opponents = getOpponents(gameState)
 
   const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
@@ -320,24 +341,27 @@ export const decideActionResponse = (gameState: PublicGameState): {
     && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer.name
       || gameState.pendingAction!.action === Actions.ForeignAid
     )) {
-    const legalBlockInfluences = Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
+    const legalBlockInfluences = shuffle(Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
       if (legalBlock === gameState.pendingAction?.action) {
         agg.push(influence as Influences)
       }
       return agg
-    }, [] as Influences[])
+    }, [] as Influences[]))
 
     for (const legalBlockInfluence of legalBlockInfluences) {
       const hasLegalBlockingInfluence = gameState.selfPlayer?.influences.some((i) => i === legalBlockInfluence)
+      if (hasLegalBlockingInfluence && !randomlyDecideToNotUseOwnedInfluence()) {
+        return { response: Responses.Block, claimedInfluence: legalBlockInfluence }
+      }
+    }
+
+    for (const legalBlockInfluence of legalBlockInfluences) {
       const baseBluffMargin = (1 - honesty) ** 1.5 * ((isSelfTarget ? 0.4 : 0.2) + Math.random() * 0.1)
       const finalBluffMargin = getFinalBluffMargin(baseBluffMargin, legalBlockInfluence, gameState.selfPlayer)
 
       if (
-        hasLegalBlockingInfluence
-        || (
-          randomlyDecideToBluff(finalBluffMargin)
-          && getProbabilityOfPlayerInfluence(gameState, legalBlockInfluence) > 0
-        )
+        randomlyDecideToBluff(finalBluffMargin)
+        && getProbabilityOfPlayerInfluence(gameState, legalBlockInfluence) > 0
       ) {
         return { response: Responses.Block, claimedInfluence: legalBlockInfluence }
       }
