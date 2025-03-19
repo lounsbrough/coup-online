@@ -67,12 +67,29 @@ export const getOpponents = (gameState: PublicGameState): PublicPlayer[] =>
   gameState.players.filter(({ name, influenceCount }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
 
+const checkRequiredTargetPlayer = (gameState: PublicGameState) => {
+  const opponents = getOpponents(gameState)
+
+  // If only one opponent would remain, target the one who could Coup you on the next round.
+  if (opponents.length === 2 && opponents[0].influenceCount === 1 && opponents[1].influenceCount === 1) {
+    if (opponents[0].coins >= 7 && opponents[1].coins < 7) {
+      return opponents[0]
+    }
+    if (opponents[1].coins >= 7 && opponents[0].coins < 7) {
+      return opponents[1]
+    }
+  }
+}
+
 const getPossibleTargetPlayers = (
   gameState: PublicGameState,
   condition: (player: PublicPlayer) => boolean
 ) => getOpponents(gameState).filter(condition)
 
 const decideCoupTarget = (gameState: PublicGameState) => {
+  const requiredTarget = checkRequiredTargetPlayer(gameState)
+  if (requiredTarget) return requiredTarget
+
   const opponents = getOpponents(gameState)
 
   const vengefulness = (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100
@@ -86,6 +103,9 @@ const decideCoupTarget = (gameState: PublicGameState) => {
 }
 
 const decideAssasinationTarget = (gameState: PublicGameState) => {
+  const requiredTarget = checkRequiredTargetPlayer(gameState)
+  if (requiredTarget) return requiredTarget
+
   const opponents = getOpponents(gameState)
 
   const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
