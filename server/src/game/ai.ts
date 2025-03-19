@@ -1,6 +1,7 @@
 import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
+import { shuffle } from "../utilities/array"
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
   gameState.players.reduce((agg: Influences[], { deadInfluences }) => {
@@ -320,24 +321,27 @@ export const decideActionResponse = (gameState: PublicGameState): {
     && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer.name
       || gameState.pendingAction!.action === Actions.ForeignAid
     )) {
-    const legalBlockInfluences = Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
+    const legalBlockInfluences = shuffle(Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
       if (legalBlock === gameState.pendingAction?.action) {
         agg.push(influence as Influences)
       }
       return agg
-    }, [] as Influences[])
+    }, [] as Influences[]))
 
     for (const legalBlockInfluence of legalBlockInfluences) {
       const hasLegalBlockingInfluence = gameState.selfPlayer?.influences.some((i) => i === legalBlockInfluence)
+      if (hasLegalBlockingInfluence && !randomlyDecideToNotUseOwnedInfluence()) {
+        return { response: Responses.Block, claimedInfluence: legalBlockInfluence }
+      }
+    }
+
+    for (const legalBlockInfluence of legalBlockInfluences) {
       const baseBluffMargin = (1 - honesty) ** 1.5 * ((isSelfTarget ? 0.4 : 0.2) + Math.random() * 0.1)
       const finalBluffMargin = getFinalBluffMargin(baseBluffMargin, legalBlockInfluence, gameState.selfPlayer)
 
       if (
-        hasLegalBlockingInfluence
-        || (
-          randomlyDecideToBluff(finalBluffMargin)
-          && getProbabilityOfPlayerInfluence(gameState, legalBlockInfluence) > 0
-        )
+        randomlyDecideToBluff(finalBluffMargin)
+        && getProbabilityOfPlayerInfluence(gameState, legalBlockInfluence) > 0
       ) {
         return { response: Responses.Block, claimedInfluence: legalBlockInfluence }
       }
