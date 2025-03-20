@@ -230,7 +230,7 @@ export const decideAction = (gameState: PublicGameState): {
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100
 
-  const baseBluffMargin = (1 - honesty) ** 1.5 * 0.5
+  const baseBluffMargin = (1 - honesty) ** 1.5 * 0.3
   const getFinalBluffMarginForAction = (influence: Influences) =>
     getFinalBluffMargin(baseBluffMargin, influence, gameState.selfPlayer!)
 

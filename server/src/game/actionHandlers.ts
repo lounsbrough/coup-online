@@ -690,6 +690,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
       if (claimedInfluence) {
         removeClaimedInfluence(actionPlayer, claimedInfluence)
+        addUnclaimedInfluence(actionPlayer, claimedInfluence)
       }
       holdGrudge({ state, offended: state.turnPlayer!, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, actionPlayer.name, influence)
