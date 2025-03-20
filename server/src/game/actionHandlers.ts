@@ -890,6 +890,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
         addClaimedInfluence(actionPlayer, claimedInfluence)
       }
       removeClaimedInfluence(blockPlayer, state.pendingBlock!.claimedInfluence)
+      addUnclaimedInfluence(blockPlayer, state.pendingBlock!.claimedInfluence)
       holdGrudge({ state, offended: blockPlayer.name, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, blockPlayer.name, influence)
       processPendingAction(state)
