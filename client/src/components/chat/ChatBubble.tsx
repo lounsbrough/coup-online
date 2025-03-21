@@ -1,9 +1,14 @@
 import Fab from '@mui/material/Fab'
 import ChatIcon from '@mui/icons-material/Chat'
 
-function ChatBubble() {
+interface ChatBubbleProps {
+  openChatDialog: () => void;
+}
+
+export default function ChatBubble({ openChatDialog }: ChatBubbleProps) {
   return (
     <Fab
+      onClick={openChatDialog}
       sx={{ mr: 3, mb: 3 }}
       color="primary"
       style={{
@@ -16,5 +21,3 @@ function ChatBubble() {
     </Fab>
   )
 }
-
-export default ChatBubble
