@@ -4,7 +4,7 @@ import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, deleteChatMessageHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
@@ -356,6 +356,44 @@ const eventHandlers: {
       influences: Joi.array().items(
         Joi.string().allow(...Object.values(Influences)).required()
       ).min(1).max(2).required()
+    })
+  },
+  [PlayerActions.sendChatMessage]: {
+    handler: sendChatMessageHandler,
+    express: {
+      method: 'post',
+      parseParams: (req) => {
+        const roomId: string = req.body.roomId
+        const playerId: string = req.body.playerId
+        const messageId: string = req.body.messageId
+        const messageText: string = req.body.messageText.trim()
+        return { roomId, playerId, messageId, messageText }
+      },
+      validator: validateExpressBody
+    },
+    joiSchema: Joi.object().keys({
+      roomId: Joi.string().required(),
+      playerId: Joi.string().required(),
+      messageId: Joi.string().guid().required(),
+      messageText: Joi.string().required()
+    })
+  },
+  [PlayerActions.deleteChatMessage]: {
+    handler: deleteChatMessageHandler,
+    express: {
+      method: 'post',
+      parseParams: (req) => {
+        const roomId: string = req.body.roomId
+        const playerId: string = req.body.playerId
+        const messageId: string = req.body.messageId
+        return { roomId, playerId, messageId }
+      },
+      validator: validateExpressBody
+    },
+    joiSchema: Joi.object().keys({
+      roomId: Joi.string().required(),
+      playerId: Joi.string().required(),
+      messageId: Joi.string().guid().required()
     })
   }
 }

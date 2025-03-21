@@ -52,6 +52,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
 
   return {
     eventLogs: gameState.eventLogs,
+    chatMessages: gameState.chatMessages,
     lastEventTimestamp: gameState.lastEventTimestamp,
     isStarted: gameState.isStarted,
     pendingInfluenceLoss: gameState.pendingInfluenceLoss,

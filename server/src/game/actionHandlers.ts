@@ -965,3 +965,56 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
 
   return { roomId, playerId }
 }
+
+export const sendChatMessageHandler = async ({ roomId, playerId, messageId, messageText }: {
+  roomId: string
+  playerId: string
+  messageId: string
+  messageText: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  const player = getPlayerInRoom(gameState, playerId)
+
+  if (gameState.chatMessages.some(({id}) => id === messageId)) {
+    throw new GameMutationInputError('This message id already exists')
+  }
+
+  await mutateGameState(gameState, (state) => {
+    state.chatMessages.push({
+      id: messageId,
+      text: messageText,
+      from: player.name,
+      timestamp: new Date(),
+      deleted: false
+    })
+  })
+
+  return { roomId, playerId }
+}
+
+export const deleteChatMessageHandler = async ({ roomId, playerId, messageId }: {
+  roomId: string
+  playerId: string
+  messageId: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  const player = getPlayerInRoom(gameState, playerId)
+
+  await mutateGameState(gameState, (state) => {
+    const existingMessage = state.chatMessages.find(({id}) => id === messageId)
+
+    if (!existingMessage) {
+      throw new GameMutationInputError('Message id does not exist')
+    }
+
+    if (existingMessage.from !== player.name) {
+      throw new GameMutationInputError('You can\'t delete this message')
+    }
+
+    existingMessage.deleted = true
+  })
+
+  return { roomId, playerId }
+}

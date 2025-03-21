@@ -132,6 +132,7 @@ const getNewGameState = (roomId: string, settings: GameSettings): GameState => (
   pendingInfluenceLoss: {},
   isStarted: false,
   eventLogs: [],
+  chatMessages: [],
   lastEventTimestamp: new Date(),
   turn: 1,
   settings

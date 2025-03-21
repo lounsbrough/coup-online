@@ -36,6 +36,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: [],
+    chatMessages: [],
     lastEventTimestamp: chance.date(),
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, 6),
@@ -82,6 +83,7 @@ describe('gameState', () => {
 
       const publicGameState: PublicGameState = {
         eventLogs: gameState.eventLogs,
+        chatMessages: gameState.chatMessages,
         lastEventTimestamp: gameState.lastEventTimestamp,
         isStarted: gameState.isStarted,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
