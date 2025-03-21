@@ -4,7 +4,7 @@ import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Link } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import DraggableFab from "../utilities/DraggableFab"
+import ChatBubble from "../utilities/ChatBubble"
 
 function Game() {
   const { gameState } = useGameStateContext()
@@ -35,7 +35,7 @@ function Game() {
         <WaitingRoom />
       )}
       {gameState && gameState.selfPlayer && (
-        <DraggableFab />
+        <ChatBubble />
       )}
     </>
   )
