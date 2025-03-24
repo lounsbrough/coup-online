@@ -5,6 +5,7 @@ import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 import { compressString, decompressString } from "./compression"
 import { getCurrentTimestamp } from "./time"
+import { dehydrateGameState } from "../../../shared/helpers/state"
 
 jest.mock("./storage")
 jest.mock("./compression")
@@ -200,7 +201,7 @@ describe('gameState', () => {
     ])('should not throw if game state is valid', ({ mutation }) => {
       const gameState = getRandomGameState()
       mutation(gameState)
-      expect(() => validateGameState(gameState)).not.toThrow()
+      expect(() => validateGameState(dehydrateGameState(gameState))).not.toThrow()
     })
 
     it.each([
@@ -246,7 +247,7 @@ describe('gameState', () => {
     ])('should throw $error', async ({ mutation, error }) => {
       const gameState = getRandomGameState()
       mutation(gameState)
-      expect(() => validateGameState(gameState)).toThrow(error)
+      expect(() => validateGameState(dehydrateGameState(gameState))).toThrow(error)
     })
   })
 

@@ -988,6 +988,11 @@ export const sendChatMessageHandler = async ({ roomId, playerId, messageId, mess
       timestamp: new Date(),
       deleted: false
     })
+
+    const maxMessageCount = 500
+    if (state.chatMessages.length > maxMessageCount) {
+      state.chatMessages.splice(0, state.chatMessages.length - maxMessageCount)
+    }
   })
 
   return { roomId, playerId }

@@ -23,8 +23,9 @@ export type Translations = ActionMessages & {
   briefDescriptionOfCoup: string
   cancel: string
   cardCountInDeck: string
-  cheatSheet: string
   challenge: string
+  chat: string
+  cheatSheet: string
   chooseATarget: string
   chooseAnAction: string
   chooseInfluenceToLose: string
@@ -80,6 +81,7 @@ export type Translations = ActionMessages & {
   loseInfluence: string
   losingAChallenge: string
   losingInfluence: string
+  noChatMessages: string
   none: string
   notEnoughCoins: string
   numberOfPlayers: string
@@ -158,6 +160,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     cancel: 'Cancel',
     cardCountInDeck: '{{count}} card{{plural[[s]]}} in the deck',
     challenge: 'Challenge',
+    chat: 'Chat',
     cheatSheet: 'Cheat Sheet',
     chooseATarget: 'Choose a Target',
     chooseAnAction: 'Choose an Action',
@@ -236,6 +239,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     loseInfluence: 'Lose {{primaryInfluence}}',
     losingAChallenge: 'Losing a Challenge',
     losingInfluence: 'Losing Influence',
+    noChatMessages: 'No chat messages',
     none: 'None',
     notEnoughCoins: 'Not enough coins',
     numberOfPlayers: 'Number of Players',
@@ -312,6 +316,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     cancel: 'Cancelar',
     cardCountInDeck: '{{count}} carta{{plural[[s]]}} no baralho',
     challenge: 'Desafio',
+    chat: 'Bate-papo',
     cheatSheet: 'Folha de dicas',
     chooseATarget: 'Escolha um alvo',
     chooseAnAction: 'Escolha uma ação',
@@ -390,6 +395,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     loseInfluence: 'Perder {{primaryInfluence}}',
     losingAChallenge: 'Perdendo um desafio',
     losingInfluence: 'Perdendo influência',
+    noChatMessages: 'Nenhuma mensagem',
     none: 'Nenhum',
     notEnoughCoins: 'Moedas insuficientes',
     numberOfPlayers: 'Número de jogadores',

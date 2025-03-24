@@ -248,3 +248,21 @@ export type PublicGameState = Pick<GameState,
   selfPlayer?: Player
   deckCount: number
 }
+
+type DehydratedChatMessage = Omit<ChatMessage, 'timestamp'> & {timestamp: string}
+
+export type DehydratedGameState = Omit<GameState,
+  'lastEventTimestamp' |
+  'chatMessages'
+> & {
+  lastEventTimestamp: string
+  chatMessages: DehydratedChatMessage[]
+};
+
+export type DehydratedPublicGameState = Omit<PublicGameState,
+  'lastEventTimestamp' |
+  'chatMessages'
+> & {
+  lastEventTimestamp: string
+  chatMessages: DehydratedChatMessage[]
+};

@@ -55,10 +55,12 @@
     ]
   },
   "devDependencies": {
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.4",
     "@shared": "../shared",
     "@types/chance": "^1.1.6",
     "chance": "^1.1.12",
     "cypress": "^14.2.0",
+    "esbuild": "^0.25.1",
     "globals": "^16.0.0",
     "typescript-eslint": "^8.26.1"
   }

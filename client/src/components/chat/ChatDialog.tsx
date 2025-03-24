@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Slide from '@mui/material/Slide'
 import { TransitionProps } from '@mui/material/transitions'
 import ChatMessages from './ChatMessages'
+import { useTranslationContext } from '../../contexts/TranslationsContext'
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -26,6 +27,8 @@ interface ChatDialogProps {
 export default function ChatDialog({
   isOpen, handleClose
 }: ChatDialogProps) {
+  const { t } = useTranslationContext()
+
   return (
     <React.Fragment>
       <Dialog
@@ -37,14 +40,14 @@ export default function ChatDialog({
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Chat"}</DialogTitle>
+        <DialogTitle>{t('chat')}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             <ChatMessages />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' onClick={handleClose}>Close</Button>
+          <Button variant='contained' onClick={handleClose}>{t('close')}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

@@ -1,6 +1,6 @@
-import { useState, createContext, useContext, ReactNode, useEffect, useCallback } from 'react'
+import { useState, createContext, useContext, ReactNode, useEffect, useCallback, useMemo } from 'react'
 import useSWR from 'swr'
-import { PlayerActions, PublicGameState, ServerEvents, isSameState } from '@shared'
+import { PlayerActions, PublicGameState, DehydratedPublicGameState, ServerEvents, isSameState, rehydrateGameState } from '@shared'
 import { getPlayerId } from '../helpers/players'
 import { useSearchParams } from 'react-router'
 import { useWebSocketContext } from './WebSocketContext'
@@ -8,30 +8,37 @@ import { getBaseUrl } from '../helpers/api'
 
 type GameStateContextType = {
   gameState?: PublicGameState | undefined,
-  setGameState: (newGameState: PublicGameState) => void
+  setDehydratedGameState: (newGameState: DehydratedPublicGameState) => void
 }
 
 export const GameStateContext = createContext<GameStateContextType>({
-  setGameState: () => { }
+  setDehydratedGameState: () => { }
 })
 
 export function GameStateContextProvider({ children }: { children: ReactNode }) {
-  const [gameState, setGameState] = useState<PublicGameState>()
+  const [dehydratedGameState, setDehydratedGameState] = useState<DehydratedPublicGameState>()
   const [searchParams] = useSearchParams()
   const { socket, isConnected } = useWebSocketContext()
 
   const roomId = searchParams.get('roomId')
 
-  const setGameStateIfChanged = useCallback((newState: PublicGameState) => {
-    setGameState((prevState) => prevState && isSameState(prevState, newState) ? prevState : newState)
-  }, [setGameState])
+  const gameState = useMemo(() =>
+    dehydratedGameState ? rehydrateGameState(dehydratedGameState) : undefined,
+    [dehydratedGameState]
+  )
+
+  console.log(gameState)
+
+  const setDehydratedGameStateIfChanged = useCallback((newState: DehydratedPublicGameState) => {
+    setDehydratedGameState((prevState) => prevState && isSameState(prevState, newState) ? prevState : newState)
+  }, [setDehydratedGameState])
 
   const handleGameStateResponse = useCallback(async (response: Response) => {
     if (response.ok) {
       const { gameState: newState } = await response.json()
-      setGameStateIfChanged(newState)
+      setDehydratedGameStateIfChanged(newState)
     }
-  }, [setGameStateIfChanged])
+  }, [setDehydratedGameStateIfChanged])
 
   useSWR<void, Error>(
     roomId
@@ -53,7 +60,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
       return
     }
 
-    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, setGameStateIfChanged)
+    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, setDehydratedGameStateIfChanged)
     socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
 
     const intervalId = setInterval(() => {
@@ -61,7 +68,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     }, 5000)
 
     return () => { clearInterval(intervalId) }
-  }, [roomId, socket, isConnected, setGameStateIfChanged])
+  }, [roomId, socket, isConnected, setDehydratedGameStateIfChanged])
 
   const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)
   const gameIsOver = playersLeft?.length === 1
@@ -90,7 +97,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     }
   }, [roomId, socket, isConnected, aiPlayersActive, handleGameStateResponse])
 
-  const contextValue = { gameState, setGameState }
+  const contextValue = { gameState, setDehydratedGameState }
 
   return (
     <GameStateContext.Provider value={contextValue}>

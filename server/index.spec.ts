@@ -1,13 +1,13 @@
 import Chance from 'chance'
 import { io, Socket } from 'socket.io-client'
-import { Actions, Player, PlayerActions, PublicGameState, PublicPlayer, Responses, ServerEvents } from '../shared/types/game'
-import { PublicGameStateOrError } from './index'
+import { Actions, DehydratedPublicGameState, Player, PlayerActions, PublicPlayer, Responses, ServerEvents } from '../shared/types/game'
+import { DehydratedPublicGameStateOrError } from './index'
 
 const chance = new Chance()
 
 const baseUrl = 'http://localhost:8008'
 
-const validatePublicState = (gameState: PublicGameState) => {
+const validatePublicState = (gameState: DehydratedPublicGameState) => {
   expect(Object.keys(gameState)).toEqual(expect.arrayContaining([
     "eventLogs",
     "isStarted",
@@ -39,7 +39,7 @@ describe('index', () => {
         headers: { 'content-type': 'application/json' }
       })
 
-      const json: PublicGameStateOrError = await response.json()
+      const json: DehydratedPublicGameStateOrError = await response.json()
 
       return { json, status: response.status }
     }
@@ -51,7 +51,7 @@ describe('index', () => {
         body: JSON.stringify(body)
       })
 
-      const json: PublicGameStateOrError = await response.json()
+      const json: DehydratedPublicGameStateOrError = await response.json()
 
       return { json, status: response.status }
     }
@@ -772,11 +772,11 @@ describe('index', () => {
       return sockets.map((socket) => {
         let resolver: (value?: unknown) => void
         let rejector: (error: Error) => void
-        const promise = new Promise<PublicGameState>((resolve, reject) => {
+        const promise = new Promise<DehydratedPublicGameState>((resolve, reject) => {
           resolver = resolve
           rejector = reject
         })
-        socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState: PublicGameState) => {
+        socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState: DehydratedPublicGameState) => {
           resolver(gameState)
         })
         socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error: string) => {
