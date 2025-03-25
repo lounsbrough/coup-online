@@ -27,8 +27,6 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     [dehydratedGameState]
   )
 
-  console.log(gameState)
-
   const setDehydratedGameStateIfChanged = useCallback((newState: DehydratedPublicGameState) => {
     setDehydratedGameState((prevState) => prevState && isSameState(prevState, newState) ? prevState : newState)
   }, [setDehydratedGameState])

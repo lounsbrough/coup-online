@@ -210,6 +210,7 @@ export const resetGame = async (roomId: string) => {
     grudges: {}
   }))
   newGameState.availablePlayerColors = oldGameState.availablePlayerColors
+  newGameState.chatMessages = oldGameState.chatMessages
   await createGameState(roomId, newGameState)
 }
 

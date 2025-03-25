@@ -34,7 +34,7 @@ export enum PlayerActions {
   blockChallengeResponse = 'blockChallengeResponse',
   loseInfluences = 'loseInfluences',
   sendChatMessage = 'sendChatMessage',
-  deleteChatMessage = 'deleteChatMessage'
+  setChatMessageDeleted = 'setChatMessageDeleted'
 }
 
 export enum ServerEvents {

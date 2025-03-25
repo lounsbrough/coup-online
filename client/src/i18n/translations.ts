@@ -81,6 +81,7 @@ export type Translations = ActionMessages & {
   loseInfluence: string
   losingAChallenge: string
   losingInfluence: string
+  messageWasDeleted: string
   noChatMessages: string
   none: string
   notEnoughCoins: string
@@ -122,6 +123,7 @@ export type Translations = ActionMessages & {
   rulesSetup: string
   rulesSteal: string
   rulesTax: string
+  send: string
   settings: string
   setup: string
   skepticism: string
@@ -136,6 +138,7 @@ export type Translations = ActionMessages & {
   welcomeToCoup: string
   whatIsBotsName: string
   whatIsYourName: string
+  writeNewMessage: string
   youAreNotInGame: string
 }
 
@@ -239,6 +242,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     loseInfluence: 'Lose {{primaryInfluence}}',
     losingAChallenge: 'Losing a Challenge',
     losingInfluence: 'Losing Influence',
+    messageWasDeleted: 'Message was deleted',
     noChatMessages: 'No chat messages',
     none: 'None',
     notEnoughCoins: 'Not enough coins',
@@ -280,6 +284,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     rulesSetup: 'Shuffle the cards and deal two to each player. Players should look at their cards but keep them hidden from everyone else. Each player takes two coins from the bank as their starting wealth. In a game with only two players, the starting player begins the game with one coin instead of two.',
     rulesSteal: 'Take two coins from another player. Can be Challenged. Can be Blocked by Captain or Ambassador.',
     rulesTax: 'Take three coins from the bank. Can be Challenged. Cannot be Blocked.',
+    send: 'Send',
     settings: 'Settings',
     setup: 'Setup',
     skepticism: 'Skepticism',
@@ -294,6 +299,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     welcomeToCoup: 'Welcome To Coup!',
     whatIsBotsName: 'What is its name?',
     whatIsYourName: 'What is your name?',
+    writeNewMessage: 'Write New Message',
     youAreNotInGame: 'You are not in the game'
   },
   'pt-BR': {
@@ -395,6 +401,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     loseInfluence: 'Perder {{primaryInfluence}}',
     losingAChallenge: 'Perdendo um desafio',
     losingInfluence: 'Perdendo influência',
+    messageWasDeleted: 'Mensagem foi descartada',
     noChatMessages: 'Nenhuma mensagem',
     none: 'Nenhum',
     notEnoughCoins: 'Moedas insuficientes',
@@ -436,6 +443,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     rulesSetup: 'Embaralhe as cartas e distribua duas para cada jogador. Os jogadores devem olhar para as suas cartas, mas mantê-las escondidas de todos os outros. Cada jogador pega duas moedas do banco como riqueza inicial. Num jogo com apenas dois jogadores, o jogador inicial começa o jogo com uma moeda em vez de duas.',
     rulesSteal: 'Pegue duas moedas de outro jogador. Pode ser desafiado. Pode ser bloqueado pelo Capitão ou Embaixador.',
     rulesTax: 'Pegue três moedas do banco. Pode ser desafiado. Não pode ser bloqueado.',
+    send: 'Enviar',
     settings: 'Configurações',
     setup: 'Configurar',
     skepticism: 'Ceticismo',
@@ -450,6 +458,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     welcomeToCoup: 'Bem vindo ao Golpe!',
     whatIsBotsName: 'Qual é seu nome?',
     whatIsYourName: 'Qual o seu nome?',
+    writeNewMessage: 'Escreva nova mensagem',
     youAreNotInGame: 'Você não está neste jogo'
   }
 }

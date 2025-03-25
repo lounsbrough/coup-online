@@ -5,11 +5,8 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Link } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import ChatBubble from "../chat/ChatBubble"
-import ChatDialog from "../chat/ChatDialog"
-import { useState } from "react"
 
 function Game() {
-  const [chatOpen, setChatOpen] = useState(false)
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
@@ -38,10 +35,7 @@ function Game() {
         <WaitingRoom />
       )}
       {gameState && gameState.selfPlayer && (
-        <>
-          <ChatBubble openChatDialog={() => { setChatOpen(true) }} />
-          <ChatDialog isOpen={chatOpen} handleClose={() => { setChatOpen(false) }} />
-        </>
+        <ChatBubble />
       )}
     </>
   )

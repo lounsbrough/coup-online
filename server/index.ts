@@ -4,7 +4,7 @@ import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, DehydratedPublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, deleteChatMessageHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler } from './src/game/actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, setChatMessageDeletedHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
@@ -376,25 +376,27 @@ const eventHandlers: {
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
       messageId: Joi.string().guid().required(),
-      messageText: Joi.string().required()
+      messageText: Joi.string().required().max(500)
     })
   },
-  [PlayerActions.deleteChatMessage]: {
-    handler: deleteChatMessageHandler,
+  [PlayerActions.setChatMessageDeleted]: {
+    handler: setChatMessageDeletedHandler,
     express: {
       method: 'post',
       parseParams: (req) => {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const messageId: string = req.body.messageId
-        return { roomId, playerId, messageId }
+        const deleted: boolean = req.body.deleted
+        return { roomId, playerId, messageId, deleted }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
-      messageId: Joi.string().guid().required()
+      messageId: Joi.string().guid().required(),
+      deleted: Joi.bool().required()
     })
   }
 }

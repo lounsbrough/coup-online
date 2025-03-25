@@ -998,10 +998,11 @@ export const sendChatMessageHandler = async ({ roomId, playerId, messageId, mess
   return { roomId, playerId }
 }
 
-export const deleteChatMessageHandler = async ({ roomId, playerId, messageId }: {
+export const setChatMessageDeletedHandler = async ({ roomId, playerId, messageId, deleted }: {
   roomId: string
   playerId: string
   messageId: string
+  deleted: boolean
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -1015,10 +1016,10 @@ export const deleteChatMessageHandler = async ({ roomId, playerId, messageId }: 
     }
 
     if (existingMessage.from !== player.name) {
-      throw new GameMutationInputError('You can\'t delete this message')
+      throw new GameMutationInputError('This is not your message')
     }
 
-    existingMessage.deleted = true
+    existingMessage.deleted = deleted
   })
 
   return { roomId, playerId }
