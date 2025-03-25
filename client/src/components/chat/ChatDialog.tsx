@@ -35,6 +35,7 @@ export default function ChatDialog({
   isOpen, handleClose, setLatestReadMessageId
 }: ChatDialogProps) {
   const scrollingMessageBoxRef = useRef<HTMLElement>(null)
+  const messageTextInputRef = useRef<HTMLInputElement>(null)
   const [pendingMessageText, setPendingMessageText] = useState('')
   const [pendingMessageId, setPendingMessageId] = useState('')
   const { gameState } = useGameStateContext()
@@ -83,6 +84,12 @@ export default function ChatDialog({
     })
   }, [isOpen, gameState.roomId, gameState.chatMessages.length])
 
+  useEffect(() => {
+    if (isOpen && messageTextInputRef.current) {
+      messageTextInputRef.current.focus()
+    }
+  }, [isOpen, messageTextInputRef.current])
+
   return (
     <>
       <Dialog
@@ -118,7 +125,12 @@ export default function ChatDialog({
                   sendMessage()
                 }
               }}
-              slotProps={{ htmlInput: { maxLength: maxMessageLength } }}
+              slotProps={{
+                htmlInput: {
+                  ref: messageTextInputRef,
+                  maxLength: maxMessageLength
+                }
+              }}
               size='small'
               sx={{ width: '100%' }}
             ></TextField>

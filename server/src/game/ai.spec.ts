@@ -14,8 +14,8 @@ describe('ai', () => {
     name: chance.string(),
     coins: chance.natural({ min: 0, max: 5 }),
     influences: [],
-    claimedInfluences: [],
-    unclaimedInfluences: [],
+    claimedInfluences: new Set(),
+    unclaimedInfluences: new Set(),
     deadInfluences: [],
     color: chance.string(),
     ai: chance.bool(),
@@ -26,8 +26,8 @@ describe('ai', () => {
     name: chance.string(),
     coins: chance.natural({ min: 0, max: 5 }),
     influenceCount: 2,
-    claimedInfluences: [],
-    unclaimedInfluences: [],
+    claimedInfluences: new Set(),
+    unclaimedInfluences: new Set(),
     deadInfluences: [],
     color: chance.string(),
     ai: chance.bool(),
@@ -43,6 +43,7 @@ describe('ai', () => {
       chatMessages: [],
       lastEventTimestamp: chance.date(),
       isStarted: chance.bool(),
+      turn: chance.natural(),
       players: [],
       pendingInfluenceLoss: {},
       roomId: chance.string()
@@ -257,6 +258,7 @@ describe('ai', () => {
       expect(decideAction({
         roomId: chance.string(),
         isStarted: chance.bool(),
+        turn: chance.natural(),
         eventLogs: [],
         chatMessages: [],
         lastEventTimestamp: chance.date(),
@@ -294,6 +296,7 @@ describe('ai', () => {
       expect(decideAction({
         roomId: chance.string(),
         isStarted: chance.bool(),
+        turn: chance.natural(),
         eventLogs: [],
         chatMessages: [],
         lastEventTimestamp: chance.date(),
@@ -333,6 +336,7 @@ describe('ai', () => {
       const decidedAction = decideAction({
         roomId: chance.string(),
         isStarted: chance.bool(),
+        turn: chance.natural(),
         eventLogs: [],
         chatMessages: [],
         lastEventTimestamp: chance.date(),
@@ -342,7 +346,7 @@ describe('ai', () => {
             name: 'harper',
             influenceCount: 1,
             deadInfluences: [Influences.Assassin],
-            claimedInfluences: [Influences.Duke]
+            claimedInfluences: new Set([Influences.Duke])
           },
           {
             ...getRandomPublicPlayer(),
@@ -364,7 +368,7 @@ describe('ai', () => {
           coins: 4,
           influences: [Influences.Ambassador],
           deadInfluences: [Influences.Assassin],
-          claimedInfluences: [Influences.Duke]
+          claimedInfluences: new Set([Influences.Duke])
         },
         pendingInfluenceLoss: {},
         deckCount: 11
@@ -379,6 +383,7 @@ describe('ai', () => {
       const decidedAction = decideAction({
         roomId: chance.string(),
         isStarted: chance.bool(),
+        turn: chance.natural(),
         eventLogs: [],
         chatMessages: [],
         lastEventTimestamp: chance.date(),
@@ -388,7 +393,7 @@ describe('ai', () => {
             name: 'harper',
             influenceCount: 1,
             deadInfluences: [Influences.Assassin],
-            claimedInfluences: [Influences.Duke]
+            claimedInfluences: new Set([Influences.Duke])
           },
           {
             ...getRandomPublicPlayer(),
@@ -410,7 +415,7 @@ describe('ai', () => {
           coins: 4,
           influences: [Influences.Ambassador],
           deadInfluences: [Influences.Assassin],
-          claimedInfluences: [Influences.Duke]
+          claimedInfluences: new Set([Influences.Duke])
         },
         pendingInfluenceLoss: {},
         deckCount: 11
@@ -425,6 +430,7 @@ describe('ai', () => {
       expect(decideActionResponse({
         roomId: chance.string(),
         isStarted: chance.bool(),
+        turn: chance.natural(),
         eventLogs: [],
         chatMessages: [],
         lastEventTimestamp: chance.date(),
@@ -460,7 +466,7 @@ describe('ai', () => {
           action: Actions.Steal,
           targetPlayer: 'david',
           claimConfirmed: false,
-          pendingPlayers: ['david']
+          pendingPlayers: new Set(['david'])
         },
         turnPlayer: 'hailey',
         pendingInfluenceLoss: {},

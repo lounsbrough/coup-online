@@ -1,6 +1,6 @@
 import Chance from 'chance'
 import { io, Socket } from 'socket.io-client'
-import { Actions, DehydratedPublicGameState, Player, PlayerActions, PublicPlayer, Responses, ServerEvents } from '../shared/types/game'
+import { Actions, DehydratedPlayer, DehydratedPublicGameState, DehydratedPublicPlayer, PlayerActions, Responses, ServerEvents } from '../shared/types/game'
 import { DehydratedPublicGameStateOrError } from './index'
 
 const chance = new Chance()
@@ -21,7 +21,7 @@ const validatePublicState = (gameState: DehydratedPublicGameState) => {
   expect(Object.keys(gameState)).not.toContain("availablePlayerColors")
 
   expect(gameState.selfPlayer).toBeTruthy()
-  gameState.players.forEach((player: Player & PublicPlayer) => {
+  gameState.players.forEach((player: DehydratedPlayer & DehydratedPublicPlayer) => {
     expect(player.id).toBeUndefined()
     expect(player.influences).toBeUndefined()
     expect(player.influenceCount).toBeTruthy()
@@ -635,7 +635,7 @@ describe('index', () => {
           expect(responseJson).toEqual({ error: expect.stringMatching(error) })
         } else {
           validatePublicState(responseJson.gameState!)
-          expect(responseJson.gameState!.players.every((player: PublicPlayer) => player.influenceCount === 2))
+          expect(responseJson.gameState!.players.every((player: DehydratedPublicPlayer) => player.influenceCount === 2))
           expect(responseJson.gameState!.isStarted).toBe(false)
         }
       })
