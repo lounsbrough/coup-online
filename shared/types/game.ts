@@ -32,7 +32,9 @@ export enum PlayerActions {
   actionChallengeResponse = 'actionChallengeResponse',
   blockResponse = 'blockResponse',
   blockChallengeResponse = 'blockChallengeResponse',
-  loseInfluences = 'loseInfluences'
+  loseInfluences = 'loseInfluences',
+  sendChatMessage = 'sendChatMessage',
+  setChatMessageDeleted = 'setChatMessageDeleted'
 }
 
 export enum ServerEvents {
@@ -179,9 +181,18 @@ export type GameSettings = {
   eventLogRetentionTurns: number
 }
 
+export type ChatMessage = {
+  id: string
+  from: string
+  timestamp: Date
+  text: string
+  deleted: boolean
+}
+
 export type GameState = {
   deck: Influences[]
   eventLogs: EventMessage[]
+  chatMessages: ChatMessage[]
   lastEventTimestamp: Date
   isStarted: boolean
   availablePlayerColors: string[]
@@ -219,6 +230,7 @@ export type GameState = {
 
 export type PublicGameState = Pick<GameState,
   'eventLogs' |
+  'chatMessages' |
   'isStarted' |
   'lastEventTimestamp' |
   'pendingInfluenceLoss' |
@@ -236,3 +248,21 @@ export type PublicGameState = Pick<GameState,
   selfPlayer?: Player
   deckCount: number
 }
+
+type DehydratedChatMessage = Omit<ChatMessage, 'timestamp'> & {timestamp: string}
+
+export type DehydratedGameState = Omit<GameState,
+  'lastEventTimestamp' |
+  'chatMessages'
+> & {
+  lastEventTimestamp: string
+  chatMessages: DehydratedChatMessage[]
+};
+
+export type DehydratedPublicGameState = Omit<PublicGameState,
+  'lastEventTimestamp' |
+  'chatMessages'
+> & {
+  lastEventTimestamp: string
+  chatMessages: DehydratedChatMessage[]
+};

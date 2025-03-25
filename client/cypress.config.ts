@@ -1,7 +1,9 @@
 import { defineConfig } from "cypress"
-import { GameState } from "../shared/types/game"
+import { DehydratedGameState, GameState } from "../shared/types/game"
 import { createGameState, getGameState, mutateGameState } from "../server/src/utilities/gameState"
 import { getValue } from "../server/src/utilities/storage"
+import { rehydrateGameState } from "../shared/helpers/state"
+import createBundler from '@bahmutov/cypress-esbuild-preprocessor'
 
 const setGameStateTask = async (state: GameState) => {
   if (!await getValue(state.roomId)) {
@@ -15,9 +17,10 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
+      on('file:preprocessor', createBundler())
       on('task', {
-        setGameState({ state }: { state: GameState }) {
-          return setGameStateTask(state)
+        setGameState({ state }: { state: DehydratedGameState }) {
+          return setGameStateTask(rehydrateGameState(state))
         }
       })
       return config

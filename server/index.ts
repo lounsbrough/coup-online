@@ -3,24 +3,25 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
-import { Actions, Influences, Responses, PublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './src/game/actionHandlers'
+import { Actions, Influences, Responses, DehydratedPublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, setChatMessageDeletedHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
+import { dehydrateGameState } from '../shared/helpers/state'
 
-export type PublicGameStateOrError = { gameState: PublicGameState, error?: never } | { error: string, gameState?: never }
+export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
 
 type ServerToClientEvents = {
-  [ServerEvents.gameStateChanged]: (gameState: PublicGameState) => void
+  [ServerEvents.gameStateChanged]: (gameState: DehydratedPublicGameState) => void
   [ServerEvents.error]: (error: string) => void
 }
 
 type ClientToServerEvents = {
   [action in PlayerActions]: (
     params: unknown,
-    callback?: (response: PublicGameStateOrError) => void
+    callback?: (response: DehydratedPublicGameStateOrError) => void
   ) => Promise<void>
 }
 
@@ -357,6 +358,46 @@ const eventHandlers: {
         Joi.string().allow(...Object.values(Influences)).required()
       ).min(1).max(2).required()
     })
+  },
+  [PlayerActions.sendChatMessage]: {
+    handler: sendChatMessageHandler,
+    express: {
+      method: 'post',
+      parseParams: (req) => {
+        const roomId: string = req.body.roomId
+        const playerId: string = req.body.playerId
+        const messageId: string = req.body.messageId
+        const messageText: string = req.body.messageText.trim()
+        return { roomId, playerId, messageId, messageText }
+      },
+      validator: validateExpressBody
+    },
+    joiSchema: Joi.object().keys({
+      roomId: Joi.string().required(),
+      playerId: Joi.string().required(),
+      messageId: Joi.string().guid().required(),
+      messageText: Joi.string().required().max(500)
+    })
+  },
+  [PlayerActions.setChatMessageDeleted]: {
+    handler: setChatMessageDeletedHandler,
+    express: {
+      method: 'post',
+      parseParams: (req) => {
+        const roomId: string = req.body.roomId
+        const playerId: string = req.body.playerId
+        const messageId: string = req.body.messageId
+        const deleted: boolean = req.body.deleted
+        return { roomId, playerId, messageId, deleted }
+      },
+      validator: validateExpressBody
+    },
+    joiSchema: Joi.object().keys({
+      roomId: Joi.string().required(),
+      playerId: Joi.string().required(),
+      messageId: Joi.string().guid().required(),
+      deleted: Joi.bool().required()
+    })
   }
 }
 
@@ -389,7 +430,7 @@ io.on('connection', (socket) => {
           const emitGameStateChanged = async (pushToSocket: Socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId
             try {
-              const publicGameState = getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId })
+              const publicGameState = dehydrateGameState(getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
               pushToSocket.emit(ServerEvents.gameStateChanged, publicGameState)
               if (isCallerSocket) callback?.({ gameState: publicGameState })
             } catch (error) {
@@ -441,13 +482,13 @@ io.on('connection', (socket) => {
 const responseHandler = <T>(
   event: PlayerActions,
   handler: (props: T) => Promise<{ roomId: string, playerId: string }>
-) => async (res: Response<PublicGameStateOrError>, props: T) => {
+) => async (res: Response<DehydratedPublicGameStateOrError>, props: T) => {
   try {
     const { roomId, playerId } = await handler(props)
-    const publicGameState = getPublicGameState({
+    const publicGameState = dehydrateGameState(getPublicGameState({
       gameState: await getGameState(roomId),
       playerId
-    })
+    }))
     res.status(200).json({ gameState: publicGameState })
   } catch (error) {
     console.error(error, { event, props })

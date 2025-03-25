@@ -1,4 +1,4 @@
-import { PlayerActions, PublicGameState } from "@shared"
+import { PlayerActions, DehydratedPublicGameState } from "@shared"
 import { useMemo, useState } from "react"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useGameStateContext } from "../contexts/GameStateContext"
@@ -7,11 +7,11 @@ import { getBaseUrl } from "../helpers/api"
 
 function useGameMutation<ParamsType>({ action, callback }: {
   action: PlayerActions,
-  callback?: (gameState: PublicGameState) => void
+  callback?: (gameState: DehydratedPublicGameState) => void
 }) {
   const [error, setError] = useState('')
   const { socket, isConnected } = useWebSocketContext()
-  const { setGameState } = useGameStateContext()
+  const { setDehydratedGameState } = useGameStateContext()
 
   const { trigger: triggerSwr, isMutating } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
     setError('')
@@ -22,7 +22,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
     }).then(async (res) => {
       if (res.ok) {
         const { gameState } = await res.json()
-        setGameState(gameState)
+        setDehydratedGameState(gameState)
         callback?.(gameState)
       } else {
         setError((await res.json()).error)
@@ -33,16 +33,16 @@ function useGameMutation<ParamsType>({ action, callback }: {
   const trigger = useMemo(() => socket && isConnected
     ? (params: ParamsType) => {
       setError('')
-      socket.emit(action, params, ({ error, gameState }: { error: string, gameState: PublicGameState }) => {
+      socket.emit(action, params, ({ error, gameState }: { error: string, gameState: DehydratedPublicGameState }) => {
         if (error) {
           setError(error)
         } else {
           callback?.(gameState)
-          setGameState(gameState)
+          setDehydratedGameState(gameState)
         }
       })
     }
-    : triggerSwr, [socket, isConnected, action, callback, triggerSwr, setGameState])
+    : triggerSwr, [socket, isConnected, action, callback, triggerSwr, setDehydratedGameState])
 
   return { trigger, error, isMutating }
 }

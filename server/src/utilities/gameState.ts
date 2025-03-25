@@ -1,5 +1,5 @@
-import { isSameState } from '../../../shared/helpers/state'
-import { EventMessage, GameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
+import { rehydrateGameState, isSameState, dehydrateGameState } from '../../../shared/helpers/state'
+import { EventMessage, GameState, DehydratedGameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { shuffle } from './array'
 import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
@@ -17,11 +17,9 @@ export const getGameState = async (
     throw new GameMutationInputError(`Room ${roomId} does not exist`, 404)
   }
 
-  const state = JSON.parse(decompressString(compressed))
+  const state: DehydratedGameState = JSON.parse(decompressString(compressed))
 
-  state.lastEventTimestamp = new Date(state.lastEventTimestamp ?? null)
-
-  return state
+  return rehydrateGameState(state)
 }
 
 export const getPublicGameState = ({ gameState, playerId }: {
@@ -52,6 +50,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
 
   return {
     eventLogs: gameState.eventLogs,
+    chatMessages: gameState.chatMessages,
     lastEventTimestamp: gameState.lastEventTimestamp,
     isStarted: gameState.isStarted,
     pendingInfluenceLoss: gameState.pendingInfluenceLoss,
@@ -68,7 +67,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
   }
 }
 
-export const validateGameState = (state: GameState) => {
+export const validateGameState = (state: DehydratedGameState) => {
   if (state.players.length < 1 || state.players.length > 6) {
     throw new GameMutationInputError("Game state must always have 1 to 6 players")
   }
@@ -102,7 +101,7 @@ export const validateGameState = (state: GameState) => {
   }
 }
 
-const setGameState = async (roomId: string, newState: GameState) => {
+const setGameState = async (roomId: string, newState: DehydratedGameState) => {
   const oneMonth = 2678400
   validateGameState(newState)
   const compressed = compressString(JSON.stringify(newState))
@@ -110,7 +109,7 @@ const setGameState = async (roomId: string, newState: GameState) => {
 }
 
 export const createGameState = async (roomId: string, gameState: GameState) => {
-  await setGameState(roomId, gameState)
+  await setGameState(roomId, dehydrateGameState(gameState))
 }
 
 export const mutateGameState = async (
@@ -119,19 +118,23 @@ export const mutateGameState = async (
 ) => {
   const gameState = await getGameState(validatedState.roomId)
 
-  if (!isSameState(gameState, validatedState)) {
+  const dehydratedValidatedGameState = dehydrateGameState(validatedState)
+
+  if (!isSameState(dehydrateGameState(gameState), dehydratedValidatedGameState)) {
     throw new GameMutationInputError('State has changed since validation, rejecting mutation')
   }
 
   mutation(gameState)
 
-  if (isSameState(gameState, validatedState)) {
+  const dehydratedGameState = dehydrateGameState(gameState)
+
+  if (isSameState(dehydratedGameState, dehydratedValidatedGameState)) {
     return
   }
 
-  gameState.lastEventTimestamp = getCurrentTimestamp()
+  dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
 
-  await setGameState(validatedState.roomId, gameState)
+  await setGameState(validatedState.roomId, dehydratedGameState)
 }
 
 export const shuffleDeck = (state: GameState) => {

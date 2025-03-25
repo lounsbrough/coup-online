@@ -1,5 +1,5 @@
 import Chance from 'chance'
-import { GameState, Influences, Player } from '../../../shared/types/game'
+import { EventMessages, GameState, Influences, Player } from '../../../shared/types/game'
 import { shuffle } from '../../../server/src/utilities/array'
 
 const chance = new Chance()
@@ -8,7 +8,17 @@ export const getGameState = ({ players }: { players: Player[] }) => {
   const gameState: GameState = {
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
-    eventLogs: chance.n(chance.string, chance.natural({ min: 2, max: 10 })),
+    eventLogs: chance.n(() => ({
+      event: chance.pickone(Object.values(EventMessages)),
+      turn: 1
+    }), chance.natural({max: 10, min: 2})),
+    chatMessages: chance.n(() => ({
+      id: chance.guid(),
+      from: chance.pickone(players).name,
+      text: chance.sentence(),
+      deleted: false,
+      timestamp: chance.date()
+    }), chance.natural({max: 10, min: 2})),
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, 6),
     players: [],
