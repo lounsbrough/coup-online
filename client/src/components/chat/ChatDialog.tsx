@@ -86,7 +86,6 @@ export default function ChatDialog({
 
   useEffect(() => {
     if (isOpen && messageTextInputRef.current) {
-      console.log(messageTextInputRef.current)
       messageTextInputRef.current.focus()
     }
   }, [isOpen, messageTextInputRef.current])
