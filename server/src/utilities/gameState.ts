@@ -57,6 +57,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
     players: publicPlayers,
     roomId: gameState.roomId,
     deckCount: gameState.deck.length,
+    turn: gameState.turn,
     ...(selfPlayer && { selfPlayer }),
     ...(gameState.pendingAction && { pendingAction: gameState.pendingAction }),
     ...(gameState.pendingActionChallenge && { pendingActionChallenge: gameState.pendingActionChallenge }),

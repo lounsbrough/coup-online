@@ -9,7 +9,7 @@ import { GameMutationInputError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
-import { dehydrateGameState } from '../shared/helpers/state'
+import { dehydratePublicGameState } from '../shared/helpers/state'
 
 export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
 
@@ -430,7 +430,7 @@ io.on('connection', (socket) => {
           const emitGameStateChanged = async (pushToSocket: Socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId
             try {
-              const publicGameState = dehydrateGameState(getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
+              const publicGameState = dehydratePublicGameState(getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
               pushToSocket.emit(ServerEvents.gameStateChanged, publicGameState)
               if (isCallerSocket) callback?.({ gameState: publicGameState })
             } catch (error) {
@@ -485,7 +485,7 @@ const responseHandler = <T>(
 ) => async (res: Response<DehydratedPublicGameStateOrError>, props: T) => {
   try {
     const { roomId, playerId } = await handler(props)
-    const publicGameState = dehydrateGameState(getPublicGameState({
+    const publicGameState = dehydratePublicGameState(getPublicGameState({
       gameState: await getGameState(roomId),
       playerId
     }))

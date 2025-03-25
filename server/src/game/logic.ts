@@ -157,8 +157,8 @@ export const addPlayerToGame = ({
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
     deadInfluences: [],
-    claimedInfluences: [],
-    unclaimedInfluences: [],
+    claimedInfluences: new Set(),
+    unclaimedInfluences: new Set(),
     color: state.availablePlayerColors.shift()!,
     ai,
     grudges: {},
@@ -204,8 +204,8 @@ export const resetGame = async (roomId: string) => {
     ...player,
     coins: 2,
     influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
-    claimedInfluences: [],
-    unclaimedInfluences: [],
+    claimedInfluences: new Set(),
+    unclaimedInfluences: new Set(),
     deadInfluences: [],
     grudges: {}
   }))
@@ -271,31 +271,25 @@ export const holdGrudge = ({ state, offended, offender, weight }: {
 }
 
 export const addClaimedInfluence = (player: Player, influence: Influences) => {
-  if (!player.claimedInfluences.some((i) => i === influence)) {
-    player.claimedInfluences.push(influence)
-  }
+  player.claimedInfluences.add(influence)
 }
 
 export const removeClaimedInfluence = (player: Player, influence?: Influences) => {
-  if (!influence) {
-    player.claimedInfluences = []
-    return
+  if (influence) {
+    player.claimedInfluences.delete(influence)
+  } else {
+    player.claimedInfluences.clear()
   }
-
-  player.claimedInfluences = player.claimedInfluences.filter((i) => i !== influence)
 }
 
 export const addUnclaimedInfluence = (player: Player, influence: Influences) => {
-  if (!player.unclaimedInfluences.some((i) => i === influence)) {
-    player.unclaimedInfluences.push(influence)
-  }
+  player.unclaimedInfluences.add(influence)
 }
 
 export const removeUnclaimedInfluence = (player: Player, influence?: Influences) => {
-  if (!influence) {
-    player.unclaimedInfluences = []
-    return
+  if (influence) {
+    player.unclaimedInfluences.delete(influence)
+  } else {
+    player.unclaimedInfluences.clear()
   }
-
-  player.unclaimedInfluences = player.unclaimedInfluences.filter((i) => i !== influence)
 }

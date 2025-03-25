@@ -25,8 +25,8 @@ const getRandomPlayers = (state: GameState, count?: number): Player[] =>
     color: chance.color(),
     coins: 2,
     influences: [...Array.from({ length: 2 }, () => drawCardFromDeck(state))],
-    claimedInfluences: [],
-    unclaimedInfluences: [],
+    claimedInfluences: new Set(),
+    unclaimedInfluences: new Set(),
     deadInfluences: [],
     ai: false,
     grudges: {}
@@ -67,7 +67,7 @@ describe('gameState', () => {
       const gameState = getRandomGameState()
       const compressedStateString = 'some compressed base64'
       getValueMock.mockResolvedValue(compressedStateString)
-      decompressStringMock.mockReturnValue(JSON.stringify(gameState))
+      decompressStringMock.mockReturnValue(JSON.stringify(dehydrateGameState(gameState)))
 
       expect(await getGameState(roomId)).toEqual(gameState)
       expect(decompressStringMock).toHaveBeenCalledTimes(1)
@@ -87,6 +87,7 @@ describe('gameState', () => {
         chatMessages: gameState.chatMessages,
         lastEventTimestamp: gameState.lastEventTimestamp,
         isStarted: gameState.isStarted,
+        turn: gameState.turn,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
         roomId: gameState.roomId,
         deckCount: 15 - gameState.players.length * 2,
@@ -141,7 +142,7 @@ describe('gameState', () => {
     it('should update storage with new state', async () => {
       const gameState = getRandomGameState()
       const compressedStateString = 'some compressed base64'
-      getValueMock.mockResolvedValue(JSON.stringify(gameState))
+      getValueMock.mockResolvedValue(JSON.stringify(dehydrateGameState(gameState)))
       compressStringMock.mockReturnValue(compressedStateString)
 
       getCurrentTimestampMock.mockReturnValue(new Date(1, 22, 2020))
@@ -150,14 +151,9 @@ describe('gameState', () => {
         state.players[0].coins -= 1
       })
 
-      const expectedState = {
-        ...gameState,
-        lastEventTimestamp: new Date(1, 22, 2020).toISOString(),
-        players: [
-          { ...gameState.players[0], coins: gameState.players[0].coins - 1 },
-          ...gameState.players.slice(1)
-        ]
-      }
+      const expectedState = dehydrateGameState(gameState)
+      expectedState.players[0].coins -= 1
+      expectedState.lastEventTimestamp = new Date(1, 22, 2020).toISOString()
 
       const actualStateString = compressStringMock.mock.calls[0][0]
 
@@ -171,11 +167,11 @@ describe('gameState', () => {
     it('should not update storage if state unchanged', async () => {
       const gameState = getRandomGameState()
       const compressedStateString = 'some compressed base64'
-      getValueMock.mockResolvedValue(JSON.stringify(gameState))
+      getValueMock.mockResolvedValue(JSON.stringify(dehydrateGameState(gameState)))
       compressStringMock.mockReturnValue(compressedStateString)
 
       await mutateGameState(gameState, (state) => {
-        state.players = JSON.parse(JSON.stringify(state.players))
+        state.players[0] = {...state.players[0]}
       })
 
       expect(compressStringMock).not.toHaveBeenCalled()
@@ -228,7 +224,7 @@ describe('gameState', () => {
         mutation: (state: GameState) => {
           state.pendingAction = {
             action: chance.pickone(Object.values(Actions)),
-            pendingPlayers: [],
+            pendingPlayers: new Set(),
             claimConfirmed: false
           }
         },
@@ -237,7 +233,7 @@ describe('gameState', () => {
       {
         mutation: (state: GameState) => {
           state.pendingBlock = {
-            pendingPlayers: [],
+            pendingPlayers: new Set(),
             sourcePlayer: chance.pickone(state.players).name,
             claimedInfluence: chance.pickone(Object.values(Influences))
           }
