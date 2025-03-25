@@ -40,6 +40,7 @@ describe('ai', () => {
     const gameState: PublicGameState = {
       deckCount: 15 - players.length * 2,
       eventLogs: [],
+      chatMessages: [],
       lastEventTimestamp: chance.date(),
       isStarted: chance.bool(),
       players: [],
@@ -257,6 +258,7 @@ describe('ai', () => {
         roomId: chance.string(),
         isStarted: chance.bool(),
         eventLogs: [],
+        chatMessages: [],
         lastEventTimestamp: chance.date(),
         players: [
           {
@@ -293,6 +295,7 @@ describe('ai', () => {
         roomId: chance.string(),
         isStarted: chance.bool(),
         eventLogs: [],
+        chatMessages: [],
         lastEventTimestamp: chance.date(),
         players: [
           {
@@ -331,6 +334,7 @@ describe('ai', () => {
         roomId: chance.string(),
         isStarted: chance.bool(),
         eventLogs: [],
+        chatMessages: [],
         lastEventTimestamp: chance.date(),
         players: [
           {
@@ -376,6 +380,7 @@ describe('ai', () => {
         roomId: chance.string(),
         isStarted: chance.bool(),
         eventLogs: [],
+        chatMessages: [],
         lastEventTimestamp: chance.date(),
         players: [
           {
@@ -421,6 +426,7 @@ describe('ai', () => {
         roomId: chance.string(),
         isStarted: chance.bool(),
         eventLogs: [],
+        chatMessages: [],
         lastEventTimestamp: chance.date(),
         players: [
           {

@@ -690,6 +690,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
       if (claimedInfluence) {
         removeClaimedInfluence(actionPlayer, claimedInfluence)
+        addUnclaimedInfluence(actionPlayer, claimedInfluence)
       }
       holdGrudge({ state, offended: state.turnPlayer!, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, actionPlayer.name, influence)
@@ -889,6 +890,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
         addClaimedInfluence(actionPlayer, claimedInfluence)
       }
       removeClaimedInfluence(blockPlayer, state.pendingBlock!.claimedInfluence)
+      addUnclaimedInfluence(blockPlayer, state.pendingBlock!.claimedInfluence)
       holdGrudge({ state, offended: blockPlayer.name, offender: challengePlayer.name, weight: grudgeSizes[Responses.Challenge] })
       killPlayerInfluence(state, blockPlayer.name, influence)
       processPendingAction(state)
@@ -959,6 +961,65 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
         killPlayerInfluence(state, losingPlayer.name, influence)
       }
     })
+  })
+
+  return { roomId, playerId }
+}
+
+export const sendChatMessageHandler = async ({ roomId, playerId, messageId, messageText }: {
+  roomId: string
+  playerId: string
+  messageId: string
+  messageText: string
+}) => {
+  const gameState = await getGameState(roomId)
+
+  const player = getPlayerInRoom(gameState, playerId)
+
+  if (gameState.chatMessages.some(({id}) => id === messageId)) {
+    throw new GameMutationInputError('This message id already exists')
+  }
+
+  await mutateGameState(gameState, (state) => {
+    state.chatMessages.push({
+      id: messageId,
+      text: messageText,
+      from: player.name,
+      timestamp: new Date(),
+      deleted: false
+    })
+
+    const maxMessageCount = 500
+    if (state.chatMessages.length > maxMessageCount) {
+      state.chatMessages.splice(0, state.chatMessages.length - maxMessageCount)
+    }
+  })
+
+  return { roomId, playerId }
+}
+
+export const setChatMessageDeletedHandler = async ({ roomId, playerId, messageId, deleted }: {
+  roomId: string
+  playerId: string
+  messageId: string
+  deleted: boolean
+}) => {
+  const gameState = await getGameState(roomId)
+
+  const player = getPlayerInRoom(gameState, playerId)
+
+  await mutateGameState(gameState, (state) => {
+    const existingMessage = state.chatMessages.find(({id}) => id === messageId)
+
+    if (!existingMessage) {
+      throw new GameMutationInputError('Message id does not exist')
+    }
+
+    if (existingMessage.from !== player.name) {
+      throw new GameMutationInputError('This is not your message')
+    }
+
+    existingMessage.deleted = deleted
   })
 
   return { roomId, playerId }

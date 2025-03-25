@@ -79,7 +79,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
         onSubmit={(event) => {
           event.preventDefault()
           trigger({
-            roomId: gameState.roomId.trim(),
+            roomId: gameState.roomId,
             playerId: getPlayerId(),
             playerName: botName.trim(),
             personality: { vengefulness, honesty, skepticism }

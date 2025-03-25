@@ -5,6 +5,7 @@ import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
 import { compressString, decompressString } from "./compression"
 import { getCurrentTimestamp } from "./time"
+import { dehydrateGameState } from "../../../shared/helpers/state"
 
 jest.mock("./storage")
 jest.mock("./compression")
@@ -36,6 +37,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     deck: shuffle(Object.values(Influences)
       .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
     eventLogs: [],
+    chatMessages: [],
     lastEventTimestamp: chance.date(),
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, 6),
@@ -82,6 +84,7 @@ describe('gameState', () => {
 
       const publicGameState: PublicGameState = {
         eventLogs: gameState.eventLogs,
+        chatMessages: gameState.chatMessages,
         lastEventTimestamp: gameState.lastEventTimestamp,
         isStarted: gameState.isStarted,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
@@ -198,7 +201,7 @@ describe('gameState', () => {
     ])('should not throw if game state is valid', ({ mutation }) => {
       const gameState = getRandomGameState()
       mutation(gameState)
-      expect(() => validateGameState(gameState)).not.toThrow()
+      expect(() => validateGameState(dehydrateGameState(gameState))).not.toThrow()
     })
 
     it.each([
@@ -244,7 +247,7 @@ describe('gameState', () => {
     ])('should throw $error', async ({ mutation, error }) => {
       const gameState = getRandomGameState()
       mutation(gameState)
-      expect(() => validateGameState(gameState)).toThrow(error)
+      expect(() => validateGameState(dehydrateGameState(gameState))).toThrow(error)
     })
   })
 

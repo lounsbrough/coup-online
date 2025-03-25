@@ -46,7 +46,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-node
 
-    - uses: webfactory/ssh-agent@v0.9.0
+    - uses: webfactory/ssh-agent@v0.9.1
       with:
         ssh-private-key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
 
@@ -56,8 +56,8 @@ jobs:
         username: pi
         key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
         port: 8222
-        script_stop: true
         script: |
+          set -e
           cd /var/www/html/coup-online/server
           git pull
           sudo npm i -g pnpm
