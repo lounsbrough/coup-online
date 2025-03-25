@@ -16,7 +16,7 @@ import { getPlayerId } from '../../helpers/players'
 import { useGameStateContext } from '../../contexts/GameStateContext'
 import { getLatestReadMessageIdStorageKey } from '../../helpers/localStorageKeys'
 
-const Transition = forwardRef(function Transition(
+const SlideTransition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
   },
@@ -87,9 +87,7 @@ export default function ChatDialog({
     <>
       <Dialog
         open={isOpen}
-        slots={{
-          transition: Transition
-        }}
+        slots={{ transition: SlideTransition }}
         keepMounted
         fullWidth
         onClose={handleClose}
