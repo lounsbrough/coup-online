@@ -75,7 +75,12 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     p: 1,
                     width: '6rem',
                     transition: theme.transitions.create(['transform', 'box-shadow']),
-                    animation: isWaitingOnPlayer ? 'pulse 1.5s infinite' : undefined
+                    animation: isWaitingOnPlayer ? 'pulsePlayer 1.5s infinite' : undefined,
+                    "@keyframes pulsePlayer": {
+                      "0%": { transform: 'scale(1)' },
+                      "50%": { transform: 'scale(1.06)' },
+                      "100%": { transform: 'scale(1)' }
+                    },
                   }}>
                   <Typography variant="h6" sx={{
                     fontWeight: 'bold',
