@@ -50,7 +50,10 @@ export const getPublicGameState = ({ gameState, playerId }: {
 
   return {
     eventLogs: gameState.eventLogs,
-    chatMessages: gameState.chatMessages,
+    chatMessages: gameState.chatMessages.map((chatMessage) => ({
+      ...chatMessage,
+      text: chatMessage.deleted ? '' : chatMessage.text
+    })),
     lastEventTimestamp: gameState.lastEventTimestamp,
     isStarted: gameState.isStarted,
     pendingInfluenceLoss: gameState.pendingInfluenceLoss,
