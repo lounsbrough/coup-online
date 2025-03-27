@@ -19,9 +19,12 @@ import { getGameState, mutateGameState } from "../src/utilities/gameState"
         // modify state as needed for migration
       })
 
-      const players = gameState.players.map(({name, ai}) =>
-        ({name: `${ai ? '🤖' : '🧍'} ${name}`}))
-      console.log(players)
+      const gameInfo = {
+        lastEvent: gameState.lastEventTimestamp,
+        chatMessages: gameState.chatMessages.length,
+        players: gameState.players.map(({name, ai}) => ({name: `${ai ? '🤖' : '🧍'} ${name}`}))
+      }
+      console.log(gameInfo)
     }
 
     process.exit(0)
