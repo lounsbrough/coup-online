@@ -1,6 +1,5 @@
 import { createClient } from "redis"
 import { getGameState, mutateGameState } from "../src/utilities/gameState"
-import { GameState } from "../../shared/types/game"
 
 (async () => {
   const redisClient = await createClient(
@@ -16,9 +15,9 @@ import { GameState } from "../../shared/types/game"
     for (const roomId of roomIds) {
       const gameState = await getGameState(roomId)
 
-      // await mutateGameState(gameState, (state: GameState) => {
-      //   state.chatMessages = []
-      // })
+      await mutateGameState(gameState, (state) => {
+        // modify state as needed for migration
+      })
 
       const players = gameState.players.map(({name, ai}) =>
         ({name: `${ai ? '🤖' : '🧍'} ${name}`}))
