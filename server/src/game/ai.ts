@@ -114,7 +114,7 @@ const decideAssasinationTarget = (gameState: PublicGameState) => {
   const opponentAffinities: [number, PublicPlayer][] = opponents.map((opponent) => {
     const dangerFactor = getPlayerDangerFactor(opponent)
     const revengeFactor = (gameState.selfPlayer?.grudges[opponent.name] ?? 0) * vengefulness * 2
-    const contessaFactor = opponent.claimedInfluences.includes(Influences.Contessa) ? -10 - 10 * (1 - skepticism) : 0
+    const contessaFactor = opponent.claimedInfluences.has(Influences.Contessa) ? -10 - 10 * (1 - skepticism) : 0
     return [dangerFactor + revengeFactor + contessaFactor + Math.random() * 3, opponent]
   })
 
@@ -192,10 +192,10 @@ const getFinalBluffMargin = (
   self: Player
 ) => {
   let finalBluffMargin = baseBluffMargin
-  if (self.unclaimedInfluences.includes(influence)) {
+  if (self.unclaimedInfluences.has(influence)) {
     finalBluffMargin *= 0.2
   }
-  if (self.claimedInfluences.includes(influence)) {
+  if (self.claimedInfluences.has(influence)) {
     finalBluffMargin *= 5
   }
   return finalBluffMargin
@@ -259,10 +259,10 @@ export const decideAction = (gameState: PublicGameState): {
     const bestTargets: PublicPlayer[] = []
     possibleTargets.forEach((possibleTarget) => {
       const blockingAbility =
-        (possibleTarget.claimedInfluences.includes(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
-        + (possibleTarget.claimedInfluences.includes(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
-        - (possibleTarget.unclaimedInfluences.includes(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
-        - (possibleTarget.unclaimedInfluences.includes(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
+        (possibleTarget.claimedInfluences.has(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
+        + (possibleTarget.claimedInfluences.has(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
+        - (possibleTarget.unclaimedInfluences.has(Influences.Captain) ? (0.5 * (1.5 - skepticism)) : 0)
+        - (possibleTarget.unclaimedInfluences.has(Influences.Ambassador) ? (0.5 * (1.5 - skepticism)) : 0)
         + getProbabilityOfBlockingSteal(possibleTarget.name)
 
       if (blockingAbility < minBlockingAbility) {
@@ -301,7 +301,7 @@ export const decideAction = (gameState: PublicGameState): {
     return { action: Actions.Assassinate, targetPlayer: targetPlayer.name }
   }
 
-  const claimedDukeCount = gameState.players.filter(({ claimedInfluences }) => claimedInfluences.includes(Influences.Duke)).length
+  const claimedDukeCount = gameState.players.filter(({ claimedInfluences }) => claimedInfluences.has(Influences.Duke)).length
   if (claimedDukeCount * (0.35 - skepticism * 0.35) + getProbabilityOfPlayerInfluence(gameState, Influences.Duke) < 0.25 + Math.random() * 0.1) {
     return { action: Actions.ForeignAid }
   }
@@ -325,36 +325,53 @@ export const decideActionResponse = (gameState: PublicGameState): {
   const skepticismMargin = skepticism ** 2 * ((isSelfTarget ? 0.8 : 0.4) + Math.random() * 0.1)
 
   const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
-  if (!gameState.pendingAction?.claimConfirmed
-    && requiredInfluenceForAction
-    && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) <= skepticismMargin
-    && (
-      !turnPlayer?.claimedInfluences.includes(requiredInfluenceForAction)
-      || turnPlayer?.unclaimedInfluences.includes(requiredInfluenceForAction)
-      || Math.random() < skepticismMargin
-    )
+
+  const isChallengeable = requiredInfluenceForAction && !gameState.pendingAction?.claimConfirmed
+
+  if (
+    isChallengeable
+    && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) === 0
   ) {
     return { response: Responses.Challenge }
   }
 
-  if (ActionAttributes[gameState.pendingAction!.action].blockable
-    && (gameState.pendingAction?.targetPlayer === gameState.selfPlayer.name
+  const isBlockable = (
+    ActionAttributes[gameState.pendingAction!.action].blockable
+    && (
+      gameState.pendingAction?.targetPlayer === gameState.selfPlayer.name
       || gameState.pendingAction!.action === Actions.ForeignAid
-    )) {
-    const legalBlockInfluences = shuffle(Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
-      if (legalBlock === gameState.pendingAction?.action) {
-        agg.push(influence as Influences)
-      }
-      return agg
-    }, [] as Influences[]))
+    )
+  )
 
+  const legalBlockInfluences = shuffle(Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
+    if (legalBlock === gameState.pendingAction?.action) {
+      agg.push(influence as Influences)
+    }
+    return agg
+  }, [] as Influences[]))
+
+  if (isBlockable) {
     for (const legalBlockInfluence of legalBlockInfluences) {
       const hasLegalBlockingInfluence = gameState.selfPlayer?.influences.some((i) => i === legalBlockInfluence)
       if (hasLegalBlockingInfluence && !randomlyDecideToNotUseOwnedInfluence()) {
         return { response: Responses.Block, claimedInfluence: legalBlockInfluence }
       }
     }
+  }
 
+  if (
+    isChallengeable
+    && getProbabilityOfPlayerInfluence(gameState, requiredInfluenceForAction, gameState.turnPlayer) <= skepticismMargin
+    && (
+      !turnPlayer?.claimedInfluences.has(requiredInfluenceForAction)
+      || turnPlayer?.unclaimedInfluences.has(requiredInfluenceForAction)
+      || Math.random() < skepticismMargin
+    )
+  ) {
+    return { response: Responses.Challenge }
+  }
+
+  if (isBlockable) {
     for (const legalBlockInfluence of legalBlockInfluences) {
       const baseBluffMargin = (1 - honesty) ** 1.5 * ((isSelfTarget ? 0.4 : 0.2) + Math.random() * 0.1)
       const finalBluffMargin = getFinalBluffMargin(baseBluffMargin, legalBlockInfluence, gameState.selfPlayer)
@@ -411,7 +428,7 @@ export const decideBlockResponse = (gameState: PublicGameState): {
   const isSelfAction = gameState.turnPlayer === gameState.selfPlayer?.name
   const skepticismMargin = skepticism ** 2 * ((isSelfAction ? 0.8 : 0.4) + Math.random() * 0.1)
   if (getProbabilityOfPlayerInfluence(gameState, gameState.pendingBlock!.claimedInfluence, gameState.pendingBlock!.sourcePlayer) <= skepticismMargin
-    && (!gameState.players.find(({ name }) => name === gameState.pendingBlock!.sourcePlayer)?.claimedInfluences.includes(gameState.pendingBlock!.claimedInfluence) || Math.random() < skepticismMargin)) {
+    && (!gameState.players.find(({ name }) => name === gameState.pendingBlock!.sourcePlayer)?.claimedInfluences.has(gameState.pendingBlock!.claimedInfluence) || Math.random() < skepticismMargin)) {
     return { response: Responses.Challenge }
   }
 

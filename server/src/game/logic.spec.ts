@@ -15,8 +15,8 @@ const getRandomPlayers = (count?: number) : Player[] =>
     color: chance.color(),
     coins: 2,
     influences: [],
-    claimedInfluences: [],
-    unclaimedInfluences: [],
+    claimedInfluences: new Set(),
+    unclaimedInfluences: new Set(),
     deadInfluences: [],
     ai: false,
     grudges: {}

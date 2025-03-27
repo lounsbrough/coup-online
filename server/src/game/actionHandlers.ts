@@ -457,12 +457,12 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
 
       state.pendingAction = {
         action,
-        pendingPlayers: state.players.reduce((agg: string[], cur) => {
+        pendingPlayers: state.players.reduce((agg, cur) => {
           if (cur.influences.length && cur.name !== player.name) {
-            agg.push(cur.name)
+            agg.add(cur.name)
           }
           return agg
-        }, []),
+        }, new Set<string>()),
         ...(targetPlayer && { targetPlayer }),
         claimConfirmed: false
       }
@@ -532,17 +532,14 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
         }
       }
 
-      if (state.pendingAction.pendingPlayers.length === 1) {
+      if (state.pendingAction.pendingPlayers.size === 1) {
         const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
         if (claimedInfluence) {
           addClaimedInfluence(actionPlayer, claimedInfluence)
         }
         processPendingAction(state)
       } else {
-        state.pendingAction.pendingPlayers.splice(
-          state.pendingAction.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name),
-          1
-        )
+        state.pendingAction.pendingPlayers.delete(player.name)
       }
     })
   } else if (response === Responses.Challenge) {
@@ -584,16 +581,16 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
         throw new GameMutationInputError('Unable to find pending action')
       }
 
-      state.pendingAction.pendingPlayers = []
+      state.pendingAction.pendingPlayers = new Set<string>()
       state.pendingBlock = {
         sourcePlayer: player.name,
         claimedInfluence,
-        pendingPlayers: state.players.reduce((agg: string[], cur) => {
+        pendingPlayers: state.players.reduce((agg, cur) => {
           if (cur.influences.length && cur.name !== player.name) {
-            agg.push(cur.name)
+            agg.add(cur.name)
           }
           return agg
-        }, []),
+        }, new Set<string>()),
       }
       logEvent(state, {
         event: EventMessages.BlockPending,
@@ -658,17 +655,17 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
 
         const remainingInfluenceCount = targetPlayer.influences.length - (state.pendingInfluenceLoss[targetPlayer.name]?.length ?? 0)
         if (remainingInfluenceCount > 0) {
-          state.pendingAction.pendingPlayers = [state.pendingAction.targetPlayer]
+          state.pendingAction.pendingPlayers = new Set([state.pendingAction.targetPlayer])
         } else {
           processPendingAction(state)
         }
       } else if (ActionAttributes[state.pendingAction.action].blockable) {
-        state.pendingAction.pendingPlayers = state.players.reduce((agg: string[], cur) => {
+        state.pendingAction.pendingPlayers = state.players.reduce((agg, cur) => {
           if (cur.influences.length && cur.name !== state.turnPlayer) {
-            agg.push(cur.name)
+            agg.add(cur.name)
           }
           return agg
-        }, [])
+        }, new Set<string>())
       } else {
         processPendingAction(state)
       }
@@ -745,7 +742,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
         throw new GameMutationInputError('Unable to find pending action or pending block')
       }
 
-      if (state.pendingBlock.pendingPlayers.length === 1) {
+      if (state.pendingBlock.pendingPlayers.size === 1) {
         const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
         const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
 
@@ -781,10 +778,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
         delete state.pendingActionChallenge
         delete state.pendingAction
       } else {
-        state.pendingBlock.pendingPlayers.splice(
-          state.pendingBlock.pendingPlayers.findIndex((pendingPlayer) => pendingPlayer === player.name),
-          1
-        )
+        state.pendingBlock.pendingPlayers.delete(player.name)
       }
     })
   }

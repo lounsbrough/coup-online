@@ -1,6 +1,6 @@
 import { useState, createContext, useContext, ReactNode, useEffect, useCallback, useMemo } from 'react'
 import useSWR from 'swr'
-import { PlayerActions, PublicGameState, DehydratedPublicGameState, ServerEvents, isSameState, rehydrateGameState } from '@shared'
+import { PlayerActions, PublicGameState, DehydratedPublicGameState, ServerEvents, isSameState, rehydratePublicGameState } from '@shared'
 import { getPlayerId } from '../helpers/players'
 import { useSearchParams } from 'react-router'
 import { useWebSocketContext } from './WebSocketContext'
@@ -23,7 +23,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
   const roomId = searchParams.get('roomId')
 
   const gameState = useMemo(() =>
-    dehydratedGameState ? rehydrateGameState(dehydratedGameState) : undefined,
+    dehydratedGameState ? rehydratePublicGameState(dehydratedGameState) : undefined,
     [dehydratedGameState]
   )
 

@@ -12,7 +12,7 @@ export const canPlayerChooseActionResponse = (state: PublicGameState) =>
   && state.pendingAction
   && !state.pendingActionChallenge
   && !state.pendingBlock
-  && state.pendingAction.pendingPlayers.includes(state.selfPlayer.name)
+  && state.pendingAction.pendingPlayers.has(state.selfPlayer.name)
 
 export const canPlayerChooseActionChallengeResponse = (state: PublicGameState) =>
   state.selfPlayer
@@ -24,7 +24,7 @@ export const canPlayerChooseBlockResponse = (state: PublicGameState) =>
   && state.pendingBlock
   && !state.pendingBlockChallenge
   && state.pendingBlock.sourcePlayer !== state.selfPlayer.name
-  && state.pendingBlock.pendingPlayers.includes(state.selfPlayer.name)
+  && state.pendingBlock.pendingPlayers.has(state.selfPlayer.name)
 
 export const canPlayerChooseBlockChallengeResponse = (state: PublicGameState) =>
   state.selfPlayer

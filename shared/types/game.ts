@@ -162,8 +162,8 @@ export type Player = {
   color: string
   id: string
   influences: Influences[]
-  claimedInfluences: Influences[]
-  unclaimedInfluences: Influences[]
+  claimedInfluences: Set<Influences>
+  unclaimedInfluences: Set<Influences>
   deadInfluences: Influences[]
   name: string
   ai: boolean
@@ -173,8 +173,24 @@ export type Player = {
   }
 }
 
+export type DehydratedPlayer = Omit<Player,
+  'claimedInfluences' |
+  'unclaimedInfluences'
+> & {
+  claimedInfluences: Influences[]
+  unclaimedInfluences: Influences[]
+}
+
 export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
   influenceCount: number
+}
+
+export type DehydratedPublicPlayer = Omit<PublicPlayer,
+  'claimedInfluences' |
+  'unclaimedInfluences'
+> & {
+  claimedInfluences: Influences[]
+  unclaimedInfluences: Influences[]
 }
 
 export type GameSettings = {
@@ -189,6 +205,31 @@ export type ChatMessage = {
   deleted: boolean
 }
 
+type DehydratedChatMessage = Omit<ChatMessage, 'timestamp'> & {
+  timestamp: string
+}
+
+type PendingAction = {
+  targetPlayer?: string
+  action: Actions
+  pendingPlayers: Set<string>
+  claimConfirmed: boolean
+}
+
+type DehydratedPendingAction = Omit<PendingAction, 'pendingPlayers'> & {
+  pendingPlayers: string[]
+}
+
+type PendingBlock = {
+  sourcePlayer: string
+  claimedInfluence: Influences
+  pendingPlayers: Set<string>
+}
+
+type DehydratedPendingBlock = Omit<PendingBlock, 'pendingPlayers'> & {
+  pendingPlayers: string[]
+}
+
 export type GameState = {
   deck: Influences[]
   eventLogs: EventMessage[]
@@ -197,20 +238,11 @@ export type GameState = {
   isStarted: boolean
   availablePlayerColors: string[]
   players: Player[]
-  pendingAction?: {
-    targetPlayer?: string
-    action: Actions
-    pendingPlayers: string[]
-    claimConfirmed: boolean
-  }
+  pendingAction?: PendingAction
   pendingActionChallenge?: {
     sourcePlayer: string
   }
-  pendingBlock?: {
-    sourcePlayer: string
-    claimedInfluence: Influences
-    pendingPlayers: string[]
-  }
+  pendingBlock?: PendingBlock
   pendingBlockChallenge?: {
     sourcePlayer: string
   }
@@ -228,20 +260,34 @@ export type GameState = {
   settings: GameSettings
 }
 
+export type DehydratedGameState = Omit<GameState,
+  'players' |
+  'lastEventTimestamp' |
+  'chatMessages' |
+  'pendingAction' |
+  'pendingBlock'
+> & {
+  players: DehydratedPlayer[]
+  lastEventTimestamp: string
+  chatMessages: DehydratedChatMessage[]
+  pendingAction?: DehydratedPendingAction
+  pendingBlock?: DehydratedPendingBlock
+};
+
 export type PublicGameState = Pick<GameState,
   'eventLogs' |
   'chatMessages' |
   'isStarted' |
   'lastEventTimestamp' |
   'pendingInfluenceLoss' |
-  'roomId'
+  'roomId' |
+  'turn'
 > & Partial<Pick<GameState,
   'pendingAction' |
   'pendingActionChallenge' |
   'pendingBlock' |
   'pendingBlockChallenge' |
   'resetGameRequest' |
-  'turn' |
   'turnPlayer'
 >> & {
   players: PublicPlayer[]
@@ -249,20 +295,18 @@ export type PublicGameState = Pick<GameState,
   deckCount: number
 }
 
-type DehydratedChatMessage = Omit<ChatMessage, 'timestamp'> & {timestamp: string}
-
-export type DehydratedGameState = Omit<GameState,
-  'lastEventTimestamp' |
-  'chatMessages'
-> & {
-  lastEventTimestamp: string
-  chatMessages: DehydratedChatMessage[]
-};
-
 export type DehydratedPublicGameState = Omit<PublicGameState,
+  'players' |
+  'selfPlayer' |
   'lastEventTimestamp' |
-  'chatMessages'
+  'chatMessages' |
+  'pendingAction' |
+  'pendingBlock'
 > & {
+  players: DehydratedPublicPlayer[]
+  selfPlayer?: DehydratedPlayer
   lastEventTimestamp: string
   chatMessages: DehydratedChatMessage[]
+  pendingAction?: DehydratedPendingAction
+  pendingBlock?: DehydratedPendingBlock
 };

@@ -118,7 +118,11 @@ export default function ChatDialog({
                   sendMessage()
                 }
               }}
-              slotProps={{ htmlInput: { maxLength: maxMessageLength } }}
+              slotProps={{
+                htmlInput: {
+                  maxLength: maxMessageLength
+                }
+              }}
               size='small'
               sx={{ width: '100%' }}
             ></TextField>
