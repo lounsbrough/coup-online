@@ -1018,3 +1018,45 @@ export const setChatMessageDeletedHandler = async ({ roomId, playerId, messageId
 
   return { roomId, playerId }
 }
+
+export const setEmojiOnChatMessageHandler = async ({
+  roomId,
+  playerId,
+  messageId,
+  emoji,
+  selected,
+}: {
+  roomId: string;
+  playerId: string;
+  messageId: string;
+  emoji: string;
+  selected: boolean;
+}) => {
+  const gameState = await getGameState(roomId)
+
+  const player = getPlayerInRoom(gameState, playerId)
+
+  await mutateGameState(gameState, (state) => {
+    const existingMessage = state.chatMessages.find(
+      ({ id }) => id === messageId
+    )
+
+    if (!existingMessage) {
+      throw new GameMutationInputError("Message id does not exist")
+    }
+
+    if (selected) {
+      if (!existingMessage.emojis) {
+        existingMessage.emojis = {}
+      }
+      if (!existingMessage.emojis[emoji]) {
+        existingMessage.emojis[emoji] = new Set()
+      }
+      existingMessage.emojis[emoji].add(player.name)
+    } else {
+      existingMessage.emojis?.[emoji].delete(player.name)
+    }
+  })
+
+  return { roomId, playerId }
+}

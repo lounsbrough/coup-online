@@ -34,7 +34,8 @@ export enum PlayerActions {
   blockChallengeResponse = 'blockChallengeResponse',
   loseInfluences = 'loseInfluences',
   sendChatMessage = 'sendChatMessage',
-  setChatMessageDeleted = 'setChatMessageDeleted'
+  setChatMessageDeleted = 'setChatMessageDeleted',
+  setEmojiOnChatMessage = 'setEmojiOnChatMessage'
 }
 
 export enum ServerEvents {
@@ -203,10 +204,16 @@ export type ChatMessage = {
   timestamp: Date
   text: string
   deleted: boolean
+  emojis?: {
+    [emoji: string]: Set<string>
+  } | undefined
 }
 
-type DehydratedChatMessage = Omit<ChatMessage, 'timestamp'> & {
+type DehydratedChatMessage = Omit<ChatMessage, 'timestamp' | 'emojis'> & {
   timestamp: string
+  emojis?: {
+    [emoji: string]: string[]
+  } | undefined
 }
 
 type PendingAction = {

@@ -13,7 +13,10 @@ const dehydrateCommonGameState = (hydrated: GameState | PublicGameState) => ({
   lastEventTimestamp: hydrated.lastEventTimestamp.toISOString(),
   chatMessages: hydrated.chatMessages.map((message) => ({
     ...message,
-    timestamp: message.timestamp.toISOString()
+    timestamp: message.timestamp.toISOString(),
+    emojis: message.emojis ? Object.fromEntries(
+      Object.entries(message.emojis).map(([emoji, playerNames]) => ([emoji, [...playerNames]]))
+    ): undefined,
   })),
   ...(hydrated.pendingAction && {
     pendingAction: {
@@ -81,7 +84,10 @@ const rehydrateCommonGameState = (dehydrated: DehydratedGameState | DehydratedPu
   lastEventTimestamp: new Date(dehydrated.lastEventTimestamp),
   chatMessages: dehydrated.chatMessages.map((message) => ({
     ...message,
-    timestamp: new Date(message.timestamp)
+    timestamp: new Date(message.timestamp),
+    emojis: message.emojis ? Object.fromEntries(
+      Object.entries(message.emojis).map(([emoji, playerNames]) => ([emoji, new Set(playerNames)]))
+    ): undefined,
   })),
   ...(dehydrated.pendingAction && {
     pendingAction: {
