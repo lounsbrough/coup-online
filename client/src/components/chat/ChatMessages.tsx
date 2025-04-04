@@ -1,14 +1,19 @@
-import { Box, IconButton, Tooltip, Typography } from "@mui/material"
+import { useState } from "react"
+import { Box, IconButton, Popover, Tooltip, Typography } from "@mui/material"
+import { AddReaction, Delete as DeleteIcon, Restore as RestoreIcon } from "@mui/icons-material"
+import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import { Delete as DeleteIcon, Restore as RestoreIcon } from "@mui/icons-material"
 import useGameMutation from "../../hooks/useGameMutation"
 import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
+import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 
 export default function ChatMessages() {
+  const [emojiPickerAnchorEl, setEmojiPickerAnchorEl] = useState<HTMLButtonElement | null>(null)
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
+  const { colorMode } = useColorModeContext()
 
   const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string, messageId: string, deleted: boolean
@@ -21,6 +26,8 @@ export default function ChatMessages() {
       {t('noChatMessages')}
     </Typography>
   }
+
+  console.log(gameState.chatMessages)
 
   return gameState.chatMessages.map(({ id, text, from, deleted, timestamp }) => {
     const isMyMessage = from === gameState.selfPlayer?.name
@@ -55,13 +62,30 @@ export default function ChatMessages() {
         >
           {deleted ? t('messageWasDeleted') : text}
         </Typography>
+        <Popover
+          id={id}
+          open={!!emojiPickerAnchorEl}
+          anchorEl={emojiPickerAnchorEl}
+          onClose={() => { setEmojiPickerAnchorEl(null) }}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+          <EmojiPicker open theme={colorMode === 'light' ? Theme.LIGHT : Theme.DARK} />
+        </Popover>
         <Typography fontSize='smaller'>
+          <IconButton sx={{ my: -0.5, height: '35px', width: '35px' }}>
+            <Typography fontSize="small">❤️</Typography>
+          </IconButton>
+          <IconButton sx={{ my: -0.5, height: '35px', width: '35px' }}>
+            <Typography fontSize="small">🤣</Typography>
+          </IconButton>
           <Tooltip title={timestamp.toLocaleString()}>
             <span>{timestamp.toLocaleTimeString()}</span>
           </Tooltip>
           {isMyMessage && (
             <IconButton
-              size="small"
               sx={{ my: -0.5, mr: -1 }}
               loading={isMutating}
               onClick={() => {
@@ -79,6 +103,17 @@ export default function ChatMessages() {
               />
             </IconButton>
           )}
+          <IconButton
+            onClick={(event) => {
+              setEmojiPickerAnchorEl(event.currentTarget)
+            }}
+            sx={{ my: -0.5, mr: -1 }}
+          >
+            <AddReaction
+              fontSize="small"
+              sx={{ verticalAlign: 'text-bottom' }}
+            />
+          </IconButton>
         </Typography>
       </Box>
     )
