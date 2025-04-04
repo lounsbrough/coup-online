@@ -1,9 +1,15 @@
-import { GameState, PublicGameState, DehydratedGameState, DehydratedPublicGameState } from "../types/game";
+import { GameState, PublicGameState, DehydratedGameState, DehydratedPublicGameState, ChatMessage, DehydratedChatMessage } from "../types/game";
 
 const arraySortReplacer = (_: string, value: any) => (value instanceof Array ? [...value].sort() : value)
 
 export const isSameState = (a: DehydratedGameState | DehydratedPublicGameState, b: DehydratedGameState | DehydratedPublicGameState) =>
   JSON.stringify(a, arraySortReplacer) === JSON.stringify(b, arraySortReplacer)
+
+const getRequiredChatMessageFields = <T extends ChatMessage | DehydratedChatMessage>(chatMessage: T): Omit<T, 'emojis'> => {
+  const required = {...chatMessage}
+  delete required.emojis
+  return required
+}
 
 const dehydrateCommonGameState = (hydrated: GameState | PublicGameState) => ({
   eventLogs: hydrated.eventLogs,
@@ -12,11 +18,13 @@ const dehydrateCommonGameState = (hydrated: GameState | PublicGameState) => ({
   turn: hydrated.turn,
   lastEventTimestamp: hydrated.lastEventTimestamp.toISOString(),
   chatMessages: hydrated.chatMessages.map((message) => ({
-    ...message,
+    ...getRequiredChatMessageFields(message),
     timestamp: message.timestamp.toISOString(),
-    emojis: message.emojis ? Object.fromEntries(
-      Object.entries(message.emojis).map(([emoji, playerNames]) => ([emoji, [...playerNames]]))
-    ): undefined,
+    ...(message.emojis && {
+      emojis: Object.fromEntries(
+        Object.entries(message.emojis).map(([emoji, playerNames]) => ([emoji, [...playerNames]]))
+      )
+    }),
   })),
   ...(hydrated.pendingAction && {
     pendingAction: {
@@ -83,11 +91,13 @@ const rehydrateCommonGameState = (dehydrated: DehydratedGameState | DehydratedPu
   turn: dehydrated.turn,
   lastEventTimestamp: new Date(dehydrated.lastEventTimestamp),
   chatMessages: dehydrated.chatMessages.map((message) => ({
-    ...message,
+    ...getRequiredChatMessageFields(message),
     timestamp: new Date(message.timestamp),
-    emojis: message.emojis ? Object.fromEntries(
-      Object.entries(message.emojis).map(([emoji, playerNames]) => ([emoji, new Set(playerNames)]))
-    ): undefined,
+    ...(message.emojis && {
+      emojis: Object.fromEntries(
+        Object.entries(message.emojis).map(([emoji, playerNames]) => ([emoji, new Set(playerNames)]))
+      )
+    }),
   })),
   ...(dehydrated.pendingAction && {
     pendingAction: {

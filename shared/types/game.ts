@@ -206,14 +206,14 @@ export type ChatMessage = {
   deleted: boolean
   emojis?: {
     [emoji: string]: Set<string>
-  } | undefined
+  }
 }
 
-type DehydratedChatMessage = Omit<ChatMessage, 'timestamp' | 'emojis'> & {
+export type DehydratedChatMessage = Omit<ChatMessage, 'timestamp' | 'emojis'> & {
   timestamp: string
   emojis?: {
     [emoji: string]: string[]
-  } | undefined
+  }
 }
 
 type PendingAction = {
