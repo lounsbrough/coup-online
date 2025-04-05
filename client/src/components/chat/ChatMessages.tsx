@@ -111,9 +111,20 @@ export default function ChatMessages() {
                     <IconButton
                       sx={{
                         my: -0.5,
+                        height: '35px',
                         color: 'inherit',
-                      }}>
-                      <Typography fontSize="small">{emoji} {playerNames.size > 1 ? playerNames.size : null}</Typography>
+                      }}
+                      onClick={() => {
+                        setEmojiOnChatMessageMutation.trigger({
+                          roomId: gameState.roomId,
+                          playerId: getPlayerId(),
+                          messageId: id,
+                          emoji,
+                          selected: true
+                        })
+                      }}
+                    >
+                      <Typography>{emoji} {playerNames.size > 1 ? playerNames.size : null}</Typography>
                     </IconButton>
                   </Tooltip>
                 ))}
