@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Box, IconButton, Paper, Popover, Tooltip, Typography } from "@mui/material"
+import { Box, IconButton, Popover, Tooltip, Typography } from "@mui/material"
 import { AddReaction, Delete as DeleteIcon, Restore as RestoreIcon } from "@mui/icons-material"
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -103,18 +103,19 @@ export default function ChatMessages() {
                     sx={{ verticalAlign: 'text-bottom' }}
                   />
                 </IconButton>
-                {emojis && [...Object.entries(emojis)].map(([emoji, playerNames]) => (
-                  <IconButton
+                {emojis && Object.entries(emojis).map(([emoji, playerNames]) => (
+                  <Tooltip
                     key={emoji}
-                    sx={{
-                      my: -0.5,
-                      // aspectRatio: 1,
-                      // height: '35px',
-                      // width: '35px',
-                      color: 'inherit',
-                    }}>
-                    <Typography fontSize="small">{emoji}</Typography>
-                  </IconButton>
+                    title={[...playerNames].join(',')}
+                  >
+                    <IconButton
+                      sx={{
+                        my: -0.5,
+                        color: 'inherit',
+                      }}>
+                      <Typography fontSize="small">{emoji} {playerNames.size > 1 ? playerNames.size : null}</Typography>
+                    </IconButton>
+                  </Tooltip>
                 ))}
               </Typography>
             </Box>
