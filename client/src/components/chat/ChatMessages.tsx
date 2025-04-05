@@ -115,12 +115,13 @@ export default function ChatMessages() {
                         color: 'inherit',
                       }}
                       onClick={() => {
+                        const selected = !gameState.selfPlayer?.name || !playerNames.has(gameState.selfPlayer?.name)
                         setEmojiOnChatMessageMutation.trigger({
                           roomId: gameState.roomId,
                           playerId: getPlayerId(),
                           messageId: id,
                           emoji,
-                          selected: true
+                          selected
                         })
                       }}
                     >
