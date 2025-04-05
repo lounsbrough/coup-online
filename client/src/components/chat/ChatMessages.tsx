@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Box, IconButton, Popover, Tooltip, Typography } from "@mui/material"
+import { Box, IconButton, Paper, Popover, Tooltip, Typography } from "@mui/material"
 import { AddReaction, Delete as DeleteIcon, Restore as RestoreIcon } from "@mui/icons-material"
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -10,6 +10,7 @@ import { getPlayerId } from "../../helpers/players"
 import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 
 export default function ChatMessages() {
+  const [emojiMessageId, setEmojiMessageId] = useState<string>()
   const [emojiPickerAnchorEl, setEmojiPickerAnchorEl] = useState<HTMLButtonElement | null>(null)
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
@@ -31,93 +32,125 @@ export default function ChatMessages() {
 
   console.log(gameState.chatMessages)
 
-  return gameState.chatMessages.map(({ id, text, from, deleted, timestamp }) => {
-    const isMyMessage = from === gameState.selfPlayer?.name
-    const SetDeletedIcon = deleted ? RestoreIcon : DeleteIcon
+  return (
+    <>
+      {(
+        gameState.chatMessages.map(({ id, text, from, deleted, timestamp, emojis }) => {
+          const isMyMessage = from === gameState.selfPlayer?.name
+          const SetDeletedIcon = deleted ? RestoreIcon : DeleteIcon
 
-    return (
-      <Box
-        key={id}
-        sx={{
-          px: 1,
-          py: 0.5,
-          textAlign: isMyMessage ? 'right' : 'left',
-          borderBottom: '1px solid rgba(120, 120, 120, 0.2)'
-        }}
-      >
-        {!isMyMessage && (
-          <Typography
-            component='span'
-            fontWeight={500}
-            fontSize='inherit'
-            sx={{ color: gameState?.players.find(({ name }) => name === from)?.color }}
-          >
-            {from}:
-          </Typography>
-        )}
-        <Typography
-          component="span"
-          sx={{
-            ml: 0.5,
-            ...(deleted && { fontStyle: 'italic', fontSize: 'smaller' })
-          }}
-        >
-          {deleted ? t('messageWasDeleted') : text}
-        </Typography>
-        <Popover
-          id={id}
-          open={!!emojiPickerAnchorEl}
-          anchorEl={emojiPickerAnchorEl}
-          onClose={() => { setEmojiPickerAnchorEl(null) }}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-          <EmojiPicker open theme={colorMode === 'light' ? Theme.LIGHT : Theme.DARK} />
-        </Popover>
-        <Typography fontSize='smaller'>
-          <IconButton sx={{ my: -0.5, height: '35px', width: '35px' }}>
-            <Typography fontSize="small">❤️</Typography>
-          </IconButton>
-          <IconButton sx={{ my: -0.5, height: '35px', width: '35px' }}>
-            <Typography fontSize="small">🤣</Typography>
-          </IconButton>
-          <Tooltip title={timestamp.toLocaleString()}>
-            <span>{timestamp.toLocaleTimeString()}</span>
-          </Tooltip>
-          {isMyMessage && (
-            <IconButton
-              sx={{ my: -0.5, mr: -1 }}
-              loading={setChatMessageDeletedMutation.isMutating}
-              onClick={() => {
-                setChatMessageDeletedMutation.trigger({
-                  roomId: gameState.roomId,
-                  playerId: getPlayerId(),
-                  messageId: id,
-                  deleted: !deleted
-                })
+          return (
+            <Box
+              key={id}
+              sx={{
+                px: 1,
+                py: 0.5,
+                textAlign: isMyMessage ? 'right' : 'left',
+                borderBottom: '1px solid rgba(120, 120, 120, 0.2)'
               }}
             >
-              <SetDeletedIcon
-                fontSize="small"
-                sx={{ verticalAlign: 'text-bottom' }}
-              />
-            </IconButton>
-          )}
-          <IconButton
-            onClick={(event) => {
-              setEmojiPickerAnchorEl(event.currentTarget)
-            }}
-            sx={{ my: -0.5, mr: -1 }}
-          >
-            <AddReaction
-              fontSize="small"
-              sx={{ verticalAlign: 'text-bottom' }}
-            />
-          </IconButton>
-        </Typography>
-      </Box>
-    )
-  })
+              {!isMyMessage && (
+                <Typography
+                  component='span'
+                  fontWeight={500}
+                  fontSize='inherit'
+                  sx={{ color: gameState?.players.find(({ name }) => name === from)?.color }}
+                >
+                  {from}:
+                </Typography>
+              )}
+              <Typography
+                component="span"
+                sx={{
+                  ml: 0.5,
+                  ...(deleted && { fontStyle: 'italic', fontSize: 'smaller' })
+                }}
+              >
+                {deleted ? t('messageWasDeleted') : text}
+              </Typography>
+              <Typography fontSize='smaller'>
+                <Tooltip title={timestamp.toLocaleString()}>
+                  <span>{timestamp.toLocaleTimeString()}</span>
+                </Tooltip>
+                {isMyMessage && (
+                  <IconButton
+                    sx={{ my: -0.5, mr: -1 }}
+                    loading={setChatMessageDeletedMutation.isMutating}
+                    onClick={() => {
+                      setChatMessageDeletedMutation.trigger({
+                        roomId: gameState.roomId,
+                        playerId: getPlayerId(),
+                        messageId: id,
+                        deleted: !deleted
+                      })
+                    }}
+                  >
+                    <SetDeletedIcon
+                      fontSize="small"
+                      sx={{ verticalAlign: 'text-bottom' }}
+                    />
+                  </IconButton>
+                )}
+                <IconButton
+                  onClick={(event) => {
+                    setEmojiPickerAnchorEl(event.currentTarget)
+                    setEmojiMessageId(id)
+                  }}
+                  sx={{ my: -0.5 }}
+                >
+                  <AddReaction
+                    fontSize="small"
+                    sx={{ verticalAlign: 'text-bottom' }}
+                  />
+                </IconButton>
+                {emojis && [...Object.entries(emojis)].map(([emoji, playerNames]) => (
+                  <IconButton
+                    key={emoji}
+                    sx={{
+                      my: -0.5,
+                      // aspectRatio: 1,
+                      // height: '35px',
+                      // width: '35px',
+                      color: 'inherit',
+                    }}>
+                    <Typography fontSize="small">{emoji}</Typography>
+                  </IconButton>
+                ))}
+              </Typography>
+            </Box>
+          )
+        })
+      )}
+      <Popover
+        id="emoji-popover"
+        open={!!emojiPickerAnchorEl}
+        anchorEl={emojiPickerAnchorEl}
+        slotProps={{
+          paper: { sx: { backgroundColor: 'transparent', boxShadow: 'none' } }
+        }}
+        onClose={() => { setEmojiPickerAnchorEl(null) }}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+      >
+        <EmojiPicker
+          open
+          reactionsDefaultOpen
+          lazyLoadEmojis
+          theme={colorMode === 'light' ? Theme.LIGHT : Theme.DARK}
+          onEmojiClick={(emojiData) => {
+            if (!emojiMessageId) throw new Error("Unable to determine message id")
+            setEmojiOnChatMessageMutation.trigger({
+              roomId: gameState.roomId,
+              playerId: getPlayerId(),
+              messageId: emojiMessageId,
+              emoji: emojiData.emoji,
+              selected: true
+            })
+          }}
+        />
+      </Popover>
+    </>
+  )
 }
