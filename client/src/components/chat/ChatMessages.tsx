@@ -15,11 +15,13 @@ export default function ChatMessages() {
   const { t } = useTranslationContext()
   const { colorMode } = useColorModeContext()
 
-  const { trigger, isMutating } = useGameMutation<{
+  const setChatMessageDeletedMutation = useGameMutation<{
     roomId: string, playerId: string, messageId: string, deleted: boolean
-  }>({
-    action: PlayerActions.setChatMessageDeleted
-  })
+  }>({ action: PlayerActions.setChatMessageDeleted })
+
+  const setEmojiOnChatMessageMutation = useGameMutation<{
+    roomId: string, playerId: string, messageId: string, emoji: string, selected: boolean
+  }>({ action: PlayerActions.setEmojiOnChatMessage })
 
   if (!gameState?.chatMessages?.length) {
     return <Typography>
@@ -87,9 +89,9 @@ export default function ChatMessages() {
           {isMyMessage && (
             <IconButton
               sx={{ my: -0.5, mr: -1 }}
-              loading={isMutating}
+              loading={setChatMessageDeletedMutation.isMutating}
               onClick={() => {
-                trigger({
+                setChatMessageDeletedMutation.trigger({
                   roomId: gameState.roomId,
                   playerId: getPlayerId(),
                   messageId: id,
