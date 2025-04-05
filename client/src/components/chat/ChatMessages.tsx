@@ -106,7 +106,7 @@ export default function ChatMessages() {
                 {emojis && Object.entries(emojis).map(([emoji, playerNames]) => (
                   <Tooltip
                     key={emoji}
-                    title={[...playerNames].join(',')}
+                    title={[...playerNames].join(', ')}
                   >
                     <IconButton
                       sx={{
