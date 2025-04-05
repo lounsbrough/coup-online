@@ -1054,7 +1054,12 @@ export const setEmojiOnChatMessageHandler = async ({
       }
       existingMessage.emojis[emoji].add(player.name)
     } else {
-      existingMessage.emojis?.[emoji].delete(player.name)
+      if (existingMessage.emojis?.[emoji]) {
+        existingMessage.emojis[emoji].delete(player.name)
+        if (!existingMessage.emojis[emoji].size) {
+          delete existingMessage.emojis[emoji]
+        }
+      }
     }
   })
 
