@@ -417,7 +417,7 @@ const eventHandlers: {
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
       messageId: Joi.string().guid().required(),
-      emoji: Joi.string().required().max(5),
+      emoji: Joi.string().required().max(20),
       selected: Joi.bool().required()
     })
   }
