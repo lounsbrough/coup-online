@@ -31,8 +31,6 @@ export default function ChatMessages() {
     </Typography>
   }
 
-  console.log(gameState.chatMessages)
-
   return (
     <>
       {(
