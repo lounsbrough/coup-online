@@ -105,7 +105,6 @@ function GameBoard() {
               fontSize: '2rem'
             }}>
             <Tooltip
-              placement="top"
               title={
                 <Typography variant="h6">
                   {t('cardCountInDeck', {

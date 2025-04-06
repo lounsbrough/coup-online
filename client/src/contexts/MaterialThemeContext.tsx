@@ -114,7 +114,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
       spacing: isLargeScreen ? 8 : 4,
       components: {
         MuiTooltip: {
-          defaultProps: { enterTouchDelay: 50, leaveTouchDelay: 3000 }
+          defaultProps: { enterTouchDelay: 50, leaveTouchDelay: 3000, placement: 'top', arrow: true }
         },
         MuiTypography: {
           styleOverrides: {
