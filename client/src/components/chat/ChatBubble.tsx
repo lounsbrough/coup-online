@@ -34,13 +34,13 @@ export default function ChatBubble() {
           position: 'fixed',
           bottom: 0,
           right: 0,
-          animation: hasUnreadMessages ? 'pulseChatBubble 10s infinite' : undefined,
+          animation: hasUnreadMessages ? 'pulseChatBubble 5s infinite' : undefined,
           "@keyframes pulseChatBubble": {
             "0%": { transform: 'scale(1) rotateZ(0)' },
-            "1%": { transform: 'scale(1.15) rotateZ(5deg)' },
-            "2%": { transform: 'scale(1) rotateZ(0)' },
-            "3%": { transform: 'scale(1.3) rotateZ(10deg)' },
-            "10%": { transform: 'scale(1) rotateZ(0)' },
+            "2%": { transform: 'scale(1.15) rotateZ(5deg)' },
+            "4%": { transform: 'scale(1) rotateZ(0)' },
+            "6%": { transform: 'scale(1.3) rotateZ(10deg)' },
+            "20%": { transform: 'scale(1) rotateZ(0)' },
             "100%": { transform: 'scale(1) rotateZ(0)' }
           },
         }}
