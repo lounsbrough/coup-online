@@ -52,7 +52,7 @@ importers:
         version: 2.9.3
       emoji-picker-react:
         specifier: ^4.12.2
-        version: 4.12.2(react@19.0.0)
+        version: 4.12.2(react@19.1.0)
       eslint:
         specifier: ^9.23.0
         version: 9.23.0(jiti@2.4.2)
@@ -9861,10 +9861,10 @@ snapshots:
 
   emittery@0.8.1: {}
 
-  emoji-picker-react@4.12.2(react@19.0.0):
+  emoji-picker-react@4.12.2(react@19.1.0):
     dependencies:
       flairup: 1.0.0
-      react: 19.0.0
+      react: 19.1.0
 
   emoji-regex@8.0.0: {}
 
