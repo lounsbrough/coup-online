@@ -8,6 +8,7 @@ import useGameMutation from "../../hooks/useGameMutation"
 import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import { useColorModeContext } from "../../contexts/MaterialThemeContext"
+import './ChatMessages.css'
 
 export default function ChatMessages() {
   const [emojiMessageId, setEmojiMessageId] = useState<string>()
@@ -70,11 +71,14 @@ export default function ChatMessages() {
               </Typography>
               <Typography fontSize='smaller'>
                 <Tooltip title={timestamp.toLocaleString()}>
-                  <span>{timestamp.toLocaleTimeString()}</span>
+                  <Typography component="span" sx={{
+                    mr: 1,
+                    verticalAlign: 'middle'
+                  }}>{timestamp.toLocaleTimeString()}</Typography>
                 </Tooltip>
                 {isMyMessage && (
                   <IconButton
-                    sx={{ my: -0.5, mr: -1 }}
+                    sx={{ m: -0.5 }}
                     loading={setChatMessageDeletedMutation.isMutating}
                     onClick={() => {
                       setChatMessageDeletedMutation.trigger({
@@ -85,10 +89,7 @@ export default function ChatMessages() {
                       })
                     }}
                   >
-                    <SetDeletedIcon
-                      fontSize="small"
-                      sx={{ verticalAlign: 'text-bottom' }}
-                    />
+                    <SetDeletedIcon fontSize="small" />
                   </IconButton>
                 )}
                 <IconButton
@@ -96,12 +97,9 @@ export default function ChatMessages() {
                     setEmojiPickerAnchorEl(event.currentTarget)
                     setEmojiMessageId(id)
                   }}
-                  sx={{ my: -0.5 }}
+                  sx={{ m: -0.5 }}
                 >
-                  <AddReaction
-                    fontSize="small"
-                    sx={{ verticalAlign: 'text-bottom' }}
-                  />
+                  <AddReaction fontSize="small" />
                 </IconButton>
                 {emojis && Object.entries(emojis).map(([emoji, playerNames]) => (
                   <Tooltip
@@ -110,8 +108,8 @@ export default function ChatMessages() {
                   >
                     <IconButton
                       sx={{
-                        my: -0.5,
-                        height: '35px',
+                        m: -0.5,
+                        height: '32px',
                         color: 'inherit',
                       }}
                       onClick={() => {
@@ -125,7 +123,7 @@ export default function ChatMessages() {
                         })
                       }}
                     >
-                      <Typography>{emoji} {playerNames.size > 1 ? playerNames.size : null}</Typography>
+                      <Typography fontSize="20px">{emoji} {playerNames.size > 1 ? playerNames.size : null}</Typography>
                     </IconButton>
                   </Tooltip>
                 ))}
@@ -138,9 +136,6 @@ export default function ChatMessages() {
         id="emoji-popover"
         open={!!emojiPickerAnchorEl}
         anchorEl={emojiPickerAnchorEl}
-        slotProps={{
-          paper: { sx: { backgroundColor: 'transparent', boxShadow: 'none' } }
-        }}
         onClose={() => { setEmojiPickerAnchorEl(null) }}
         anchorOrigin={{
           vertical: 'bottom',
@@ -161,6 +156,7 @@ export default function ChatMessages() {
               emoji: emojiData.emoji,
               selected: true
             })
+            setEmojiPickerAnchorEl(null)
           }}
         />
       </Popover>
