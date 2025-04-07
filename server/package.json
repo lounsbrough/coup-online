@@ -21,7 +21,7 @@
   "dependencies": {
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
-    "express": "^5.0.1",
+    "express": "^5.1.0",
     "joi": "^17.13.3",
     "redis": "^4.7.0",
     "socket.io": "^4.8.1"
@@ -31,7 +31,7 @@
     "@types/body-parser": "^1.19.5",
     "@types/chance": "^1.1.6",
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
+    "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.10",
     "@types/ws": "^8.5.13",
