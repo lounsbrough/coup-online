@@ -11,6 +11,7 @@ const fabSize = 56
 export default function ChatBubble() {
   const [chatOpen, setChatOpen] = useState(false)
   const [latestReadMessageId, setLatestReadMessageId] = useState<string | null>()
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false)
   const [unreadMessagePlayerColors, setUnreadMessagePlayerColors] = useState<string[]>([])
   const { gameState } = useGameStateContext()
 
@@ -24,24 +25,29 @@ export default function ChatBubble() {
 
   useEffect(() => {
     if (!chatOpen) {
-      const unreadMessagePlayerNames = new Set<string>()
+      setHasUnreadMessages(!!gameState.chatMessages.length && (!latestReadMessageId || latestReadMessageId !== gameState.chatMessages.at(-1)?.id))
+
+      const playerNameToColorMap: { [name: string]: string | undefined } = {}
+      gameState.players.forEach(({ name, color }) => { playerNameToColorMap[name] = color })
+
+      const unreadMessagePlayerColors = new Set<string>()
       let reachedLatestRead = false
       gameState.chatMessages.forEach(({ id, from }) => {
-        if ((!latestReadMessageId || reachedLatestRead) && from !== gameState.selfPlayer?.name) {
-          unreadMessagePlayerNames.add(from)
+        if (
+          (!latestReadMessageId || reachedLatestRead)
+          && from !== gameState.selfPlayer?.name
+          && playerNameToColorMap[from]) {
+          unreadMessagePlayerColors.add(playerNameToColorMap[from])
         }
         if (latestReadMessageId === id) reachedLatestRead = true
       })
-      const playerNameToColorMap: { [name: string]: string } = {}
-      gameState.players.forEach(({ name, color }) => {
-        playerNameToColorMap[name] = color
-      })
 
-      setUnreadMessagePlayerColors([...unreadMessagePlayerNames].map((name) => playerNameToColorMap[name]))
+      setUnreadMessagePlayerColors([...unreadMessagePlayerColors])
     } else {
+      setHasUnreadMessages(false)
       setUnreadMessagePlayerColors([])
     }
-  }, [chatOpen, latestReadMessageId, gameState.chatMessages.length])
+  }, [chatOpen, latestReadMessageId, gameState.chatMessages.length, gameState.players.length])
 
   const fabBackground = getDiscreteGradient(unreadMessagePlayerColors)
 
@@ -60,7 +66,7 @@ export default function ChatBubble() {
           right: 0,
           background: fabBackground,
           '&:hover': { background: fabBackground },
-          animation: unreadMessagePlayerColors.length ? 'pulseChatBubble 5s infinite' : undefined,
+          animation: hasUnreadMessages ? 'pulseChatBubble 5s infinite' : undefined,
           "@keyframes pulseChatBubble": {
             "0%": { transform: 'scale(1) rotateZ(0)' },
             "2%": { transform: 'scale(1.15) rotateZ(5deg)' },
