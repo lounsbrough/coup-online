@@ -55,6 +55,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
   useEffect(() => {
     if (!roomId || !socket || !isConnected) {
+      if (!roomId) setDehydratedGameState(undefined)
       return
     }
 
