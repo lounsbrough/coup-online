@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import ChatMessages from './ChatMessages'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import { Close as CloseIcon, Send as SendIcon } from '@mui/icons-material'
-import { Box, Divider, IconButton, TextField, Typography } from '@mui/material'
+import { Box, Divider, IconButton, TextField, Typography, useTheme } from '@mui/material'
 import useGameMutation from '../../hooks/useGameMutation'
 import { PlayerActions } from '@shared'
 import { getPlayerId } from '../../helpers/players'
@@ -24,6 +24,7 @@ export default function ChatDrawerContent({
   const [pendingMessageId, setPendingMessageId] = useState('')
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
+  const { isLargeScreen } = useTheme()
 
   const { trigger, isMutating, error } = useGameMutation<{
     roomId: string, playerId: string, messageId: string, messageText: string
@@ -69,9 +70,9 @@ export default function ChatDrawerContent({
 
   return (
     <>
-      <Box sx={{ p: 1, display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ p: isLargeScreen ? 1.4 : 4, display: 'flex', alignItems: 'center' }}>
         <IconButton sx={{ position: 'absolute' }} onClick={() => { setChatOpen(false) }}>
-          <CloseIcon fontSize='inherit' />
+          <CloseIcon fontSize="large" />
         </IconButton>
         <Typography flexGrow={1} textAlign="center" variant='h5'>{t('chat')}</Typography>
       </Box>
