@@ -26,9 +26,11 @@ export default function ChatMessages() {
   }>({ action: PlayerActions.setEmojiOnChatMessage })
 
   if (!gameState?.chatMessages?.length) {
-    return <Typography>
-      {t('noChatMessages')}
-    </Typography>
+    return (
+      <Typography my={2} textAlign="center">
+        {t('noChatMessages')}
+      </Typography>
+    )
   }
 
   return (
