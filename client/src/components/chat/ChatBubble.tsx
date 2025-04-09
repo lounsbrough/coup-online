@@ -85,11 +85,6 @@ export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId,
       >
         <ChatIcon fontSize='large' />
       </Fab>
-      {/* <ChatDialog
-        isOpen={chatOpen}
-        handleClose={() => { setChatOpen(false) }}
-        setLatestReadMessageId={setLatestReadMessageId}
-      /> */}
     </>
   )
 }
