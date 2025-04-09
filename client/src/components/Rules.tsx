@@ -76,7 +76,8 @@ function Rules() {
               <Close fontSize="large" />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h5" component="div">
-              <Gavel sx={{ verticalAlign: 'middle' }} /> <span style={{ verticalAlign: 'middle' }}>{t('rules')}</span>
+              <Gavel sx={{ verticalAlign: 'middle', mr: 1 }} />
+              <span style={{ verticalAlign: 'middle' }}>{t('rules')}</span>
             </Typography>
           </Toolbar>
         </AppBar>
