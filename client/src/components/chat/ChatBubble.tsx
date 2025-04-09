@@ -1,29 +1,31 @@
 import { useEffect, useState } from 'react'
 import Fab from '@mui/material/Fab'
 import ChatIcon from '@mui/icons-material/Chat'
-import ChatDialog from './ChatDialog'
 import { getLatestReadMessageIdStorageKey } from '../../helpers/localStorageKeys'
 import { useGameStateContext } from '../../contexts/GameStateContext'
 import { getDiscreteGradient } from '../../helpers/styles'
 
 const fabSize = 56
 
-export default function ChatBubble() {
-  const [chatOpen, setChatOpen] = useState(false)
-  const [latestReadMessageId, setLatestReadMessageId] = useState<string | null>()
+interface ChatBubbleProps {
+  chatOpen: boolean
+  setChatOpen: (open: boolean) => void
+  latestReadMessageId: string | null
+  setLatestReadMessageId: (id: string | null) => void
+}
+
+export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId, setLatestReadMessageId }: ChatBubbleProps) {
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false)
   const [unreadMessagePlayerColors, setUnreadMessagePlayerColors] = useState<string[]>([])
   const { gameState } = useGameStateContext()
 
-  if (!gameState) {
-    return null
-  }
-
   useEffect(() => {
+    if (!gameState) return
     setLatestReadMessageId(localStorage.getItem(getLatestReadMessageIdStorageKey(gameState.roomId)))
-  }, [gameState.roomId])
+  }, [gameState?.roomId])
 
   useEffect(() => {
+    if (!gameState) return
     if (!chatOpen) {
       setHasUnreadMessages(!!gameState.chatMessages.length && (!latestReadMessageId || latestReadMessageId !== gameState.chatMessages.at(-1)?.id))
 
@@ -47,7 +49,11 @@ export default function ChatBubble() {
       setHasUnreadMessages(false)
       setUnreadMessagePlayerColors([])
     }
-  }, [chatOpen, latestReadMessageId, gameState.chatMessages.length, gameState.players.length])
+  }, [chatOpen, latestReadMessageId, gameState?.chatMessages.length, gameState?.players.length])
+
+  if (!gameState) {
+    return null
+  }
 
   const fabBackground = getDiscreteGradient(unreadMessagePlayerColors)
 
@@ -79,11 +85,11 @@ export default function ChatBubble() {
       >
         <ChatIcon fontSize='large' />
       </Fab>
-      <ChatDialog
+      {/* <ChatDialog
         isOpen={chatOpen}
         handleClose={() => { setChatOpen(false) }}
         setLatestReadMessageId={setLatestReadMessageId}
-      />
+      /> */}
     </>
   )
 }
