@@ -3,9 +3,9 @@ import { AppBar, Box, Button, Dialog, DialogContent, DialogContentText, Divider,
 import { Block, Close, Gavel, Group } from "@mui/icons-material"
 import { TransitionProps } from '@mui/material/transitions'
 import { ActionAttributes, Actions, Influences } from '@shared'
-import './Rules.css'
 import InfluenceIcon from "./icons/InfluenceIcon"
 import { useTranslationContext } from "../contexts/TranslationsContext"
+import './Rules.css'
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -62,7 +62,7 @@ function Rules() {
         fullScreen
         open={modalOpen}
         onClose={() => { setModalOpen(false) }}
-        TransitionComponent={Transition}
+        slots={{ transition: Transition }}
       >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
@@ -73,7 +73,7 @@ function Rules() {
               aria-label={t('close')?.toString()}
               sx={{ ml: 1 }}
             >
-              <Close />
+              <Close fontSize="large" />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h5" component="div">
               <Gavel sx={{ verticalAlign: 'middle' }} /> <span style={{ verticalAlign: 'middle' }}>{t('rules')}</span>
