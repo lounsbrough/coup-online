@@ -26,9 +26,11 @@ export default function ChatMessages() {
   }>({ action: PlayerActions.setEmojiOnChatMessage })
 
   if (!gameState?.chatMessages?.length) {
-    return <Typography>
-      {t('noChatMessages')}
-    </Typography>
+    return (
+      <Typography my={2} textAlign="center">
+        {t('noChatMessages')}
+      </Typography>
+    )
   }
 
   return (
@@ -106,7 +108,7 @@ export default function ChatMessages() {
                   >
                     <IconButton
                       sx={{
-                        m: -0.5,
+                        my: -0.5,
                         height: '32px',
                         color: 'inherit',
                       }}
@@ -121,7 +123,8 @@ export default function ChatMessages() {
                         })
                       }}
                     >
-                      <Typography fontSize="20px">{emoji} {playerNames.size > 1 ? playerNames.size : null}</Typography>
+                      <Typography fontSize="20px">{emoji}</Typography>
+                      {playerNames.size > 1 && <Typography ml={0.5} fontWeight={900}>{playerNames.size}</Typography>}
                     </IconButton>
                   </Tooltip>
                 ))}

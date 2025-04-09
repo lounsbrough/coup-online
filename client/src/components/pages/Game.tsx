@@ -4,7 +4,6 @@ import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Link } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import ChatBubble from "../chat/ChatBubble"
 
 function Game() {
   const { gameState } = useGameStateContext()
@@ -33,9 +32,6 @@ function Game() {
       )}
       {gameState && !gameState.isStarted && gameState.selfPlayer && (
         <WaitingRoom />
-      )}
-      {gameState && gameState.selfPlayer && (
-        <ChatBubble />
       )}
     </>
   )
