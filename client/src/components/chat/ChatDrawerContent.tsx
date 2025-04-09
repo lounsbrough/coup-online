@@ -111,8 +111,8 @@ export default function ChatDrawerContent({
         >
           {t('send')}
         </Button>
-        {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </Box>
+      {error && <Typography color='error' sx={{ mb: 1, fontWeight: 700 }}>{error}</Typography>}
     </>
   )
 }

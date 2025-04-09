@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Route, Routes, Link } from 'react-router'
 import { Box, Button, Typography } from '@mui/material'
 import JoinGame from './pages/JoinGame'
@@ -16,20 +15,16 @@ import UserSettings from './UserSettings'
 import { WebSocketContextProvider } from '../contexts/WebSocketContext'
 import Logo from './icons/Logo'
 import { useTranslationContext } from '../contexts/TranslationsContext'
-import ChatBubble from './chat/ChatBubble'
 import ChatDrawer from './chat/ChatDrawer'
 
 function App() {
-  const [chatOpen, setChatOpen] = useState(false)
-  const [latestReadMessageId, setLatestReadMessageId] = useState<string | null>(null)
   const { t } = useTranslationContext()
 
   return (
     <div className="App">
       <WebSocketContextProvider>
         <GameStateContextProvider>
-          <ChatBubble chatOpen={chatOpen} setChatOpen={setChatOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
-          <ChatDrawer chatOpen={chatOpen} setChatOpen={setChatOpen} setLatestReadMessageId={setLatestReadMessageId} mainContent={(
+          <ChatDrawer mainContent={(
             <>
               <header className="App-header">
                 <Box sx={{ whiteSpace: 'nowrap' }}>

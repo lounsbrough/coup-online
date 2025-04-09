@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
 import ChatDrawerContent from './ChatDrawerContent'
+import ChatBubble from './ChatBubble'
 
 const desktopDrawerWidth = '25vw'
 
@@ -31,47 +33,51 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 }))
 
 interface ChatDrawerProps {
-  chatOpen: boolean
-  setChatOpen: (open: boolean) => void
-  setLatestReadMessageId: (id: string | null) => void
   mainContent: React.ReactNode
 }
 
-export default function ChatDrawer({ chatOpen, setChatOpen, setLatestReadMessageId, mainContent }: ChatDrawerProps) {
+export default function ChatDrawer({ mainContent }: ChatDrawerProps) {
+  const [chatOpen, setChatOpen] = useState(false)
+  const [latestReadMessageId, setLatestReadMessageId] = useState<string | null>(null)
   const { isLargeScreen } = useTheme()
 
-  return isLargeScreen ? (
-    <Box sx={{ display: 'flex' }}>
-      <Main open={chatOpen}>
-        {mainContent}
-      </Main>
-      <Drawer
-        sx={{
-          width: desktopDrawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: desktopDrawerWidth,
-          },
-        }}
-        variant="persistent"
-        anchor="right"
-        open={chatOpen}
-        slotProps={{ root: { keepMounted: true } }}
-      >
-        <ChatDrawerContent chatOpen={chatOpen} setChatOpen={setChatOpen} setLatestReadMessageId={setLatestReadMessageId} />
-      </Drawer>
-    </Box>
-  ) : (
+  return (
     <>
-      {mainContent}
-      <Drawer
-        anchor="right"
-        open={chatOpen}
-        onClose={() => { setChatOpen(false) }}
-        slotProps={{ root: { keepMounted: true } }}
-      >
-        <ChatDrawerContent chatOpen={chatOpen} setChatOpen={setChatOpen} setLatestReadMessageId={setLatestReadMessageId} />
-      </Drawer>
+      <ChatBubble chatOpen={chatOpen} setChatOpen={setChatOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
+      {isLargeScreen ? (
+        <Box sx={{ display: 'flex' }}>
+          <Main open={chatOpen}>
+            {mainContent}
+          </Main>
+          <Drawer
+            sx={{
+              width: desktopDrawerWidth,
+              flexShrink: 0,
+              '& .MuiDrawer-paper': {
+                width: desktopDrawerWidth,
+              },
+            }}
+            variant="persistent"
+            anchor="right"
+            open={chatOpen}
+            slotProps={{ root: { keepMounted: true } }}
+          >
+            <ChatDrawerContent chatOpen={chatOpen} setChatOpen={setChatOpen} setLatestReadMessageId={setLatestReadMessageId} />
+          </Drawer>
+        </Box>
+      ) : (
+        <>
+          {mainContent}
+          <Drawer
+            anchor="right"
+            open={chatOpen}
+            onClose={() => { setChatOpen(false) }}
+            slotProps={{ root: { keepMounted: true } }}
+          >
+            <ChatDrawerContent chatOpen={chatOpen} setChatOpen={setChatOpen} setLatestReadMessageId={setLatestReadMessageId} />
+          </Drawer>
+        </>
+      )}
     </>
   )
 }
