@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, Switch, Typography, useTheme } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, Switch, Typography, useTheme } from "@mui/material"
 import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
 import ColorModeToggle from "./ColorModeToggle"
 import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
@@ -48,7 +48,14 @@ function UserSettings() {
         open={modalOpen}
         onClose={() => { setModalOpen(false) }}
       >
-        <DialogTitle mb={2}>{t('settings')}</DialogTitle>
+        <DialogTitle mb={2}>
+          <Box display="flex" alignItems="center">
+            <Typography flexGrow={1} textAlign="center" variant='h5'>
+              <Settings sx={{ verticalAlign: 'middle', mr: 1 }} />
+              <span style={{ verticalAlign: 'middle' }}>{t('settings')}</span>
+            </Typography>
+          </Box>
+        </DialogTitle>
         <DialogContent>
           <Grid2 container spacing={3} direction="column">
             <Grid2 height={rowHeight} alignContent="center" sx={{ whiteSpace: 'nowrap' }}>
