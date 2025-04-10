@@ -73,7 +73,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     background: playerColor,
                     borderRadius: 3,
                     p: 1,
-                    width: '6rem',
+                    width: '7rem',
                     transition: theme.transitions.create(['transform', 'box-shadow']),
                     animation: isWaitingOnPlayer ? 'pulsePlayer 1.5s infinite' : undefined,
                     "@keyframes pulsePlayer": {
