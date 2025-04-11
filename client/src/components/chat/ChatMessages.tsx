@@ -66,9 +66,9 @@ export default function ChatMessages() {
                 >
                   {deleted ? t('messageWasDeleted') : text}
                 </Typography>
-                <Typography fontSize='smaller'>
+                <Typography>
                   <Tooltip title={timestamp.toLocaleString()}>
-                    <Typography component="span" sx={{
+                    <Typography fontSize='smaller' component="span" sx={{
                       mr: 1,
                       verticalAlign: 'middle'
                     }}>{timestamp.toLocaleTimeString()}</Typography>
