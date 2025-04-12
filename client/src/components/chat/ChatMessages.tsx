@@ -104,9 +104,10 @@ export default function ChatMessages() {
                       title={[...playerNames].join(', ')}
                     >
                       <IconButton
+                        size="small"
                         sx={{
                           my: -0.5,
-                          height: '32px',
+                          height: '28px',
                           color: 'inherit',
                         }}
                         onClick={() => {
@@ -120,7 +121,7 @@ export default function ChatMessages() {
                           })
                         }}
                       >
-                        <Typography fontSize="20px">{emoji}</Typography>
+                        <Typography>{emoji}</Typography>
                         {playerNames.size > 1 && <Typography ml={0.5} fontWeight={900}>{playerNames.size}</Typography>}
                       </IconButton>
                     </Tooltip>
@@ -132,6 +133,7 @@ export default function ChatMessages() {
         )
       )}
       <Popover
+        slotProps={{ paper: { sx: { background: 'transparent' } } }}
         id="emoji-popover"
         open={!!emojiPickerAnchorEl}
         anchorEl={emojiPickerAnchorEl}
@@ -143,7 +145,6 @@ export default function ChatMessages() {
       >
         <EmojiPicker
           open
-          reactionsDefaultOpen
           lazyLoadEmojis
           theme={colorMode === 'light' ? Theme.LIGHT : Theme.DARK}
           onEmojiClick={(emojiData) => {
