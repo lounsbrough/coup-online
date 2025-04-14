@@ -25,115 +25,115 @@ export default function ChatMessages() {
     roomId: string, playerId: string, messageId: string, emoji: string, selected: boolean
   }>({ action: PlayerActions.setEmojiOnChatMessage })
 
-  if (!gameState?.chatMessages?.length) {
-    return (
-      <Typography my={2} textAlign="center">
-        {t('noChatMessages')}
-      </Typography>
-    )
-  }
-
   return (
     <>
       {(
-        gameState.chatMessages.map(({ id, text, from, deleted, timestamp, emojis }) => {
-          const isMyMessage = from === gameState.selfPlayer?.name
-          const SetDeletedIcon = deleted ? RestoreIcon : DeleteIcon
+        !gameState?.chatMessages?.length ? (
+          <Typography my={2} textAlign="center">
+            {t('noChatMessages')}
+          </Typography>
+        ) : (
+          gameState.chatMessages.map(({ id, text, from, deleted, timestamp, emojis }) => {
+            const isMyMessage = from === gameState.selfPlayer?.name
+            const SetDeletedIcon = deleted ? RestoreIcon : DeleteIcon
 
-          return (
-            <Box
-              key={id}
-              sx={{
-                px: 1,
-                py: 0.5,
-                textAlign: isMyMessage ? 'right' : 'left',
-                borderBottom: '1px solid rgba(120, 120, 120, 0.2)'
-              }}
-            >
-              {!isMyMessage && (
-                <Typography
-                  component='span'
-                  fontWeight={500}
-                  fontSize='inherit'
-                  sx={{ color: gameState?.players.find(({ name }) => name === from)?.color }}
-                >
-                  {from}:
-                </Typography>
-              )}
-              <Typography
-                component="span"
+            return (
+              <Box
+                key={id}
                 sx={{
-                  ml: 0.5,
-                  ...(deleted && { fontStyle: 'italic', fontSize: 'smaller' })
+                  px: 1,
+                  py: 0.5,
+                  textAlign: isMyMessage ? 'right' : 'left',
+                  borderBottom: '1px solid rgba(120, 120, 120, 0.2)'
                 }}
               >
-                {deleted ? t('messageWasDeleted') : text}
-              </Typography>
-              <Typography fontSize='smaller'>
-                <Tooltip title={timestamp.toLocaleString()}>
-                  <Typography component="span" sx={{
-                    mr: 1,
-                    verticalAlign: 'middle'
-                  }}>{timestamp.toLocaleTimeString()}</Typography>
-                </Tooltip>
-                {isMyMessage && (
-                  <IconButton
-                    sx={{ m: -0.5 }}
-                    loading={setChatMessageDeletedMutation.isMutating}
-                    onClick={() => {
-                      setChatMessageDeletedMutation.trigger({
-                        roomId: gameState.roomId,
-                        playerId: getPlayerId(),
-                        messageId: id,
-                        deleted: !deleted
-                      })
-                    }}
+                {!isMyMessage && (
+                  <Typography
+                    component='span'
+                    fontWeight={500}
+                    fontSize='inherit'
+                    sx={{ color: gameState?.players.find(({ name }) => name === from)?.color }}
                   >
-                    <SetDeletedIcon fontSize="small" />
-                  </IconButton>
+                    {from}:
+                  </Typography>
                 )}
-                <IconButton
-                  onClick={(event) => {
-                    setEmojiPickerAnchorEl(event.currentTarget)
-                    setEmojiMessageId(id)
+                <Typography
+                  component="span"
+                  sx={{
+                    ml: 0.5,
+                    ...(deleted && { fontStyle: 'italic', fontSize: 'smaller' })
                   }}
-                  sx={{ m: -0.5 }}
                 >
-                  <AddReactionIcon fontSize="small" />
-                </IconButton>
-                {emojis && Object.entries(emojis).map(([emoji, playerNames]) => (
-                  <Tooltip
-                    key={emoji}
-                    title={[...playerNames].join(', ')}
-                  >
+                  {deleted ? t('messageWasDeleted') : text}
+                </Typography>
+                <Typography>
+                  <Tooltip title={timestamp.toLocaleString()}>
+                    <Typography fontSize='smaller' component="span" sx={{
+                      mr: 1,
+                      verticalAlign: 'middle'
+                    }}>{timestamp.toLocaleTimeString()}</Typography>
+                  </Tooltip>
+                  {isMyMessage && (
                     <IconButton
-                      sx={{
-                        my: -0.5,
-                        height: '32px',
-                        color: 'inherit',
-                      }}
+                      sx={{ m: -0.5 }}
+                      loading={setChatMessageDeletedMutation.isMutating}
                       onClick={() => {
-                        const selected = !gameState.selfPlayer?.name || !playerNames.has(gameState.selfPlayer?.name)
-                        setEmojiOnChatMessageMutation.trigger({
+                        setChatMessageDeletedMutation.trigger({
                           roomId: gameState.roomId,
                           playerId: getPlayerId(),
                           messageId: id,
-                          emoji,
-                          selected
+                          deleted: !deleted
                         })
                       }}
                     >
-                      <Typography fontSize="20px">{emoji}</Typography>
-                      {playerNames.size > 1 && <Typography ml={0.5} fontWeight={900}>{playerNames.size}</Typography>}
+                      <SetDeletedIcon fontSize="small" />
                     </IconButton>
-                  </Tooltip>
-                ))}
-              </Typography>
-            </Box>
-          )
-        })
+                  )}
+                  <IconButton
+                    onClick={(event) => {
+                      setEmojiPickerAnchorEl(event.currentTarget)
+                      setEmojiMessageId(id)
+                    }}
+                    sx={{ m: -0.5 }}
+                  >
+                    <AddReactionIcon fontSize="small" />
+                  </IconButton>
+                  {emojis && Object.entries(emojis).map(([emoji, playerNames]) => (
+                    <Tooltip
+                      key={emoji}
+                      title={[...playerNames].join(', ')}
+                    >
+                      <IconButton
+                        size="small"
+                        sx={{
+                          my: -0.5,
+                          height: '28px',
+                          color: 'inherit',
+                        }}
+                        onClick={() => {
+                          const selected = !gameState.selfPlayer?.name || !playerNames.has(gameState.selfPlayer?.name)
+                          setEmojiOnChatMessageMutation.trigger({
+                            roomId: gameState.roomId,
+                            playerId: getPlayerId(),
+                            messageId: id,
+                            emoji,
+                            selected
+                          })
+                        }}
+                      >
+                        <Typography>{emoji}</Typography>
+                        {playerNames.size > 1 && <Typography ml={0.5} fontWeight={900}>{playerNames.size}</Typography>}
+                      </IconButton>
+                    </Tooltip>
+                  ))}
+                </Typography>
+              </Box>
+            )
+          })
+        )
       )}
       <Popover
+        slotProps={{ paper: { sx: { background: 'transparent' } } }}
         id="emoji-popover"
         open={!!emojiPickerAnchorEl}
         anchorEl={emojiPickerAnchorEl}
@@ -145,10 +145,10 @@ export default function ChatMessages() {
       >
         <EmojiPicker
           open
-          reactionsDefaultOpen
           lazyLoadEmojis
           theme={colorMode === 'light' ? Theme.LIGHT : Theme.DARK}
           onEmojiClick={(emojiData) => {
+            if (!gameState?.roomId) throw new Error("Unable to determine room id")
             if (!emojiMessageId) throw new Error("Unable to determine message id")
             setEmojiOnChatMessageMutation.trigger({
               roomId: gameState.roomId,
