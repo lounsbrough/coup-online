@@ -58,33 +58,31 @@ export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId,
   const fabBackground = getDiscreteGradient(unreadMessagePlayerColors)
 
   return (
-    <>
-      <Fab
-        onClick={() => { setChatOpen(true) }}
-        color="primary"
-        sx={{
-          height: fabSize,
-          width: fabSize,
-          mr: 3,
-          mb: 3,
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          background: fabBackground,
-          '&:hover': { background: fabBackground },
-          animation: hasUnreadMessages ? 'pulseChatBubble 5s infinite' : undefined,
-          "@keyframes pulseChatBubble": {
-            "0%": { transform: 'scale(1) rotateZ(0)' },
-            "2%": { transform: 'scale(1.15) rotateZ(5deg)' },
-            "4%": { transform: 'scale(1) rotateZ(0)' },
-            "6%": { transform: 'scale(1.3) rotateZ(10deg)' },
-            "20%": { transform: 'scale(1) rotateZ(0)' },
-            "100%": { transform: 'scale(1) rotateZ(0)' }
-          },
-        }}
-      >
-        <ChatIcon fontSize='large' />
-      </Fab>
-    </>
+    <Fab
+      onClick={() => { setChatOpen(true) }}
+      color="primary"
+      sx={{
+        height: fabSize,
+        width: fabSize,
+        mr: 3,
+        mb: 3,
+        position: 'fixed',
+        bottom: 0,
+        right: 0,
+        background: fabBackground,
+        '&:hover': { background: fabBackground },
+        animation: hasUnreadMessages ? 'pulseChatBubble 5s infinite' : undefined,
+        "@keyframes pulseChatBubble": {
+          "0%": { transform: 'scale(1) rotateZ(0)' },
+          "2%": { transform: 'scale(1.15) rotateZ(5deg)' },
+          "4%": { transform: 'scale(1) rotateZ(0)' },
+          "6%": { transform: 'scale(1.3) rotateZ(10deg)' },
+          "20%": { transform: 'scale(1) rotateZ(0)' },
+          "100%": { transform: 'scale(1) rotateZ(0)' }
+        },
+      }}
+    >
+      <ChatIcon fontSize='large' />
+    </Fab>
   )
 }

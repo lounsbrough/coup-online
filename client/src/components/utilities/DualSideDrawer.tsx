@@ -1,16 +1,16 @@
+import { ChevronLeft, Close, Gavel } from "@mui/icons-material"
 import {
   Box,
   Drawer,
-  IconButton,
-  Toolbar,
   CssBaseline,
   useTheme,
-  Fab,
+  IconButton,
+  Typography,
+  Divider,
 } from "@mui/material"
-import MenuIcon from "@mui/icons-material/Menu"
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
+import { useTranslationContext } from "../../contexts/TranslationsContext"
 
-const dektopDrawerWidth = `25vw`
+const dektopDrawerWidth = `30vw`
 
 interface MainContentProps {
   openLeft: boolean
@@ -33,34 +33,21 @@ const MainContent = ({ openLeft, openRight, children }: MainContentProps) => {
         }),
         boxSizing: "border-box",
         minHeight: "100vh",
-        transition: theme.transitions.create(["margin", "width"], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        ...(openLeft && {
-          transition: theme.transitions.create(["margin", "width"], {
+        transition: (openLeft || openRight)
+          ? theme.transitions.create(["margin", "width"], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
+          })
+          : theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
           }),
-        }),
-        ...(openRight && {
-          transition: theme.transitions.create(["margin", "width"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
-        }),
       }}
     >
       <Box sx={{ width: "100%" }}>
         {children}
       </Box>
-      {/* <Box sx={{ width: "100%" }}>
-        <Typography component="p">
-          This is your main content. The drawers will expand from the sides when
-          opened.
-        </Typography>
-      </Box> */}
-    </Box>
+    </Box >
   )
 }
 
@@ -76,39 +63,13 @@ interface DualSideDrawerProps {
 
 const DualSideDrawer = ({ openLeft, openRight, setOpenLeft, setOpenRight, leftDrawerContent, rightDrawerContent, children }: DualSideDrawerProps) => {
   const theme = useTheme()
+  const { t } = useTranslationContext()
 
-  const handleLeftDrawerToggle = () => {
-    setOpenLeft(!openLeft)
-  }
+  const LeftCloseIcon = theme.isLargeScreen ? ChevronLeft : Close
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <Box
-        sx={{
-          position: "fixed",
-          top: theme.spacing(2),
-          left: theme.spacing(2),
-          zIndex: theme.zIndex.mobileStepper,
-        }}
-      >
-        <Fab
-          color="primary"
-          aria-label="open left drawer"
-          onClick={handleLeftDrawerToggle}
-        >
-          {openLeft ? <ArrowBackIosNewIcon /> : <MenuIcon />}
-        </Fab>
-      </Box>
-      <Box
-        sx={{
-          position: "fixed",
-          top: theme.spacing(2),
-          right: theme.spacing(2),
-          zIndex: theme.zIndex.mobileStepper,
-        }}
-      >
-      </Box>
       <Drawer
         slotProps={{
           paper: {
@@ -138,6 +99,16 @@ const DualSideDrawer = ({ openLeft, openRight, setOpenLeft, setOpenRight, leftDr
         open={openLeft}
         onClose={() => setOpenLeft(false)}
       >
+        <Box sx={{ p: theme.isLargeScreen ? 1.4 : 4, display: 'flex', alignItems: 'center' }}>
+          <Typography flexGrow={1} textAlign="center" variant='h5'>
+            <Gavel sx={{ verticalAlign: 'middle', mr: 1 }} />
+            <span style={{ verticalAlign: 'middle' }}>{t('rules')}</span>
+          </Typography>
+          <IconButton sx={{ position: 'absolute', right: 0, mr: 1 }} onClick={() => { setOpenLeft(false) }}>
+            <LeftCloseIcon fontSize="large" />
+          </IconButton>
+        </Box>
+        <Divider />
         {leftDrawerContent}
       </Drawer>
       <Drawer

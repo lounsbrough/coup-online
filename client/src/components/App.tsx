@@ -19,6 +19,8 @@ import ChatBubble from './chat/ChatBubble'
 import { Gavel } from '@mui/icons-material'
 import DualSideDrawer from './utilities/DualSideDrawer'
 import ChatDrawerContent from './chat/ChatDrawerContent'
+import RulesBubble from './rules/RulesBubble'
+import Rules from './rules/Rules'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -31,6 +33,7 @@ function App() {
     <div className="App">
       <WebSocketContextProvider>
         <GameStateContextProvider>
+          <RulesBubble setRulesOpen={setLeftDrawerOpen} />
           <ChatBubble chatOpen={rightDrawerOpen} setChatOpen={setRightDrawerOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
           <DualSideDrawer
             openLeft={leftDrawerOpen}
@@ -38,10 +41,7 @@ function App() {
             setOpenLeft={setLeftDrawerOpen}
             setOpenRight={setRightDrawerOpen}
             leftDrawerContent={(
-              <Box sx={{ p: 2 }}>
-                <Typography variant="h6">Left Sidebar</Typography>
-                <Typography>Some content for the left drawer.</Typography>
-              </Box>
+              <Rules />
             )}
             rightDrawerContent={(
               <ChatDrawerContent
