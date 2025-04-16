@@ -34,20 +34,22 @@ function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
   }
 
   if (gameState && !gameState.selfPlayer) {
-    <Grid2 mt={2} container spacing={2} direction="column">
-      <Grid2>
-        <Typography variant="h6" my={3}>
-          {t('youAreNotInGame')}
-        </Typography>
+    return (
+      <Grid2 mt={2} container spacing={2} direction="column">
+        <Grid2>
+          <Typography variant="h6" my={3}>
+            {t('youAreNotInGame')}
+          </Typography>
+        </Grid2>
+        <Grid2>
+          <Link to={`/join-game?roomId=${gameState.roomId}`}>
+            <Button variant="contained">
+              {t('joinGame')}
+            </Button>
+          </Link>
+        </Grid2>
       </Grid2>
-      <Grid2>
-        <Link to={`/join-game?roomId=${gameState.roomId}`}>
-          <Button variant="contained">
-            {t('joinGame')}
-          </Button>
-        </Link>
-      </Grid2>
-    </Grid2>
+    )
   }
 
   return gameState.isStarted
