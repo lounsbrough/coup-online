@@ -68,7 +68,6 @@ export default function ChatDrawerContent({
 
   return (
     <>
-      <Divider />
       <Box ref={scrollingMessageDrawerRef} sx={{ py: 1, px: 2, overflowY: 'auto' }}>
         <ChatMessages />
       </Box>

@@ -101,7 +101,7 @@ const SideDrawer = ({ side, open, setOpen, drawerContent, drawerHeader }: SideDr
       }} onClick={() => { setOpen(false) }}>
         <CloseIcon fontSize="large" />
       </IconButton>
-      <Box sx={{ p: theme.isLargeScreen ? 1.4 : 4, display: 'flex' }}>
+      <Box sx={{ p: theme.isLargeScreen ? 1.3 : 4, display: 'flex' }}>
         <Typography display="flex" flexGrow={1} textAlign="center" variant='h5' justifyContent="center" alignItems="center">
           {drawerHeader}
         </Typography>
