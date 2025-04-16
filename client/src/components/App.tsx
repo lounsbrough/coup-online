@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Route, Routes, Link } from 'react-router'
-import { Box, Button, IconButton, Typography, useTheme } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import JoinGame from './pages/JoinGame'
 import CreateGame from './pages/CreateGame'
 import Home from './pages/Home'
@@ -16,18 +16,17 @@ import { WebSocketContextProvider } from '../contexts/WebSocketContext'
 import Logo from './icons/Logo'
 import { useTranslationContext } from '../contexts/TranslationsContext'
 import ChatBubble from './chat/ChatBubble'
-import { Gavel } from '@mui/icons-material'
+import { Chat, Gavel } from '@mui/icons-material'
 import DualSideDrawer from './utilities/DualSideDrawer'
 import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
-import Rules from './rules/Rules'
+import RulesDrawerContent from './rules/RulesDrawerContent'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false)
   const [latestReadMessageId, setLatestReadMessageId] = useState<string | null>(null)
   const { t } = useTranslationContext()
-  const { isSmallScreen } = useTheme()
 
   return (
     <div className="App">
@@ -40,41 +39,28 @@ function App() {
             openRight={rightDrawerOpen}
             setOpenLeft={setLeftDrawerOpen}
             setOpenRight={setRightDrawerOpen}
-            leftDrawerContent={(
-              <Rules />
+            leftDrawerContent={<RulesDrawerContent />}
+            leftDrawerHeader={(
+              <>
+                <Gavel sx={{ mr: 1 }} />
+                <span>{t('rules')}</span>
+              </>
             )}
             rightDrawerContent={(
               <ChatDrawerContent
                 setLatestReadMessageId={setLatestReadMessageId}
                 chatOpen={rightDrawerOpen}
-                setChatOpen={setRightDrawerOpen}
               />
+            )}
+            rightDrawerHeader={(
+              <>
+                <Chat sx={{ mr: 1 }} />
+                <span>{t('chat')}</span>
+              </>
             )}
           >
             <header className="App-header">
               <Box sx={{ whiteSpace: 'nowrap' }}>
-                {/* <Rules /> */}
-                {isSmallScreen ? (
-                  <IconButton
-                    color="primary"
-                    size="large"
-                    onClick={() => {
-                      setLeftDrawerOpen(true)
-                    }}
-                  >
-                    <Gavel />
-                  </IconButton>
-                ) : (
-                  <Button
-                    size="large"
-                    startIcon={<Gavel />}
-                    onClick={() => {
-                      setLeftDrawerOpen(true)
-                    }}
-                  >
-                    {t('rules')}
-                  </Button>
-                )}
                 <Link to={'/'}>
                   <Button
                     size='large'
@@ -82,7 +68,7 @@ function App() {
                     startIcon={<Logo height='32px' />}
                   >
                     <Typography component="span" sx={{
-                      fontSize: "32px"
+                      fontSize: '2rem'
                     }}
                     >
                       {t('title')}

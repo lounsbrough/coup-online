@@ -6,7 +6,7 @@ import InfluenceIcon from "../icons/InfluenceIcon"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import './Rules.css'
 
-function Rules() {
+export default function RulesDrawerContent() {
   const { breakpoints, actionColors, influenceColors } = useTheme()
   const { t } = useTranslationContext()
 
@@ -261,5 +261,3 @@ function Rules() {
     </DialogContent>
   )
 }
-
-export default Rules
