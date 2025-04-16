@@ -10,7 +10,8 @@ import {
   Divider,
 } from "@mui/material"
 
-const desktopDrawerWidth = `30vw`
+const leftDesktopDrawerWidth = `35vw`
+const rightDesktopDrawerWidth = `25vw`
 
 interface MainContentProps {
   openLeft: boolean
@@ -27,9 +28,9 @@ const MainContent = ({ openLeft, openRight, children }: MainContentProps) => {
       sx={{
         flexGrow: 1,
         ...(theme.isLargeScreen && {
-          ml: openLeft ? `${desktopDrawerWidth}` : 0,
-          mr: openRight ? `${desktopDrawerWidth}` : 0,
-          width: `calc(100% - ${openLeft ? desktopDrawerWidth : 0} - ${openRight ? desktopDrawerWidth : 0})`,
+          ml: openLeft ? `${leftDesktopDrawerWidth}` : 0,
+          mr: openRight ? `${rightDesktopDrawerWidth}` : 0,
+          width: `calc(100% - ${openLeft ? leftDesktopDrawerWidth : 0} - ${openRight ? rightDesktopDrawerWidth : 0})`,
         }),
         boxSizing: "border-box",
         minHeight: "100vh",
@@ -55,11 +56,12 @@ interface SideDrawerProps {
   side: 'left' | 'right'
   open: boolean
   setOpen: (open: boolean) => void
+  desktopDrawerWidth: string
   drawerContent: React.ReactNode
   drawerHeader: React.ReactNode
 }
 
-const SideDrawer = ({ side, open, setOpen, drawerContent, drawerHeader }: SideDrawerProps) => {
+const SideDrawer = ({ side, open, setOpen, desktopDrawerWidth, drawerContent, drawerHeader }: SideDrawerProps) => {
   const theme = useTheme()
 
   const transition = () =>
@@ -136,6 +138,7 @@ const DualSideDrawer = ({
         side="left"
         open={openLeft}
         setOpen={setOpenLeft}
+        desktopDrawerWidth={leftDesktopDrawerWidth}
         drawerContent={leftDrawerContent}
         drawerHeader={leftDrawerHeader}
       />
@@ -143,6 +146,7 @@ const DualSideDrawer = ({
         side="right"
         open={openRight}
         setOpen={setOpenRight}
+        desktopDrawerWidth={rightDesktopDrawerWidth}
         drawerContent={rightDrawerContent}
         drawerHeader={rightDrawerHeader}
       />
