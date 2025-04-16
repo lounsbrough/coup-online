@@ -98,7 +98,7 @@ function PlayerActionConfirmation({
               setAutoSubmitProgress(100)
               trigger(variables)
             }}
-            disabled={isMutating}
+            loading={isMutating}
           >
             {t('confirm')}
           </Button>
