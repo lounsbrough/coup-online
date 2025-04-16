@@ -82,7 +82,7 @@ function App() {
               <Route path="/">
                 <Route index element={<Home />} />
                 <Route path="game" element={
-                  <Game />
+                  <Game leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
                 } />
                 <Route path="join-game" element={<JoinGame />} />
                 <Route path="create-game" element={<CreateGame />} />

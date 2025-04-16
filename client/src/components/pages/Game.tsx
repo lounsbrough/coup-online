@@ -5,7 +5,12 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Link } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 
-function Game() {
+interface GameProps {
+  leftDrawerOpen: boolean
+  rightDrawerOpen: boolean
+}
+
+function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
@@ -28,7 +33,7 @@ function Game() {
         </Grid2>
       )}
       {gameState && gameState.isStarted && gameState.selfPlayer && (
-        <GameBoard />
+        <GameBoard leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
       )}
       {gameState && !gameState.isStarted && gameState.selfPlayer && (
         <WaitingRoom />
