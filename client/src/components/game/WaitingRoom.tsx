@@ -96,7 +96,8 @@ function WaitingRoom() {
                 playerId: getPlayerId()
               })
             }}
-            disabled={gameState.players.length < 2 || isMutating}
+            disabled={gameState.players.length < 2}
+            loading={isMutating}
           >
             {(t('startGame'))}
           </Button>

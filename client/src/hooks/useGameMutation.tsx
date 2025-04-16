@@ -1,5 +1,5 @@
 import { PlayerActions, DehydratedPublicGameState } from "@shared"
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useGameStateContext } from "../contexts/GameStateContext"
 import useSWRMutation from "swr/mutation"
@@ -9,6 +9,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
   action: PlayerActions,
   callback?: (gameState: DehydratedPublicGameState) => void
 }) {
+  const noSocketCallbackTimeout = useRef<NodeJS.Timeout>(undefined)
   const [error, setError] = useState('')
   const [isMutatingSocket, setIsMutatingSocket] = useState(false)
   const { socket, isConnected } = useWebSocketContext()
@@ -35,7 +36,12 @@ function useGameMutation<ParamsType>({ action, callback }: {
     ? (params: ParamsType) => {
       setError('')
       setIsMutatingSocket(true)
+      clearTimeout(noSocketCallbackTimeout.current)
+      noSocketCallbackTimeout.current = setTimeout(() => {
+        setIsMutatingSocket(false)
+      }, 5000)
       socket.emit(action, params, ({ error, gameState }: { error: string, gameState: DehydratedPublicGameState }) => {
+        clearTimeout(noSocketCallbackTimeout.current)
         setIsMutatingSocket(false)
         if (error) {
           setError(error)

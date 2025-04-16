@@ -88,7 +88,7 @@ function CreateGame() {
             type="submit"
             sx={{ mt: 5 }}
             variant="contained"
-            disabled={isMutating}
+            loading={isMutating}
           >
             {t('createGame')}
           </Button>
