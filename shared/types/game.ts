@@ -168,6 +168,7 @@ export type Player = {
   deadInfluences: Influences[]
   name: string
   ai: boolean
+  personalityHidden?: boolean
   personality?: AiPersonality
   grudges: {
     [playerName: string]: number

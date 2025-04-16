@@ -131,7 +131,7 @@ const eventHandlers: {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName.trim()
-        const personality: AiPersonality = req.body.personality
+        const personality: AiPersonality | undefined = req.body.personality
         return { roomId, playerId, playerName, personality }
       },
       validator: validateExpressBody
@@ -144,7 +144,7 @@ const eventHandlers: {
         vengefulness: Joi.number().integer().min(0).max(100).required(),
         honesty: Joi.number().integer().min(0).max(100).required(),
         skepticism: Joi.number().integer().min(0).max(100).required()
-      }).required()
+      })
     })
   },
   [PlayerActions.removeFromGame]: {

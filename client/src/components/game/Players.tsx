@@ -92,6 +92,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                   <Typography variant="h6" sx={{ color: cardTextColor }}>
                     {ai && (
                       <Tooltip title={
+                        personality ? (
                         <>
                           <Typography>
                             {t('vengefulness')}
@@ -106,6 +107,11 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                             {`: ${personality?.skepticism}`}%
                           </Typography>
                         </>
+                        ) : (
+                          <Typography>
+                            {t('personalityIsHidden')}
+                          </Typography>
+                        )
                       }>
                         <Bot sx={{ verticalAlign: 'text-bottom' }} />
                       </Tooltip>
