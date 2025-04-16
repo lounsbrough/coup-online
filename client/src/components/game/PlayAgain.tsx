@@ -27,7 +27,7 @@ function PlayAgain() {
           })
         }}
         variant="contained"
-        disabled={isMutating}
+        loading={isMutating}
       >
         {t('playAgain')}
       </Button>

@@ -164,7 +164,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
           <Button
             type="submit"
             variant="contained"
-            disabled={isMutating}
+            loading={isMutating}
           >
             {t('add')}
           </Button>
