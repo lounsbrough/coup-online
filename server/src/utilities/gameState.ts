@@ -41,7 +41,6 @@ export const getPublicGameState = ({ gameState, playerId }: {
       color: player.color,
       ai: player.ai,
       grudges: player.grudges,
-      ...(player.personalityHidden !== undefined && { personalityHidden: player.personalityHidden }),
       ...(!player.personalityHidden && player.personality && { personality: player.personality })
     })
     if (player.id === playerId) {

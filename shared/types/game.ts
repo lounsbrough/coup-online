@@ -183,7 +183,7 @@ export type DehydratedPlayer = Omit<Player,
   unclaimedInfluences: Influences[]
 }
 
-export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
+export type PublicPlayer = Omit<Player, 'id' | 'influences' | 'personalityHidden'> & {
   influenceCount: number
 }
 
