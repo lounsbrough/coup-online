@@ -83,7 +83,6 @@ export type Translations = ActionMessages & {
   losingInfluence: string
   messageWasDeleted: string
   noChatMessages: string
-  none: string
   notEnoughCoins: string
   numberOfPlayers: string
   pageNotFound: string
@@ -244,7 +243,6 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: 'Losing Influence',
     messageWasDeleted: 'Message was deleted',
     noChatMessages: 'No chat messages',
-    none: 'None',
     notEnoughCoins: 'Not enough coins',
     numberOfPlayers: 'Number of Players',
     pageNotFound: 'Page not found',
@@ -403,7 +401,6 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: 'Perdendo influência',
     messageWasDeleted: 'Mensagem foi descartada',
     noChatMessages: 'Nenhuma mensagem',
-    none: 'Nenhum',
     notEnoughCoins: 'Moedas insuficientes',
     numberOfPlayers: 'Número de jogadores',
     pageNotFound: 'Página não encontrada',

@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import Button from '@mui/material/Button'
 import ChatMessages from './ChatMessages'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
-import { Chat, ChevronRight, Close, Send } from '@mui/icons-material'
-import { Box, Divider, IconButton, TextField, Typography, useTheme } from '@mui/material'
+import { Send } from '@mui/icons-material'
+import { Box, TextField, Typography } from '@mui/material'
 import useGameMutation from '../../hooks/useGameMutation'
 import { PlayerActions } from '@shared'
 import { getPlayerId } from '../../helpers/players'
@@ -12,19 +12,17 @@ import { getLatestReadMessageIdStorageKey } from '../../helpers/localStorageKeys
 
 interface ChatDrawerContentProps {
   chatOpen: boolean
-  setChatOpen: (open: boolean) => void
   setLatestReadMessageId: (id: string) => void
 }
 
 export default function ChatDrawerContent({
-  chatOpen, setChatOpen, setLatestReadMessageId
+  chatOpen, setLatestReadMessageId
 }: ChatDrawerContentProps) {
   const scrollingMessageDrawerRef = useRef<HTMLElement>(null)
   const [pendingMessageText, setPendingMessageText] = useState('')
   const [pendingMessageId, setPendingMessageId] = useState('')
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
-  const { isLargeScreen } = useTheme()
 
   const { trigger, isMutating, error } = useGameMutation<{
     roomId: string, playerId: string, messageId: string, messageText: string
@@ -68,20 +66,8 @@ export default function ChatDrawerContent({
     })
   }
 
-  const CloseIcon = isLargeScreen ? ChevronRight : Close
-
   return (
     <>
-      <Box sx={{ p: isLargeScreen ? 1.4 : 4, display: 'flex', alignItems: 'center' }}>
-        <IconButton sx={{ position: 'absolute' }} onClick={() => { setChatOpen(false) }}>
-          <CloseIcon fontSize="large" />
-        </IconButton>
-        <Typography flexGrow={1} textAlign="center" variant='h5'>
-          <Chat sx={{ verticalAlign: 'middle', mr: 1 }} />
-          <span style={{ verticalAlign: 'middle' }}>{t('chat')}</span>
-        </Typography>
-      </Box>
-      <Divider />
       <Box ref={scrollingMessageDrawerRef} sx={{ py: 1, px: 2, overflowY: 'auto' }}>
         <ChatMessages />
       </Box>

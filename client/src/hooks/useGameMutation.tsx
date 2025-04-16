@@ -10,10 +10,11 @@ function useGameMutation<ParamsType>({ action, callback }: {
   callback?: (gameState: DehydratedPublicGameState) => void
 }) {
   const [error, setError] = useState('')
+  const [isMutatingSocket, setIsMutatingSocket] = useState(false)
   const { socket, isConnected } = useWebSocketContext()
   const { setDehydratedGameState } = useGameStateContext()
 
-  const { trigger: triggerSwr, isMutating } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
+  const { trigger: triggerSwr, isMutating: isMutatingSwr } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
     setError('')
     return fetch(url, {
       method: 'POST',
@@ -33,7 +34,9 @@ function useGameMutation<ParamsType>({ action, callback }: {
   const trigger = useMemo(() => socket && isConnected
     ? (params: ParamsType) => {
       setError('')
+      setIsMutatingSocket(true)
       socket.emit(action, params, ({ error, gameState }: { error: string, gameState: DehydratedPublicGameState }) => {
+        setIsMutatingSocket(false)
         if (error) {
           setError(error)
         } else {
@@ -44,7 +47,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
     }
     : triggerSwr, [socket, isConnected, action, callback, triggerSwr, setDehydratedGameState])
 
-  return { trigger, error, isMutating }
+  return { trigger, error, isMutating: isMutatingSwr || isMutatingSocket }
 }
 
 export default useGameMutation

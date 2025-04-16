@@ -4,6 +4,8 @@ import ChatIcon from '@mui/icons-material/Chat'
 import { getLatestReadMessageIdStorageKey } from '../../helpers/localStorageKeys'
 import { useGameStateContext } from '../../contexts/GameStateContext'
 import { getDiscreteGradient } from '../../helpers/styles'
+import { Tooltip } from '@mui/material'
+import { useTranslationContext } from '../../contexts/TranslationsContext'
 
 const fabSize = 56
 
@@ -18,6 +20,7 @@ export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId,
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false)
   const [unreadMessagePlayerColors, setUnreadMessagePlayerColors] = useState<string[]>([])
   const { gameState } = useGameStateContext()
+  const { t } = useTranslationContext()
 
   useEffect(() => {
     if (!gameState) return
@@ -58,7 +61,7 @@ export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId,
   const fabBackground = getDiscreteGradient(unreadMessagePlayerColors)
 
   return (
-    <>
+    <Tooltip title={t('chat')}>
       <Fab
         onClick={() => { setChatOpen(true) }}
         color="primary"
@@ -85,6 +88,6 @@ export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId,
       >
         <ChatIcon fontSize='large' />
       </Fab>
-    </>
+    </Tooltip>
   )
 }

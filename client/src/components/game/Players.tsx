@@ -73,7 +73,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     background: playerColor,
                     borderRadius: 3,
                     p: 1,
-                    width: '6rem',
+                    width: theme.isLargeScreen ? '7rem' : '6rem',
                     transition: theme.transitions.create(['transform', 'box-shadow']),
                     animation: isWaitingOnPlayer ? 'pulsePlayer 1.5s infinite' : undefined,
                     "@keyframes pulsePlayer": {
@@ -116,6 +116,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     container mt={0.5}
                     spacing={1}
                     justifyContent='center'
+                    flexWrap="nowrap"
                   >
                     {[
                       ...Array.from({ length: influenceCount }, () => undefined),

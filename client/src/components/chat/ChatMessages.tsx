@@ -66,7 +66,7 @@ export default function ChatMessages() {
                 >
                   {deleted ? t('messageWasDeleted') : text}
                 </Typography>
-                <Typography>
+                <Typography sx={{ mr: isMyMessage ? '-0.4rem' : undefined }}>
                   <Tooltip title={timestamp.toLocaleString()}>
                     <Typography fontSize='smaller' component="span" sx={{
                       mr: 1,

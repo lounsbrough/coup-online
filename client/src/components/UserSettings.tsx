@@ -31,7 +31,7 @@ function UserSettings() {
             setModalOpen(true)
           }}
         >
-          <Settings />
+          <Settings sx={{ fontSize: '2rem' }} />
         </IconButton>
       ) : (
         <Button
