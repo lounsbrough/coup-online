@@ -14,32 +14,47 @@ function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
-  return (
-    <>
-      {gameState && !gameState.selfPlayer && (
-        <Grid2 mt={2} container spacing={2} direction="column">
-          <Grid2>
-            <Typography variant="h6" my={3}>
-              {t('youAreNotInGame')}
-            </Typography>
-          </Grid2>
-          <Grid2>
-            <Link to={`/join-game?roomId=${gameState.roomId}`}>
-              <Button variant="contained">
-                {t('joinGame')}
-              </Button>
-            </Link>
-          </Grid2>
+  if (!gameState) {
+    return (
+      <Grid2 mt={2} container spacing={2} direction="column">
+        <Grid2>
+          <Typography variant="h6" my={3}>
+            {t('gameNotFound')}
+          </Typography>
         </Grid2>
-      )}
-      {gameState && gameState.isStarted && gameState.selfPlayer && (
-        <GameBoard leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
-      )}
-      {gameState && !gameState.isStarted && gameState.selfPlayer && (
-        <WaitingRoom />
-      )}
-    </>
-  )
+        <Grid2>
+          <Link to={`/`}>
+            <Button variant="contained">
+              {t('home')}
+            </Button>
+          </Link>
+        </Grid2>
+      </Grid2>
+    )
+  }
+
+  if (gameState && !gameState.selfPlayer) {
+    return (
+      <Grid2 mt={2} container spacing={2} direction="column">
+        <Grid2>
+          <Typography variant="h6" my={3}>
+            {t('youAreNotInGame')}
+          </Typography>
+        </Grid2>
+        <Grid2>
+          <Link to={`/join-game?roomId=${gameState.roomId}`}>
+            <Button variant="contained">
+              {t('joinGame')}
+            </Button>
+          </Link>
+        </Grid2>
+      </Grid2>
+    )
+  }
+
+  return gameState.isStarted
+    ? <GameBoard leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
+    : <WaitingRoom />
 }
 
 export default Game

@@ -143,14 +143,16 @@ export const addPlayerToGame = ({
   playerId,
   playerName,
   ai = false,
-  aiPersonality,
+  personality,
 }: {
   state: GameState
   playerId: string
   playerName: string
   ai?: boolean
-  aiPersonality?: AiPersonality
+  personality?: AiPersonality
 }) => {
+  const randomPersonality = () => Math.floor(Math.random() * 101)
+
   state.players.push({
     id: playerId,
     name: playerName,
@@ -162,7 +164,12 @@ export const addPlayerToGame = ({
     color: state.availablePlayerColors.shift()!,
     ai,
     grudges: {},
-    ...(aiPersonality && { personality: aiPersonality })
+    personalityHidden: ai && !personality,
+    ...(ai && { personality: personality ?? {
+        honesty: randomPersonality(),
+        skepticism: randomPersonality(),
+        vengefulness: randomPersonality(),
+      }})
   })
 }
 

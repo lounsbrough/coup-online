@@ -89,7 +89,7 @@ export const addAiPlayerHandler = async ({ roomId, playerId, playerName, persona
   roomId: string
   playerId: string
   playerName: string
-  personality: AiPersonality
+  personality?: AiPersonality
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -110,14 +110,12 @@ export const addAiPlayerHandler = async ({ roomId, playerId, playerName, persona
       throw new GameMutationInputError(`Room ${roomId} already has player named ${playerName}`)
     }
 
-    const aiPlayerId = crypto.randomUUID()
-
     addPlayerToGame({
       state,
-      playerId: aiPlayerId,
+      playerId: crypto.randomUUID(),
       playerName,
       ai: true,
-      aiPersonality: personality
+      ...(personality && { personality })
     })
   })
 

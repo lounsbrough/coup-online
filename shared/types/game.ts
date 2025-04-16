@@ -168,6 +168,7 @@ export type Player = {
   deadInfluences: Influences[]
   name: string
   ai: boolean
+  personalityHidden?: boolean
   personality?: AiPersonality
   grudges: {
     [playerName: string]: number
@@ -182,7 +183,7 @@ export type DehydratedPlayer = Omit<Player,
   unclaimedInfluences: Influences[]
 }
 
-export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
+export type PublicPlayer = Omit<Player, 'id' | 'influences' | 'personalityHidden'> & {
   influenceCount: number
 }
 

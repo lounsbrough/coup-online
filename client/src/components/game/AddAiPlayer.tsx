@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Slider, TextField, Typography } from "@mui/material"
+import { Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Slider, Switch, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import { Casino } from "@mui/icons-material"
 import Bot from "../icons/Bot"
@@ -8,6 +8,7 @@ import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import BetaTag from "../utilities/BetaTag"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { chooseAiPersonalityStorageKey } from "../../helpers/localStorageKeys"
 
 const botNameIdeas = [
   'R2-D2',
@@ -30,11 +31,12 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
   setAddAiPlayerDialogOpen: (open: boolean) => void
 }) {
   const [botName, setBotName] = useState('')
+  const [choosePersonality, setChoosePersonality] = useState<boolean>(localStorage.getItem(chooseAiPersonalityStorageKey) !== JSON.stringify(false))
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
   const { trigger, isMutating, error } = useGameMutation<{
-    roomId: string, playerId: string, playerName: string, personality: AiPersonality
+    roomId: string, playerId: string, playerName: string, personality?: AiPersonality
   }>({
     action: PlayerActions.addAiPlayer,
     callback: () => {
@@ -82,7 +84,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
             roomId: gameState.roomId,
             playerId: getPlayerId(),
             playerName: botName.trim(),
-            personality: { vengefulness, honesty, skepticism }
+            ...(choosePersonality && { personality: { vengefulness, honesty, skepticism } })
           })
         }}
       >
@@ -113,44 +115,60 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               {t('random')}
             </Button>
           </Box>
-          <Box p={2} mt={2}>
-            <Typography mt={2}>
-              {t('vengefulness')}
-              {`: ${vengefulness}%`}
+          <Box mt={4}>
+            <Typography component="span">
+              {t('choosePersonality')}
+              :
             </Typography>
-            <Slider
-              step={1}
-              value={vengefulness}
-              valueLabelDisplay="auto"
-              min={minSliderValue}
-              max={maxSliderValue}
-              onChange={handleVengefulnessChange}
-            />
-            <Typography mt={2}>
-              {t('honesty')}
-              {`: ${honesty}%`}
-            </Typography>
-            <Slider
-              step={1}
-              value={honesty}
-              valueLabelDisplay="auto"
-              min={minSliderValue}
-              max={maxSliderValue}
-              onChange={handleHonestyChange}
-            />
-            <Typography mt={2}>
-              {t('skepticism')}
-              {`: ${skepticism}%`}
-            </Typography>
-            <Slider
-              step={1}
-              value={skepticism}
-              valueLabelDisplay="auto"
-              min={minSliderValue}
-              max={maxSliderValue}
-              onChange={handleSkepticismChange}
+            <Switch
+              checked={choosePersonality}
+              onChange={(event) => {
+                setChoosePersonality(event.target.checked)
+                localStorage.setItem(chooseAiPersonalityStorageKey, JSON.stringify(event.target.checked))
+              }}
+              slotProps={{ input: { 'aria-label': 'controlled' } }}
             />
           </Box>
+          <Collapse in={choosePersonality}>
+            <Box mt={1}>
+              <Typography mt={2}>
+                {t('vengefulness')}
+                {`: ${vengefulness}%`}
+              </Typography>
+              <Slider
+                step={1}
+                value={vengefulness}
+                valueLabelDisplay="auto"
+                min={minSliderValue}
+                max={maxSliderValue}
+                onChange={handleVengefulnessChange}
+              />
+              <Typography mt={2}>
+                {t('honesty')}
+                {`: ${honesty}%`}
+              </Typography>
+              <Slider
+                step={1}
+                value={honesty}
+                valueLabelDisplay="auto"
+                min={minSliderValue}
+                max={maxSliderValue}
+                onChange={handleHonestyChange}
+              />
+              <Typography mt={2}>
+                {t('skepticism')}
+                {`: ${skepticism}%`}
+              </Typography>
+              <Slider
+                step={1}
+                value={skepticism}
+                valueLabelDisplay="auto"
+                min={minSliderValue}
+                max={maxSliderValue}
+                onChange={handleSkepticismChange}
+              />
+            </Box>
+          </Collapse>
           {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </DialogContent>
         <DialogActions>

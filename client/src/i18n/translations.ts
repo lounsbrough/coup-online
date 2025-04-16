@@ -31,6 +31,7 @@ export type Translations = ActionMessages & {
   chooseInfluenceToLose: string
   chooseInfluenceToReveal: string
   chooseInfluencesToKeep: string
+  choosePersonality: string
   claimAnInfluence: string
   close: string
   collectCoins: string
@@ -60,6 +61,7 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerLostInfluence]: string
   [EventMessages.PlayerReplacedInfluence]: string
   fullRules: string
+  gameNotFound: string
   goal: string
   home: string
   honesty: string
@@ -87,6 +89,7 @@ export type Translations = ActionMessages & {
   numberOfPlayers: string
   pageNotFound: string
   payCoins: string
+  personalityIsHidden: string
   playAgain: string
   playerTurn: string
   playerWantToReset: string
@@ -169,6 +172,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     chooseInfluenceToLose: 'Choose an Influence to Lose',
     chooseInfluenceToReveal: 'Choose an Influence to Reveal',
     chooseInfluencesToKeep: 'Choose {{count}} Influence{{plural[[s]]}} to Keep',
+    choosePersonality: 'Choose Personality',
     claimAnInfluence: 'Claim an influence',
     close: 'Close',
     collectCoins: 'Collect {{count}} coin{{plural[[s]]}}',
@@ -220,6 +224,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerLostInfluence]: '{{primaryPlayer}} lost their {{primaryInfluence}}',
     [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revealed and replaced {{primaryInfluence}}',
     fullRules: 'Complete Rules',
+    gameNotFound: 'Game not found',
     goal: 'Goal',
     home: 'Home',
     honesty: 'Honesty',
@@ -247,6 +252,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     numberOfPlayers: 'Number of Players',
     pageNotFound: 'Page not found',
     payCoins: 'Pay {{count}} coin{{plural[[s]]}}',
+    personalityIsHidden: 'Personality is hidden',
     playAgain: 'Play Again',
     playerTurn: '{{primaryPlayer}}\'s Turn',
     playerWantToReset: '{{primaryPlayer}} wants to reset the game',
@@ -327,6 +333,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     chooseInfluenceToLose: 'Escolha uma influência para perder',
     chooseInfluenceToReveal: 'Escolha uma influência para revelar',
     chooseInfluencesToKeep: 'Escolha {{count}} influência{{plural[[s]]}} para manter',
+    choosePersonality: 'Escolher personalidade',
     claimAnInfluence: 'Declare uma influência',
     close: 'Fechar',
     collectCoins: 'Colete {{count}} moeda{{plural[[s]]}}',
@@ -378,6 +385,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerLostInfluence]: '{{primaryPlayer}} perdeu seu {{primaryInfluence}}',
     [EventMessages.PlayerReplacedInfluence]: '{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}',
     fullRules: 'Regras completas',
+    gameNotFound: 'Jogo não encontrado',
     goal: 'Meta',
     home: 'Início',
     honesty: 'Honestidade',
@@ -405,6 +413,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     numberOfPlayers: 'Número de jogadores',
     pageNotFound: 'Página não encontrada',
     payCoins: 'Pague {{count}} moeda{{plural[[s]]}}',
+    personalityIsHidden: 'Personalidade está oculta',
     playAgain: 'Jogar novamente',
     playerTurn: 'A vez de {{primaryPlayer}}',
     playerWantToReset: '{{primaryPlayer}} quer reiniciar o jogo',

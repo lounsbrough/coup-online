@@ -89,7 +89,7 @@ function UserSettings() {
                   setConfirmActions(event.target.checked)
                   localStorage.setItem(confirmActionsStorageKey, JSON.stringify(event.target.checked))
                 }}
-                inputProps={{ 'aria-label': 'controlled' }}
+                slotProps={{ input: { 'aria-label': 'controlled' } }}
               />
             </Grid2>
             <Grid2 height={rowHeight} alignContent="center">
