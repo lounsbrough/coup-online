@@ -10,7 +10,7 @@ import {
   Divider,
 } from "@mui/material"
 
-const dektopDrawerWidth = `30vw`
+const desktopDrawerWidth = `30vw`
 
 interface MainContentProps {
   openLeft: boolean
@@ -27,9 +27,9 @@ const MainContent = ({ openLeft, openRight, children }: MainContentProps) => {
       sx={{
         flexGrow: 1,
         ...(theme.isLargeScreen && {
-          ml: openLeft ? `${dektopDrawerWidth}` : 0,
-          mr: openRight ? `${dektopDrawerWidth}` : 0,
-          width: `calc(100% - ${openLeft ? dektopDrawerWidth : 0} - ${openRight ? dektopDrawerWidth : 0})`,
+          ml: openLeft ? `${desktopDrawerWidth}` : 0,
+          mr: openRight ? `${desktopDrawerWidth}` : 0,
+          width: `calc(100% - ${openLeft ? desktopDrawerWidth : 0} - ${openRight ? desktopDrawerWidth : 0})`,
         }),
         boxSizing: "border-box",
         minHeight: "100vh",
@@ -77,7 +77,7 @@ const SideDrawer = ({ side, open, setOpen, drawerContent, drawerHeader }: SideDr
       slotProps={{
         paper: {
           sx: {
-            width: theme.isLargeScreen ? (open ? dektopDrawerWidth : 0) : undefined,
+            width: theme.isLargeScreen ? (open ? desktopDrawerWidth : 0) : undefined,
             boxSizing: 'border-box',
             overflowX: 'hidden',
             transition,
@@ -85,7 +85,7 @@ const SideDrawer = ({ side, open, setOpen, drawerContent, drawerHeader }: SideDr
         }
       }}
       sx={{
-        maxWidth: theme.isLargeScreen ? dektopDrawerWidth : undefined,
+        maxWidth: theme.isLargeScreen ? desktopDrawerWidth : undefined,
         flexShrink: 0,
         transition,
       }}
