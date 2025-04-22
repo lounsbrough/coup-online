@@ -87,7 +87,7 @@ export default function ChatMessages() {
                   }}
                 >
                   {deleted ? t('messageWasDeleted') : (
-                    editingMessage ? (
+                    editingMessage?.id === id ? (
                       <TextField
                         placeholder={t('writeNewMessage') as string}
                         label={`${editingMessage.text ? ` (${maxMessageLength - editingMessage.text.length}/${maxMessageLength})` : ''}`}
