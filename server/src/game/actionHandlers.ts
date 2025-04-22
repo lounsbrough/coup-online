@@ -968,11 +968,18 @@ export const sendChatMessageHandler = async ({ roomId, playerId, messageId, mess
 
   const player = getPlayerInRoom(gameState, playerId)
 
-  if (gameState.chatMessages.some(({id}) => id === messageId)) {
-    throw new GameMutationInputError('This message id already exists')
-  }
-
   await mutateGameState(gameState, (state) => {
+    const existingMessage = state.chatMessages.find(({id}) => id === messageId)
+
+    if (existingMessage && existingMessage?.from !== player.name) {
+      throw new GameMutationInputError('This is not your message')
+    }
+
+    if (existingMessage) {
+      existingMessage.text = messageText
+      return
+    }
+
     state.chatMessages.push({
       id: messageId,
       text: messageText,

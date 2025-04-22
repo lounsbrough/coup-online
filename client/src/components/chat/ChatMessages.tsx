@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { Box, IconButton, Popover, Tooltip, Typography } from "@mui/material"
-import { AddReaction as AddReactionIcon, Delete as DeleteIcon, Restore as RestoreIcon } from "@mui/icons-material"
+import { Box, IconButton, Popover, TextField, Tooltip, Typography } from "@mui/material"
+import { AddReaction as AddReactionIcon, Cancel, Check, Delete as DeleteIcon, Edit, Restore as RestoreIcon } from "@mui/icons-material"
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
@@ -11,11 +11,20 @@ import { useColorModeContext } from "../../contexts/MaterialThemeContext"
 import './ChatMessages.css'
 
 export default function ChatMessages() {
+  const [editingMessage, setEditingMessage] = useState<{ id: string, text: string }>()
   const [emojiMessageId, setEmojiMessageId] = useState<string>()
   const [emojiPickerAnchorEl, setEmojiPickerAnchorEl] = useState<HTMLButtonElement | null>(null)
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const { colorMode } = useColorModeContext()
+
+  const sendChatMessageMutation = useGameMutation<{
+    roomId: string, playerId: string, messageId: string, messageText: string
+  }>({
+    action: PlayerActions.sendChatMessage, callback: () => {
+      setEditingMessage(undefined)
+    }
+  })
 
   const setChatMessageDeletedMutation = useGameMutation<{
     roomId: string, playerId: string, messageId: string, deleted: boolean
@@ -24,6 +33,8 @@ export default function ChatMessages() {
   const setEmojiOnChatMessageMutation = useGameMutation<{
     roomId: string, playerId: string, messageId: string, emoji: string, selected: boolean
   }>({ action: PlayerActions.setEmojiOnChatMessage })
+
+  const maxMessageLength = 500
 
   return (
     <>
@@ -36,6 +47,17 @@ export default function ChatMessages() {
           gameState.chatMessages.map(({ id, text, from, deleted, timestamp, emojis }) => {
             const isMyMessage = from === gameState.selfPlayer?.name
             const SetDeletedIcon = deleted ? RestoreIcon : DeleteIcon
+
+            const sendMessage = () => {
+              if (editingMessage && !sendChatMessageMutation.isMutating) {
+                sendChatMessageMutation.trigger({
+                  roomId: gameState.roomId,
+                  playerId: getPlayerId(),
+                  messageId: editingMessage.id || id,
+                  messageText: editingMessage.text.trim(),
+                })
+              }
+            }
 
             return (
               <Box
@@ -64,7 +86,57 @@ export default function ChatMessages() {
                     ...(deleted && { fontStyle: 'italic', fontSize: 'smaller' })
                   }}
                 >
-                  {deleted ? t('messageWasDeleted') : text}
+                  {deleted ? t('messageWasDeleted') : (
+                    editingMessage ? (
+                      <TextField
+                        placeholder={t('writeNewMessage') as string}
+                        label={`${editingMessage.text ? ` (${maxMessageLength - editingMessage.text.length}/${maxMessageLength})` : ''}`}
+                        value={editingMessage.text}
+                        onChange={(event) => {
+                          setEditingMessage({
+                            id: editingMessage.id,
+                            text: event.target.value
+                          })
+                        }}
+                        onKeyDown={(event) => {
+                          if (!!editingMessage.text.trim() && event.key === 'Enter') {
+                            sendMessage()
+                          }
+                        }}
+                        slotProps={{
+                          input: {
+                            endAdornment: (
+                              <>
+                                <IconButton
+                                  sx={{ m: -0.5 }}
+                                  disabled={sendChatMessageMutation.isMutating}
+                                >
+                                  <Cancel
+                                    onClick={() => {
+                                      setEditingMessage(undefined)
+                                    }} />
+                                </IconButton>
+                                <IconButton
+                                  sx={{ m: -0.5, mr: -2 }}
+                                  disabled={!editingMessage.text.trim()}
+                                  loading={sendChatMessageMutation.isMutating}
+                                >
+                                  <Check onClick={() => {
+                                    sendMessage()
+                                  }} />
+                                </IconButton>
+                              </>
+                            )
+                          },
+                          htmlInput: {
+                            maxLength: maxMessageLength
+                          }
+                        }}
+                        size='small'
+                        sx={{ width: '100%' }}
+                      />
+                    ) : text
+                  )}
                 </Typography>
                 <Typography sx={{ mr: isMyMessage ? '-0.4rem' : undefined }}>
                   <Tooltip title={timestamp.toLocaleString()}>
@@ -74,20 +146,31 @@ export default function ChatMessages() {
                     }}>{timestamp.toLocaleTimeString()}</Typography>
                   </Tooltip>
                   {isMyMessage && (
-                    <IconButton
-                      sx={{ m: -0.5 }}
-                      loading={setChatMessageDeletedMutation.isMutating}
-                      onClick={() => {
-                        setChatMessageDeletedMutation.trigger({
-                          roomId: gameState.roomId,
-                          playerId: getPlayerId(),
-                          messageId: id,
-                          deleted: !deleted
-                        })
-                      }}
-                    >
-                      <SetDeletedIcon fontSize="small" />
-                    </IconButton>
+                    <>
+                      {!deleted && (
+                        <IconButton
+                          sx={{ m: -0.5 }}
+                          loading={setChatMessageDeletedMutation.isMutating}
+                          onClick={() => { setEditingMessage({ id, text }) }}
+                        >
+                          <Edit fontSize="small" />
+                        </IconButton>
+                      )}
+                      <IconButton
+                        sx={{ m: -0.5 }}
+                        loading={setChatMessageDeletedMutation.isMutating}
+                        onClick={() => {
+                          setChatMessageDeletedMutation.trigger({
+                            roomId: gameState.roomId,
+                            playerId: getPlayerId(),
+                            messageId: id,
+                            deleted: !deleted
+                          })
+                        }}
+                      >
+                        <SetDeletedIcon fontSize="small" />
+                      </IconButton>
+                    </>
                   )}
                   <IconButton
                     onClick={(event) => {
