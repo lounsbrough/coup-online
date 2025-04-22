@@ -58,12 +58,14 @@ export default function ChatDrawerContent({
   }
 
   const sendMessage = () => {
-    trigger({
-      roomId: gameState.roomId,
-      playerId: getPlayerId(),
-      messageId: pendingMessageId,
-      messageText: pendingMessageText.trim()
-    })
+    if (!isMutating) {
+      trigger({
+        roomId: gameState.roomId,
+        playerId: getPlayerId(),
+        messageId: pendingMessageId,
+        messageText: pendingMessageText.trim()
+      })
+    }
   }
 
   return (
@@ -92,7 +94,7 @@ export default function ChatDrawerContent({
           }}
           size='small'
           sx={{ width: '100%' }}
-        ></TextField>
+        />
         <Button
           disabled={!sendEnabled}
           loading={isMutating}
