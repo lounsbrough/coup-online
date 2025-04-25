@@ -6,7 +6,6 @@ import { useTranslationContext } from "../../contexts/TranslationsContext"
 function InfluenceCard({ influence }: {
   influence: Influences
 }) {
-  const theme = useTheme()
   const { t } = useTranslationContext()
   const { influenceColors } = useTheme()
 
@@ -17,9 +16,7 @@ function InfluenceCard({ influence }: {
       alignContent: 'center',
       background: influence ? influenceColors[influence] : 'rgba(120, 120, 120, 0.5)',
       borderRadius: '0.5rem',
-      p: 2,
-      width: theme.isLargeScreen ? '10rem' : '9rem',
-      aspectRatio: 4
+      p: 2
     }}>
       <Grid2 container flexWrap="nowrap" spacing={1} justifyContent="center" alignItems="center">
         <Grid2>
