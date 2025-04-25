@@ -52,9 +52,14 @@ function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
     )
   }
 
-  return gameState.isStarted
-    ? <GameBoard leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
-    : <WaitingRoom />
+  return gameState.isStarted ? (
+    // Google Translate doesn't work well with some React components
+    // https://github.com/facebook/react/issues/11538
+    // https://issues.chromium.org/issues/41407169
+    <div className="notranslate">
+      <GameBoard leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
+    </div>
+  ) : <WaitingRoom />
 }
 
 export default Game
