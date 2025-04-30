@@ -11,10 +11,10 @@ interface GameProps {
 }
 
 function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
-  const { gameState, firstStateReturned } = useGameStateContext()
+  const { gameState, hasInitialStateLoaded } = useGameStateContext()
   const { t } = useTranslationContext()
 
-  if (!gameState && !firstStateReturned) {
+  if (!gameState && !hasInitialStateLoaded) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'var(--app-content-height)' }}>
         <CircularProgress size={50} />

@@ -9,16 +9,16 @@ import { getBaseUrl } from '../helpers/api'
 type GameStateContextType = {
   gameState?: PublicGameState | undefined,
   setDehydratedGameState: (newGameState: DehydratedPublicGameState) => void
-  firstStateReturned: boolean
+  hasInitialStateLoaded: boolean
 }
 
 export const GameStateContext = createContext<GameStateContextType>({
   setDehydratedGameState: () => { },
-  firstStateReturned: false
+  hasInitialStateLoaded: false
 })
 
 export function GameStateContextProvider({ children }: { children: ReactNode }) {
-  const [firstStateReturned, setFirstStateReturned] = useState(false)
+  const [hasInitialStateLoaded, setHasInitialStateLoaded] = useState(false)
   const [dehydratedGameState, setDehydratedGameState] = useState<DehydratedPublicGameState>()
   const [searchParams] = useSearchParams()
   const { socket, isConnected } = useWebSocketContext()
@@ -39,8 +39,8 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
       const { gameState: newState } = await response.json()
       setDehydratedGameStateIfChanged(newState)
     }
-    setFirstStateReturned(true)
-  }, [setDehydratedGameStateIfChanged, setFirstStateReturned])
+    setHasInitialStateLoaded(true)
+  }, [setDehydratedGameStateIfChanged, setHasInitialStateLoaded])
 
   useSWR<void, Error>(
     roomId
@@ -65,11 +65,11 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
     socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (dehydratedGameState) => {
       setDehydratedGameStateIfChanged(dehydratedGameState)
-      setFirstStateReturned(true)
+      setHasInitialStateLoaded(true)
     })
     socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => {
       console.error(error)
-      setFirstStateReturned(true)
+      setHasInitialStateLoaded(true)
     })
     socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
 
@@ -107,7 +107,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     }
   }, [roomId, socket, isConnected, aiPlayersActive, handleGameStateResponse])
 
-  const contextValue = { gameState, setDehydratedGameState, firstStateReturned }
+  const contextValue = { gameState, setDehydratedGameState, hasInitialStateLoaded }
 
   return (
     <GameStateContext.Provider value={contextValue}>
