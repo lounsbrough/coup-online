@@ -1,4 +1,4 @@
-import { Button, Grid2, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, Grid2, Typography } from "@mui/material"
 import GameBoard from "../game/GameBoard"
 import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -11,8 +11,16 @@ interface GameProps {
 }
 
 function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
-  const { gameState } = useGameStateContext()
+  const { gameState, firstStateReturned } = useGameStateContext()
   const { t } = useTranslationContext()
+
+  if (!gameState && !firstStateReturned) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'var(--app-content-height)' }}>
+        <CircularProgress size={50} />
+      </Box>
+    )
+  }
 
   if (!gameState) {
     return (
