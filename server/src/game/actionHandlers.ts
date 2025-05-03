@@ -239,10 +239,6 @@ export const forfeitGameHandler = async ({ roomId, playerId }: {
       throw new GameMutationInputError('Unable to find player')
     }
 
-    if (playerToForfeit.influences.length > 2) {
-      throw new GameMutationInputError('You can\'t forfeit with more than 2 influences')
-    }
-
     if (gameState.pendingInfluenceLoss[playerToForfeit.name]?.length) {
       throw new GameMutationInputError('You can\'t forfeit while pending influence loss')
     }
