@@ -43,7 +43,7 @@ function Forfeit() {
     || gameState.pendingActionChallenge?.sourcePlayer === selfPlayerName
     || gameState.pendingBlock?.sourcePlayer === selfPlayerName
     || gameState.pendingBlockChallenge?.sourcePlayer === selfPlayerName
-    || gameState.selfPlayer.influences.length > 2
+    || !!gameState.pendingInfluenceLoss[selfPlayerName]?.length
 
   return (
     <>

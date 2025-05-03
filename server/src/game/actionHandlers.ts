@@ -243,6 +243,10 @@ export const forfeitGameHandler = async ({ roomId, playerId }: {
       throw new GameMutationInputError('You can\'t forfeit with more than 2 influences')
     }
 
+    if (gameState.pendingInfluenceLoss[playerToForfeit.name]?.length) {
+      throw new GameMutationInputError('You can\'t forfeit while pending influence loss')
+    }
+
     playerToForfeit.deadInfluences.push(...playerToForfeit.influences)
     playerToForfeit.influences = []
     if (state.turnPlayer === playerToForfeit.name) {
@@ -266,7 +270,6 @@ export const forfeitGameHandler = async ({ roomId, playerId }: {
     if (state.pendingBlock?.pendingPlayers.has(playerToForfeit.name)) {
       processPassBlockResponse(state, playerToForfeit.name)
     }
-    delete gameState.pendingInfluenceLoss[playerToForfeit.name]
     logEvent(state, {
       event: EventMessages.PlayerForfeited,
       primaryPlayer: player.name
