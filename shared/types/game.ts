@@ -26,6 +26,7 @@ export enum PlayerActions {
   resetGame = 'resetGame',
   resetGameRequest = 'resetGameRequest',
   resetGameRequestCancel = "resetGameRequestCancel",
+  forfeit = 'forfeit',
   checkAiMove = "checkAiMove",
   action = 'action',
   actionResponse = 'actionResponse',
@@ -130,6 +131,7 @@ export enum Responses {
 export enum EventMessages {
   GameStarted = 'GameStarted',
   PlayerDied = 'PlayerDied',
+  PlayerForfeited = 'PlayerForfeited',
   PlayerLostInfluence = 'PlayerLostInfluence',
   PlayerReplacedInfluence = 'PlayerReplacedInfluence',
   ActionConfirm = 'ActionConfirm',

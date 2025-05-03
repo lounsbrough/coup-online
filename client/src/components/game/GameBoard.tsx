@@ -10,6 +10,7 @@ import PlayAgain from "./PlayAgain"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import CardDeck from "../icons/CardDeck"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import Forfeit from "./Forfeit"
 
 interface GameBoardProps {
   leftDrawerOpen: boolean
@@ -129,6 +130,9 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
           </Grid2>
           <Grid2 size={12}>
             <RequestReset />
+          </Grid2>
+          <Grid2 size={12}>
+            <Forfeit />
           </Grid2>
         </Grid2>
       </Grid2>
