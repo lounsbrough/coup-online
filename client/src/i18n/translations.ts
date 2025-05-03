@@ -1,5 +1,5 @@
-import { Actions, EventMessages, Influences, Responses } from "@shared";
-import { AvailableLanguageCode } from "./availableLanguages";
+import { Actions, EventMessages, Influences, Responses } from "@shared"
+import { AvailableLanguageCode } from "./availableLanguages"
 
 type ActionMessages = {
   [Actions.Assassinate]: string;
@@ -64,6 +64,7 @@ export type Translations = ActionMessages & {
   forfeit: string;
   forfeitConfirmationTitle: string;
   forfeitConfirmationMessage: string;
+  forfeitNotPossible: string;
   fullRules: string;
   gameNotFound: string;
   goal: string;
@@ -257,6 +258,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     forfeitConfirmationMessage:
       "Bist du sicher, dass du das Spiel aufgeben möchtest?",
     forfeitConfirmationTitle: "Spiel aufgeben",
+    forfeitNotPossible: "Du kannst das Spiel gerade nicht aufgeben",
     fullRules: "Vollständige Regeln",
     gameNotFound: "Spiel nicht gefunden",
     goal: "Ziel",
@@ -458,6 +460,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     forfeit: "Forfeit",
     forfeitConfirmationMessage: "Are you sure you want to forfeit the game?",
     forfeitConfirmationTitle: "Forfeit Game",
+    forfeitNotPossible: "You can't currently forfeit the game",
     fullRules: "Complete Rules",
     gameNotFound: "Game not found",
     goal: "Goal",
@@ -661,6 +664,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     forfeitConfirmationMessage:
       "¿Estás seguro de que quieres rendirte en la partida?",
     forfeitConfirmationTitle: "Rendir partida",
+    forfeitNotPossible: "No puedes rendirte en este momento",
     fullRules: "Reglas completas",
     gameNotFound: "Partida no encontrada",
     goal: "Objetivo",
@@ -866,6 +870,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     forfeitConfirmationMessage:
       "Êtes-vous sûr de vouloir abandonner la partie ?",
     forfeitConfirmationTitle: "Abandonner la partie",
+    forfeitNotPossible: "Vous ne pouvez pas abandonner la partie pour le moment",
     fullRules: "Règles complètes",
     gameNotFound: "Partie non trouvée",
     goal: "Objectif",
@@ -1073,6 +1078,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     forfeit: "Rinuncia",
     forfeitConfirmationMessage: "Sei sicuro di voler rinunciare alla partita?",
     forfeitConfirmationTitle: "Rinuncia alla partita",
+    forfeitNotPossible: "Non puoi rinunciare alla partita in questo momento",
     fullRules: "Regole complete",
     gameNotFound: "Partita non trovata",
     goal: "Obiettivo",
@@ -1277,6 +1283,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     forfeitConfirmationMessage:
       "Você tem certeza de que deseja desistir do jogo?",
     forfeitConfirmationTitle: "Desistir do jogo",
+    forfeitNotPossible: "Você não pode desistir do jogo no momento",
     fullRules: "Regras completas",
     gameNotFound: "Jogo não encontrado",
     goal: "Meta",
@@ -1379,6 +1386,6 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     writeNewMessage: "Escreva nova mensagem",
     youAreNotInGame: "Você não está neste jogo",
   },
-};
+}
 
-export default translations;
+export default translations

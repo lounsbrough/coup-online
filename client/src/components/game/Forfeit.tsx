@@ -1,5 +1,5 @@
 import { Flag } from "@mui/icons-material"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip, Typography } from "@mui/material"
 import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
@@ -36,16 +36,20 @@ function Forfeit() {
       <Box mt={1}>
         {!playerIsDead && (
           <>
-            <Button
-              size="small"
-              startIcon={<ForfeitIcon />}
-              variant='outlined'
-              disabled={playerHasActionsPending}
-              onClick={() => { setConfirmationOpen(true) }}
-            >
-              {t('forfeit')}
-            </Button>
-            {forfeitMutation.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{forfeitMutation.error}</Typography>}
+            <Tooltip
+              title={playerHasActionsPending && t('forfeitNotPossible')}>
+              <span>
+                <Button
+                  size="small"
+                  startIcon={<ForfeitIcon />}
+                  variant='outlined'
+                  disabled={playerHasActionsPending}
+                  onClick={() => { setConfirmationOpen(true) }}
+                >
+                  {t('forfeit')}
+                </Button>
+              </span>
+            </Tooltip>
           </>
         )}
       </Box>
@@ -61,6 +65,7 @@ function Forfeit() {
         <DialogContent>
           <DialogContentText>
             {t('forfeitConfirmationMessage')}
+            {forfeitMutation.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{forfeitMutation.error}</Typography>}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
