@@ -1,5 +1,5 @@
-import { Actions, EventMessages, Influences, Responses } from "@shared"
-import { AvailableLanguageCode } from "./availableLanguages"
+import { Actions, EventMessages, Influences, Responses } from "@shared";
+import { AvailableLanguageCode } from "./availableLanguages";
 
 type ActionMessages = {
   [Actions.Assassinate]: string;
@@ -58,8 +58,12 @@ export type Translations = ActionMessages & {
   [EventMessages.ChallengeSuccessful]: string;
   [EventMessages.GameStarted]: string;
   [EventMessages.PlayerDied]: string;
+  [EventMessages.PlayerForfeited]: string;
   [EventMessages.PlayerLostInfluence]: string;
   [EventMessages.PlayerReplacedInfluence]: string;
+  forfeit: string;
+  forfeitConfirmationTitle: string;
+  forfeitConfirmationMessage: string;
   fullRules: string;
   gameNotFound: string;
   goal: string;
@@ -243,10 +247,16 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} hat {{secondaryPlayer}} erfolgreich herausgefordert",
     [EventMessages.GameStarted]: "Das Spiel hat begonnen",
     [EventMessages.PlayerDied]: "{{primaryPlayer}} ist raus!",
+    [EventMessages.PlayerForfeited]:
+      "{{primaryPlayer}} hat das Spiel aufgegeben!",
     [EventMessages.PlayerLostInfluence]:
       "{{primaryPlayer}} hat seine/ihre {{primaryInfluence}} verloren",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} hat {{primaryInfluence}} aufgedeckt und ersetzt",
+    forfeit: "Aufgeben",
+    forfeitConfirmationMessage:
+      "Bist du sicher, dass du das Spiel aufgeben möchtest?",
+    forfeitConfirmationTitle: "Spiel aufgeben",
     fullRules: "Vollständige Regeln",
     gameNotFound: "Spiel nicht gefunden",
     goal: "Ziel",
@@ -440,10 +450,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} successfully challenged {{secondaryPlayer}}",
     [EventMessages.GameStarted]: "Game has started",
     [EventMessages.PlayerDied]: "{{primaryPlayer}} is out!",
+    [EventMessages.PlayerForfeited]: "{{primaryPlayer}} forfeited the game!",
     [EventMessages.PlayerLostInfluence]:
       "{{primaryPlayer}} lost their {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} revealed and replaced {{primaryInfluence}}",
+    forfeit: "Forfeit",
+    forfeitConfirmationMessage: "Are you sure you want to forfeit the game?",
+    forfeitConfirmationTitle: "Forfeit Game",
     fullRules: "Complete Rules",
     gameNotFound: "Game not found",
     goal: "Goal",
@@ -638,10 +652,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} desafió con éxito a {{secondaryPlayer}}",
     [EventMessages.GameStarted]: "¡La partida ha comenzado!",
     [EventMessages.PlayerDied]: "¡{{primaryPlayer}} ya valió!",
+    [EventMessages.PlayerForfeited]: "{{primaryPlayer}} se rindió",
     [EventMessages.PlayerLostInfluence]:
       "{{primaryPlayer}} perdió su {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} reveló y reemplazó {{primaryInfluence}}",
+    forfeit: "Rendir",
+    forfeitConfirmationMessage:
+      "¿Estás seguro de que quieres rendirte en la partida?",
+    forfeitConfirmationTitle: "Rendir partida",
     fullRules: "Reglas completas",
     gameNotFound: "Partida no encontrada",
     goal: "Objetivo",
@@ -837,10 +856,16 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} a défié {{secondaryPlayer}} avec succès",
     [EventMessages.GameStarted]: "La partie a commencé",
     [EventMessages.PlayerDied]: "{{primaryPlayer}} est éliminé !",
+    [EventMessages.PlayerForfeited]:
+      "{{primaryPlayer}} a abandonné la partie !",
     [EventMessages.PlayerLostInfluence]:
       "{{primaryPlayer}} a perdu son influence {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} a révélé et remplacé son influence {{primaryInfluence}}",
+    forfeit: "Abandonner",
+    forfeitConfirmationMessage:
+      "Êtes-vous sûr de vouloir abandonner la partie ?",
+    forfeitConfirmationTitle: "Abandonner la partie",
     fullRules: "Règles complètes",
     gameNotFound: "Partie non trouvée",
     goal: "Objectif",
@@ -1039,10 +1064,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} ha sfidato {{secondaryPlayer}} con successo",
     [EventMessages.GameStarted]: "La partita è iniziata",
     [EventMessages.PlayerDied]: "{{primaryPlayer}} è fuori!",
+    [EventMessages.PlayerForfeited]:
+      "{{primaryPlayer}} ha rinunciato alla partita!",
     [EventMessages.PlayerLostInfluence]:
       "{{primaryPlayer}} ha perso la sua influenza {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} ha rivelato e sostituito la sua influenza {{primaryInfluence}}",
+    forfeit: "Rinuncia",
+    forfeitConfirmationMessage: "Sei sicuro di voler rinunciare alla partita?",
+    forfeitConfirmationTitle: "Rinuncia alla partita",
     fullRules: "Regole complete",
     gameNotFound: "Partita non trovata",
     goal: "Obiettivo",
@@ -1238,10 +1268,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} desafiou {{secondaryPlayer}} com sucesso",
     [EventMessages.GameStarted]: "O jogo começou",
     [EventMessages.PlayerDied]: "{{primaryPlayer}} está fora!",
+    [EventMessages.PlayerForfeited]: "{{primaryPlayer}} desistiu do jogo!",
     [EventMessages.PlayerLostInfluence]:
       "{{primaryPlayer}} perdeu seu {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}",
+    forfeit: "Desistir",
+    forfeitConfirmationMessage:
+      "Você tem certeza de que deseja desistir do jogo?",
+    forfeitConfirmationTitle: "Desistir do jogo",
     fullRules: "Regras completas",
     gameNotFound: "Jogo não encontrado",
     goal: "Meta",
@@ -1344,6 +1379,6 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     writeNewMessage: "Escreva nova mensagem",
     youAreNotInGame: "Você não está neste jogo",
   },
-}
+};
 
-export default translations
+export default translations;
