@@ -251,6 +251,9 @@ export const forfeitGameHandler = async ({ roomId, playerId }: {
       }
       moveTurnToNextPlayer(state)
     }
+    if (state.pendingAction?.targetPlayer === playerToForfeit.name) {
+      throw new GameMutationInputError('You can\'t forfeit while action is targeted at you')
+    }
     if (state.pendingActionChallenge?.sourcePlayer === playerToForfeit.name) {
       throw new GameMutationInputError('You can\'t forfeit while your action challenge is pending')
     }
