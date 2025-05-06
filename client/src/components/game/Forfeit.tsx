@@ -38,12 +38,15 @@ function Forfeit() {
 
   const selfPlayerName = gameState.selfPlayer.name
   const playerIsDead = !gameState.selfPlayer.influences.length
+  const gameIsOver = gameState.players.filter(({ influenceCount }) => influenceCount).length === 1
   const playerHasActionsPending =
     (gameState.turnPlayer === selfPlayerName && !!gameState.pendingAction)
+    || gameState.pendingAction?.targetPlayer === selfPlayerName
     || gameState.pendingActionChallenge?.sourcePlayer === selfPlayerName
     || gameState.pendingBlock?.sourcePlayer === selfPlayerName
     || gameState.pendingBlockChallenge?.sourcePlayer === selfPlayerName
     || !!gameState.pendingInfluenceLoss[selfPlayerName]?.length
+  const forfeitNotPossible = gameIsOver || playerIsDead || playerHasActionsPending
 
   return (
     <>
@@ -51,13 +54,13 @@ function Forfeit() {
         {!playerIsDead && (
           <>
             <Tooltip
-              title={playerHasActionsPending && t('forfeitNotPossible')}>
+              title={forfeitNotPossible && t('forfeitNotPossible')}>
               <span>
                 <Button
                   size="small"
                   startIcon={<ForfeitIcon />}
                   variant='outlined'
-                  disabled={playerHasActionsPending}
+                  disabled={forfeitNotPossible}
                   onClick={() => { setConfirmationOpen(true) }}
                 >
                   {t('forfeit')}
@@ -99,7 +102,7 @@ function Forfeit() {
                 playerId: getPlayerId()
               })
             }}
-            disabled={playerHasActionsPending}
+            disabled={forfeitNotPossible}
             loading={forfeitMutation.isMutating}
           >
             {t('confirm')}
