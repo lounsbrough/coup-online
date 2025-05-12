@@ -81,8 +81,8 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       web-vitals:
-        specifier: ^4.2.4
-        version: 4.2.4
+        specifier: ^5.0.0
+        version: 5.0.0
     devDependencies:
       '@bahmutov/cypress-esbuild-preprocessor':
         specifier: ^2.2.4
@@ -6402,8 +6402,8 @@ packages:
   wbuf@1.7.3:
     resolution: {integrity: sha512-O84QOnr0icsbFGLS0O3bI5FswxzRr8/gHwWkDlQFskhSPryQXvrTMxjxGP4+iWYoauLoBvfDpkrOauZ+0iZpDA==}
 
-  web-vitals@4.2.4:
-    resolution: {integrity: sha512-r4DIlprAGwJ7YM11VZp4R884m0Vmgr6EAKe3P+kO0PPj3Unqyvv59rczf6UiGcb9Z8QxZVcqKNwv/g0WNdWwsw==}
+  web-vitals@5.0.0:
+    resolution: {integrity: sha512-yuayYLYyO4QdqB7YriMtUZxCIsUbcpZLnoPCJXocLvTRcAh/Jz2rgqsHrh9Oz/NHApB/Somd05NMsuhJV3YcLQ==}
 
   webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
@@ -14157,7 +14157,7 @@ snapshots:
     dependencies:
       minimalistic-assert: 1.0.1
 
-  web-vitals@4.2.4: {}
+  web-vitals@5.0.0: {}
 
   webidl-conversions@4.0.2: {}
 
