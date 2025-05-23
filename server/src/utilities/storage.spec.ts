@@ -2,27 +2,33 @@ import * as redis from 'redis'
 import Chance from "chance"
 import { getValue, setValue } from "./storage"
 
-jest.mock('redis')
+const expectedRedisStorage: { [key: string]: string } = {}
 
-const mockRedis = jest.mocked(redis)
+jest.mock('redis', () => {
+  const mockRedisClient = {
+    on: jest.fn().mockReturnThis(),
+    connect: jest.fn(),
+    get: jest.fn((key: string) => Promise.resolve(expectedRedisStorage[key])),
+    set: jest.fn((key: string, value: string, options?: redis.SetOptions) => {
+      expectedRedisStorage[key] = value
+      if (options?.EX) {
+        setTimeout(() => {
+          delete expectedRedisStorage[key]
+        }, options.EX * 1000)
+      }
+      return Promise.resolve('OK')
+    }),
+  }
+  mockRedisClient.connect.mockResolvedValue(mockRedisClient)
+
+  return {
+    createClient: jest.fn(() => mockRedisClient)
+  }
+})
 
 const chance = new Chance()
 
 describe('storage', () => {
-  const expectedRedisStorage: { [key: string]: string } = {}
-  const mockRedisClient = {} as redis.RedisClientType
-  mockRedisClient.on = jest.fn().mockReturnValue(mockRedisClient)
-  mockRedisClient.connect = jest.fn().mockResolvedValue(mockRedisClient)
-  mockRedisClient.get = jest.fn().mockImplementation((key: string) => Promise.resolve(expectedRedisStorage[key]))
-  mockRedisClient.set = jest.fn().mockImplementation((key: string, value: string, options: redis.SetOptions) => {
-    expectedRedisStorage[key] = value
-    if (options.EX) {
-      setTimeout(() => { delete expectedRedisStorage[key] }, options.EX * 1000)
-    }
-    return Promise.resolve()
-  })
-  mockRedis.createClient.mockReturnValue(mockRedisClient)
-
   beforeEach(() => {
     for (const key of Object.getOwnPropertyNames(expectedRedisStorage)) {
       delete expectedRedisStorage[key]
