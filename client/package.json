@@ -27,7 +27,7 @@
     "socket.io-client": "^4.8.1",
     "swr": "^2.3.3",
     "typescript": "^5.7.2",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^5.0.1"
   },
   "scripts": {
     "build-shared": "pnpm --prefix ../shared build",
