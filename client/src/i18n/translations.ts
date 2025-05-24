@@ -62,9 +62,11 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerLostInfluence]: string;
   [EventMessages.PlayerReplacedInfluence]: string;
   forfeit: string;
-  forfeitConfirmationTitle: string;
   forfeitConfirmationMessage: string;
+  forfeitConfirmationTitle: string;
+  forfeitKillInfluences: string;
   forfeitNotPossible: string;
+  forfeitReplaceWithAi: string;
   fullRules: string;
   gameNotFound: string;
   goal: string;
@@ -256,9 +258,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} hat {{primaryInfluence}} aufgedeckt und ersetzt",
     forfeit: "Aufgeben",
     forfeitConfirmationMessage:
-      "Bist du sicher, dass du das Spiel aufgeben möchtest?",
+      "Möchtest du deine Einflusskarten töten oder dich durch einen KI-Spieler ersetzen?",
     forfeitConfirmationTitle: "Spiel aufgeben",
+    forfeitKillInfluences: "Einflusskarten töten",
     forfeitNotPossible: "Du kannst das Spiel gerade nicht aufgeben",
+    forfeitReplaceWithAi: "Durch KI ersetzen",
     fullRules: "Vollständige Regeln",
     gameNotFound: "Spiel nicht gefunden",
     goal: "Ziel",
@@ -458,9 +462,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} revealed and replaced {{primaryInfluence}}",
     forfeit: "Forfeit",
-    forfeitConfirmationMessage: "Are you sure you want to forfeit the game?",
+    forfeitConfirmationMessage: "Do you want to kill your influences or replace yourself with an AI player?",
     forfeitConfirmationTitle: "Forfeit Game",
+    forfeitKillInfluences: "Kill Influences",
     forfeitNotPossible: "You can't currently forfeit the game",
+    forfeitReplaceWithAi: "Replace with AI",
     fullRules: "Complete Rules",
     gameNotFound: "Game not found",
     goal: "Goal",
@@ -662,9 +668,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} reveló y reemplazó {{primaryInfluence}}",
     forfeit: "Rendir",
     forfeitConfirmationMessage:
-      "¿Estás seguro de que quieres rendirte en la partida?",
+      "¿Quieres matar tus influencias o reemplazarte con un jugador IA?",
     forfeitConfirmationTitle: "Rendir partida",
+    forfeitKillInfluences: "Matar influencias",
     forfeitNotPossible: "No puedes rendirte en este momento",
+    forfeitReplaceWithAi: "Reemplazar con IA",
     fullRules: "Reglas completas",
     gameNotFound: "Partida no encontrada",
     goal: "Objetivo",
@@ -868,9 +876,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} a révélé et remplacé son influence {{primaryInfluence}}",
     forfeit: "Abandonner",
     forfeitConfirmationMessage:
-      "Êtes-vous sûr de vouloir abandonner la partie ?",
+      "Voulez-vous tuer vos influences ou vous remplacer par un joueur IA ?",
     forfeitConfirmationTitle: "Abandonner la partie",
+    forfeitKillInfluences: "Tuer les influences",
     forfeitNotPossible: "Vous ne pouvez pas abandonner la partie pour le moment",
+    forfeitReplaceWithAi: "Remplacer par IA",
     fullRules: "Règles complètes",
     gameNotFound: "Partie non trouvée",
     goal: "Objectif",
@@ -1076,9 +1086,12 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} ha rivelato e sostituito la sua influenza {{primaryInfluence}}",
     forfeit: "Rinuncia",
-    forfeitConfirmationMessage: "Sei sicuro di voler rinunciare alla partita?",
+    forfeitConfirmationMessage:
+      "Vuoi uccidere le tue influenze o sostituirti con un giocatore IA?",
     forfeitConfirmationTitle: "Rinuncia alla partita",
+    forfeitKillInfluences: "Uccidi le influenze",
     forfeitNotPossible: "Non puoi rinunciare alla partita in questo momento",
+    forfeitReplaceWithAi: "Sostituisci con IA",
     fullRules: "Regole complete",
     gameNotFound: "Partita non trovata",
     goal: "Obiettivo",
@@ -1281,9 +1294,11 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}",
     forfeit: "Desistir",
     forfeitConfirmationMessage:
-      "Você tem certeza de que deseja desistir do jogo?",
+      "Você quer matar suas influências ou se substituir por um jogador IA?",
     forfeitConfirmationTitle: "Desistir do jogo",
+    forfeitKillInfluences: "Mate as influências",
     forfeitNotPossible: "Você não pode desistir do jogo no momento",
+    forfeitReplaceWithAi: "Substituir por IA",
     fullRules: "Regras completas",
     gameNotFound: "Jogo não encontrado",
     goal: "Meta",

@@ -243,7 +243,8 @@ const eventHandlers: {
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
-      playerId: Joi.string().required()
+      playerId: Joi.string().required(),
+      replaceWithAi: Joi.bool().required()
     })
   },
   [PlayerActions.checkAiMove]: {

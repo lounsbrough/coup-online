@@ -14,7 +14,7 @@ function Forfeit() {
   const [error, setError] = useState('')
 
   const forfeitMutation = useGameMutation<{
-    roomId: string, playerId: string
+    roomId: string, playerId: string, replaceWithAi: boolean
   }>({
     action: PlayerActions.forfeit, callback: () => {
       setConfirmationOpen(false)
@@ -99,13 +99,29 @@ function Forfeit() {
             onClick={async () => {
               await forfeitMutation.trigger({
                 roomId: gameState.roomId,
-                playerId: getPlayerId()
+                playerId: getPlayerId(),
+                replaceWithAi: false
               })
             }}
             disabled={forfeitNotPossible}
             loading={forfeitMutation.isMutating}
           >
-            {t('confirm')}
+            {t('forfeitKillInfluences')}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={async () => {
+              await forfeitMutation.trigger({
+                roomId: gameState.roomId,
+                playerId: getPlayerId(),
+                replaceWithAi: true
+              })
+            }}
+            disabled={forfeitNotPossible}
+            loading={forfeitMutation.isMutating}
+          >
+            {t('forfeitReplaceWithAi')}
           </Button>
         </DialogActions>
       </Dialog>
