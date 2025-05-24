@@ -22,7 +22,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
   const { t } = useTranslationContext()
   const theme = useTheme()
 
-  if (!gameState?.selfPlayer) {
+  if (!gameState) {
     return null
   }
 
@@ -60,7 +60,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
             <PlayAgain />
           </Grid2>
         )}
-        {!gameState.selfPlayer.influences.length && (
+        {gameState.selfPlayer?.influences.length === 0 && (
           <Grid2>
             <SnarkyDeadComment />
           </Grid2>

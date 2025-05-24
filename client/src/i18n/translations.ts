@@ -61,6 +61,7 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerForfeited]: string;
   [EventMessages.PlayerLostInfluence]: string;
   [EventMessages.PlayerReplacedInfluence]: string;
+  [EventMessages.PlayerReplacedWithAi]: string;
   forfeit: string;
   forfeitConfirmationMessage: string;
   forfeitConfirmationTitle: string;
@@ -256,6 +257,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} hat seine/ihre {{primaryInfluence}} verloren",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} hat {{primaryInfluence}} aufgedeckt und ersetzt",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} wurde durch einen KI-Spieler ersetzt",
     forfeit: "Aufgeben",
     forfeitConfirmationMessage:
       "Möchtest du deine Einflusskarten töten oder dich durch einen KI-Spieler ersetzen?",
@@ -461,6 +464,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} lost their {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} revealed and replaced {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]: "{{primaryPlayer}} was replaced with an AI player",
     forfeit: "Forfeit",
     forfeitConfirmationMessage: "Do you want to kill your influences or replace yourself with an AI player?",
     forfeitConfirmationTitle: "Forfeit Game",
@@ -666,6 +670,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} perdió su {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} reveló y reemplazó {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} fue reemplazado por un jugador IA",
     forfeit: "Rendir",
     forfeitConfirmationMessage:
       "¿Quieres matar tus influencias o reemplazarte con un jugador IA?",
@@ -874,6 +880,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} a perdu son influence {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} a révélé et remplacé son influence {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} a été remplacé par un joueur IA",
     forfeit: "Abandonner",
     forfeitConfirmationMessage:
       "Voulez-vous tuer vos influences ou vous remplacer par un joueur IA ?",
@@ -1085,6 +1093,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} ha perso la sua influenza {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} ha rivelato e sostituito la sua influenza {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} è stato sostituito da un giocatore IA",
     forfeit: "Rinuncia",
     forfeitConfirmationMessage:
       "Vuoi uccidere le tue influenze o sostituirti con un giocatore IA?",
@@ -1292,6 +1302,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} perdeu seu {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} foi substituído por um jogador IA",
     forfeit: "Desistir",
     forfeitConfirmationMessage:
       "Você quer matar suas influências ou se substituir por um jogador IA?",

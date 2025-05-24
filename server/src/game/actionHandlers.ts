@@ -267,6 +267,10 @@ export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
       playerToForfeit.id = crypto.randomUUID()
       playerToForfeit.ai = true
       playerToForfeit.personalityHidden = true
+      logEvent(state, {
+        event: EventMessages.PlayerReplacedWithAi,
+        primaryPlayer: player.name
+      })
     } else {
       playerToForfeit.deadInfluences.push(...playerToForfeit.influences)
       playerToForfeit.influences = []
@@ -276,12 +280,11 @@ export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
       if (state.pendingBlock?.pendingPlayers.has(playerToForfeit.name)) {
         processPassBlockResponse(state, playerToForfeit.name)
       }
+      logEvent(state, {
+        event: EventMessages.PlayerForfeited,
+        primaryPlayer: player.name
+      })
     }
-
-    logEvent(state, {
-      event: EventMessages.PlayerForfeited,
-      primaryPlayer: player.name
-    })
   })
 
   return { roomId, playerId }
