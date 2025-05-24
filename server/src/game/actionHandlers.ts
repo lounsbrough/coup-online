@@ -264,6 +264,7 @@ export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
     }
 
     if (replaceWithAi) {
+      playerToForfeit.id = crypto.randomUUID()
       playerToForfeit.ai = true
       playerToForfeit.personalityHidden = true
     } else {
