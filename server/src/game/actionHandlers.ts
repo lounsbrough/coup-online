@@ -213,9 +213,10 @@ export const resetGameHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
-export const forfeitGameHandler = async ({ roomId, playerId }: {
+export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
   roomId: string
   playerId: string
+  replaceWithAi: boolean
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -243,8 +244,6 @@ export const forfeitGameHandler = async ({ roomId, playerId }: {
       throw new GameMutationInputError('You can\'t forfeit while pending influence loss')
     }
 
-    playerToForfeit.deadInfluences.push(...playerToForfeit.influences)
-    playerToForfeit.influences = []
     if (state.turnPlayer === playerToForfeit.name) {
       if (state.pendingAction) {
         throw new GameMutationInputError('You can\'t forfeit while your action is pending')
@@ -263,12 +262,22 @@ export const forfeitGameHandler = async ({ roomId, playerId }: {
     if (state.pendingBlockChallenge?.sourcePlayer === playerToForfeit.name) {
       throw new GameMutationInputError('You can\'t forfeit while your block challenge is pending')
     }
-    if (state.pendingAction?.pendingPlayers.has(playerToForfeit.name)) {
-      processPassActionResponse(state, playerToForfeit.name)
+
+    if (replaceWithAi) {
+      playerToForfeit.id = crypto.randomUUID()
+      playerToForfeit.ai = true
+      playerToForfeit.personalityHidden = true
+    } else {
+      playerToForfeit.deadInfluences.push(...playerToForfeit.influences)
+      playerToForfeit.influences = []
+      if (state.pendingAction?.pendingPlayers.has(playerToForfeit.name)) {
+        processPassActionResponse(state, playerToForfeit.name)
+      }
+      if (state.pendingBlock?.pendingPlayers.has(playerToForfeit.name)) {
+        processPassBlockResponse(state, playerToForfeit.name)
+      }
     }
-    if (state.pendingBlock?.pendingPlayers.has(playerToForfeit.name)) {
-      processPassBlockResponse(state, playerToForfeit.name)
-    }
+
     logEvent(state, {
       event: EventMessages.PlayerForfeited,
       primaryPlayer: player.name

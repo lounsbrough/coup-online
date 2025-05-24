@@ -236,7 +236,8 @@ const eventHandlers: {
       parseParams: (req) => {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
-        return { roomId, playerId }
+        const replaceWithAi: boolean = req.body.replaceWithAi
+        return { roomId, playerId, replaceWithAi }
       },
       validator: validateExpressBody
     },
