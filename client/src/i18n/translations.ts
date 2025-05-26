@@ -149,7 +149,7 @@ export type Translations = ActionMessages & {
   whatIsBotsName: string;
   whatIsYourName: string;
   writeNewMessage: string;
-  youAreNotInGame: string;
+  youAreSpectating: string;
 };
 
 const translations: { [key in AvailableLanguageCode]: Translations } = {
@@ -366,7 +366,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "Wie ist sein Name?",
     whatIsYourName: "Wie ist dein Name?",
     writeNewMessage: "Neue Nachricht schreiben",
-    youAreNotInGame: "Du bist nicht im Spiel",
+    youAreSpectating: "Du bist Zuschauer",
   },
   "en-US": {
     action: "Action",
@@ -570,7 +570,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "What is its name?",
     whatIsYourName: "What is your name?",
     writeNewMessage: "Write New Message",
-    youAreNotInGame: "You are not in the game",
+    youAreSpectating: "You are Spectating",
   },
   "es-MX": {
     action: "Acción",
@@ -777,7 +777,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "¿Cuál es su nombre?",
     whatIsYourName: "¿Cómo te llamas?",
     writeNewMessage: "Escribir mensaje nuevo",
-    youAreNotInGame: "No estás en la partida",
+    youAreSpectating: "Estás observando",
   },
   "fr-FR": {
     action: "Action",
@@ -989,7 +989,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "Quel est son nom ?",
     whatIsYourName: "Quel est votre nom ?",
     writeNewMessage: "Écrire un nouveau message",
-    youAreNotInGame: "Vous n'êtes pas dans la partie",
+    youAreSpectating: "Vous êtes en train de regarder",
   },
   "it-IT": {
     action: "Azione",
@@ -1202,7 +1202,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "Qual è il suo nome?",
     whatIsYourName: "Qual è il tuo nome?",
     writeNewMessage: "Scrivi nuovo messaggio",
-    youAreNotInGame: "Non sei nella partita",
+    youAreSpectating: "Stai osservando",
   },
   "pt-BR": {
     action: "Ação",
@@ -1411,7 +1411,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "Qual é seu nome?",
     whatIsYourName: "Qual o seu nome?",
     writeNewMessage: "Escreva nova mensagem",
-    youAreNotInGame: "Você não está neste jogo",
+    youAreSpectating: "Você está assistindo",
   },
 }
 

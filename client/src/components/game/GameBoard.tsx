@@ -55,7 +55,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
             <Victory player={playersLeft[0]} />
           </Grid2>
         )}
-        {gameIsOver && (
+        {gameIsOver && !!gameState.selfPlayer && (
           <Grid2 sx={{ m: 5 }}>
             <PlayAgain />
           </Grid2>

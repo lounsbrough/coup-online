@@ -40,7 +40,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
             return (
               <Badge
                 key={index}
-                invisible={!inWaitingRoom || (!ai && humanPlayers.length === 1)}
+                invisible={!inWaitingRoom || (!ai && humanPlayers.length === 1) || !gameState.selfPlayer}
                 badgeContent={
                   <Button
                     sx={{
@@ -93,20 +93,20 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     {ai && (
                       <Tooltip title={
                         personality ? (
-                        <>
-                          <Typography>
-                            {t('vengefulness')}
-                            {`: ${personality?.vengefulness}`}%
-                          </Typography>
-                          <Typography>
-                            {t('honesty')}
-                            {`: ${personality?.honesty}`}%
-                          </Typography>
-                          <Typography>
-                            {t('skepticism')}
-                            {`: ${personality?.skepticism}`}%
-                          </Typography>
-                        </>
+                          <>
+                            <Typography>
+                              {t('vengefulness')}
+                              {`: ${personality?.vengefulness}`}%
+                            </Typography>
+                            <Typography>
+                              {t('honesty')}
+                              {`: ${personality?.honesty}`}%
+                            </Typography>
+                            <Typography>
+                              {t('skepticism')}
+                              {`: ${personality?.skepticism}`}%
+                            </Typography>
+                          </>
                         ) : (
                           <Typography>
                             {t('personalityIsHidden')}

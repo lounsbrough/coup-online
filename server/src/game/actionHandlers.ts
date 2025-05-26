@@ -244,11 +244,8 @@ export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
       throw new GameMutationInputError('You can\'t forfeit while pending influence loss')
     }
 
-    if (state.turnPlayer === playerToForfeit.name) {
-      if (state.pendingAction) {
-        throw new GameMutationInputError('You can\'t forfeit while your action is pending')
-      }
-      moveTurnToNextPlayer(state)
+    if (state.turnPlayer === playerToForfeit.name && state.pendingAction) {
+      throw new GameMutationInputError('You can\'t forfeit while your action is pending')
     }
     if (state.pendingAction?.targetPlayer === playerToForfeit.name) {
       throw new GameMutationInputError('You can\'t forfeit while action is targeted at you')
@@ -279,6 +276,9 @@ export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
       }
       if (state.pendingBlock?.pendingPlayers.has(playerToForfeit.name)) {
         processPassBlockResponse(state, playerToForfeit.name)
+      }
+      if (state.turnPlayer === playerToForfeit.name) {
+        moveTurnToNextPlayer(state)
       }
       logEvent(state, {
         event: EventMessages.PlayerForfeited,

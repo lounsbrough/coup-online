@@ -172,15 +172,17 @@ export default function ChatMessages() {
                       </IconButton>
                     </>
                   )}
-                  <IconButton
-                    onClick={(event) => {
-                      setEmojiPickerAnchorEl(event.currentTarget)
-                      setEmojiMessageId(id)
-                    }}
-                    sx={{ m: -0.5 }}
-                  >
-                    <AddReactionIcon fontSize="small" />
-                  </IconButton>
+                  {!!gameState.selfPlayer && (
+                    <IconButton
+                      onClick={(event) => {
+                        setEmojiPickerAnchorEl(event.currentTarget)
+                        setEmojiMessageId(id)
+                      }}
+                      sx={{ m: -0.5 }}
+                    >
+                      <AddReactionIcon fontSize="small" />
+                    </IconButton>
+                  )}
                   {emojis && Object.entries(emojis).map(([emoji, playerNames]) => (
                     <Tooltip
                       key={emoji}
