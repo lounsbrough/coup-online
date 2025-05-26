@@ -70,42 +70,44 @@ export default function ChatDrawerContent({
 
   return (
     <>
-      <Box ref={scrollingMessageDrawerRef} sx={{ py: 1, px: 2, overflowY: 'auto' }}>
+      <Box ref={scrollingMessageDrawerRef} sx={{ py: 1, px: 2, overflowY: 'auto', minWidth: '200px' }}>
         <ChatMessages />
       </Box>
-      <Box display="flex" p={1}>
-        <TextField
-          placeholder={t('writeNewMessage') as string}
-          label={`${pendingMessageText ? ` (${maxMessageLength - pendingMessageText.length}/${maxMessageLength})` : ''}`}
-          value={pendingMessageText}
-          onChange={(event) => {
-            setPendingMessageText(event.target.value)
-            setPendingMessageId(crypto.randomUUID())
-          }}
-          onKeyDown={(event) => {
-            if (sendEnabled && event.key === 'Enter') {
-              sendMessage()
-            }
-          }}
-          slotProps={{
-            htmlInput: {
-              maxLength: maxMessageLength
-            }
-          }}
-          size='small'
-          sx={{ width: '100%' }}
-        />
-        <Button
-          disabled={!sendEnabled}
-          loading={isMutating}
-          sx={{ ml: 1 }}
-          variant="contained"
-          endIcon={<Send />}
-          onClick={sendMessage}
-        >
-          {t('send')}
-        </Button>
-      </Box>
+      {!!gameState.selfPlayer && (
+        <Box display="flex" p={1}>
+          <TextField
+            placeholder={t('writeNewMessage') as string}
+            label={`${pendingMessageText ? ` (${maxMessageLength - pendingMessageText.length}/${maxMessageLength})` : ''}`}
+            value={pendingMessageText}
+            onChange={(event) => {
+              setPendingMessageText(event.target.value)
+              setPendingMessageId(crypto.randomUUID())
+            }}
+            onKeyDown={(event) => {
+              if (sendEnabled && event.key === 'Enter') {
+                sendMessage()
+              }
+            }}
+            slotProps={{
+              htmlInput: {
+                maxLength: maxMessageLength
+              }
+            }}
+            size='small'
+            sx={{ width: '100%' }}
+          />
+          <Button
+            disabled={!sendEnabled}
+            loading={isMutating}
+            sx={{ ml: 1 }}
+            variant="contained"
+            endIcon={<Send />}
+            onClick={sendMessage}
+          >
+            {t('send')}
+          </Button>
+        </Box>
+      )}
       {error && <Typography color='error' sx={{ mb: 1, fontWeight: 700 }}>{error}</Typography>}
     </>
   )

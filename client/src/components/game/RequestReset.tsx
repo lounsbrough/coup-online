@@ -25,7 +25,7 @@ function RequestReset() {
   const { t } = useTranslationContext()
   const theme = useTheme()
 
-  if (!gameState) {
+  if (!gameState?.selfPlayer) {
     return null
   }
 

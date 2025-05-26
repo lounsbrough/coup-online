@@ -213,9 +213,10 @@ export const resetGameHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
-export const forfeitGameHandler = async ({ roomId, playerId }: {
+export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
   roomId: string
   playerId: string
+  replaceWithAi: boolean
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -243,13 +244,8 @@ export const forfeitGameHandler = async ({ roomId, playerId }: {
       throw new GameMutationInputError('You can\'t forfeit while pending influence loss')
     }
 
-    playerToForfeit.deadInfluences.push(...playerToForfeit.influences)
-    playerToForfeit.influences = []
-    if (state.turnPlayer === playerToForfeit.name) {
-      if (state.pendingAction) {
-        throw new GameMutationInputError('You can\'t forfeit while your action is pending')
-      }
-      moveTurnToNextPlayer(state)
+    if (state.turnPlayer === playerToForfeit.name && state.pendingAction) {
+      throw new GameMutationInputError('You can\'t forfeit while your action is pending')
     }
     if (state.pendingAction?.targetPlayer === playerToForfeit.name) {
       throw new GameMutationInputError('You can\'t forfeit while action is targeted at you')
@@ -263,16 +259,32 @@ export const forfeitGameHandler = async ({ roomId, playerId }: {
     if (state.pendingBlockChallenge?.sourcePlayer === playerToForfeit.name) {
       throw new GameMutationInputError('You can\'t forfeit while your block challenge is pending')
     }
-    if (state.pendingAction?.pendingPlayers.has(playerToForfeit.name)) {
-      processPassActionResponse(state, playerToForfeit.name)
+
+    if (replaceWithAi) {
+      playerToForfeit.id = crypto.randomUUID()
+      playerToForfeit.ai = true
+      playerToForfeit.personalityHidden = true
+      logEvent(state, {
+        event: EventMessages.PlayerReplacedWithAi,
+        primaryPlayer: player.name
+      })
+    } else {
+      playerToForfeit.deadInfluences.push(...playerToForfeit.influences)
+      playerToForfeit.influences = []
+      if (state.pendingAction?.pendingPlayers.has(playerToForfeit.name)) {
+        processPassActionResponse(state, playerToForfeit.name)
+      }
+      if (state.pendingBlock?.pendingPlayers.has(playerToForfeit.name)) {
+        processPassBlockResponse(state, playerToForfeit.name)
+      }
+      if (state.turnPlayer === playerToForfeit.name) {
+        moveTurnToNextPlayer(state)
+      }
+      logEvent(state, {
+        event: EventMessages.PlayerForfeited,
+        primaryPlayer: player.name
+      })
     }
-    if (state.pendingBlock?.pendingPlayers.has(playerToForfeit.name)) {
-      processPassBlockResponse(state, playerToForfeit.name)
-    }
-    logEvent(state, {
-      event: EventMessages.PlayerForfeited,
-      primaryPlayer: player.name
-    })
   })
 
   return { roomId, playerId }
@@ -304,8 +316,6 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   playerId: string
 }) => {
   const gameState = await getGameState(roomId)
-
-  getPlayerInRoom(gameState, playerId)
 
   const unchangedResponse = { roomId, playerId, stateUnchanged: true }
   const changedResponse = { roomId, playerId }

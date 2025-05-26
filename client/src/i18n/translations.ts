@@ -61,10 +61,13 @@ export type Translations = ActionMessages & {
   [EventMessages.PlayerForfeited]: string;
   [EventMessages.PlayerLostInfluence]: string;
   [EventMessages.PlayerReplacedInfluence]: string;
+  [EventMessages.PlayerReplacedWithAi]: string;
   forfeit: string;
-  forfeitConfirmationTitle: string;
   forfeitConfirmationMessage: string;
+  forfeitConfirmationTitle: string;
+  forfeitKillInfluences: string;
   forfeitNotPossible: string;
+  forfeitReplaceWithAi: string;
   fullRules: string;
   gameNotFound: string;
   goal: string;
@@ -146,7 +149,7 @@ export type Translations = ActionMessages & {
   whatIsBotsName: string;
   whatIsYourName: string;
   writeNewMessage: string;
-  youAreNotInGame: string;
+  youAreSpectating: string;
 };
 
 const translations: { [key in AvailableLanguageCode]: Translations } = {
@@ -254,11 +257,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} hat seine/ihre {{primaryInfluence}} verloren",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} hat {{primaryInfluence}} aufgedeckt und ersetzt",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} wurde durch einen KI-Spieler ersetzt",
     forfeit: "Aufgeben",
     forfeitConfirmationMessage:
-      "Bist du sicher, dass du das Spiel aufgeben möchtest?",
+      "Möchtest du deine Einflusskarten töten oder dich durch einen KI-Spieler ersetzen?",
     forfeitConfirmationTitle: "Spiel aufgeben",
+    forfeitKillInfluences: "Einflusskarten töten",
     forfeitNotPossible: "Du kannst das Spiel gerade nicht aufgeben",
+    forfeitReplaceWithAi: "Durch KI ersetzen",
     fullRules: "Vollständige Regeln",
     gameNotFound: "Spiel nicht gefunden",
     goal: "Ziel",
@@ -359,7 +366,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "Wie ist sein Name?",
     whatIsYourName: "Wie ist dein Name?",
     writeNewMessage: "Neue Nachricht schreiben",
-    youAreNotInGame: "Du bist nicht im Spiel",
+    youAreSpectating: "Du bist Zuschauer",
   },
   "en-US": {
     action: "Action",
@@ -457,10 +464,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} lost their {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} revealed and replaced {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]: "{{primaryPlayer}} was replaced with an AI player",
     forfeit: "Forfeit",
-    forfeitConfirmationMessage: "Are you sure you want to forfeit the game?",
+    forfeitConfirmationMessage: "Do you want to kill your influences or replace yourself with an AI player?",
     forfeitConfirmationTitle: "Forfeit Game",
+    forfeitKillInfluences: "Kill Influences",
     forfeitNotPossible: "You can't currently forfeit the game",
+    forfeitReplaceWithAi: "Replace with AI",
     fullRules: "Complete Rules",
     gameNotFound: "Game not found",
     goal: "Goal",
@@ -560,7 +570,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "What is its name?",
     whatIsYourName: "What is your name?",
     writeNewMessage: "Write New Message",
-    youAreNotInGame: "You are not in the game",
+    youAreSpectating: "You are Spectating",
   },
   "es-MX": {
     action: "Acción",
@@ -660,11 +670,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} perdió su {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} reveló y reemplazó {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} fue reemplazado por un jugador IA",
     forfeit: "Rendir",
     forfeitConfirmationMessage:
-      "¿Estás seguro de que quieres rendirte en la partida?",
+      "¿Quieres matar tus influencias o reemplazarte con un jugador IA?",
     forfeitConfirmationTitle: "Rendir partida",
+    forfeitKillInfluences: "Matar influencias",
     forfeitNotPossible: "No puedes rendirte en este momento",
+    forfeitReplaceWithAi: "Reemplazar con IA",
     fullRules: "Reglas completas",
     gameNotFound: "Partida no encontrada",
     goal: "Objetivo",
@@ -763,7 +777,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "¿Cuál es su nombre?",
     whatIsYourName: "¿Cómo te llamas?",
     writeNewMessage: "Escribir mensaje nuevo",
-    youAreNotInGame: "No estás en la partida",
+    youAreSpectating: "Estás observando",
   },
   "fr-FR": {
     action: "Action",
@@ -866,11 +880,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} a perdu son influence {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} a révélé et remplacé son influence {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} a été remplacé par un joueur IA",
     forfeit: "Abandonner",
     forfeitConfirmationMessage:
-      "Êtes-vous sûr de vouloir abandonner la partie ?",
+      "Voulez-vous tuer vos influences ou vous remplacer par un joueur IA ?",
     forfeitConfirmationTitle: "Abandonner la partie",
+    forfeitKillInfluences: "Tuer les influences",
     forfeitNotPossible: "Vous ne pouvez pas abandonner la partie pour le moment",
+    forfeitReplaceWithAi: "Remplacer par IA",
     fullRules: "Règles complètes",
     gameNotFound: "Partie non trouvée",
     goal: "Objectif",
@@ -971,7 +989,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "Quel est son nom ?",
     whatIsYourName: "Quel est votre nom ?",
     writeNewMessage: "Écrire un nouveau message",
-    youAreNotInGame: "Vous n'êtes pas dans la partie",
+    youAreSpectating: "Vous êtes en train de regarder",
   },
   "it-IT": {
     action: "Azione",
@@ -1075,10 +1093,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} ha perso la sua influenza {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} ha rivelato e sostituito la sua influenza {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} è stato sostituito da un giocatore IA",
     forfeit: "Rinuncia",
-    forfeitConfirmationMessage: "Sei sicuro di voler rinunciare alla partita?",
+    forfeitConfirmationMessage:
+      "Vuoi uccidere le tue influenze o sostituirti con un giocatore IA?",
     forfeitConfirmationTitle: "Rinuncia alla partita",
+    forfeitKillInfluences: "Uccidi le influenze",
     forfeitNotPossible: "Non puoi rinunciare alla partita in questo momento",
+    forfeitReplaceWithAi: "Sostituisci con IA",
     fullRules: "Regole complete",
     gameNotFound: "Partita non trovata",
     goal: "Obiettivo",
@@ -1179,7 +1202,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "Qual è il suo nome?",
     whatIsYourName: "Qual è il tuo nome?",
     writeNewMessage: "Scrivi nuovo messaggio",
-    youAreNotInGame: "Non sei nella partita",
+    youAreSpectating: "Stai osservando",
   },
   "pt-BR": {
     action: "Ação",
@@ -1279,11 +1302,15 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "{{primaryPlayer}} perdeu seu {{primaryInfluence}}",
     [EventMessages.PlayerReplacedInfluence]:
       "{{primaryPlayer}} revelou e substituiu {{primaryInfluence}}",
+    [EventMessages.PlayerReplacedWithAi]:
+      "{{primaryPlayer}} foi substituído por um jogador IA",
     forfeit: "Desistir",
     forfeitConfirmationMessage:
-      "Você tem certeza de que deseja desistir do jogo?",
+      "Você quer matar suas influências ou se substituir por um jogador IA?",
     forfeitConfirmationTitle: "Desistir do jogo",
+    forfeitKillInfluences: "Mate as influências",
     forfeitNotPossible: "Você não pode desistir do jogo no momento",
+    forfeitReplaceWithAi: "Substituir por IA",
     fullRules: "Regras completas",
     gameNotFound: "Jogo não encontrado",
     goal: "Meta",
@@ -1384,7 +1411,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     whatIsBotsName: "Qual é seu nome?",
     whatIsYourName: "Qual o seu nome?",
     writeNewMessage: "Escreva nova mensagem",
-    youAreNotInGame: "Você não está neste jogo",
+    youAreSpectating: "Você está assistindo",
   },
 }
 

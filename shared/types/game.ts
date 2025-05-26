@@ -134,6 +134,7 @@ export enum EventMessages {
   PlayerForfeited = 'PlayerForfeited',
   PlayerLostInfluence = 'PlayerLostInfluence',
   PlayerReplacedInfluence = 'PlayerReplacedInfluence',
+  PlayerReplacedWithAi = 'PlayerReplacedWithAi',
   ActionConfirm = 'ActionConfirm',
   ActionPending = 'ActionPending',
   ActionProcessed = 'ActionProcessed',

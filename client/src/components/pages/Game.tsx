@@ -1,9 +1,10 @@
-import { Box, Button, CircularProgress, Grid2, Typography } from "@mui/material"
+import { Alert, Box, Button, CircularProgress, Grid2, Typography } from "@mui/material"
 import GameBoard from "../game/GameBoard"
 import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Link } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { Visibility } from "@mui/icons-material"
 
 interface GameProps {
   leftDrawerOpen: boolean
@@ -41,33 +42,35 @@ function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
     )
   }
 
-  if (gameState && !gameState.selfPlayer) {
-    return (
-      <Grid2 mt={2} container spacing={2} direction="column">
-        <Grid2>
-          <Typography variant="h6" my={3}>
-            {t('youAreNotInGame')}
-          </Typography>
-        </Grid2>
-        <Grid2>
-          <Link to={`/join-game?roomId=${gameState.roomId}`}>
-            <Button variant="contained">
-              {t('joinGame')}
-            </Button>
-          </Link>
-        </Grid2>
-      </Grid2>
-    )
-  }
+  const spectatingAlert = gameState && !gameState.selfPlayer && (
+    <Alert
+      icon={<Visibility fontSize="inherit" />}
+      severity="info"
+      sx={{
+        fontSize: 'larger',
+        p: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      {t('youAreSpectating')}
+    </Alert>
+  )
 
   return gameState.isStarted ? (
     // Google Translate doesn't work well with some React components
     // https://github.com/facebook/react/issues/11538
     // https://issues.chromium.org/issues/41407169
     <div className="notranslate">
+      {spectatingAlert}
       <GameBoard leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
     </div>
-  ) : <WaitingRoom />
+  ) : (
+    <>
+      {spectatingAlert}
+      <WaitingRoom />
+    </>
+  )
 }
 
 export default Game
