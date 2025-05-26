@@ -317,8 +317,6 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  getPlayerInRoom(gameState, playerId)
-
   const unchangedResponse = { roomId, playerId, stateUnchanged: true }
   const changedResponse = { roomId, playerId }
 
