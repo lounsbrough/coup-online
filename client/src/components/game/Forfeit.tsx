@@ -1,11 +1,13 @@
-import { Flag } from "@mui/icons-material"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip, Typography } from "@mui/material"
+import { Close, Flag } from "@mui/icons-material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip, Typography, useTheme } from "@mui/material"
 import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { useEffect, useState } from "react"
+import Bot from "../icons/Bot"
+import Skull from "../icons/Skull"
 
 const ForfeitIcon = Flag
 
@@ -23,6 +25,7 @@ function Forfeit() {
 
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
+  const { isSmallScreen } = useTheme()
 
   useEffect(() => {
     if (!confirmationOpen) setError('')
@@ -85,9 +88,12 @@ function Forfeit() {
             {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{
+          ...(isSmallScreen && { flexDirection: 'column', alignItems: 'flex-end', gap: 2 })
+        }}>
           <Button
-            variant="outlined"
+            variant="contained"
+            startIcon={<Close />}
             onClick={() => { setConfirmationOpen(false) }}
             disabled={forfeitMutation.isMutating}
           >
@@ -95,6 +101,7 @@ function Forfeit() {
           </Button>
           <Button
             variant="contained"
+            startIcon={<Skull />}
             color="error"
             onClick={async () => {
               await forfeitMutation.trigger({
@@ -110,6 +117,7 @@ function Forfeit() {
           </Button>
           <Button
             variant="contained"
+            startIcon={<Bot />}
             color="error"
             onClick={async () => {
               await forfeitMutation.trigger({
