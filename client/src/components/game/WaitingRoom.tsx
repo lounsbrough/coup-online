@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Alert, Button, Grid2, Snackbar, Typography, useTheme } from "@mui/material"
+import { Alert, Button, Grid, Snackbar, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
 import { ContentCopy } from "@mui/icons-material"
@@ -34,23 +34,23 @@ function WaitingRoom() {
 
   return (
     <>
-      <Grid2 container direction='column' justifyContent="center">
-        <Grid2 sx={{ p: 2, mt: 4 }}>
+      <Grid container direction='column' justifyContent="center">
+        <Grid sx={{ p: 2, mt: 4 }}>
           <Players inWaitingRoom />
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
       <Typography variant="h5" m={3}>
         {t('room')}
         : <strong>{gameState.roomId}</strong></Typography>
-      <Grid2 container direction='column' spacing={2}>
-        <Grid2>
+      <Grid container direction='column' spacing={2}>
+        <Grid>
           <QRCodeSVG
             bgColor="transparent"
             fgColor={theme.palette.primary[theme.palette.mode === LIGHT_COLOR_MODE ? 'dark' : 'light']}
             value={inviteLink}
           />
-        </Grid2>
-        <Grid2>
+        </Grid>
+        <Grid>
           <Button
             variant="contained"
             startIcon={<ContentCopy />}
@@ -75,9 +75,9 @@ function WaitingRoom() {
               {t('inviteLinkCopied')}
             </Alert>
           </Snackbar>
-        </Grid2>
+        </Grid>
         {!!gameState.selfPlayer && (
-          <Grid2>
+          <Grid>
             <Button
               variant="contained"
               startIcon={<Bot />}
@@ -89,10 +89,10 @@ function WaitingRoom() {
               {(t('addAiPlayer'))}
               <BetaTag />
             </Button>
-          </Grid2>
+          </Grid>
         )}
         {!!gameState.selfPlayer && (
-          <Grid2>
+          <Grid>
             <Button
               variant='contained'
               onClick={() => {
@@ -117,10 +117,10 @@ function WaitingRoom() {
               </Typography>
             )}
             {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
-          </Grid2>
+          </Grid>
         )}
         {!gameState.selfPlayer && (
-          <Grid2>
+          <Grid>
             <Button
               variant='contained'
               onClick={() => {
@@ -129,9 +129,9 @@ function WaitingRoom() {
             >
               {(t('joinGame'))}
             </Button>
-          </Grid2>
+          </Grid>
         )}
-      </Grid2>
+      </Grid>
       <AddAiPlayer
         addAiPlayerDialogOpen={addAiPlayerDialogOpen}
         setAddAiPlayerDialogOpen={setAddAiPlayerDialogOpen}

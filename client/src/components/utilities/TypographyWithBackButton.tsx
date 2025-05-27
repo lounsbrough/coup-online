@@ -1,5 +1,5 @@
 import { ArrowBack } from "@mui/icons-material"
-import { Grid2, IconButton, SxProps, Typography, TypographyProps } from "@mui/material"
+import { Grid, IconButton, SxProps, Typography, TypographyProps } from "@mui/material"
 
 const buttonSx: SxProps = { p: 1, my: -1, mx: 1 }
 
@@ -7,7 +7,7 @@ function TypographyWithBackButton({ children, onBack, ...props }: TypographyProp
   onBack: () => void
 }) {
   return (
-    <Grid2 container alignItems="center" justifyContent="center">
+    <Grid container alignItems="center" justifyContent="center">
       <IconButton
         onClick={() => { onBack() }}
         sx={buttonSx}
@@ -18,7 +18,7 @@ function TypographyWithBackButton({ children, onBack, ...props }: TypographyProp
       <IconButton
         sx={{ ...buttonSx, visibility: 'hidden' }}
       ><ArrowBack /></IconButton>
-    </Grid2>
+    </Grid>
   )
 }
 

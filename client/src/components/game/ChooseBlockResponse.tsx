@@ -1,4 +1,4 @@
-import { Grid2, Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { EventMessages, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -41,7 +41,7 @@ function ChooseBlockResponse() {
           secondaryPlayer: gameState.turnPlayer
         })}
       </Typography>
-      <Grid2 container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center">
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map((response, index) => {
@@ -58,7 +58,7 @@ function ChooseBlockResponse() {
               {t(response)}
             </GrowingButton>
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }

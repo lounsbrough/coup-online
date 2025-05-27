@@ -1,4 +1,4 @@
-import { Badge, Button, Grid2, Paper, Tooltip, Typography, useTheme } from "@mui/material"
+import { Badge, Button, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Close, MonetizationOn } from "@mui/icons-material"
@@ -30,7 +30,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
 
   return (
     <>
-      <Grid2 container justifyContent="center" spacing={3}>
+      <Grid container justifyContent="center" spacing={3}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences, ai, personality }, index) => {
             const playerColor = influenceCount ? color : '#777777'
@@ -118,7 +118,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     )}
                     <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                   </Typography>
-                  <Grid2
+                  <Grid
                     container mt={0.5}
                     spacing={1}
                     justifyContent='center'
@@ -129,7 +129,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                       ...deadInfluences
                     ].map((influence, index) => {
                       return (
-                        <Grid2
+                        <Grid
                           key={index}
                           sx={{
                             justifyContent: 'center',
@@ -153,15 +153,15 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                               <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
                             </span>
                           </Tooltip>
-                        </Grid2>
+                        </Grid>
                       )
                     })}
-                  </Grid2>
+                  </Grid>
                 </Paper>
               </Badge>
             )
           })}
-      </Grid2>
+      </Grid>
       {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
   )

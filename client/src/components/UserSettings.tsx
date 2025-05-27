@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, Switch, Typography, useTheme } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Switch, Typography, useTheme } from "@mui/material"
 import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
 import ColorModeToggle from "./ColorModeToggle"
 import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
@@ -57,28 +57,28 @@ function UserSettings() {
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Grid2 container spacing={3} direction="column">
-            <Grid2 height={rowHeight} alignContent="center" sx={{ whiteSpace: 'nowrap' }}>
+          <Grid container spacing={3} direction="column">
+            <Grid height={rowHeight} alignContent="center" sx={{ whiteSpace: 'nowrap' }}>
               <Typography component="span" sx={{ mr: 2 }}>{t('language')}:</Typography>
               <LanguageSelector />
-            </Grid2>
+            </Grid>
             {roomId && (
-              <Grid2 height={rowHeight} alignContent="center">
+              <Grid height={rowHeight} alignContent="center">
                 <Typography component="span" sx={{ mr: 1 }}>
                   {t('room')}
                   :
                 </Typography>
                 <strong>{roomId}</strong>
-              </Grid2>
+              </Grid>
             )}
-            <Grid2 height={rowHeight} alignContent="center">
+            <Grid height={rowHeight} alignContent="center">
               <Typography component="span" sx={{ mr: 2 }}>
                 {t('colorMode')}
                 :
               </Typography>
               <ColorModeToggle />
-            </Grid2>
-            <Grid2 height={rowHeight} alignContent="center">
+            </Grid>
+            <Grid height={rowHeight} alignContent="center">
               <Typography component="span">
                 {t('confirmActions')}
                 :
@@ -91,8 +91,8 @@ function UserSettings() {
                 }}
                 slotProps={{ input: { 'aria-label': 'controlled' } }}
               />
-            </Grid2>
-            <Grid2 height={rowHeight} alignContent="center">
+            </Grid>
+            <Grid height={rowHeight} alignContent="center">
               <Typography component="span" sx={{ mr: 1 }}>
                 {t('websocketsConnection')}
                 :
@@ -100,8 +100,8 @@ function UserSettings() {
               {isConnected
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
                 : <CancelOutlined color="error" sx={{ verticalAlign: 'middle' }} />}
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button variant='contained' onClick={() => { setModalOpen(false) }}>

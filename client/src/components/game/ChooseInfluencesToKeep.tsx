@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Checkbox, Grid2, Typography } from "@mui/material"
+import { Checkbox, Grid, Typography } from "@mui/material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
@@ -49,7 +49,7 @@ function ChooseInfluencesToKeep() {
           count: influenceCountToKeep
         })}
       </Typography>
-      <Grid2 container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
@@ -77,7 +77,7 @@ function ChooseInfluencesToKeep() {
               {t(influence)}
             </GrowingButton>
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }

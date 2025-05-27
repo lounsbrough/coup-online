@@ -1,4 +1,4 @@
-import { Box, Grid2, Tooltip, Typography, useTheme } from "@mui/material"
+import { Box, Grid, Tooltip, Typography, useTheme } from "@mui/material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
@@ -44,26 +44,26 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
   const drawerIsOpen = leftDrawerOpen || rightDrawerOpen
 
   return (
-    <Grid2 container className="game-board">
-      <Grid2 size={{ xs: 12, sm: 12, md: 0, lg: drawerIsOpen ? 0 : 3 }} />
-      <Grid2
+    <Grid container className="game-board">
+      <Grid size={{ xs: 12, sm: 12, md: 0, lg: drawerIsOpen ? 0 : 3 }} />
+      <Grid
         p={2}
         size={{ xs: 12, sm: 12, md: 9, lg: drawerIsOpen ? 9 : 6 }}
       >
         {gameIsOver && (
-          <Grid2 sx={{ m: 5 }}>
+          <Grid sx={{ m: 5 }}>
             <Victory player={playersLeft[0]} />
-          </Grid2>
+          </Grid>
         )}
         {gameIsOver && !!gameState.selfPlayer && (
-          <Grid2 sx={{ m: 5 }}>
+          <Grid sx={{ m: 5 }}>
             <PlayAgain />
-          </Grid2>
+          </Grid>
         )}
         {gameState.selfPlayer?.influences.length === 0 && (
-          <Grid2>
+          <Grid>
             <SnarkyDeadComment />
-          </Grid2>
+          </Grid>
         )}
         {turnPlayer && !gameIsOver && (
           <Box my={2}>
@@ -76,35 +76,35 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
           </Box>
         )}
         {!!gameState?.selfPlayer?.influences?.length && (
-          <Grid2 container justifyContent="center" my={4}>
+          <Grid container justifyContent="center" my={4}>
             <PlayerInfluences />
-          </Grid2>
+          </Grid>
         )}
-        <Grid2 container justifyContent="center" sx={{ my: 2 }}>
+        <Grid container justifyContent="center" sx={{ my: 2 }}>
           <Players />
-        </Grid2>
+        </Grid>
         {!gameIsOver && (
-          <Grid2 container justifyContent="center">
-            <Grid2 sx={{ p: 2 }}>
+          <Grid container justifyContent="center">
+            <Grid sx={{ p: 2 }}>
               <PlayerDecision />
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         )}
-      </Grid2>
-      <Grid2
+      </Grid>
+      <Grid
         size={{ xs: 12, sm: 12, md: 3 }}
         sx={{ p: 2 }}
       >
-        <Grid2
+        <Grid
           container
           p={1}
           spacing={0.5}
           sx={centeredOnSmallScreen}
         >
-          <Grid2 size={12}>
+          <Grid size={12}>
             <EventLog />
-          </Grid2>
-          <Grid2
+          </Grid>
+          <Grid
             container
             size={12}
             alignItems='center'
@@ -127,16 +127,16 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
                 fontSize='smaller'
               >{gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} /></Typography>
             </Tooltip>
-          </Grid2>
-          <Grid2 size={12}>
+          </Grid>
+          <Grid size={12}>
             <RequestReset />
-          </Grid2>
-          <Grid2 size={12}>
+          </Grid>
+          <Grid size={12}>
             <Forfeit />
-          </Grid2>
-        </Grid2>
-      </Grid2>
-    </Grid2 >
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid >
   )
 }
 

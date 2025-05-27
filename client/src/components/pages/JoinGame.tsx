@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 import { Analytics } from '@vercel/analytics/react'
-import { Box, Breadcrumbs, Button, Grid2, TextField, Typography } from "@mui/material"
+import { Box, Breadcrumbs, Button, Grid, TextField, Typography } from "@mui/material"
 import { AccountCircle, Group } from "@mui/icons-material"
 import { Link, useNavigate, useSearchParams } from "react-router"
 import { getPlayerId } from "../../helpers/players"
@@ -47,8 +47,8 @@ function JoinGame() {
           })
         }}
       >
-        <Grid2 container direction="column" alignItems='center'>
-          <Grid2>
+        <Grid container direction="column" alignItems='center'>
+          <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Group sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
@@ -62,8 +62,8 @@ function JoinGame() {
                 required
               />
             </Box>
-          </Grid2>
-          <Grid2>
+          </Grid>
+          <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
@@ -77,9 +77,9 @@ function JoinGame() {
                 required
               />
             </Box>
-          </Grid2>
-        </Grid2>
-        <Grid2>
+          </Grid>
+        </Grid>
+        <Grid>
           <Button
             type="submit"
             sx={{ mt: 5 }}
@@ -88,7 +88,7 @@ function JoinGame() {
           >
             {t('joinGame')}
           </Button>
-        </Grid2>
+        </Grid>
         {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>
     </>
