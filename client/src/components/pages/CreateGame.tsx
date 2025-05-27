@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { Box, Breadcrumbs, Button, Grid2, Slider, TextField, Typography } from "@mui/material"
+import { Box, Breadcrumbs, Button, Grid, Slider, TextField, Typography } from "@mui/material"
 import { AccountCircle } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router"
 import { getPlayerId } from "../../helpers/players"
@@ -46,8 +46,8 @@ function CreateGame() {
           })
         }}
       >
-        <Grid2 container direction="column" alignItems='center'>
-          <Grid2>
+        <Grid container direction="column" alignItems='center'>
+          <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
@@ -61,9 +61,9 @@ function CreateGame() {
                 required
               />
             </Box>
-          </Grid2>
+          </Grid>
 
-          <Grid2 sx={{ maxWidth: '300px', width: '90%' }}>
+          <Grid sx={{ maxWidth: '300px', width: '90%' }}>
             <Box p={2} mt={2}>
               <Typography mt={2}>
                 {t('eventLogRetentionTurns')}
@@ -81,9 +81,9 @@ function CreateGame() {
                 }}
               />
             </Box>
-          </Grid2>
-        </Grid2>
-        <Grid2>
+          </Grid>
+        </Grid>
+        <Grid>
           <Button
             type="submit"
             sx={{ mt: 5 }}
@@ -92,7 +92,7 @@ function CreateGame() {
           >
             {t('createGame')}
           </Button>
-        </Grid2>
+        </Grid>
         {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>
     </>

@@ -1,4 +1,4 @@
-import { Grid2, Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -51,7 +51,7 @@ function ChooseActionResponse() {
         >
           {t('claimAnInfluence')}
         </TypographyWithBackButton>
-        <Grid2 container spacing={2} justifyContent="center">
+        <Grid container spacing={2} justifyContent="center">
           {Object.entries(InfluenceAttributes)
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map(([influence, influenceAttributes]) => {
@@ -68,7 +68,7 @@ function ChooseActionResponse() {
                 variant="contained"
               >{t(influence as Influences)}</GrowingButton>
             })}
-        </Grid2>
+        </Grid>
       </>
     )
   }
@@ -83,7 +83,7 @@ function ChooseActionResponse() {
           secondaryPlayer: gameState.pendingAction.targetPlayer
         })}
       </Typography>
-      <Grid2 container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center">
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map((response, index) => {
@@ -111,7 +111,7 @@ function ChooseActionResponse() {
               {t(response)}
             </GrowingButton>
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }

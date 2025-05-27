@@ -1,4 +1,4 @@
-import { Grid2, Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -39,7 +39,7 @@ function ChooseInfluenceToLose() {
       <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
         {t('chooseInfluenceToLose')}
       </Typography>
-      <Grid2 container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
@@ -54,7 +54,7 @@ function ChooseInfluenceToLose() {
               {t(influence)}
             </GrowingButton>
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }

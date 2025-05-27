@@ -1,4 +1,4 @@
-import { Grid2, Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { EventMessages, Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -59,7 +59,7 @@ function ChooseChallengeResponse() {
           })}
         </Typography>
       )}
-      <Grid2 container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
@@ -74,7 +74,7 @@ function ChooseChallengeResponse() {
               {t(influence as Influences)}
             </GrowingButton>
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }

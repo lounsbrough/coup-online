@@ -1,4 +1,4 @@
-import { Grid2, Tooltip, Typography, useTheme } from "@mui/material"
+import { Grid, Tooltip, Typography, useTheme } from "@mui/material"
 import { ActionAttributes, Actions, PlayerActions, EventMessages } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -51,7 +51,7 @@ function ChooseAction() {
         >
           {t('chooseATarget')}
         </TypographyWithBackButton>
-        <Grid2 container spacing={2} justifyContent="center">
+        <Grid container spacing={2} justifyContent="center">
           {gameState.players.map((player) => {
             if (player.name === gameState.selfPlayer?.name || !player.influenceCount
             ) {
@@ -77,7 +77,7 @@ function ChooseAction() {
               variant="contained"
             >{player.name}</GrowingButton>
           })}
-        </Grid2>
+        </Grid>
       </>
     )
   }
@@ -87,7 +87,7 @@ function ChooseAction() {
       <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
         {t('chooseAnAction')}
       </Typography>
-      <Grid2 container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center">
         {Object.entries(ActionAttributes)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map(([action, actionAttributes], index) => {
@@ -98,7 +98,7 @@ function ChooseAction() {
             }
 
             return (
-              <Grid2 key={index}>
+              <Grid key={index}>
                 <Tooltip title={lackingCoins && t('notEnoughCoins')}>
                   <span>
                     <GrowingButton
@@ -113,10 +113,10 @@ function ChooseAction() {
                     </GrowingButton>
                   </span>
                 </Tooltip>
-              </Grid2>
+              </Grid>
             )
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Alert, Box, Button, CircularProgress, Grid2, Typography } from "@mui/material"
+import { Alert, Box, Button, CircularProgress, Grid, Typography } from "@mui/material"
 import GameBoard from "../game/GameBoard"
 import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -25,20 +25,20 @@ function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
 
   if (!gameState) {
     return (
-      <Grid2 mt={2} container spacing={2} direction="column">
-        <Grid2>
+      <Grid mt={2} container spacing={2} direction="column">
+        <Grid>
           <Typography variant="h6" my={3}>
             {t('gameNotFound')}
           </Typography>
-        </Grid2>
-        <Grid2>
+        </Grid>
+        <Grid>
           <Link to={`/`}>
             <Button variant="contained">
               {t('home')}
             </Button>
           </Link>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     )
   }
 
