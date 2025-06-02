@@ -33,7 +33,7 @@
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.29",
     "@types/ws": "^8.18.1",
     "chance": "^1.1.13",
     "eslint": "^9.27.0",
