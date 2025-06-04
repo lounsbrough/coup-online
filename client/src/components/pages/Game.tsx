@@ -2,7 +2,7 @@ import { Alert, Box, Button, CircularProgress, Grid, Typography } from "@mui/mat
 import GameBoard from "../game/GameBoard"
 import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Link } from "react-router"
+import { Link, useSearchParams } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { Visibility } from "@mui/icons-material"
 
@@ -13,9 +13,11 @@ interface GameProps {
 
 function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
   const { gameState, hasInitialStateLoaded } = useGameStateContext()
+  const [searchParams] = useSearchParams()
   const { t } = useTranslationContext()
+  const roomId = searchParams.get('roomId')
 
-  if (!gameState && !hasInitialStateLoaded) {
+  if (roomId && !gameState && !hasInitialStateLoaded) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'var(--app-content-height)' }}>
         <CircularProgress size={50} />
