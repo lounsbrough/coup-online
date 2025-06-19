@@ -70,6 +70,7 @@ export const dehydrateGameState = (hydrated: GameState) : DehydratedGameState =>
 export const dehydratePublicGameState = (hydrated: PublicGameState) : DehydratedPublicGameState => ({
   ...dehydrateCommonGameState(hydrated),
   deckCount: hydrated.deckCount,
+  settings: hydrated.settings,
   players: hydrated.players.map((player) => ({
     ...player,
     claimedInfluences: [...player.claimedInfluences],
@@ -145,6 +146,7 @@ export const rehydrateGameState = (dehydrated: DehydratedGameState): GameState =
 export const rehydratePublicGameState = (dehydrated: DehydratedPublicGameState): PublicGameState => ({
   ...rehydrateCommonGameState(dehydrated),
   deckCount: dehydrated.deckCount,
+  settings: dehydrated.settings,
   players: dehydrated.players.map((player) => ({
     ...player,
     claimedInfluences: new Set(player.claimedInfluences),

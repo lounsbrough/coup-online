@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { Box, Breadcrumbs, Button, Grid, Slider, TextField, Typography } from "@mui/material"
+import { Box, Breadcrumbs, Button, Grid, Slider, Switch, TextField, Typography } from "@mui/material"
 import { AccountCircle } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router"
 import { getPlayerId } from "../../helpers/players"
@@ -7,10 +7,16 @@ import { Analytics } from '@vercel/analytics/react'
 import { GameSettings, PlayerActions, DehydratedPublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { allowReviveStorageKey, eventLogRetentionTurnsStorageKey } from "../../helpers/localStorageKeys"
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
-  const [eventLogRetentionTurns, setEventLogRetentionTurns] = useState(3)
+  const [eventLogRetentionTurns, setEventLogRetentionTurns] = useState<number>(
+    JSON.parse(localStorage.getItem(eventLogRetentionTurnsStorageKey) ?? JSON.stringify(3))
+  )
+  const [allowRevive, setAllowRevive] = useState<boolean>(
+    JSON.parse(localStorage.getItem(allowReviveStorageKey) ?? JSON.stringify(false))
+  )
   const navigate = useNavigate()
   const { t } = useTranslationContext()
 
@@ -42,7 +48,10 @@ function CreateGame() {
           trigger({
             playerId: getPlayerId(),
             playerName: playerName.trim(),
-            settings: { eventLogRetentionTurns }
+            settings: {
+              eventLogRetentionTurns,
+              allowRevive
+            }
           })
         }}
       >
@@ -62,9 +71,8 @@ function CreateGame() {
               />
             </Box>
           </Grid>
-
           <Grid sx={{ maxWidth: '300px', width: '90%' }}>
-            <Box p={2} mt={2}>
+            <Box mt={6}>
               <Typography mt={2}>
                 {t('eventLogRetentionTurns')}
                 {`: ${eventLogRetentionTurns}`}
@@ -76,9 +84,25 @@ function CreateGame() {
                 valueLabelDisplay="auto"
                 min={1}
                 max={100}
-                onChange={(_: Event, value: number | number[]) => {
-                  setEventLogRetentionTurns(value as number)
+                onChange={(_: Event, value: number) => {
+                  setEventLogRetentionTurns(value)
+                  localStorage.setItem(eventLogRetentionTurnsStorageKey, JSON.stringify(value))
                 }}
+              />
+            </Box>
+          </Grid>
+          <Grid sx={{ maxWidth: '300px', width: '90%' }}>
+            <Box mt={2}>
+              <Typography component="span" mt={2}>
+                {t('allowRevive')}:
+              </Typography>
+              <Switch
+                checked={allowRevive}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setAllowRevive(event.target.checked)
+                  localStorage.setItem(allowReviveStorageKey, JSON.stringify(event.target.checked))
+                }}
+                slotProps={{ input: { 'aria-label': 'controlled' } }}
               />
             </Box>
           </Grid>

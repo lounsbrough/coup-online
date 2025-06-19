@@ -52,13 +52,13 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
   const [honesty, setHonesty] = useState<number>(50)
   const [skepticism, setSkepticism] = useState<number>(50)
 
-  const handleVengefulnessChange = (_: Event, value: number | number[]) => {
+  const handleVengefulnessChange = (_: Event, value: number) => {
     setVengefulness(value as number)
   }
-  const handleHonestyChange = (_: Event, value: number | number[]) => {
+  const handleHonestyChange = (_: Event, value: number) => {
     setHonesty(value as number)
   }
-  const handleSkepticismChange = (_: Event, value: number | number[]) => {
+  const handleSkepticismChange = (_: Event, value: number) => {
     setSkepticism(value as number)
   }
 

@@ -93,13 +93,17 @@ function ChooseAction() {
           .map(([action, actionAttributes], index) => {
             const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer!.coins < actionAttributes.coinsRequired
 
-            if (gameState.selfPlayer!.coins >= 10 && action !== Actions.Coup) {
+            if (gameState.selfPlayer!.coins >= 10 && ![Actions.Coup, Actions.Revive].includes(action as Actions)) {
+              return null
+            }
+
+            if (!gameState.settings.allowRevive && action === Actions.Revive) {
               return null
             }
 
             return (
               <Grid key={index}>
-                <Tooltip title={lackingCoins && t('notEnoughCoins')}>
+                <Tooltip title={lackingCoins && t('notEnoughCoins', { count: actionAttributes.coinsRequired })} placement="top">
                   <span>
                     <GrowingButton
                       onClick={() => {

@@ -98,6 +98,7 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
       [Actions.Exchange]: influenceColors[Influences.Ambassador],
       [Actions.ForeignAid]: primaryColor,
       [Actions.Income]: primaryColor,
+      [Actions.Revive]: primaryColor,
       [Actions.Steal]: influenceColors[Influences.Captain],
       [Actions.Tax]: influenceColors[Influences.Duke]
     }

@@ -7,6 +7,7 @@ type ActionMessages = {
   [Actions.Exchange]: string;
   [Actions.ForeignAid]: string;
   [Actions.Income]: string;
+  [Actions.Revive]: string;
   [Actions.Steal]: string;
   [Actions.Tax]: string;
 };
@@ -17,6 +18,7 @@ export type Translations = ActionMessages & {
   add: string;
   addAiPlayer: string;
   addPlayersToStartGame: string;
+  allowRevive: string;
   anyone: string;
   block: string;
   blockAsInfluence: string;
@@ -161,12 +163,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Austausch",
     [Actions.ForeignAid]: "Auslandshilfe",
     [Actions.Income]: "Einkommen",
+    [Actions.Revive]: "Wiederbeleben",
     [Actions.Steal]: "Stehlen",
     [Actions.Tax]: "Steuern",
     add: "Hinzufügen",
     addAiPlayer: "KI-Spieler hinzufügen",
     addPlayersToStartGame:
       "Füge mindestens einen weiteren Spieler hinzu, um das Spiel zu starten",
+    allowRevive: "Wiederbeleben erlauben",
     anyone: "Jeder",
     block: "Blocken",
     blockAsInfluence: "Blocken als {{primaryInfluence}}",
@@ -207,6 +211,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Austausch]]}} von Einflusskarten",
       [Actions.ForeignAid]: "{{action[[Auslandshilfe]]}} erhalten",
       [Actions.Income]: "{{action[[Einkommen]]}} erhalten",
+      [Actions.Revive]: "{{action[[Wiederbeleben]]}} einer Einflusskarte",
       [Actions.Steal]: "{{action[[Stehlen]]}} von {{secondaryPlayer}}",
       [Actions.Tax]: "{{action[[Steuern]]}} erhalten",
     },
@@ -233,6 +238,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
         "{{primaryPlayer}} hat {{action[[Auslandshilfe]]}} erhalten",
       [Actions.Income]:
         "{{primaryPlayer}} hat {{action[[Einkommen]]}} erhalten",
+      [Actions.Revive]:
+        "{{primaryPlayer}} hat eine Einflusskarte {{action[[Wiederbelebt]]}}",
       [Actions.Steal]:
         "{{primaryPlayer}} hat von {{secondaryPlayer}} {{action[[Gestohlen]]}}",
       [Actions.Tax]: "{{primaryPlayer}} hat {{action[[Steuern]]}} erhalten",
@@ -292,7 +299,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Einfluss verlieren",
     messageWasDeleted: "Nachricht wurde gelöscht",
     noChatMessages: "Keine Chatnachrichten",
-    notEnoughCoins: "Nicht genügend Münzen",
+    notEnoughCoins: "Nicht genügend Münzen ({{count}})",
     numberOfPlayers: "Anzahl der Spieler",
     pageNotFound: "Seite nicht gefunden",
     payCoins: "Zahle {{count}} Münze{{plural[[n]]}}",
@@ -376,11 +383,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Exchange",
     [Actions.ForeignAid]: "Foreign Aid",
     [Actions.Income]: "Income",
+    [Actions.Revive]: "Revive",
     [Actions.Steal]: "Steal",
     [Actions.Tax]: "Tax",
     add: "Add",
     addAiPlayer: "Add AI Player",
     addPlayersToStartGame: "Add at least one more player to start game",
+    allowRevive: "Allow Revive",
     anyone: "Anyone",
     block: "Block",
     blockAsInfluence: "Block as {{primaryInfluence}}",
@@ -417,8 +426,9 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Exchange]]}} influences",
       [Actions.ForeignAid]: "Collect {{action[[Foreign Aid]]}}",
       [Actions.Income]: "Collect {{action[[Income]]}}",
+      [Actions.Revive]: "{{action[[Revive]]}} an influence",
       [Actions.Steal]: "{{action[[Steal]]}} from {{secondaryPlayer}}",
-      [Actions.Tax]: "Collect {{action}}",
+      [Actions.Tax]: "Collect {{action[[Tax]]}}",
     },
     [EventMessages.ActionPending]: {
       [Actions.Assassinate]:
@@ -441,6 +451,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]:
         "{{primaryPlayer}} received {{action[[Foreign Aid]]}}",
       [Actions.Income]: "{{primaryPlayer}} collected {{action[[Income]]}}",
+      [Actions.Revive]: "{{primaryPlayer}} {{action[[Revived]]}} an influence",
       [Actions.Steal]:
         "{{primaryPlayer}} {{action[[Stole]]}} from {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} collected {{action[[Tax]]}}",
@@ -497,7 +508,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Losing Influence",
     messageWasDeleted: "Message was deleted",
     noChatMessages: "No chat messages",
-    notEnoughCoins: "Not enough coins",
+    notEnoughCoins: "Not enough coins ({{count}})",
     numberOfPlayers: "Number of Players",
     pageNotFound: "Page not found",
     payCoins: "Pay {{count}} coin{{plural[[s]]}}",
@@ -580,12 +591,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Intercambiar",
     [Actions.ForeignAid]: "Ayuda extranjera",
     [Actions.Income]: "Ingresos",
+    [Actions.Revive]: "Revivir",
     [Actions.Steal]: "Robar",
     [Actions.Tax]: "Impuestos",
     add: "Agregar",
     addAiPlayer: "Agregar jugador IA",
     addPlayersToStartGame:
       "Agrega al menos un jugador más para empezar el juego",
+    allowRevive: "Permitir revivir",
     anyone: "Cualquiera",
     block: "Bloquear",
     blockAsInfluence: "Bloquear como {{primaryInfluence}}",
@@ -623,6 +636,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Intercambiar]]}} influencias",
       [Actions.ForeignAid]: "Recibir {{action[[Ayuda extranjera]]}}",
       [Actions.Income]: "Recibir {{action[[Ingresos]]}}",
+      [Actions.Revive]: "{{action[[Revivir]]}} una influencia",
       [Actions.Steal]: "{{action[[Robar]]}} a {{secondaryPlayer}}",
       [Actions.Tax]: "Recibir {{action[[Impuestos]]}}",
     },
@@ -647,6 +661,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]:
         "{{primaryPlayer}} recibió {{action[[Ayuda extranjera]]}}",
       [Actions.Income]: "{{primaryPlayer}} recibió {{action[[Ingresos]]}}",
+      [Actions.Revive]:
+        "{{primaryPlayer}} {{action[[Revivió]]}} una influencia",
       [Actions.Steal]:
         "{{primaryPlayer}} le {{action[[Robó]]}} a {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} cobró {{action[[Impuestos]]}}",
@@ -705,7 +721,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Perder influencia",
     messageWasDeleted: "El mensaje fue borrado",
     noChatMessages: "No hay mensajes en el chat",
-    notEnoughCoins: "No alcanzan las monedas",
+    notEnoughCoins: "No alcanzan las monedas ({{count}})",
     numberOfPlayers: "Número de jugadores",
     pageNotFound: "Página no encontrada",
     payCoins: "Pagar {{count}} moneda{{plural[[s]]}}",
@@ -787,12 +803,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Échanger",
     [Actions.ForeignAid]: "Aide étrangère",
     [Actions.Income]: "Revenu",
+    [Actions.Revive]: "Réanimer",
     [Actions.Steal]: "Voler",
     [Actions.Tax]: "Taxe",
     add: "Ajouter",
     addAiPlayer: "Ajouter un joueur IA",
     addPlayersToStartGame:
       "Ajouter au moins un joueur de plus pour démarrer la partie",
+    allowRevive: "Autoriser la réanimation",
     anyone: "N'importe qui",
     block: "Bloquer",
     blockAsInfluence: "Bloquer comme {{primaryInfluence}}",
@@ -831,6 +849,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Échanger]]}} des influences",
       [Actions.ForeignAid]: "Collecter {{action[[Aide étrangère]]}}",
       [Actions.Income]: "Collecter {{action[[Revenu]]}}",
+      [Actions.Revive]: "{{action[[Réanimer]]}} une influence",
       [Actions.Steal]: "{{action[[Voler]]}} à {{secondaryPlayer}}",
       [Actions.Tax]: "Collecter {{action[[Taxe]]}}",
     },
@@ -856,6 +875,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]:
         "{{primaryPlayer}} a reçu l'{{action[[Aide étrangère]]}}",
       [Actions.Income]: "{{primaryPlayer}} a collecté le {{action[[Revenu]]}}",
+      [Actions.Revive]: "{{primaryPlayer}} a {{action[[Réanimer]]}} une influence",
       [Actions.Steal]:
         "{{primaryPlayer}} a {{action[[Volé]]}} à {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} a collecté la {{action[[Taxe]]}}",
@@ -915,7 +935,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Perte d'influence",
     messageWasDeleted: "Le message a été supprimé",
     noChatMessages: "Aucun message dans le chat",
-    notEnoughCoins: "Pas assez de pièces",
+    notEnoughCoins: "Pas assez de pièces ({{count}})",
     numberOfPlayers: "Nombre de joueurs",
     pageNotFound: "Page non trouvée",
     payCoins: "Payer {{count}} pièce{{plural[[s]]}}",
@@ -999,12 +1019,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Scambia",
     [Actions.ForeignAid]: "Aiuti esteri",
     [Actions.Income]: "Reddito",
+    [Actions.Revive]: "Rivivi",
     [Actions.Steal]: "Ruba",
     [Actions.Tax]: "Tassa",
     add: "Aggiungi",
     addAiPlayer: "Aggiungi giocatore IA",
     addPlayersToStartGame:
       "Aggiungi almeno un altro giocatore per iniziare la partita",
+    allowRevive: "Consenti rivivificazione",
     anyone: "Chiunque",
     block: "Blocca",
     blockAsInfluence: "Blocca come {{primaryInfluence}}",
@@ -1043,6 +1065,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Scambia]]}} influenze",
       [Actions.ForeignAid]: "Raccogli {{action[[Aiuti esteri]]}}",
       [Actions.Income]: "Raccogli {{action[[Reddito]]}}",
+      [Actions.Revive]: "{{action[[Rivivi]]}} un'influenza",
       [Actions.Steal]: "{{action[[Ruba]]}} da {{secondaryPlayer}}",
       [Actions.Tax]: "Raccogli {{action[[Tassa]]}}",
     },
@@ -1069,6 +1092,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
         "{{primaryPlayer}} ha ricevuto {{action[[aiuti esteri]]}}",
       [Actions.Income]:
         "{{primaryPlayer}} ha riscosso il {{action[[reddito]]}}",
+      [Actions.Revive]:
+        "{{primaryPlayer}} ha {{action[[rivissuto]]}} un'influenza",
       [Actions.Steal]:
         "{{primaryPlayer}} ha {{action[[rubato]]}} da {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} ha riscosso la {{action[[tassa]]}}",
@@ -1128,7 +1153,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Perdita di influenza",
     messageWasDeleted: "Il messaggio è stato eliminato",
     noChatMessages: "Nessun messaggio in chat",
-    notEnoughCoins: "Non abbastanza monete",
+    notEnoughCoins: "Non abbastanza monete ({{count}})",
     numberOfPlayers: "Numero di giocatori",
     pageNotFound: "Pagina non trovata",
     payCoins: "Paga {{count}} moneta{{plural[[e]]}}",
@@ -1212,12 +1237,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Trocar",
     [Actions.ForeignAid]: "Ajuda Externa",
     [Actions.Income]: "Renda",
+    [Actions.Revive]: "Ressuscitar",
     [Actions.Steal]: "Roubar",
     [Actions.Tax]: "Imposto",
     add: "Adicionar",
     addAiPlayer: "Adicionar jogador AI",
     addPlayersToStartGame:
       "Adicione pelo menos mais um jogador para iniciar o jogo",
+    allowRevive: "Permitir ressuscitar",
     anyone: "Todos",
     block: "Bloque",
     blockAsInfluence: "Bloquear como {{primaryInfluence}}",
@@ -1255,6 +1282,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Trocar]]}} influências",
       [Actions.ForeignAid]: "Receber {{action[[ajuda externa]]}}",
       [Actions.Income]: "Coleter {{action[[renda]]}}",
+      [Actions.Revive]: "{{action[[Ressuscitar]]}} uma influência",
       [Actions.Steal]: "{{action[[Roubar]]}} de {{secondaryPlayer}}",
       [Actions.Tax]: "Cobrar {{action[[imposto]]}}",
     },
@@ -1279,6 +1307,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]:
         "{{primaryPlayer}} recebeu {{action[[ajuda externa]]}}",
       [Actions.Income]: "{{primaryPlayer}} coletou {{action[[renda]]}}",
+      [Actions.Revive]: "{{primaryPlayer}} {{action[[ressuscitou]]}} uma influência",
       [Actions.Steal]:
         "{{primaryPlayer}} {{action[[roubou]]}} de {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} coubrou {{action[[imposto]]}}",
@@ -1337,7 +1366,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Perdendo influência",
     messageWasDeleted: "Mensagem foi descartada",
     noChatMessages: "Nenhuma mensagem",
-    notEnoughCoins: "Moedas insuficientes",
+    notEnoughCoins: "Moedas insuficientes ({{count}})",
     numberOfPlayers: "Número de jogadores",
     pageNotFound: "Página não encontrada",
     payCoins: "Pague {{count}} moeda{{plural[[s]]}}",

@@ -446,8 +446,17 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     throw new GameMutationInputError('You don\'t have enough coins')
   }
 
-  if (player.coins >= 10 && action !== Actions.Coup) {
-    throw new GameMutationInputError('You must coup when you have 10 or more coins')
+  if (player.coins >= 10 && ![Actions.Coup, Actions.Revive].includes(action)) {
+    throw new GameMutationInputError(`You must ${Actions.Coup} or ${Actions.Revive} when you have 10 or more coins`)
+  }
+
+  if (action === Actions.Revive) {
+    if (!gameState.settings.allowRevive) {
+      throw new GameMutationInputError('Revive action is not allowed in this game')
+    }
+    if (!player.deadInfluences.length) {
+      throw new GameMutationInputError('You have no dead influences to revive')
+    }
   }
 
   if (targetPlayer && !gameState.players.some((player) => player.name === targetPlayer)) {
@@ -496,6 +505,36 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
         })
         holdGrudge({ state, offended: targetPlayer, offender: coupingPlayer.name, weight: grudgeSizes[Actions.Coup] })
         promptPlayerToLoseInfluence(state, targetPlayer)
+      })
+    } else if (action === Actions.Revive) {
+      await mutateGameState(gameState, (state) => {
+        const revivePlayer = state.players.find(({ id }) => id === playerId)
+
+        if (!revivePlayer) {
+          throw new GameMutationInputError('Unable to find revive player')
+        }
+
+        if (revivePlayer.coins !== player.coins) {
+          throw new GameMutationInputError('Unexpected player state, refusing mutation')
+        }
+
+        if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: revivePlayer.id }))) {
+          throw new GameMutationInputError('You can\'t choose an action right now')
+        }
+
+        revivePlayer.coins -= 10
+        const influenceToRevive = revivePlayer.deadInfluences.pop()
+        if (!influenceToRevive) {
+          throw new GameMutationInputError('Unable to find dead influences to revive')
+        }
+        revivePlayer.influences.push(influenceToRevive)
+        revealAndReplaceInfluence(state, revivePlayer.name, influenceToRevive)
+        moveTurnToNextPlayer(state)
+        logEvent(state, {
+          event: EventMessages.ActionProcessed,
+          action,
+          primaryPlayer: player.name
+        })
       })
     } else if (action === Actions.Income) {
       await mutateGameState(gameState, (state) => {

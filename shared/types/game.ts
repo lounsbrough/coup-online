@@ -13,7 +13,8 @@ export enum Actions {
   Tax = 'Tax',
   ForeignAid = 'Foreign Aid',
   Income = 'Income',
-  Exchange = 'Exchange'
+  Exchange = 'Exchange',
+  Revive = 'Revive'
 }
 
 export enum PlayerActions {
@@ -119,7 +120,13 @@ export const ActionAttributes: {
     challengeable: true,
     influenceRequired: Influences.Ambassador,
     requiresTarget: false
-  }
+  },
+  [Actions.Revive]: {
+    blockable: false,
+    challengeable: false,
+    coinsRequired: 10,
+    requiresTarget: false
+  },
 }
 
 export enum Responses {
@@ -200,6 +207,7 @@ export type DehydratedPublicPlayer = Omit<PublicPlayer,
 
 export type GameSettings = {
   eventLogRetentionTurns: number
+  allowRevive: boolean
 }
 
 export type ChatMessage = {
@@ -292,7 +300,8 @@ export type PublicGameState = Pick<GameState,
   'lastEventTimestamp' |
   'pendingInfluenceLoss' |
   'roomId' |
-  'turn'
+  'turn' |
+  'settings'
 > & Partial<Pick<GameState,
   'pendingAction' |
   'pendingActionChallenge' |
