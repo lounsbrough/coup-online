@@ -7,6 +7,7 @@ type ActionMessages = {
   [Actions.Exchange]: string;
   [Actions.ForeignAid]: string;
   [Actions.Income]: string;
+  [Actions.Revive]: string;
   [Actions.Steal]: string;
   [Actions.Tax]: string;
 };
@@ -17,6 +18,7 @@ export type Translations = ActionMessages & {
   add: string;
   addAiPlayer: string;
   addPlayersToStartGame: string;
+  allowRevive: string;
   anyone: string;
   block: string;
   blockAsInfluence: string;
@@ -110,6 +112,7 @@ export type Translations = ActionMessages & {
   [Responses.Challenge]: string;
   [Responses.Pass]: string;
   revealInfluence: string;
+  reviveAnInfluence: string;
   room: string;
   rules: string;
   rulesActions: string;
@@ -130,6 +133,7 @@ export type Translations = ActionMessages & {
   rulesInfluences: string;
   rulesLosingAChallenge: string;
   rulesLosingInfluence: string;
+  rulesRevive: string
   rulesSetup: string;
   rulesSteal: string;
   rulesTax: string;
@@ -161,12 +165,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Austausch",
     [Actions.ForeignAid]: "Auslandshilfe",
     [Actions.Income]: "Einkommen",
+    [Actions.Revive]: "Wiederbeleben",
     [Actions.Steal]: "Stehlen",
     [Actions.Tax]: "Steuern",
     add: "Hinzufügen",
     addAiPlayer: "KI-Spieler hinzufügen",
     addPlayersToStartGame:
       "Füge mindestens einen weiteren Spieler hinzu, um das Spiel zu starten",
+    allowRevive: "Wiederbeleben erlauben",
     anyone: "Jeder",
     block: "Blocken",
     blockAsInfluence: "Blocken als {{primaryInfluence}}",
@@ -207,6 +213,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Austausch]]}} von Einflusskarten",
       [Actions.ForeignAid]: "{{action[[Auslandshilfe]]}} erhalten",
       [Actions.Income]: "{{action[[Einkommen]]}} erhalten",
+      [Actions.Revive]: "{{action[[Wiederbeleben]]}} einer Einflusskarte",
       [Actions.Steal]: "{{action[[Stehlen]]}} von {{secondaryPlayer}}",
       [Actions.Tax]: "{{action[[Steuern]]}} erhalten",
     },
@@ -233,6 +240,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
         "{{primaryPlayer}} hat {{action[[Auslandshilfe]]}} erhalten",
       [Actions.Income]:
         "{{primaryPlayer}} hat {{action[[Einkommen]]}} erhalten",
+      [Actions.Revive]:
+        "{{primaryPlayer}} hat eine Einflusskarte {{action[[Wiederbelebt]]}}",
       [Actions.Steal]:
         "{{primaryPlayer}} hat von {{secondaryPlayer}} {{action[[Gestohlen]]}}",
       [Actions.Tax]: "{{primaryPlayer}} hat {{action[[Steuern]]}} erhalten",
@@ -292,7 +301,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Einfluss verlieren",
     messageWasDeleted: "Nachricht wurde gelöscht",
     noChatMessages: "Keine Chatnachrichten",
-    notEnoughCoins: "Nicht genügend Münzen",
+    notEnoughCoins: "Nicht genügend Münzen ({{count}})",
     numberOfPlayers: "Anzahl der Spieler",
     pageNotFound: "Seite nicht gefunden",
     payCoins: "Zahle {{count}} Münze{{plural[[n]]}}",
@@ -309,6 +318,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Challenge]: "Herausfordern",
     [Responses.Pass]: "Passen",
     revealInfluence: "Decke {{primaryInfluence}} auf",
+    reviveAnInfluence: "Wiederbelebe eine Einflusskarte",
     room: "Raum",
     rules: "Regeln",
     rulesActions:
@@ -328,7 +338,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     rulesContents: "Deck mit Einflusskarten, Bank mit Münzen.",
     rulesContessa: "Kann Attentatsversuche blocken.",
     rulesCoup:
-      "Kostet sieben Münzen. Veranlasse einen Spieler, eine Einflusskarte abzugeben. Kann nicht herausgefordert oder geblockt werden. Wenn du deinen Zug mit 10 oder mehr Münzen beginnst, musst du diese Aktion ausführen.",
+      "Kostet sieben Münzen. Veranlasse einen Spieler, eine Einflusskarte abzugeben. Kann nicht herausgefordert oder geblockt werden. Wenn du deinen Zug mit zehn oder mehr Münzen beginnst, musst du einen Putsch (oder Wiederbeleben, wenn aktiviert) durchführen.",
     rulesDuke: "Kann Steuern erheben und Auslandshilfe blocken.",
     rulesExchange:
       "Ziehe zwei Einflusskarten vom Deck, sieh sie dir an und mische sie mit deinen aktuellen Einflusskarten. Lege zwei Karten zurück in den Stapel und mische den Stapel. Kann herausgefordert werden. Kann nicht geblockt werden.",
@@ -343,6 +353,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "Jeder Spieler, der eine Herausforderung verliert, muss eine seiner Einflusskarten offen vor sich hinlegen, sodass alle sie sehen können. Wenn dies seine letzte Einflusskarte ist, scheidet er aus dem Spiel aus.",
     rulesLosingInfluence:
       "Jedes Mal, wenn ein Spieler eine Einflusskarte verliert, wählt er, welche seiner Karten er aufdeckt.",
+    rulesRevive:
+      "Im Standardspiel nicht verfügbar, kann aber beim Erstellen eines neuen Spiels aktiviert werden. Kostet zehn Münzen. Belebt eine Einflusskarte aus dem Ablagestapel wieder. Kann nicht angefochten oder blockiert werden.",
     rulesSetup:
       "Mische die Karten und teile jedem Spieler zwei aus. Die Spieler sollten ihre Karten ansehen, aber sie vor den anderen verbergen. Jeder Spieler nimmt zwei Münzen von der Bank als Startkapital. In einem Spiel mit nur zwei Spielern beginnt der Startspieler das Spiel mit einer Münze anstelle von zwei.",
     rulesSteal:
@@ -376,11 +388,13 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Exchange",
     [Actions.ForeignAid]: "Foreign Aid",
     [Actions.Income]: "Income",
+    [Actions.Revive]: "Revive",
     [Actions.Steal]: "Steal",
     [Actions.Tax]: "Tax",
     add: "Add",
     addAiPlayer: "Add AI Player",
     addPlayersToStartGame: "Add at least one more player to start game",
+    allowRevive: "Allow Revive",
     anyone: "Anyone",
     block: "Block",
     blockAsInfluence: "Block as {{primaryInfluence}}",
@@ -417,8 +431,9 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Exchange]]}} influences",
       [Actions.ForeignAid]: "Collect {{action[[Foreign Aid]]}}",
       [Actions.Income]: "Collect {{action[[Income]]}}",
+      [Actions.Revive]: "{{action[[Revive]]}} an influence",
       [Actions.Steal]: "{{action[[Steal]]}} from {{secondaryPlayer}}",
-      [Actions.Tax]: "Collect {{action}}",
+      [Actions.Tax]: "Collect {{action[[Tax]]}}",
     },
     [EventMessages.ActionPending]: {
       [Actions.Assassinate]:
@@ -441,6 +456,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]:
         "{{primaryPlayer}} received {{action[[Foreign Aid]]}}",
       [Actions.Income]: "{{primaryPlayer}} collected {{action[[Income]]}}",
+      [Actions.Revive]: "{{primaryPlayer}} {{action[[Revived]]}} an influence",
       [Actions.Steal]:
         "{{primaryPlayer}} {{action[[Stole]]}} from {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} collected {{action[[Tax]]}}",
@@ -497,7 +513,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Losing Influence",
     messageWasDeleted: "Message was deleted",
     noChatMessages: "No chat messages",
-    notEnoughCoins: "Not enough coins",
+    notEnoughCoins: "Not enough coins ({{count}})",
     numberOfPlayers: "Number of Players",
     pageNotFound: "Page not found",
     payCoins: "Pay {{count}} coin{{plural[[s]]}}",
@@ -514,6 +530,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Challenge]: "Challenge",
     [Responses.Pass]: "Pass",
     revealInfluence: "Reveal {{primaryInfluence}}",
+    reviveAnInfluence: "Revive an influence",
     room: "Room",
     rules: "Rules",
     rulesActions:
@@ -532,7 +549,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     rulesContents: "Deck of influence cards, bank of coins.",
     rulesContessa: "Can Block assassination attempts.",
     rulesCoup:
-      "Costs seven coins. Cause a player to give up an Influence card. Cannot be Challenged or Blocked. If you start your turn with 10+ coins, you must take this action.",
+      "Costs seven coins. Cause a player to give up an Influence card. Cannot be Challenged or Blocked. If you start your turn with ten or more coins, you must Coup (or Revive if enabled).",
     rulesDuke: "Can Tax and Block Foreign Aid.",
     rulesExchange:
       "Draw two Influence cards from the deck, look at them and mix them with your current Influence cards. Place two cards back in the deck and shuffle the deck. Can be Challenged. Cannot be Blocked.",
@@ -547,6 +564,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "Any player who loses a Challenge must turn one of their Influence cards face up for all to see. If that is their last Influence card, they are out of the game.",
     rulesLosingInfluence:
       "Any time a player loses an Influence card, they choose which of their cards to reveal.",
+    rulesRevive: "Not available in the standard game but can be enabled when creating a new game. Costs ten coins. Revive an Influence card from the discard pile. Cannot be Challenged or Blocked.",
     rulesSetup:
       "Shuffle the cards and deal two to each player. Players should look at their cards but keep them hidden from everyone else. Each player takes two coins from the bank as their starting wealth. In a game with only two players, the starting player begins the game with one coin instead of two.",
     rulesSteal:
@@ -580,12 +598,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Intercambiar",
     [Actions.ForeignAid]: "Ayuda extranjera",
     [Actions.Income]: "Ingresos",
+    [Actions.Revive]: "Revivir",
     [Actions.Steal]: "Robar",
     [Actions.Tax]: "Impuestos",
     add: "Agregar",
     addAiPlayer: "Agregar jugador IA",
     addPlayersToStartGame:
       "Agrega al menos un jugador más para empezar el juego",
+    allowRevive: "Permitir revivir",
     anyone: "Cualquiera",
     block: "Bloquear",
     blockAsInfluence: "Bloquear como {{primaryInfluence}}",
@@ -623,6 +643,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Intercambiar]]}} influencias",
       [Actions.ForeignAid]: "Recibir {{action[[Ayuda extranjera]]}}",
       [Actions.Income]: "Recibir {{action[[Ingresos]]}}",
+      [Actions.Revive]: "{{action[[Revivir]]}} una influencia",
       [Actions.Steal]: "{{action[[Robar]]}} a {{secondaryPlayer}}",
       [Actions.Tax]: "Recibir {{action[[Impuestos]]}}",
     },
@@ -647,6 +668,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]:
         "{{primaryPlayer}} recibió {{action[[Ayuda extranjera]]}}",
       [Actions.Income]: "{{primaryPlayer}} recibió {{action[[Ingresos]]}}",
+      [Actions.Revive]:
+        "{{primaryPlayer}} {{action[[Revivió]]}} una influencia",
       [Actions.Steal]:
         "{{primaryPlayer}} le {{action[[Robó]]}} a {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} cobró {{action[[Impuestos]]}}",
@@ -705,7 +728,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Perder influencia",
     messageWasDeleted: "El mensaje fue borrado",
     noChatMessages: "No hay mensajes en el chat",
-    notEnoughCoins: "No alcanzan las monedas",
+    notEnoughCoins: "No alcanzan las monedas ({{count}})",
     numberOfPlayers: "Número de jugadores",
     pageNotFound: "Página no encontrada",
     payCoins: "Pagar {{count}} moneda{{plural[[s]]}}",
@@ -722,6 +745,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Challenge]: "Desafiar",
     [Responses.Pass]: "Pasar",
     revealInfluence: "Revelar {{primaryInfluence}}",
+    reviveAnInfluence: "Revivir una influencia",
     room: "Sala",
     rules: "Reglas",
     rulesActions: "Los jugadores se turnan para hacer una de estas acciones:",
@@ -740,7 +764,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     rulesContents: "Mazo de cartas de influencia, banco de monedas.",
     rulesContessa: "Puede bloquear intentos de asesinato.",
     rulesCoup:
-      "Cuesta siete monedas. Obliga a un jugador a deshacerse de una carta de influencia. No se puede desafiar ni bloquear. Si empiezas tu turno con 10 o más monedas, debes hacer esta acción.",
+      "Cuesta siete monedas. Obliga a un jugador a deshacerse de una carta de influencia. No se puede desafiar ni bloquear. Si comienzas tu turno con diez o más monedas, debes hacer un golpe de estado (o revivir si está activado).",
     rulesDuke: "Puede cobrar impuestos y bloquear la Ayuda Extranjera.",
     rulesExchange:
       "Roba dos cartas de influencia del mazo, míralas y mézclalas con tus cartas de influencia. Pon dos cartas de vuelta en el mazo y baraja el mazo. Se puede desafiar. No se puede bloquear.",
@@ -754,6 +778,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "Cualquier jugador que pierda un desafío debe poner una de sus cartas de influencia boca arriba para que todos la vean. Si esa es su última carta de influencia, queda fuera del juego.",
     rulesLosingInfluence:
       "Cada vez que un jugador pierde una carta de influencia, elige cuál de sus cartas revela.",
+    rulesRevive:
+      "No disponible en el juego estándar, pero se puede activar al crear una nueva partida. Cuesta diez monedas. Revive una carta de influencia del descarte. No se puede desafiar ni bloquear.",
     rulesSetup:
       "Baraja las cartas y reparte dos a cada jugador. Los jugadores deben ver sus cartas pero mantenerlas escondidas de los demás. Cada jugador toma dos monedas del banco para empezar. En una partida de solo dos jugadores, el que empieza comienza con una moneda en lugar de dos.",
     rulesSteal:
@@ -787,12 +813,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Échanger",
     [Actions.ForeignAid]: "Aide étrangère",
     [Actions.Income]: "Revenu",
+    [Actions.Revive]: "Réanimer",
     [Actions.Steal]: "Voler",
     [Actions.Tax]: "Taxe",
     add: "Ajouter",
     addAiPlayer: "Ajouter un joueur IA",
     addPlayersToStartGame:
       "Ajouter au moins un joueur de plus pour démarrer la partie",
+    allowRevive: "Autoriser la réanimation",
     anyone: "N'importe qui",
     block: "Bloquer",
     blockAsInfluence: "Bloquer comme {{primaryInfluence}}",
@@ -831,6 +859,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Échanger]]}} des influences",
       [Actions.ForeignAid]: "Collecter {{action[[Aide étrangère]]}}",
       [Actions.Income]: "Collecter {{action[[Revenu]]}}",
+      [Actions.Revive]: "{{action[[Réanimer]]}} une influence",
       [Actions.Steal]: "{{action[[Voler]]}} à {{secondaryPlayer}}",
       [Actions.Tax]: "Collecter {{action[[Taxe]]}}",
     },
@@ -856,6 +885,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]:
         "{{primaryPlayer}} a reçu l'{{action[[Aide étrangère]]}}",
       [Actions.Income]: "{{primaryPlayer}} a collecté le {{action[[Revenu]]}}",
+      [Actions.Revive]: "{{primaryPlayer}} a {{action[[Réanimer]]}} une influence",
       [Actions.Steal]:
         "{{primaryPlayer}} a {{action[[Volé]]}} à {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} a collecté la {{action[[Taxe]]}}",
@@ -915,7 +945,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Perte d'influence",
     messageWasDeleted: "Le message a été supprimé",
     noChatMessages: "Aucun message dans le chat",
-    notEnoughCoins: "Pas assez de pièces",
+    notEnoughCoins: "Pas assez de pièces ({{count}})",
     numberOfPlayers: "Nombre de joueurs",
     pageNotFound: "Page non trouvée",
     payCoins: "Payer {{count}} pièce{{plural[[s]]}}",
@@ -932,6 +962,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Challenge]: "Défier",
     [Responses.Pass]: "Passer",
     revealInfluence: "Révéler {{primaryInfluence}}",
+    reviveAnInfluence: "Réanimer une influence",
     room: "Salle",
     rules: "Règles",
     rulesActions:
@@ -951,7 +982,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     rulesContents: "Deck de cartes d'influence, banque de pièces.",
     rulesContessa: "Peut Bloquer les tentatives d'assassinat.",
     rulesCoup:
-      "Coûte sept pièces. Forcez un joueur à se défaire d'une carte d'Influence. Ne peut pas être Défié ou Bloqué. Si vous commencez votre tour avec 10 pièces ou plus, vous devez entreprendre cette action.",
+      "Coûte sept pièces. Force un joueur à se défaire d'une carte d'Influence. Ne peut pas être Défié ou Bloqué. Si vous commencez votre tour avec dix pièces ou plus, vous devez faire un Coup (ou Réanimer si activé).",
     rulesDuke: "Peut Taxer et Bloquer l'Aide Étrangère.",
     rulesExchange:
       "Piochez deux cartes d'Influence du deck, regardez-les et mélangez-les avec vos cartes d'Influence actuelles. Replacez deux cartes dans le deck et mélangez le deck. Peut être Défié. Ne peut pas être Bloqué.",
@@ -966,6 +997,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "Tout joueur qui perd un Défi doit retourner l'une de ses cartes d'Influence face visible pour que tous la voient. Si c'est sa dernière carte d'Influence, il est éliminé du jeu.",
     rulesLosingInfluence:
       "Chaque fois qu'un joueur perd une carte d'Influence, il choisit laquelle de ses cartes révéler.",
+    rulesRevive:
+      "Non disponible dans le jeu standard mais peut être activé lors de la création d'une nouvelle partie. Coûte dix pièces. Réanime une carte d'Influence de la pile de défausse. Ne peut pas être Défié ou Bloqué.",
     rulesSetup:
       "Mélangez les cartes et distribuez-en deux à chaque joueur. Les joueurs doivent regarder leurs cartes mais les garder cachées aux autres. Chaque joueur prend deux pièces de la banque comme richesse de départ. Dans une partie avec seulement deux joueurs, le joueur de départ commence la partie avec une pièce au lieu de deux.",
     rulesSteal:
@@ -999,12 +1032,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Scambia",
     [Actions.ForeignAid]: "Aiuti esteri",
     [Actions.Income]: "Reddito",
+    [Actions.Revive]: "Rivivi",
     [Actions.Steal]: "Ruba",
     [Actions.Tax]: "Tassa",
     add: "Aggiungi",
     addAiPlayer: "Aggiungi giocatore IA",
     addPlayersToStartGame:
       "Aggiungi almeno un altro giocatore per iniziare la partita",
+    allowRevive: "Consenti rivivificazione",
     anyone: "Chiunque",
     block: "Blocca",
     blockAsInfluence: "Blocca come {{primaryInfluence}}",
@@ -1043,6 +1078,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Scambia]]}} influenze",
       [Actions.ForeignAid]: "Raccogli {{action[[Aiuti esteri]]}}",
       [Actions.Income]: "Raccogli {{action[[Reddito]]}}",
+      [Actions.Revive]: "{{action[[Rivivi]]}} un'influenza",
       [Actions.Steal]: "{{action[[Ruba]]}} da {{secondaryPlayer}}",
       [Actions.Tax]: "Raccogli {{action[[Tassa]]}}",
     },
@@ -1069,6 +1105,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
         "{{primaryPlayer}} ha ricevuto {{action[[aiuti esteri]]}}",
       [Actions.Income]:
         "{{primaryPlayer}} ha riscosso il {{action[[reddito]]}}",
+      [Actions.Revive]:
+        "{{primaryPlayer}} ha {{action[[rivissuto]]}} un'influenza",
       [Actions.Steal]:
         "{{primaryPlayer}} ha {{action[[rubato]]}} da {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} ha riscosso la {{action[[tassa]]}}",
@@ -1128,7 +1166,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Perdita di influenza",
     messageWasDeleted: "Il messaggio è stato eliminato",
     noChatMessages: "Nessun messaggio in chat",
-    notEnoughCoins: "Non abbastanza monete",
+    notEnoughCoins: "Non abbastanza monete ({{count}})",
     numberOfPlayers: "Numero di giocatori",
     pageNotFound: "Pagina non trovata",
     payCoins: "Paga {{count}} moneta{{plural[[e]]}}",
@@ -1145,6 +1183,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Challenge]: "Sfida",
     [Responses.Pass]: "Passa",
     revealInfluence: "Rivela {{primaryInfluence}}",
+    reviveAnInfluence: "Rivivi un'influenza",
     room: "Stanza",
     rules: "Regole",
     rulesActions:
@@ -1164,7 +1203,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     rulesContents: "Mazzo di carte influenza, banca di monete.",
     rulesContessa: "Può Bloccare i tentativi di assassinio.",
     rulesCoup:
-      "Costa sette monete. Costringi un giocatore a rinunciare a una carta Influenza. Non può essere Sfidato o Bloccato. Se inizi il tuo turno con 10+ monete, devi intraprendere questa azione.",
+      "Costa sette monete. Costringe un giocatore a rinunciare a una carta Influenza. Non può essere Sfidato o Bloccato. Se inizi il tuo turno con dieci o più monete, devi fare un Colpo di Stato (o Rivivere se attivato).",
     rulesDuke: "Può Tassare e Bloccare gli Aiuti Esteri.",
     rulesExchange:
       "Pesca due carte Influenza dal mazzo, guardale e mescolale con le tue carte Influenza attuali. Rimetti due carte nel mazzo e mescola il mazzo. Può essere Sfidato. Non può essere Bloccato.",
@@ -1179,6 +1218,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "Qualsiasi giocatore che perde una Sfida deve girare una delle sue carte Influenza a faccia in su perché tutti la vedano. Se quella è la sua ultima carta Influenza, è fuori dal gioco.",
     rulesLosingInfluence:
       "Ogni volta che un giocatore perde una carta Influenza, sceglie quale delle sue carte rivelare.",
+    rulesRevive:
+      "Non disponibile nel gioco standard, ma può essere attivato creando una nuova partita. Costa dieci monete. Rivive una carta Influenza dalla pila degli scarti. Non può essere Sfidato o Bloccato.",
     rulesSetup:
       "Mescola le carte e distribuiscine due a ogni giocatore. I giocatori dovrebbero guardare le loro carte ma tenerle nascoste a tutti gli altri. Ogni giocatore prende due monete dalla banca come ricchezza iniziale. In una partita con solo due giocatori, il giocatore iniziale inizia la partita con una moneta invece di due.",
     rulesSteal:
@@ -1212,12 +1253,14 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Actions.Exchange]: "Trocar",
     [Actions.ForeignAid]: "Ajuda Externa",
     [Actions.Income]: "Renda",
+    [Actions.Revive]: "Ressuscitar",
     [Actions.Steal]: "Roubar",
     [Actions.Tax]: "Imposto",
     add: "Adicionar",
     addAiPlayer: "Adicionar jogador AI",
     addPlayersToStartGame:
       "Adicione pelo menos mais um jogador para iniciar o jogo",
+    allowRevive: "Permitir ressuscitar",
     anyone: "Todos",
     block: "Bloque",
     blockAsInfluence: "Bloquear como {{primaryInfluence}}",
@@ -1255,6 +1298,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.Exchange]: "{{action[[Trocar]]}} influências",
       [Actions.ForeignAid]: "Receber {{action[[ajuda externa]]}}",
       [Actions.Income]: "Coleter {{action[[renda]]}}",
+      [Actions.Revive]: "{{action[[Ressuscitar]]}} uma influência",
       [Actions.Steal]: "{{action[[Roubar]]}} de {{secondaryPlayer}}",
       [Actions.Tax]: "Cobrar {{action[[imposto]]}}",
     },
@@ -1279,6 +1323,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       [Actions.ForeignAid]:
         "{{primaryPlayer}} recebeu {{action[[ajuda externa]]}}",
       [Actions.Income]: "{{primaryPlayer}} coletou {{action[[renda]]}}",
+      [Actions.Revive]: "{{primaryPlayer}} {{action[[ressuscitou]]}} uma influência",
       [Actions.Steal]:
         "{{primaryPlayer}} {{action[[roubou]]}} de {{secondaryPlayer}}",
       [Actions.Tax]: "{{primaryPlayer}} coubrou {{action[[imposto]]}}",
@@ -1337,7 +1382,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     losingInfluence: "Perdendo influência",
     messageWasDeleted: "Mensagem foi descartada",
     noChatMessages: "Nenhuma mensagem",
-    notEnoughCoins: "Moedas insuficientes",
+    notEnoughCoins: "Moedas insuficientes ({{count}})",
     numberOfPlayers: "Número de jogadores",
     pageNotFound: "Página não encontrada",
     payCoins: "Pague {{count}} moeda{{plural[[s]]}}",
@@ -1354,6 +1399,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     [Responses.Challenge]: "Desafiar",
     [Responses.Pass]: "Passar",
     revealInfluence: "Revelar {{primaryInfluence}}",
+    reviveAnInfluence: "Ressuscitar uma influência",
     room: "Sala",
     rules: "Regras",
     rulesActions:
@@ -1373,7 +1419,7 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
     rulesContents: "Baralho de cartas de influência, banco de moedas.",
     rulesContessa: "Pode bloquear tentativas de assassinato.",
     rulesCoup:
-      "Custa sete moedas. Faça com que um jogador descarte uma carta de Influência. Não pode ser desafiado ou bloqueado. Se você começar seu turno com 10 moedas ou mais, você será forçado a realizar esta ação.",
+      "Custa sete moedas. Force um jogador a descartar uma carta de Influência. Não pode ser desafiado ou bloqueado. Se você começar seu turno com dez ou mais moedas, você deve usar Golpe (ou Ressuscitar, se habilitado)",
     rulesDuke: "Pode cobrar impostos e bloquear ajuda externa.",
     rulesExchange:
       "Pegue duas cartas de Influência do baralho, observe-as e misture-as com suas cartas de Influência atuais. Coloque duas cartas de volta no baralho e embaralhe-o. Pode ser desafiado. Não pode ser bloqueado.",
@@ -1388,6 +1434,8 @@ const translations: { [key in AvailableLanguageCode]: Translations } = {
       "Qualquer jogador que perder um Desafio deve virar uma de suas cartas de Influência para que todos possam ver. Se esta for a última carta de Influência, eles estão fora do jogo.",
     rulesLosingInfluence:
       "Sempre que um jogador perde uma carta de Influência, ele escolhe qual das suas cartas revelar.",
+    rulesRevive:
+      "Não disponível no jogo padrão, mas pode ser ativado ao criar um novo jogo. Custa dez moedas. Ressuscite uma carta de Influência do descarte.",
     rulesSetup:
       "Embaralhe as cartas e distribua duas para cada jogador. Os jogadores devem olhar para as suas cartas, mas mantê-las escondidas de todos os outros. Cada jogador pega duas moedas do banco como riqueza inicial. Num jogo com apenas dois jogadores, o jogador inicial começa o jogo com uma moeda em vez de duas.",
     rulesSteal:

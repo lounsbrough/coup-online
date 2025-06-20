@@ -41,7 +41,7 @@ describe('Games', () => {
         isStarted: true,
         turnPlayer: david,
         eventLogs: [],
-        settings: { eventLogRetentionTurns: 100 }
+        settings: { eventLogRetentionTurns: 100, allowRevive: true },
       }
     })
 
@@ -90,6 +90,28 @@ describe('Games', () => {
     cy.get('input[type="checkbox"]').eq(1).click()
 
     cy.loadPlayer(gameUrl, harper)
+    cy.clickGameBoardButton(Actions.Tax)
+
+    cy.loadPlayer(gameUrl, david)
+    cy.clickGameBoardButton(Responses.Pass)
+    cy.clickGameBoardButton(Actions.Income)
+
+    cy.loadPlayer(gameUrl, harper)
+    cy.clickGameBoardButton(Actions.Revive)
+
+    cy.loadPlayer(gameUrl, david)
+    cy.clickGameBoardButton(Actions.Income)
+
+    for (let i = 0; i < 3; i++) {
+      cy.loadPlayer(gameUrl, harper)
+      cy.clickGameBoardButton(Actions.Tax)
+
+      cy.loadPlayer(gameUrl, david)
+      cy.clickGameBoardButton(Responses.Pass)
+      cy.clickGameBoardButton(Actions.Income)
+    }
+
+    cy.loadPlayer(gameUrl, harper)
     cy.clickGameBoardButton(Actions.Coup)
     cy.clickGameBoardButton(david)
 
@@ -113,6 +135,7 @@ describe('Games', () => {
     cy.contains('Harper received Foreign Aid')
     cy.contains('David is trying to Exchange influences')
     cy.contains('David Exchanged influences')
+    cy.contains('Harper Revived an influence')
     cy.contains('Harper Couped David')
     cy.contains(/David lost their .+/)
     cy.contains('David is out!')

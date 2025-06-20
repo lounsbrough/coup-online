@@ -42,7 +42,7 @@ describe('actionHandlers', () => {
     }[]) => {
       const { roomId } = await createGameHandler({
         ...players[0],
-        settings: { eventLogRetentionTurns: 100 }
+        settings: { eventLogRetentionTurns: 100, allowRevive: true }
       })
 
       for (const player of players) {
@@ -81,7 +81,7 @@ describe('actionHandlers', () => {
     it('creating, joining, resetting game', async () => {
       const { roomId } = await createGameHandler({
         ...harper,
-        settings: { eventLogRetentionTurns: 100 }
+        settings: { eventLogRetentionTurns: 100, allowRevive: true }
       })
 
       await joinGameHandler({ roomId, ...hailey, playerName: 'not hailey' })
@@ -314,7 +314,9 @@ describe('actionHandlers', () => {
     it('coup', async () => {
       const roomId = await setupTestGame([david, harper, { ...hailey, coins: 7 }])
 
+      await expect(actionHandler({ roomId, playerId: david.playerId, action: Actions.Coup, targetPlayer: hailey.playerName })).rejects.toThrow('You don\'t have enough coins')
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
+      await expect(actionHandler({ roomId, playerId: harper.playerId, action: Actions.Coup, targetPlayer: hailey.playerName })).rejects.toThrow('You don\'t have enough coins')
       await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
 
       await expect(actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Coup, targetPlayer: hailey.playerName })).rejects.toThrow('You can\'t target yourself')
@@ -329,6 +331,29 @@ describe('actionHandlers', () => {
 
       expect(gameState.turnPlayer).toBe(david.playerName)
       expect(gameState.players[0].influences).toHaveLength(1)
+      expect(gameState.players[1].influences).toHaveLength(2)
+      expect(gameState.players[2].influences).toHaveLength(2)
+      expect(gameState.players[0].coins).toBe(3)
+      expect(gameState.players[1].coins).toBe(3)
+      expect(gameState.players[2].coins).toBe(0)
+    })
+
+    it('revive', async () => {
+      const roomId = await setupTestGame([david, harper, { ...hailey, coins: 10, influences: [Influences.Assassin], deadInfluences: [Influences.Captain] }])
+
+      await expect(actionHandler({ roomId, playerId: david.playerId, action: Actions.Revive })).rejects.toThrow('You don\'t have enough coins')
+      await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
+      await expect(actionHandler({ roomId, playerId: harper.playerId, action: Actions.Revive })).rejects.toThrow('You don\'t have enough coins')
+      await actionHandler({ roomId, playerId: harper.playerId, action: Actions.Income })
+
+      await expect(actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Income })).rejects.toThrow('You must Coup or Revive when you have 10 or more coins')
+      await actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Revive })
+      await expect(actionHandler({ roomId, playerId: hailey.playerId, action: Actions.Income })).rejects.toThrow('You can\'t choose an action right now')
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.turnPlayer).toBe(david.playerName)
+      expect(gameState.players[0].influences).toHaveLength(2)
       expect(gameState.players[1].influences).toHaveLength(2)
       expect(gameState.players[2].influences).toHaveLength(2)
       expect(gameState.players[0].coins).toBe(3)

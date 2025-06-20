@@ -63,7 +63,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const { json: { gameState } } = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const { json: { gameState } } = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             return { roomId: gameState?.roomId, playerId }
           },
@@ -102,7 +102,7 @@ describe('index', () => {
           body: {
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 10 }),
-            settings: { eventLogRetentionTurns: 100 }
+            settings: { eventLogRetentionTurns: 100, allowRevive: true }
           },
           error: '',
           status: 200
@@ -118,14 +118,32 @@ describe('index', () => {
             playerName: chance.string({ length: 10 }),
             settings: { }
           },
+          error: '"settings.eventLogRetentionTurns" is required, "settings.allowRevive" is required',
+          status: 400
+        },
+        {
+          body: {
+            playerId: chance.string({ length: 10 }),
+            playerName: chance.string({ length: 10 }),
+            settings: { allowRevive: true }
+          },
           error: '"settings.eventLogRetentionTurns" is required',
           status: 400
         },
         {
           body: {
             playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 11 }),
+            playerName: chance.string({ length: 10 }),
             settings: { eventLogRetentionTurns: 100 }
+          },
+          error: '"settings.allowRevive" is required',
+          status: 400
+        },
+        {
+          body: {
+            playerId: chance.string({ length: 10 }),
+            playerName: chance.string({ length: 11 }),
+            settings: { eventLogRetentionTurns: 100, allowRevive: true }
           },
           error: '"playerName" length must be less than or equal to 10 characters long',
           status: 400
@@ -172,7 +190,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } =  response
             const roomId = gameState?.roomId
@@ -210,7 +228,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -225,7 +243,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -244,7 +262,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -262,7 +280,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -306,7 +324,7 @@ describe('index', () => {
               name: chance.string({ length: 10 }),
             }
 
-            const response = await postApi(PlayerActions.createGame, { playerId: removingPlayer.id, playerName: removingPlayer.name, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId: removingPlayer.id, playerName: removingPlayer.name, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -367,7 +385,7 @@ describe('index', () => {
             const response = await postApi(PlayerActions.createGame, {
               playerId: players[0].id,
               playerName: players[0].name,
-              settings: { eventLogRetentionTurns: 100 }
+              settings: { eventLogRetentionTurns: 100, allowRevive: true }
             })
 
             const { json: { gameState } } = response
@@ -404,7 +422,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -448,7 +466,7 @@ describe('index', () => {
             const response = await postApi(PlayerActions.createGame, {
               playerId: players[0].id,
               playerName: players[0].name,
-              settings: { eventLogRetentionTurns: 100 }
+              settings: { eventLogRetentionTurns: 100, allowRevive: true }
             })
 
             const { json: { gameState } } = response
@@ -486,7 +504,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -530,7 +548,7 @@ describe('index', () => {
             let response = await postApi(PlayerActions.createGame, {
               playerId: players[0].id,
               playerName: players[0].name,
-              settings: { eventLogRetentionTurns: 100 }
+              settings: { eventLogRetentionTurns: 100, allowRevive: true }
             })
 
             let { json: { gameState } } = response
@@ -590,7 +608,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -605,7 +623,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -656,7 +674,7 @@ describe('index', () => {
             const response = await postApi(PlayerActions.createGame, {
               playerId: players[0].id,
               playerName: players[0].name,
-              settings: { eventLogRetentionTurns: 100 }
+              settings: { eventLogRetentionTurns: 100, allowRevive: true }
             })
 
             const { json: { gameState } } = response
@@ -691,7 +709,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -706,7 +724,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -721,7 +739,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -814,7 +832,7 @@ describe('index', () => {
       gameStatePromises = getGameStatePromises([socket1])
       socket1.emit(PlayerActions.createGame, {
         ...player1,
-        settings: { eventLogRetentionTurns: 100 }
+        settings: { eventLogRetentionTurns: 100, allowRevive: true }
       })
       const { roomId } = await gameStatePromises[0]
 

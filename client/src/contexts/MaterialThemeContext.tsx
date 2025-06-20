@@ -98,11 +98,17 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
       [Actions.Exchange]: influenceColors[Influences.Ambassador],
       [Actions.ForeignAid]: primaryColor,
       [Actions.Income]: primaryColor,
+      [Actions.Revive]: primaryColor,
       [Actions.Steal]: influenceColors[Influences.Captain],
       [Actions.Tax]: influenceColors[Influences.Duke]
     }
 
     let theme = createTheme({
+      ...(process.env.REACT_APP_DISABLE_TRANSITIONS ? {
+        transitions: {
+          create: () => 'none',
+        }
+      } : {}),
       palette: {
         mode: activeColorMode,
         background: (isLightMode ? {} : { default: grey[800] }),

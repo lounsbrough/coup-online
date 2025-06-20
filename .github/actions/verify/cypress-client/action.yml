@@ -15,6 +15,8 @@ runs:
       pnpm cypress install
       pnpm concurrently --kill-others --success first "pnpm --prefix ../server dev" "pnpm start" "pnpm wait-on tcp:8008 && pnpm wait-on http://localhost:3000 && pnpm cypress run"
     shell: bash
+    env:
+      REACT_APP_DISABLE_TRANSITIONS: true
   - name: Save Cypress Output
     if: ${{ failure() }}
     uses: actions/upload-artifact@v4

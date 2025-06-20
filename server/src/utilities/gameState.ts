@@ -54,6 +54,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
       ...chatMessage,
       text: chatMessage.deleted ? '' : chatMessage.text
     })),
+    settings: gameState.settings,
     lastEventTimestamp: gameState.lastEventTimestamp,
     isStarted: gameState.isStarted,
     pendingInfluenceLoss: gameState.pendingInfluenceLoss,

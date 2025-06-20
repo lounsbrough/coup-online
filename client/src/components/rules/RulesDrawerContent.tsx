@@ -21,7 +21,7 @@ export default function RulesDrawerContent() {
     )
   ), [t])
 
-  const anyIndicator = <><Group sx={{ verticalAlign: 'middle', }} /><br /><span style={{ verticalAlign: 'middle' }}>{` ${t('anyone')}`}</span></>
+  const anyIndicator = <><Group sx={{ mb: -1 }} /><br /><span style={{ verticalAlign: 'middle' }}>{` ${t('anyone')}`}</span></>
 
   return (
     <DialogContent sx={{
@@ -61,6 +61,16 @@ export default function RulesDrawerContent() {
                   {t('payCoins', { count: 7 })}
                   <br />
                   {t('killAnInfluence')}
+                </td>
+              </tr>
+              <tr style={{ background: actionColors[Actions.Coup] }}>
+                <td>{anyIndicator}</td>
+                <td>
+                  {t(Actions.Revive)}
+                  <br />
+                  {t('payCoins', { count: 10 })}
+                  <br />
+                  {t('reviveAnInfluence')}
                 </td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Duke] }}>
@@ -155,6 +165,7 @@ export default function RulesDrawerContent() {
             <li>{actionText[Actions.Income]}: {t('rulesIncome')}</li>
             <li>{actionText[Actions.ForeignAid]}: {t('rulesForeignAid')}</li>
             <li>{actionText[Actions.Coup]}: {t('rulesCoup')}</li>
+            <li>{actionText[Actions.Revive]}: {t('rulesRevive')}</li>
             <li>{actionText[Actions.Tax]}: {t('rulesTax')}</li>
             <li>{actionText[Actions.Assassinate]}: {t('rulesAssassinate')}</li>
             <li>{actionText[Actions.Steal]}: {t('rulesSteal')}</li>
