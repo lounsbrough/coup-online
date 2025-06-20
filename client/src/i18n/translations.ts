@@ -472,14 +472,6 @@ const translations: Translations = {
     "it-IT": "Crea Nuovo Gioco",
     "pt-BR": "Criar Novo Jogo",
   },
-  draw2InfluencesAndDiscard2: {
-    "de-DE": "Ziehe 2 Einflusskarten & lege 2 ab",
-    "en-US": "Draw 2 influences and discard 2",
-    "es-MX": "Robar 2 influencias y descartar 2",
-    "fr-FR": "Piocher 2 influences et en défausser 2",
-    "it-IT": "Pesca 2 influenze e scarta 2",
-    "pt-BR": "Comprar 2 influências e descartar 2",
-  },
   dark: {
     "de-DE": "Dunkel",
     "en-US": "Dark",
@@ -487,6 +479,14 @@ const translations: Translations = {
     "fr-FR": "Sombre",
     "it-IT": "Scuro",
     "pt-BR": "Escuro",
+  },
+  draw2InfluencesAndDiscard2: {
+    "de-DE": "Ziehe 2 Einflusskarten & lege 2 ab",
+    "en-US": "Draw 2 influences and discard 2",
+    "es-MX": "Robar 2 influencias y descartar 2",
+    "fr-FR": "Piocher 2 influences et en défausser 2",
+    "it-IT": "Pesca 2 influenze e scarta 2",
+    "pt-BR": "Comprar 2 influências e descartar 2",
   },
   effect: {
     "de-DE": "Effekt",
