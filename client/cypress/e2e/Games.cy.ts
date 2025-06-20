@@ -41,7 +41,7 @@ describe('Games', () => {
         isStarted: true,
         turnPlayer: david,
         eventLogs: [],
-        settings: { eventLogRetentionTurns: 100 }
+        settings: { eventLogRetentionTurns: 100, allowRevive: true },
       }
     })
 
