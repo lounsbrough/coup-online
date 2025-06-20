@@ -104,6 +104,11 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
     }
 
     let theme = createTheme({
+      ...(process.env.REACT_APP_DISABLE_TRANSITIONS ? {
+        transitions: {
+          create: () => 'none',
+        }
+      } : {}),
       palette: {
         mode: activeColorMode,
         background: (isLightMode ? {} : { default: grey[800] }),
