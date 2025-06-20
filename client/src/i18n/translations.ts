@@ -743,12 +743,12 @@ const translations: Translations = {
     "pt-BR": "O jogo começou!",
   },
   [EventMessages.PlayerDied]: {
-    "de-DE": "{{primaryPlayer}} ist gestorben",
-    "en-US": "{{primaryPlayer}} has died",
-    "es-MX": "{{primaryPlayer}} ha muerto",
-    "fr-FR": "{{primaryPlayer}} est mort",
-    "it-IT": "{{primaryPlayer}} è morto",
-    "pt-BR": "{{primaryPlayer}} morreu",
+    "de-DE": "{{primaryPlayer}} ist gestorben!",
+    "en-US": "{{primaryPlayer}} has died!",
+    "es-MX": "{{primaryPlayer}} ha muerto!",
+    "fr-FR": "{{primaryPlayer}} est mort !",
+    "it-IT": "{{primaryPlayer}} è morto!",
+    "pt-BR": "{{primaryPlayer}} morreu!",
   },
   [EventMessages.PlayerForfeited]: {
     "de-DE": "{{primaryPlayer}} hat aufgegeben",

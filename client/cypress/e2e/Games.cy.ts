@@ -138,6 +138,6 @@ describe('Games', () => {
     cy.contains('Harper Revived an influence')
     cy.contains('Harper Couped David')
     cy.contains(/David lost their .+/)
-    cy.contains('David is out!')
+    cy.contains('David has died!')
   })
 })
