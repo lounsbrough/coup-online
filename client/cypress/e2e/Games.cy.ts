@@ -124,7 +124,7 @@ describe('Games', () => {
     cy.contains('David collected Income')
     cy.contains('Harper is trying to collect Foreign Aid')
     cy.contains('David is trying to block Harper as Duke')
-    cy.contains('Harper is challenging David')
+    cy.contains('Harper is trying to challenge David')
     cy.contains('Harper successfully challenged David')
     cy.contains('David failed to block Harper')
     cy.contains('David lost their Contessa')
