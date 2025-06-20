@@ -38,7 +38,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     roomId: chance.string(),
     turn: chance.natural(),
     turnPlayer: chance.pickone(players).name,
-    settings: { eventLogRetentionTurns: 100 }
+    settings: { eventLogRetentionTurns: 100, allowRevive: true }
   }
 
   gameState.players.forEach((player) => {

@@ -45,7 +45,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     pendingInfluenceLoss: {},
     roomId: chance.string(),
     turn: chance.natural(),
-    settings: { eventLogRetentionTurns: 100 }
+    settings: { eventLogRetentionTurns: 100, allowRevive: true }
   }
 
   gameState.players = getRandomPlayers(gameState, playersCount)
@@ -114,6 +114,7 @@ describe('gameState', () => {
           ai: player.ai,
           grudges: player.grudges
         })),
+        settings: gameState.settings,
         ...(gameState.pendingAction && { pendingAction: gameState.pendingAction }),
         ...(gameState.pendingActionChallenge && { pendingActionChallenge: gameState.pendingActionChallenge }),
         ...(gameState.pendingBlock && { pendingBlock: gameState.pendingBlock }),
@@ -262,7 +263,7 @@ describe('gameState', () => {
   describe('logEvent', () => {
     const gameState = {
       ...getRandomGameState(),
-      settings: { eventLogRetentionTurns: 50 }
+      settings: { eventLogRetentionTurns: 50, allowRevive: true }
     }
 
     const newLog = {

@@ -211,13 +211,18 @@ export const decideAction = (gameState: PublicGameState): {
   }
 
   const endGameAction = checkEndGameAction(gameState)
-  if (endGameAction) {
-    return endGameAction
-  }
+  if (endGameAction) return endGameAction
 
   let willCoup = false
+  let willRevive = false
   if (gameState.selfPlayer?.coins >= 10) {
-    willCoup = true
+    if (gameState.settings.allowRevive
+      && gameState.selfPlayer.influences.length === 1
+      && Math.random() > 0.2) {
+      willRevive = true
+    } else {
+      willCoup = true
+    }
   } else if (gameState.selfPlayer?.coins >= 7) {
     willCoup = Math.random() > 0.5
   }
@@ -226,6 +231,8 @@ export const decideAction = (gameState: PublicGameState): {
     const targetPlayer = decideCoupTarget(gameState)
     return { action: Actions.Coup, targetPlayer: targetPlayer.name }
   }
+
+  if (willRevive) return { action: Actions.Revive }
 
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100

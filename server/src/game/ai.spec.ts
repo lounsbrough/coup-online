@@ -46,6 +46,7 @@ describe('ai', () => {
       turn: chance.natural(),
       players: [],
       pendingInfluenceLoss: {},
+      settings: {eventLogRetentionTurns: 3, allowRevive: true},
       roomId: chance.string()
     }
 
@@ -254,7 +255,7 @@ describe('ai', () => {
   })
 
   describe('decideAction', () => {
-    it('should choose Coup if 10 or more coins', () => {
+    it('should choose Coup if 10 or more coins and Revive not enabled', () => {
       expect(decideAction({
         roomId: chance.string(),
         isStarted: chance.bool(),
@@ -284,6 +285,7 @@ describe('ai', () => {
           influences: [Influences.Ambassador, Influences.Contessa],
           deadInfluences: []
         },
+        settings: { eventLogRetentionTurns: 3, allowRevive: false },
         pendingInfluenceLoss: {},
         deckCount: 11
       })).toEqual({
@@ -322,6 +324,7 @@ describe('ai', () => {
           influences: [Influences.Ambassador],
           deadInfluences: [Influences.Contessa]
         },
+        settings: { eventLogRetentionTurns: 3, allowRevive: true },
         pendingInfluenceLoss: {},
         deckCount: 11
       })).toEqual({
@@ -370,6 +373,7 @@ describe('ai', () => {
           deadInfluences: [Influences.Assassin],
           claimedInfluences: new Set([Influences.Duke])
         },
+        settings: { eventLogRetentionTurns: 3, allowRevive: false },
         pendingInfluenceLoss: {},
         deckCount: 11
       })
@@ -417,6 +421,7 @@ describe('ai', () => {
           deadInfluences: [Influences.Assassin],
           claimedInfluences: new Set([Influences.Duke])
         },
+        settings: { eventLogRetentionTurns: 3, allowRevive: true },
         pendingInfluenceLoss: {},
         deckCount: 11
       })
@@ -469,6 +474,7 @@ describe('ai', () => {
           pendingPlayers: new Set(['david'])
         },
         turnPlayer: 'hailey',
+        settings: { eventLogRetentionTurns: 3, allowRevive: true },
         pendingInfluenceLoss: {},
         deckCount: 11
       })).toEqual({ response: Responses.Challenge })
