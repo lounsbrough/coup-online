@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.5",
+    "@eslint/js": "^9.29.0",
     "@shared": "../shared",
     "@types/chance": "^1.1.6",
     "chance": "^1.1.13",

@@ -1,4 +1,4 @@
-import { Grid, Tooltip, Typography, useTheme } from "@mui/material"
+import { Box, Grid, Tooltip, Typography, useTheme } from "@mui/material"
 import { ActionAttributes, Actions, PlayerActions, EventMessages } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -91,8 +91,6 @@ function ChooseAction() {
         {Object.entries(ActionAttributes)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map(([action, actionAttributes], index) => {
-            const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer!.coins < actionAttributes.coinsRequired
-
             if (gameState.selfPlayer!.coins >= 10 && ![Actions.Coup, Actions.Revive].includes(action as Actions)) {
               return null
             }
@@ -101,9 +99,20 @@ function ChooseAction() {
               return null
             }
 
+            const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer!.coins < actionAttributes.coinsRequired
+            const noDeadInfluencesForRevive = action === Actions.Revive && !gameState.selfPlayer!.deadInfluences.length
+            const isActionDisabled = lackingCoins || noDeadInfluencesForRevive
+
             return (
               <Grid key={index}>
-                <Tooltip title={lackingCoins && t('notEnoughCoins', { count: actionAttributes.coinsRequired })} placement="top">
+                <Tooltip
+                  title={isActionDisabled && (
+                    <Box sx={{ textAlign: 'center' }}>
+                      {lackingCoins && <Typography>{t('notEnoughCoins', { count: actionAttributes.coinsRequired })}</Typography>}
+                      {noDeadInfluencesForRevive && <Typography>{t('noDeadInfluences')}</Typography>}
+                    </Box>
+                  )}
+                  placement="top">
                   <span>
                     <GrowingButton
                       onClick={() => {
@@ -111,7 +120,7 @@ function ChooseAction() {
                       }}
                       color={action as Actions}
                       variant="contained"
-                      disabled={lackingCoins}
+                      disabled={isActionDisabled}
                     >
                       {t(action as Actions)}
                     </GrowingButton>
