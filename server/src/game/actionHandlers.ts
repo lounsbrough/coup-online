@@ -528,7 +528,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
           throw new GameMutationInputError('Unable to find dead influences to revive')
         }
         revivePlayer.influences.push(influenceToRevive)
-        revealAndReplaceInfluence(state, revivePlayer.name, influenceToRevive)
+        revealAndReplaceInfluence(state, revivePlayer.name, influenceToRevive, false)
         moveTurnToNextPlayer(state)
         logEvent(state, {
           event: EventMessages.ActionProcessed,

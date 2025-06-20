@@ -221,7 +221,7 @@ export const resetGame = async (roomId: string) => {
   await createGameState(roomId, newGameState)
 }
 
-export const revealAndReplaceInfluence = (state: GameState, playerName: string, influence: Influences) => {
+export const revealAndReplaceInfluence = (state: GameState, playerName: string, influence: Influences, log: boolean = true) => {
   const player = state.players.find(({ name }) => name === playerName)
 
   if (!player) {
@@ -235,11 +235,13 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
   )[0])
   shuffleDeck(state)
   player.influences.push(drawCardFromDeck(state))
-  logEvent(state, {
-    event: EventMessages.PlayerReplacedInfluence,
-    primaryPlayer: player.name,
-    influence
-  })
+  if (log) {
+    logEvent(state, {
+      event: EventMessages.PlayerReplacedInfluence,
+      primaryPlayer: player.name,
+      influence
+    })
+  }
 }
 
 export const moveTurnToNextPlayer = (state: GameState) => {
