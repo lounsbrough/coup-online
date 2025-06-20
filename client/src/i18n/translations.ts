@@ -97,6 +97,7 @@ export type Translations = ActionMessages & {
   losingInfluence: TranslationsForString;
   messageWasDeleted: TranslationsForString;
   noChatMessages: TranslationsForString;
+  noDeadInfluences: TranslationsForString;
   notEnoughCoins: TranslationsForString;
   numberOfPlayers: TranslationsForString;
   pageNotFound: TranslationsForString;
@@ -1029,13 +1030,21 @@ const translations: Translations = {
     "it-IT": "Nessun messaggio di chat",
     "pt-BR": "Sem mensagens de chat",
   },
+  noDeadInfluences: {
+    "de-DE": "Keine toten Einflüsse",
+    "en-US": "No dead influences",
+    "es-MX": "No hay influencias muertas",
+    "fr-FR": "Aucune influence morte",
+    "it-IT": "Nessuna influenza morta",
+    "pt-BR": "Sem influências mortas",
+  },
   notEnoughCoins: {
-    "de-DE": "Nicht genug Münzen {{count}}",
-    "en-US": "Not enough coins {{count}}",
-    "es-MX": "No hay suficientes monedas {{count}}",
-    "fr-FR": "Pas assez de pièces {{count}}",
-    "it-IT": "Non ci sono abbastanza monete {{count}}",
-    "pt-BR": "Moedas insuficientes {{count}}",
+    "de-DE": "Nicht genug Münzen ({{count}})",
+    "en-US": "Not enough coins ({{count}})",
+    "es-MX": "No hay suficientes monedas ({{count}})",
+    "fr-FR": "Pas assez de pièces ({{count}})",
+    "it-IT": "Non ci sono abbastanza monete ({{count}})",
+    "pt-BR": "Moedas insuficientes ({{count}})",
   },
   numberOfPlayers: {
     "de-DE": "Anzahl der Spieler",
