@@ -339,7 +339,11 @@ describe('actionHandlers', () => {
     })
 
     it('revive', async () => {
-      const roomId = await setupTestGame([david, harper, { ...hailey, coins: 10, influences: [Influences.Assassin], deadInfluences: [Influences.Captain] }])
+      const roomId = await setupTestGame([
+        {...david, influences: [Influences.Duke, Influences.Contessa] },
+        {...harper, influences: [Influences.Captain, Influences.Ambassador] },
+        { ...hailey, coins: 10, influences: [Influences.Assassin], deadInfluences: [Influences.Captain] }
+      ])
 
       await expect(actionHandler({ roomId, playerId: david.playerId, action: Actions.Revive })).rejects.toThrow('You don\'t have enough coins')
       await actionHandler({ roomId, playerId: david.playerId, action: Actions.Income })
