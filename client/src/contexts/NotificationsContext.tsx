@@ -1,24 +1,48 @@
-import { createContext, useState, useMemo, useRef, useContext, useCallback } from 'react'
+import { createContext, useState, useMemo, useRef, useContext, useCallback, ReactNode } from 'react'
 import { Alert, Fade } from '@mui/material'
+import { AlertColor } from '@mui/material/Alert'
 
 export enum NOTIFICATION_TYPES {
   ERROR = 'ERROR',
   WARNING = 'WARNING',
   INFO = 'INFO',
   SUCCESS = 'SUCCESS'
-};
+}
 
-const NotificationsContext = createContext({
+interface Notification {
+  id: string;
+  message: string | ReactNode;
+  severity: NOTIFICATION_TYPES;
+  eternal?: boolean;
+  dismissTimeout?: ReturnType<typeof setTimeout>;
+  dismissed?: boolean;
+}
+
+interface NotificationsContextType {
+  notifications: Notification[];
+  showNotification: (notification: Omit<Notification, 'id' | 'dismissed' | 'dismissTimeout'> & { id?: string }) => void;
+  removeNotification: (id: string) => void;
+}
+
+const NotificationsContext = createContext<NotificationsContextType>({
   notifications: [],
-  showNotification: null,
-  removeNotification: null
+  showNotification: () => {
+    console.warn('showNotification called without a provider')
+  },
+  removeNotification: () => {
+    console.warn('removeNotification called without a provider')
+  }
 })
 
-export function NotificationsContextProvider({ children }) {
-  const notificationsContainerRef = useRef(null)
-  const [notifications, setNotifications] = useState([])
+interface NotificationsContextProviderProps {
+  children: ReactNode;
+}
 
-  const dismissNotification = (id) => {
+export function NotificationsContextProvider({ children }: NotificationsContextProviderProps) {
+  const notificationsContainerRef = useRef<HTMLDivElement>(null)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+
+  const dismissNotification = useCallback((id: string) => {
     setNotifications((existing) => {
       const index = existing.findIndex((notification) => notification.id === id)
 
@@ -26,10 +50,11 @@ export function NotificationsContextProvider({ children }) {
         return existing
       }
 
-      clearTimeout(existing[index].dismissTimeout)
+      if (existing[index].dismissTimeout) {
+        clearTimeout(existing[index].dismissTimeout)
+      }
 
       const modified = [...existing]
-
       modified[index] = {
         ...existing[index],
         dismissed: true
@@ -37,9 +62,9 @@ export function NotificationsContextProvider({ children }) {
 
       return modified
     })
-  }
+  }, [])
 
-  const removeNotification = useCallback((id) => {
+  const removeNotification = useCallback((id: string) => {
     setNotifications((existing) => {
       if (!existing.some(({ id: existingId }) => existingId === id)) {
         return existing
@@ -60,13 +85,14 @@ export function NotificationsContextProvider({ children }) {
     })
   }, [])
 
-  const showNotification = useCallback((notification) => {
+  const showNotification = useCallback((notification: Omit<Notification, 'id' | 'dismissed' | 'dismissTimeout'> & { id?: string }) => {
     const newId = notification.id || crypto.randomUUID()
 
-    const newNotification = {
+    const newNotification: Notification = {
       ...notification,
       id: newId,
-      severity: notification.severity ?? NOTIFICATION_TYPES.ERROR
+      severity: notification.severity,
+      dismissed: false
     }
 
     if (!notification.eternal) {
@@ -74,27 +100,24 @@ export function NotificationsContextProvider({ children }) {
     }
 
     setNotifications((existing) => {
-      if (existing.some(({ id }) => id === notification.id)) {
-        return existing
-      }
+      const existingIndex = existing.findIndex(({ id }) => id === newId)
 
-      const previousIndex = existing.findIndex(({ id }) => id === newId)
-
-      if (previousIndex === -1) {
+      if (existingIndex !== -1) {
+        if (existing[existingIndex].dismissTimeout) {
+          clearTimeout(existing[existingIndex].dismissTimeout)
+        }
+        return [
+          ...existing.slice(0, existingIndex),
+          newNotification,
+          ...existing.slice(existingIndex + 1)
+        ]
+      } else {
         return [...existing, newNotification]
       }
-
-      clearTimeout(existing[previousIndex].dismissTimeout)
-
-      return [
-        ...existing.slice(0, previousIndex),
-        newNotification,
-        ...existing.slice(previousIndex + 1)
-      ]
     })
-  }, [])
+  }, [dismissNotification])
 
-  const contextValue = useMemo(
+  const contextValue = useMemo<NotificationsContextType>(
     () => ({ notifications, showNotification, removeNotification }),
     [notifications, showNotification, removeNotification]
   )
@@ -109,21 +132,23 @@ export function NotificationsContextProvider({ children }) {
             top: '3.5rem',
             left: '50%',
             transform: 'translateX(-50%)',
-            zIndex: '1301'
+            zIndex: '1301',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
-          {notifications.map(({
-            id, severity, message, dismissed
-          }) => (
+          {notifications.map(({ id, severity, message, dismissed }) => (
             <Fade
               key={id}
               in={!dismissed}
               onExited={() => removeNotification(id)}
+              timeout={{ enter: 300, exit: 500 }}
             >
               <Alert
                 onClose={() => dismissNotification(id)}
-                severity={severity.toLowerCase()}
-                sx={{ marginTop: 1 }}
+                severity={severity.toLowerCase() as AlertColor}
+                sx={{ marginTop: 1, minWidth: '300px' }}
               >
                 <span style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
                   {`${severity.toLowerCase()}: `}
@@ -139,4 +164,10 @@ export function NotificationsContextProvider({ children }) {
   )
 }
 
-export const useNotificationsContext = () => useContext(NotificationsContext)
+export const useNotificationsContext = () => {
+  const context = useContext(NotificationsContext)
+  if (context === undefined) {
+    throw new Error('useNotificationsContext must be used within a NotificationsContextProvider')
+  }
+  return context
+}
