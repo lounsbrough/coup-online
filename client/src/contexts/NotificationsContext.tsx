@@ -2,17 +2,10 @@ import { createContext, useState, useMemo, useRef, useContext, useCallback, Reac
 import { Alert, Fade } from '@mui/material'
 import { AlertColor } from '@mui/material/Alert'
 
-export enum NOTIFICATION_TYPES {
-  ERROR = 'ERROR',
-  WARNING = 'WARNING',
-  INFO = 'INFO',
-  SUCCESS = 'SUCCESS'
-}
-
 interface Notification {
   id: string;
   message: string | ReactNode;
-  severity: NOTIFICATION_TYPES;
+  severity: 'success' | 'error' | 'warning' | 'info';
   eternal?: boolean;
   dismissTimeout?: ReturnType<typeof setTimeout>;
   dismissed?: boolean;
@@ -96,7 +89,7 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
     }
 
     if (!notification.eternal) {
-      newNotification.dismissTimeout = setTimeout(() => dismissNotification(newId), 15000)
+      newNotification.dismissTimeout = setTimeout(() => dismissNotification(newId), 5000)
     }
 
     setNotifications((existing) => {
