@@ -144,6 +144,7 @@ export type Translations = ActionMessages & {
   settings: TranslationsForString;
   setup: TranslationsForString;
   skepticism: TranslationsForString;
+  spectateGame: TranslationsForString;
   startGame: TranslationsForString;
   startingPlayerBeginsWith1Coin: TranslationsForString;
   steal2CoinsFromSomeone: TranslationsForString;
@@ -1405,6 +1406,14 @@ const translations: Translations = {
     "fr-FR": "Scepticisme",
     "it-IT": "Scetticismo",
     "pt-BR": "Ceticismo"
+  },
+  spectateGame: {
+    "de-DE": "Spiel beobachten",
+    "en-US": "Spectate Game",
+    "es-MX": "Observar Juego",
+    "fr-FR": "Regarder le Jeu",
+    "it-IT": "Osserva il Gioco",
+    "pt-BR": "Assistir Jogo"
   },
   startGame: {
     "de-DE": "Spiel starten",

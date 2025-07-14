@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react"
+import { useCallback, useState, useRef } from "react"
 import { Analytics } from '@vercel/analytics/react'
 import { Box, Breadcrumbs, Button, Grid, TextField, Typography } from "@mui/material"
-import { AccountCircle, Group } from "@mui/icons-material"
+import { AccountCircle, Group, Visibility } from "@mui/icons-material"
 import { Link, useNavigate, useSearchParams } from "react-router"
+import { PlayerActions } from '@shared'
 import { getPlayerId } from "../../helpers/players"
-import { PlayerActions, DehydratedPublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 
@@ -14,14 +14,20 @@ function JoinGame() {
   const [playerName, setPlayerName] = useState('')
   const navigate = useNavigate()
   const { t } = useTranslationContext()
+  const formRef = useRef<HTMLFormElement>(null)
+  const playerNameInputRef = useRef<HTMLInputElement>(null)
 
-  const navigateToRoom = useCallback((gameState: DehydratedPublicGameState) => {
-    navigate(`/game?roomId=${gameState.roomId}`)
-  }, [navigate])
+  const navigateToRoom = useCallback(() => {
+    navigate(`/game?roomId=${roomId}`)
+  }, [navigate, roomId])
 
   const { trigger, isMutating, error } = useGameMutation<{
     roomId: string, playerId: string, playerName: string
   }>({ action: PlayerActions.joinGame, callback: navigateToRoom })
+
+  const { trigger: spectateTrigger, isMutating: spectateIsMutating, error: spectateError } = useGameMutation<{
+    roomId: string, playerId: string
+  }>({ action: PlayerActions.gameState, callback: navigateToRoom })
 
   return (
     <>
@@ -38,13 +44,31 @@ function JoinGame() {
         {t('joinExistingGame')}
       </Typography>
       <form
+        ref={formRef}
+        noValidate
         onSubmit={(event) => {
           event.preventDefault()
-          trigger({
-            roomId: roomId.trim(),
-            playerId: getPlayerId(),
-            playerName: playerName.trim()
-          })
+
+          const buttonId = (event.nativeEvent as SubmitEvent).submitter?.id
+
+          if (buttonId === 'joinGameButton') {
+            playerNameInputRef.current!.setAttribute('required', '')
+            if (formRef.current!.checkValidity()) trigger({
+              roomId: roomId.trim(),
+              playerId: getPlayerId(),
+              playerName: playerName.trim()
+            })
+          } else if (buttonId === 'spectateGameButton') {
+            console.log('removing required attribute from player name input')
+            playerNameInputRef.current!.removeAttribute('required')
+            if (formRef.current!.checkValidity()) spectateTrigger({
+              roomId: roomId.trim(),
+              playerId: getPlayerId()
+            })
+          } else {
+            console.error('Unexpected button ID:', buttonId)
+          }
+          formRef.current!.reportValidity()
         }}
       >
         <Grid container direction="column" alignItems='center'>
@@ -67,6 +91,9 @@ function JoinGame() {
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
+                slotProps={{
+                  htmlInput: { ref: playerNameInputRef }
+                }}
                 data-testid='playerNameInput'
                 value={playerName}
                 onChange={(event) => {
@@ -81,6 +108,7 @@ function JoinGame() {
         </Grid>
         <Grid>
           <Button
+            id="joinGameButton"
             type="submit"
             sx={{ mt: 5 }}
             variant="contained"
@@ -88,8 +116,20 @@ function JoinGame() {
           >
             {t('joinGame')}
           </Button>
+          {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </Grid>
-        {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
+        <Grid>
+          <Button
+            id="spectateGameButton"
+            type="submit"
+            sx={{ mt: 5 }}
+            variant="contained"
+            loading={spectateIsMutating}
+          >
+            {t('spectateGame')}
+          </Button>
+          {spectateError && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{spectateError}</Typography>}
+        </Grid>
       </form>
     </>
   )
