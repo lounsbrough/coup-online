@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Close, Flag } from "@mui/icons-material"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip, Typography, useTheme } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip, useTheme } from "@mui/material"
 import { PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
