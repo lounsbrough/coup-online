@@ -24,7 +24,7 @@ function CreateGame() {
     navigate(`/game?roomId=${gameState.roomId}`)
   }, [navigate])
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     playerId: string, playerName: string, settings: GameSettings
   }>({ action: PlayerActions.createGame, callback: navigateToRoom })
 
@@ -117,7 +117,6 @@ function CreateGame() {
             {t('createGame')}
           </Button>
         </Grid>
-        {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
       </form>
     </>
   )

@@ -1,9 +1,10 @@
 import { PlayerActions, DehydratedPublicGameState } from "@shared"
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState, useEffect } from "react"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useGameStateContext } from "../contexts/GameStateContext"
 import useSWRMutation from "swr/mutation"
 import { getBaseUrl } from "../helpers/api"
+import { useNotificationsContext } from "../contexts/NotificationsContext"
 
 function useGameMutation<ParamsType>({ action, callback }: {
   action: PlayerActions,
@@ -14,6 +15,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
   const [isMutatingSocket, setIsMutatingSocket] = useState(false)
   const { socket, isConnected } = useWebSocketContext()
   const { setDehydratedGameState } = useGameStateContext()
+  const { showNotification } = useNotificationsContext()
 
   const { trigger: triggerSwr, isMutating: isMutatingSwr } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
     setError('')
@@ -53,7 +55,17 @@ function useGameMutation<ParamsType>({ action, callback }: {
     }
     : triggerSwr, [socket, isConnected, action, callback, triggerSwr, setDehydratedGameState])
 
-  return { trigger, error, isMutating: isMutatingSwr || isMutatingSocket }
+  useEffect(() => {
+    if (error) {
+      showNotification({
+        id: error,
+        message: error,
+        severity: 'error'
+      })
+    }
+  }, [error, showNotification])
+
+  return { trigger, isMutating: isMutatingSwr || isMutatingSocket }
 }
 
 export default useGameMutation

@@ -25,7 +25,7 @@ function PlayerActionConfirmation({
   const { t } = useTranslationContext()
   const theme = useTheme()
 
-  const { trigger, isMutating, error } = useGameMutation<object>({ action })
+  const { trigger, isMutating } = useGameMutation<object>({ action })
 
   const skipConfirmation = !JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
 
@@ -104,7 +104,6 @@ function PlayerActionConfirmation({
           </Button>
         </Grid>
       </Grid>
-      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
   )
 }

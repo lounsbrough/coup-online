@@ -1,7 +1,7 @@
 import { useCallback, useState, useRef } from "react"
 import { Analytics } from '@vercel/analytics/react'
 import { Box, Breadcrumbs, Button, Grid, TextField, Typography } from "@mui/material"
-import { AccountCircle, Group, Visibility } from "@mui/icons-material"
+import { AccountCircle, Group } from "@mui/icons-material"
 import { Link, useNavigate, useSearchParams } from "react-router"
 import { PlayerActions } from '@shared'
 import { getPlayerId } from "../../helpers/players"
@@ -21,11 +21,11 @@ function JoinGame() {
     navigate(`/game?roomId=${roomId}`)
   }, [navigate, roomId])
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger: joinTrigger, isMutating: joinIsMutating } = useGameMutation<{
     roomId: string, playerId: string, playerName: string
   }>({ action: PlayerActions.joinGame, callback: navigateToRoom })
 
-  const { trigger: spectateTrigger, isMutating: spectateIsMutating, error: spectateError } = useGameMutation<{
+  const { trigger: spectateTrigger, isMutating: spectateIsMutating } = useGameMutation<{
     roomId: string, playerId: string
   }>({ action: PlayerActions.gameState, callback: navigateToRoom })
 
@@ -53,7 +53,7 @@ function JoinGame() {
 
           if (buttonId === 'joinGameButton') {
             playerNameInputRef.current!.setAttribute('required', '')
-            if (formRef.current!.checkValidity()) trigger({
+            if (formRef.current!.checkValidity()) joinTrigger({
               roomId: roomId.trim(),
               playerId: getPlayerId(),
               playerName: playerName.trim()
@@ -112,11 +112,10 @@ function JoinGame() {
             type="submit"
             sx={{ mt: 5 }}
             variant="contained"
-            loading={isMutating}
+            loading={joinIsMutating}
           >
             {t('joinGame')}
           </Button>
-          {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </Grid>
         <Grid>
           <Button
@@ -128,7 +127,6 @@ function JoinGame() {
           >
             {t('spectateGame')}
           </Button>
-          {spectateError && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{spectateError}</Typography>}
         </Grid>
       </form>
     </>

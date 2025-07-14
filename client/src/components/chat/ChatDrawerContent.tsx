@@ -24,7 +24,7 @@ export default function ChatDrawerContent({
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string, messageId: string, messageText: string
   }>({
     action: PlayerActions.sendChatMessage,
@@ -108,7 +108,6 @@ export default function ChatDrawerContent({
           </Button>
         </Box>
       )}
-      {error && <Typography color='error' sx={{ mb: 1, fontWeight: 700 }}>{error}</Typography>}
     </>
   )
 }

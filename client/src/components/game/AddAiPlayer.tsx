@@ -35,7 +35,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string, playerName: string, personality?: AiPersonality
   }>({
     action: PlayerActions.addAiPlayer,
@@ -169,7 +169,6 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               />
             </Box>
           </Collapse>
-          {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
         </DialogContent>
         <DialogActions>
           <Button

@@ -23,7 +23,7 @@ function WaitingRoom() {
   const navigate = useNavigate()
   const { showNotification } = useNotificationsContext()
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string
   }>({ action: PlayerActions.startGame })
 
@@ -107,7 +107,6 @@ function WaitingRoom() {
                 {t('startingPlayerBeginsWith1Coin')}
               </Typography>
             )}
-            {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
           </Grid>
         )}
         {!gameState.selfPlayer && (
