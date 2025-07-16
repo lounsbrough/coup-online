@@ -11,14 +11,14 @@ function useGameMutation<ParamsType>({ action, callback }: {
   callback?: (gameState: DehydratedPublicGameState) => void
 }) {
   const noSocketCallbackTimeout = useRef<NodeJS.Timeout>(undefined)
-  const [error, setError] = useState('')
+  const [mutationError, setMutationError] = useState('')
   const [isMutatingSocket, setIsMutatingSocket] = useState(false)
   const { socket, isConnected } = useWebSocketContext()
   const { setDehydratedGameState } = useGameStateContext()
   const { showNotification } = useNotificationsContext()
 
   const { trigger: triggerSwr, isMutating: isMutatingSwr } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
-    setError('')
+    setMutationError('')
     return fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -29,14 +29,16 @@ function useGameMutation<ParamsType>({ action, callback }: {
         setDehydratedGameState(gameState)
         callback?.(gameState)
       } else {
-        setError((await res.json()).error)
+        setMutationError((await res.json()).error)
       }
+    }).catch(() => {
+      setMutationError('Unable to connect to server')
     })
   }))
 
   const trigger = useMemo(() => socket && isConnected
     ? (params: ParamsType) => {
-      setError('')
+      setMutationError('')
       setIsMutatingSocket(true)
       clearTimeout(noSocketCallbackTimeout.current)
       noSocketCallbackTimeout.current = setTimeout(() => {
@@ -46,7 +48,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
         clearTimeout(noSocketCallbackTimeout.current)
         setIsMutatingSocket(false)
         if (error) {
-          setError(error)
+          setMutationError(error)
         } else {
           callback?.(gameState)
           setDehydratedGameState(gameState)
@@ -56,14 +58,14 @@ function useGameMutation<ParamsType>({ action, callback }: {
     : triggerSwr, [socket, isConnected, action, callback, triggerSwr, setDehydratedGameState])
 
   useEffect(() => {
-    if (error) {
+    if (mutationError) {
       showNotification({
-        id: error,
-        message: error,
+        id: mutationError,
+        message: mutationError,
         severity: 'error'
       })
     }
-  }, [error, showNotification])
+  }, [mutationError, showNotification])
 
   return { trigger, isMutating: isMutatingSwr || isMutatingSocket }
 }
