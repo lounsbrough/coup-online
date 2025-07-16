@@ -125,8 +125,8 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     flexWrap="nowrap"
                   >
                     {[
-                      ...Array.from({ length: influenceCount }, () => undefined),
-                      ...deadInfluences
+                      ...deadInfluences,
+                      ...Array.from({ length: influenceCount }, () => undefined)
                     ].map((influence, index) => {
                       return (
                         <Grid
