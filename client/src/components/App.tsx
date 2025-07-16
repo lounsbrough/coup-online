@@ -21,6 +21,7 @@ import DualSideDrawer from './utilities/DualSideDrawer'
 import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
+import { NotificationsContextProvider } from '../contexts/NotificationsContext'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -30,68 +31,70 @@ function App() {
 
   return (
     <div className="App">
-      <WebSocketContextProvider>
-        <GameStateContextProvider>
-          <RulesBubble setRulesOpen={setLeftDrawerOpen} />
-          <ChatBubble chatOpen={rightDrawerOpen} setChatOpen={setRightDrawerOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
-          <DualSideDrawer
-            openLeft={leftDrawerOpen}
-            openRight={rightDrawerOpen}
-            setOpenLeft={setLeftDrawerOpen}
-            setOpenRight={setRightDrawerOpen}
-            leftDrawerContent={<RulesDrawerContent />}
-            leftDrawerHeader={(
-              <>
-                <Gavel sx={{ mr: 1 }} />
-                <span>{t('rules')}</span>
-              </>
-            )}
-            rightDrawerContent={(
-              <ChatDrawerContent
-                setLatestReadMessageId={setLatestReadMessageId}
-                chatOpen={rightDrawerOpen}
-              />
-            )}
-            rightDrawerHeader={(
-              <>
-                <Chat sx={{ mr: 1 }} />
-                <span>{t('chat')}</span>
-              </>
-            )}
-          >
-            <header className="App-header">
-              <Box sx={{ whiteSpace: 'nowrap' }}>
-                <Link to={'/'}>
-                  <Button
-                    size='large'
-                    color='primary'
-                    startIcon={<Logo height='32px' />}
-                  >
-                    <Typography component="span" sx={{
-                      fontSize: '2rem'
-                    }}
+      <NotificationsContextProvider>
+        <WebSocketContextProvider>
+          <GameStateContextProvider>
+            <RulesBubble setRulesOpen={setLeftDrawerOpen} />
+            <ChatBubble chatOpen={rightDrawerOpen} setChatOpen={setRightDrawerOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
+            <DualSideDrawer
+              openLeft={leftDrawerOpen}
+              openRight={rightDrawerOpen}
+              setOpenLeft={setLeftDrawerOpen}
+              setOpenRight={setRightDrawerOpen}
+              leftDrawerContent={<RulesDrawerContent />}
+              leftDrawerHeader={(
+                <>
+                  <Gavel sx={{ mr: 1 }} />
+                  <span>{t('rules')}</span>
+                </>
+              )}
+              rightDrawerContent={(
+                <ChatDrawerContent
+                  setLatestReadMessageId={setLatestReadMessageId}
+                  chatOpen={rightDrawerOpen}
+                />
+              )}
+              rightDrawerHeader={(
+                <>
+                  <Chat sx={{ mr: 1 }} />
+                  <span>{t('chat')}</span>
+                </>
+              )}
+            >
+              <header className="App-header">
+                <Box sx={{ whiteSpace: 'nowrap' }}>
+                  <Link to={'/'}>
+                    <Button
+                      size='large'
+                      color='primary'
+                      startIcon={<Logo height='32px' />}
                     >
-                      {t('title')}
-                    </Typography>
-                  </Button>
-                </Link>
-                <UserSettings />
-              </Box>
-            </header>
-            <Routes>
-              <Route path="/">
-                <Route index element={<Home />} />
-                <Route path="game" element={
-                  <Game leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
-                } />
-                <Route path="join-game" element={<JoinGame />} />
-                <Route path="create-game" element={<CreateGame />} />
-                <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link to={'/'}>{t('home')}</Link></Typography>} />
-              </Route>
-            </Routes>
-          </DualSideDrawer>
-        </GameStateContextProvider>
-      </WebSocketContextProvider>
+                      <Typography component="span" sx={{
+                        fontSize: '2rem'
+                      }}
+                      >
+                        {t('title')}
+                      </Typography>
+                    </Button>
+                  </Link>
+                  <UserSettings />
+                </Box>
+              </header>
+              <Routes>
+                <Route path="/">
+                  <Route index element={<Home />} />
+                  <Route path="game" element={
+                    <Game leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
+                  } />
+                  <Route path="join-game" element={<JoinGame />} />
+                  <Route path="create-game" element={<CreateGame />} />
+                  <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link to={'/'}>{t('home')}</Link></Typography>} />
+                </Route>
+              </Routes>
+            </DualSideDrawer>
+          </GameStateContextProvider>
+        </WebSocketContextProvider>
+      </NotificationsContextProvider>
     </div>
   )
 }

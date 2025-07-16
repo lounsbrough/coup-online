@@ -2,6 +2,7 @@ import { Button, Grid, Typography } from "@mui/material"
 import { useNavigate } from "react-router"
 import GitHubLinks from "../GitHubLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { AddCircle, GroupAdd } from "@mui/icons-material"
 
 function Home() {
   const navigate = useNavigate()
@@ -20,6 +21,7 @@ function Home() {
           type="submit" sx={{ mt: 5 }}
           variant="contained"
           onClick={() => { navigate(`/create-game`) }}
+          startIcon={<AddCircle />}
         >{t('createNewGame')}</Button>
       </Grid>
       <Grid>
@@ -27,6 +29,7 @@ function Home() {
           type="submit" sx={{ mt: 5 }}
           variant="contained"
           onClick={() => { navigate(`/join-game`) }}
+          startIcon={<GroupAdd />}
         >{t('joinExistingGame')}</Button>
       </Grid>
       <GitHubLinks />

@@ -52,7 +52,6 @@ function RequestReset() {
             >
               {!isResetPending ? t('resetGame') : t('waitingOnOtherPlayers')}
             </Button>
-            {resetGameRequest.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGameRequest.error}</Typography>}
           </>
         )}
       </Box>
@@ -84,7 +83,6 @@ function RequestReset() {
               >
                 {t('cancel')}
               </Button>
-              {resetGameRequestCancel.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGameRequestCancel.error}</Typography>}
             </Grid>
             <Grid>
               <Button
@@ -102,7 +100,6 @@ function RequestReset() {
               >
                 {t('resetGame')}
               </Button>
-              {resetGame.error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{resetGame.error}</Typography>}
             </Grid>
           </Grid>
         </>

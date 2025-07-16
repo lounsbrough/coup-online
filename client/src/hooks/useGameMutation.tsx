@@ -1,22 +1,24 @@
 import { PlayerActions, DehydratedPublicGameState } from "@shared"
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState, useEffect } from "react"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useGameStateContext } from "../contexts/GameStateContext"
 import useSWRMutation from "swr/mutation"
 import { getBaseUrl } from "../helpers/api"
+import { useNotificationsContext } from "../contexts/NotificationsContext"
 
 function useGameMutation<ParamsType>({ action, callback }: {
   action: PlayerActions,
   callback?: (gameState: DehydratedPublicGameState) => void
 }) {
   const noSocketCallbackTimeout = useRef<NodeJS.Timeout>(undefined)
-  const [error, setError] = useState('')
+  const [mutationError, setMutationError] = useState('')
   const [isMutatingSocket, setIsMutatingSocket] = useState(false)
   const { socket, isConnected } = useWebSocketContext()
   const { setDehydratedGameState } = useGameStateContext()
+  const { showNotification } = useNotificationsContext()
 
   const { trigger: triggerSwr, isMutating: isMutatingSwr } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
-    setError('')
+    setMutationError('')
     return fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -27,14 +29,16 @@ function useGameMutation<ParamsType>({ action, callback }: {
         setDehydratedGameState(gameState)
         callback?.(gameState)
       } else {
-        setError((await res.json()).error)
+        setMutationError((await res.json()).error)
       }
+    }).catch(() => {
+      setMutationError('Unable to connect to server')
     })
   }))
 
   const trigger = useMemo(() => socket && isConnected
     ? (params: ParamsType) => {
-      setError('')
+      setMutationError('')
       setIsMutatingSocket(true)
       clearTimeout(noSocketCallbackTimeout.current)
       noSocketCallbackTimeout.current = setTimeout(() => {
@@ -44,7 +48,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
         clearTimeout(noSocketCallbackTimeout.current)
         setIsMutatingSocket(false)
         if (error) {
-          setError(error)
+          setMutationError(error)
         } else {
           callback?.(gameState)
           setDehydratedGameState(gameState)
@@ -53,7 +57,17 @@ function useGameMutation<ParamsType>({ action, callback }: {
     }
     : triggerSwr, [socket, isConnected, action, callback, triggerSwr, setDehydratedGameState])
 
-  return { trigger, error, isMutating: isMutatingSwr || isMutatingSocket }
+  useEffect(() => {
+    if (mutationError) {
+      showNotification({
+        id: mutationError,
+        message: mutationError,
+        severity: 'error'
+      })
+    }
+  }, [mutationError, showNotification])
+
+  return { trigger, isMutating: isMutatingSwr || isMutatingSocket }
 }
 
 export default useGameMutation

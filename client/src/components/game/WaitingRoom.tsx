@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { Alert, Button, Grid, Snackbar, Typography, useTheme } from "@mui/material"
+import { Button, Grid, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
-import { ContentCopy } from "@mui/icons-material"
+import { ContentCopy, PlayArrow } from "@mui/icons-material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
@@ -13,16 +13,17 @@ import AddAiPlayer from "./AddAiPlayer"
 import BetaTag from "../utilities/BetaTag"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { useNavigate } from "react-router"
+import { useNotificationsContext } from "../../contexts/NotificationsContext"
 
 function WaitingRoom() {
-  const [showCopiedToClipboardMessage, setShowCopiedToClipboardMessage] = useState(false)
   const [addAiPlayerDialogOpen, setAddAiPlayerDialogOpen] = useState(false)
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const theme = useTheme()
   const navigate = useNavigate()
+  const { showNotification } = useNotificationsContext()
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string
   }>({ action: PlayerActions.startGame })
 
@@ -56,25 +57,15 @@ function WaitingRoom() {
             startIcon={<ContentCopy />}
             onClick={() => {
               navigator.clipboard.writeText(inviteLink)
-              setShowCopiedToClipboardMessage(true)
+              showNotification({
+                id: 'inviteLinkCopied',
+                message: t('inviteLinkCopied'),
+                severity: 'success'
+              })
             }}
           >
             {(t('copyInviteLink'))}
           </Button>
-          <Snackbar
-            open={showCopiedToClipboardMessage}
-            autoHideDuration={5000}
-            onClose={() => { setShowCopiedToClipboardMessage(false) }}
-          >
-            <Alert
-              onClose={() => { setShowCopiedToClipboardMessage(false) }}
-              severity="success"
-              variant="filled"
-              sx={{ width: '100%' }}
-            >
-              {t('inviteLinkCopied')}
-            </Alert>
-          </Snackbar>
         </Grid>
         {!!gameState.selfPlayer && (
           <Grid>
@@ -103,6 +94,7 @@ function WaitingRoom() {
               }}
               disabled={gameState.players.length < 2}
               loading={isMutating}
+              startIcon={<PlayArrow />}
             >
               {(t('startGame'))}
             </Button>
@@ -116,7 +108,6 @@ function WaitingRoom() {
                 {t('startingPlayerBeginsWith1Coin')}
               </Typography>
             )}
-            {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
           </Grid>
         )}
         {!gameState.selfPlayer && (

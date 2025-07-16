@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import ChatMessages from './ChatMessages'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import { Send } from '@mui/icons-material'
-import { Box, TextField, Typography } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import useGameMutation from '../../hooks/useGameMutation'
 import { PlayerActions } from '@shared'
 import { getPlayerId } from '../../helpers/players'
@@ -24,7 +24,7 @@ export default function ChatDrawerContent({
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string, messageId: string, messageText: string
   }>({
     action: PlayerActions.sendChatMessage,
@@ -108,7 +108,6 @@ export default function ChatDrawerContent({
           </Button>
         </Box>
       )}
-      {error && <Typography color='error' sx={{ mb: 1, fontWeight: 700 }}>{error}</Typography>}
     </>
   )
 }

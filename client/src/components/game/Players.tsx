@@ -16,7 +16,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   const { t } = useTranslationContext()
   const theme = useTheme()
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string, playerName: string
   }>({ action: PlayerActions.removeFromGame })
 
@@ -162,7 +162,6 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
             )
           })}
       </Grid>
-      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
     </>
   )
 }
