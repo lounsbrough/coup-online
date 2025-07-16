@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 import { Box, Breadcrumbs, Button, Grid, Slider, Switch, TextField, Typography } from "@mui/material"
-import { AccountCircle } from "@mui/icons-material"
+import { AddCircle, Person } from "@mui/icons-material"
 import { Link, useNavigate } from "react-router"
 import { getPlayerId } from "../../helpers/players"
 import { Analytics } from '@vercel/analytics/react'
@@ -58,7 +58,7 @@ function CreateGame() {
         <Grid container direction="column" alignItems='center'>
           <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
-              <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+              <Person sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
                 data-testid='playerNameInput'
                 value={playerName}
@@ -113,6 +113,7 @@ function CreateGame() {
             sx={{ mt: 5 }}
             variant="contained"
             loading={isMutating}
+            startIcon={<AddCircle />}
           >
             {t('createGame')}
           </Button>

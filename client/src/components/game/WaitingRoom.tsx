@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
-import { ContentCopy } from "@mui/icons-material"
+import { ContentCopy, PlayArrow } from "@mui/icons-material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
@@ -94,6 +94,7 @@ function WaitingRoom() {
               }}
               disabled={gameState.players.length < 2}
               loading={isMutating}
+              startIcon={<PlayArrow />}
             >
               {(t('startGame'))}
             </Button>

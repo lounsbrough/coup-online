@@ -1,7 +1,7 @@
 import { useCallback, useState, useRef } from "react"
 import { Analytics } from '@vercel/analytics/react'
 import { Box, Breadcrumbs, Button, Grid, TextField, Typography } from "@mui/material"
-import { AccountCircle, Group } from "@mui/icons-material"
+import { Person, Group, GroupAdd, Visibility } from "@mui/icons-material"
 import { Link, useNavigate, useSearchParams } from "react-router"
 import { PlayerActions } from '@shared'
 import { getPlayerId } from "../../helpers/players"
@@ -89,7 +89,7 @@ function JoinGame() {
           </Grid>
           <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
-              <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+              <Person sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
                 slotProps={{
                   htmlInput: { ref: playerNameInputRef }
@@ -113,6 +113,7 @@ function JoinGame() {
             sx={{ mt: 5 }}
             variant="contained"
             loading={joinIsMutating}
+            startIcon={<GroupAdd />}
           >
             {t('joinGame')}
           </Button>
@@ -124,6 +125,7 @@ function JoinGame() {
             sx={{ mt: 5 }}
             variant="contained"
             loading={spectateIsMutating}
+            startIcon={<Visibility />}
           >
             {t('spectateGame')}
           </Button>
