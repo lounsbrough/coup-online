@@ -7,6 +7,7 @@ import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
+import getResponseIcon from "../../helpers/getResponseIcon"
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
@@ -102,11 +103,14 @@ function ChooseActionResponse() {
               return null
             }
 
+            const ResponseIcon = getResponseIcon(response)
+
             return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
+              startIcon={<ResponseIcon />}
             >
               {t(response)}
             </GrowingButton>

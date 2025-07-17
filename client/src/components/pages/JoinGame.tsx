@@ -71,7 +71,7 @@ function JoinGame() {
           formRef.current!.reportValidity()
         }}
       >
-        <Grid container direction="column" alignItems='center'>
+        <Grid container direction="column" alignItems='center' spacing={2}>
           <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Group sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -105,30 +105,29 @@ function JoinGame() {
               />
             </Box>
           </Grid>
-        </Grid>
-        <Grid>
-          <Button
-            id="joinGameButton"
-            type="submit"
-            sx={{ mt: 5 }}
-            variant="contained"
-            loading={joinIsMutating}
-            startIcon={<GroupAdd />}
-          >
-            {t('joinGame')}
-          </Button>
-        </Grid>
-        <Grid>
-          <Button
-            id="spectateGameButton"
-            type="submit"
-            sx={{ mt: 5 }}
-            variant="contained"
-            loading={spectateIsMutating}
-            startIcon={<Visibility />}
-          >
-            {t('spectateGame')}
-          </Button>
+          <Grid>
+            <Button
+              id="joinGameButton"
+              type="submit"
+              sx={{ mt: 5 }}
+              variant="contained"
+              loading={joinIsMutating}
+              startIcon={<GroupAdd />}
+            >
+              {t('joinGame')}
+            </Button>
+          </Grid>
+          <Grid>
+            <Button
+              id="spectateGameButton"
+              type="submit"
+              variant="contained"
+              loading={spectateIsMutating}
+              startIcon={<Visibility />}
+            >
+              {t('spectateGame')}
+            </Button>
+          </Grid>
         </Grid>
       </form>
     </>
