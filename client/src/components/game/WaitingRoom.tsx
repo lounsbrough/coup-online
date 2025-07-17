@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
-import { ContentCopy, PlayArrow } from "@mui/icons-material"
+import { ContentCopy, GroupAdd, PlayArrow } from "@mui/icons-material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
@@ -117,6 +117,7 @@ function WaitingRoom() {
               onClick={() => {
                 navigate(`/join-game?roomId=${gameState.roomId}`)
               }}
+              startIcon={<GroupAdd />}
             >
               {(t('joinGame'))}
             </Button>

@@ -6,6 +6,7 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
+import getResponseIcon from "../../helpers/getResponseIcon"
 
 function ChooseBlockResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
@@ -49,11 +50,14 @@ function ChooseBlockResponse() {
               return null
             }
 
+            const ResponseIcon = getResponseIcon(response)
+
             return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
+              startIcon={<ResponseIcon />}
             >
               {t(response)}
             </GrowingButton>
