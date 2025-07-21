@@ -33,7 +33,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
       <Grid container justifyContent="center" spacing={3}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences, ai, personality }, index) => {
-            const playerColor = influenceCount ? color : '#777777'
+            const playerColor = gameState.isStarted && !influenceCount ? '#777777' : color
             const cardTextColor = theme.palette.mode === LIGHT_COLOR_MODE ? 'white' : 'black'
             const isWaitingOnPlayer = waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
 
@@ -124,10 +124,10 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     justifyContent='center'
                     flexWrap="nowrap"
                   >
-                    {[
+                    {(gameState.isStarted ? [
                       ...deadInfluences,
                       ...Array.from({ length: influenceCount }, () => undefined)
-                    ].map((influence, index) => {
+                    ] : Array.from({ length: 2 }, () => undefined)).map((influence, index) => {
                       return (
                         <Grid
                           key={index}

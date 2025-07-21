@@ -5,8 +5,7 @@ import { GameMutationInputError } from './errors'
 import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 import { getCurrentTimestamp } from './time'
-
-export const countOfEachInfluenceInDeck = 3
+import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 
 export const getGameState = async (
   roomId: string
@@ -72,14 +71,30 @@ export const getPublicGameState = ({ gameState, playerId }: {
   }
 }
 
+export const getCountOfEachInfluence = (playerCount: number): number => {
+  if (playerCount >= 0 && playerCount <= 6) {
+    return 3
+  }
+
+  if (playerCount <= 8) {
+    return 4
+  }
+
+  if (playerCount <= MAX_PLAYER_COUNT) {
+    return 5
+  }
+
+  throw new Error(`Invalid player count: ${playerCount}`)
+}
+
 export const validateGameState = (state: DehydratedGameState) => {
-  if (state.players.length < 1 || state.players.length > 6) {
-    throw new GameMutationInputError("Game state must always have 1 to 6 players")
+  if (state.players.length < 1 || state.players.length > MAX_PLAYER_COUNT) {
+    throw new GameMutationInputError(`Game state must always have 1 to ${MAX_PLAYER_COUNT} players`)
   }
   if (state.isStarted && !state.players.find((player) => player.name === state.turnPlayer)?.influences.length) {
     throw new GameMutationInputError("Invalid turn player")
   }
-  if (state.players.some((player) =>
+  if (state.isStarted && state.players.some((player) =>
     (player.influences.length + player.deadInfluences.length) -
     (state.pendingInfluenceLoss[player.name]?.filter(({ putBackInDeck }) => putBackInDeck)?.length ?? 0)
     !== 2)
@@ -92,7 +107,9 @@ export const validateGameState = (state: DehydratedGameState) => {
     influences.forEach((card) => cardCounts[card]++)
     deadInfluences.forEach((card) => cardCounts[card]++)
   })
-  if (Object.values(cardCounts).some((count) => count !== countOfEachInfluenceInDeck)) {
+
+  const countOfEachInfluence = getCountOfEachInfluence(state.players.length)
+  if (Object.values(cardCounts).some((count) => count !== countOfEachInfluence)) {
     throw new GameMutationInputError("Incorrect total card count in game")
   }
   if (state.pendingAction?.pendingPlayers?.length === 0

@@ -6,7 +6,7 @@ import { ContentCopy, GroupAdd, PlayArrow } from "@mui/icons-material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
-import { PlayerActions } from "@shared"
+import { MAX_PLAYER_COUNT, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import AddAiPlayer from "./AddAiPlayer"
@@ -75,7 +75,7 @@ function WaitingRoom() {
               onClick={() => {
                 setAddAiPlayerDialogOpen(true)
               }}
-              disabled={gameState.players.length === 6}
+              disabled={gameState.players.length === MAX_PLAYER_COUNT}
             >
               {(t('addAiPlayer'))}
               <BetaTag />

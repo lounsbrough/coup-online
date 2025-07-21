@@ -1,5 +1,6 @@
 import Chance from 'chance'
 import { DehydratedGameState, DehydratedPlayer, EventMessages, Influences } from '../../../shared/types/game'
+import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { shuffle } from '../../../server/src/utilities/array'
 
 const chance = new Chance()
@@ -20,7 +21,7 @@ export const getGameState = ({ players }: { players: DehydratedPlayer[] }) => {
       timestamp: chance.date().toISOString()
     }), chance.natural({max: 10, min: 2})),
     isStarted: chance.bool(),
-    availablePlayerColors: chance.n(chance.color, 6),
+    availablePlayerColors: chance.n(chance.color, MAX_PLAYER_COUNT),
     players: [],
     pendingInfluenceLoss: {},
     lastEventTimestamp: chance.date().toISOString(),

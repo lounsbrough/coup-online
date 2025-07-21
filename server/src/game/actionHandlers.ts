@@ -5,6 +5,7 @@ import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../
 import { generateRoomId } from "../utilities/identifiers"
 import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
+import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 
 const getPlayerInRoom = (gameState: GameState, playerId: string) => {
@@ -64,7 +65,7 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
     }
   } else {
     await mutateGameState(gameState, (state) => {
-      if (state.players.length >= 6) {
+      if (state.players.length >= MAX_PLAYER_COUNT) {
         throw new GameMutationInputError(`Room ${roomId} is full`)
       }
 
@@ -96,7 +97,7 @@ export const addAiPlayerHandler = async ({ roomId, playerId, playerName, persona
   getPlayerInRoom(gameState, playerId)
 
   await mutateGameState(gameState, (state) => {
-    if (state.players.length >= 6) {
+    if (state.players.length >= MAX_PLAYER_COUNT) {
       throw new GameMutationInputError(`Room ${roomId} is full`)
     }
 

@@ -3,6 +3,7 @@ import { drawCardFromDeck } from "../utilities/gameState"
 import { GameState, Influences, Player } from '../../../shared/types/game'
 import { shuffle } from "../utilities/array"
 import { moveTurnToNextPlayer, startGame } from "./logic"
+import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
 
 jest.mock("../utilities/storage")
 
@@ -20,7 +21,7 @@ const getRandomPlayers = (count?: number) : Player[] =>
     deadInfluences: [],
     ai: false,
     grudges: {}
-  }), count ?? chance.natural({ min: 2, max: 6 }))
+  }), count ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
   const players = getRandomPlayers(playersCount)
@@ -32,7 +33,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     chatMessages: [],
     lastEventTimestamp: chance.date(),
     isStarted: chance.bool(),
-    availablePlayerColors: chance.n(chance.color, 6),
+    availablePlayerColors: chance.n(chance.color, MAX_PLAYER_COUNT),
     players,
     pendingInfluenceLoss: {},
     roomId: chance.string(),
