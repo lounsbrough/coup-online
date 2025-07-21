@@ -1320,12 +1320,12 @@ const translations: Translations = {
     "pt-BR": "Pegue uma moeda do banco. Não pode ser desafiado ou bloqueado."
   },
   rulesInfluences: {
-    "de-DE": "Es gibt fünf verschiedene Charaktere im Einflussdeck (drei von jedem Charakter).",
-    "en-US": "There are five different characters in the influence deck (three of each character).",
-    "es-MX": "Hay cinco personajes diferentes en el mazo de influencia (tres de cada personaje).",
-    "fr-FR": "Il y a cinq personnages différents dans le paquet d'influence (trois de chaque personnage).",
-    "it-IT": "Ci sono cinque personaggi diversi nel mazzo di influenza (tre di ogni personaggio).",
-    "pt-BR": "Existem cinco personagens diferentes no baralho de influência (três de cada personagem)."
+    "de-DE": "Es gibt fünf verschiedene Charaktere im Einflussdeck.",
+    "en-US": "There are five different characters in the influence deck.",
+    "es-MX": "Hay cinco personajes diferentes en el mazo de influencia.",
+    "fr-FR": "Il y a cinq personnages différents dans le paquet d'influence.",
+    "it-IT": "Ci sono cinque personaggi diversi nel mazzo di influenza.",
+    "pt-BR": "Existem cinco personagens diferentes no baralho de influência."
   },
   rulesLosingAChallenge: {
     "de-DE": "Jeder Spieler, der eine Herausforderung verliert, muss eine ihrer Einflusskarten aufdecken, damit alle sie sehen können. Wenn das ihre letzte Einflusskarte ist, scheiden sie aus dem Spiel aus.",
