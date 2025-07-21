@@ -1,6 +1,6 @@
 import { Chance } from "chance"
 import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, mutateGameState, validateGameState } from "./gameState"
-import { getCountOfEachInfluence } from "./deck"
+import { getCountOfEachInfluence, createDeckForPlayerCount } from "./deck"
 import { Actions, EventMessages, GameState, Influences, Player, PublicGameState } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
 import { shuffle } from "./array"
@@ -38,8 +38,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
   const playerCount = playersCount ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT })
 
   const gameState: GameState = {
-    deck: shuffle(Object.values(Influences)
-      .flatMap((influence) => Array.from({ length: getCountOfEachInfluence(playerCount) }, () => influence))),
+    deck: createDeckForPlayerCount(playerCount),
     eventLogs: [],
     chatMessages: [],
     lastEventTimestamp: chance.date(),
@@ -213,8 +212,7 @@ describe('gameState', () => {
       {
         mutation: (state: GameState) => {
           const playerCount = MAX_PLAYER_COUNT + 1
-          state.deck = shuffle(Object.values(Influences)
-            .flatMap((influence) => Array.from({ length: 5 }, () => influence)))
+          state.deck = createDeckForPlayerCount(MAX_PLAYER_COUNT)
           state.players = getRandomPlayers(state, playerCount)
         },
         error: `Game state must always have 1 to ${MAX_PLAYER_COUNT} players`

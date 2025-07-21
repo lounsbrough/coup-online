@@ -37,6 +37,11 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
             const cardTextColor = theme.palette.mode === LIGHT_COLOR_MODE ? 'white' : 'black'
             const isWaitingOnPlayer = waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
 
+            const influences = gameState.isStarted ? [
+              ...deadInfluences,
+              ...Array.from({ length: influenceCount }, () => undefined)
+            ] : Array.from({ length: 2 }, () => undefined)
+
             return (
               <Badge
                 key={index}
@@ -124,10 +129,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     justifyContent='center'
                     flexWrap="nowrap"
                   >
-                    {(gameState.isStarted ? [
-                      ...deadInfluences,
-                      ...Array.from({ length: influenceCount }, () => undefined)
-                    ] : Array.from({ length: 2 }, () => undefined)).map((influence, index) => {
+                    {influences.map((influence, index) => {
                       return (
                         <Grid
                           key={index}
