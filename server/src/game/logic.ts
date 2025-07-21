@@ -189,7 +189,7 @@ export const createNewGame = async (roomId: string, playerId: string, playerName
   await createGameState(roomId, newGameState)
 }
 
-export const startGame = async (gameState: GameState) => {
+export const startGame = (gameState: GameState) => {
   gameState.isStarted = true
   gameState.players = shuffle(gameState.players)
   gameState.players.forEach((player) => {
