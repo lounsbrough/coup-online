@@ -3,7 +3,7 @@ import React from "react"
 import { screen, render as testingLibraryRender } from "@testing-library/react"
 import Chance from 'chance'
 import { GameStateContext } from "../../src/contexts/GameStateContext"
-import { PublicGameState } from '@shared'
+import { MAX_PLAYER_COUNT, PublicGameState } from '@shared'
 import { MaterialThemeContextProvider, useColorModeContext } from "../../src/contexts/MaterialThemeContext"
 import { PaletteMode } from "@mui/material"
 
@@ -17,7 +17,7 @@ export const getRandomGameState = (): PublicGameState => {
     coins: chance.natural({ min: 0, max: 12 }),
     influenceCount: chance.natural({ min: 0, max: 2 }),
     color: chance.color()
-  }), chance.natural({ min: 2, max: 6 }))
+  }), chance.natural({ min: 2, max: MAX_PLAYER_COUNT }))
 
   const selfPlayer = chance.pickone(players)
 

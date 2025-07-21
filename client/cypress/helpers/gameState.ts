@@ -1,13 +1,13 @@
 import Chance from 'chance'
-import { DehydratedGameState, DehydratedPlayer, EventMessages, Influences } from '../../../shared/types/game'
-import { shuffle } from '../../../server/src/utilities/array'
+import { DehydratedGameState, DehydratedPlayer, EventMessages } from '../../../shared/types/game'
+import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
+import { createDeckForPlayerCount } from '../../../server/src/utilities/deck'
 
 const chance = new Chance()
 
 export const getGameState = ({ players }: { players: DehydratedPlayer[] }) => {
   const gameState: DehydratedGameState = {
-    deck: shuffle(Object.values(Influences)
-      .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
+    deck: createDeckForPlayerCount(players.length),
     eventLogs: chance.n(() => ({
       event: chance.pickone(Object.values(EventMessages)),
       turn: 1
@@ -20,7 +20,7 @@ export const getGameState = ({ players }: { players: DehydratedPlayer[] }) => {
       timestamp: chance.date().toISOString()
     }), chance.natural({max: 10, min: 2})),
     isStarted: chance.bool(),
-    availablePlayerColors: chance.n(chance.color, 6),
+    availablePlayerColors: chance.n(chance.color, MAX_PLAYER_COUNT),
     players: [],
     pendingInfluenceLoss: {},
     lastEventTimestamp: chance.date().toISOString(),

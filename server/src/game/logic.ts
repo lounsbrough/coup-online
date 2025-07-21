@@ -1,6 +1,7 @@
 import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, Influences, Player, Responses } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
+import { createDeckForPlayerCount } from "../utilities/deck"
 import { GameMutationInputError } from "../utilities/errors"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
@@ -119,16 +120,11 @@ export const processPendingAction = (state: GameState) => {
   delete state.pendingAction
 }
 
-const buildGameDeck = () => {
-  return Object.values(Influences)
-    .flatMap((influence) => Array.from({ length: 3 }, () => influence))
-}
-
 const getNewGameState = (roomId: string, settings: GameSettings): GameState => ({
   roomId,
-  availablePlayerColors: shuffle(['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088']),
+  availablePlayerColors: shuffle(['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088', '#8A2BE2', '#AAD700', '#993399', '#FF3333']),
   players: [],
-  deck: shuffle(buildGameDeck()),
+  deck: shuffle(createDeckForPlayerCount(0)),
   pendingInfluenceLoss: {},
   isStarted: false,
   eventLogs: [],
@@ -157,7 +153,7 @@ export const addPlayerToGame = ({
     id: playerId,
     name: playerName,
     coins: 2,
-    influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
+    influences: [],
     deadInfluences: [],
     claimedInfluences: new Set(),
     unclaimedInfluences: new Set(),
@@ -171,6 +167,7 @@ export const addPlayerToGame = ({
         vengefulness: randomPersonality(),
       }})
   })
+  state.deck = createDeckForPlayerCount(state.players.length)
 }
 
 export const removePlayerFromGame = (state: GameState, playerName: string) => {
@@ -179,7 +176,7 @@ export const removePlayerFromGame = (state: GameState, playerName: string) => {
     1
   )[0]
   state.availablePlayerColors.push(player.color)
-  state.deck.push(...player.influences, ...player.deadInfluences)
+  state.deck = createDeckForPlayerCount(state.players.length)
 }
 
 export const createNewGame = async (roomId: string, playerId: string, playerName: string, gameSettings: GameSettings) => {
@@ -188,9 +185,12 @@ export const createNewGame = async (roomId: string, playerId: string, playerName
   await createGameState(roomId, newGameState)
 }
 
-export const startGame = async (gameState: GameState) => {
+export const startGame = (gameState: GameState) => {
   gameState.isStarted = true
   gameState.players = shuffle(gameState.players)
+  gameState.players.forEach((player) => {
+    player.influences.push(...Array.from({ length: 2 }, () => drawCardFromDeck(gameState)))
+  })
   if (gameState.players.length === 2) {
     gameState.players[0].coins = 1
   }
@@ -210,12 +210,13 @@ export const resetGame = async (roomId: string) => {
   newGameState.players = oldGameState.players.map((player) => ({
     ...player,
     coins: 2,
-    influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
+    influences: [],
     claimedInfluences: new Set(),
     unclaimedInfluences: new Set(),
     deadInfluences: [],
     grudges: {}
   }))
+  newGameState.deck = createDeckForPlayerCount(newGameState.players.length)
   newGameState.availablePlayerColors = oldGameState.availablePlayerColors
   newGameState.chatMessages = oldGameState.chatMessages
   await createGameState(roomId, newGameState)

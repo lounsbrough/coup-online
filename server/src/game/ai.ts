@@ -1,7 +1,7 @@
-import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 import { shuffle } from "../utilities/array"
+import { getCountOfEachInfluence } from "../utilities/deck"
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
   gameState.players.reduce((agg: Influences[], { deadInfluences }) => {
@@ -22,7 +22,9 @@ const getProbabilityOfHiddenCardBeingInfluence = (
 
   const knownMatchedInfluenceCount = knownInfluences.filter((i) => i === influence).length
 
-  if (knownMatchedInfluenceCount === countOfEachInfluenceInDeck) {
+  const countOfEachInfluence = getCountOfEachInfluence(gameState.players.length)
+
+  if (knownMatchedInfluenceCount === countOfEachInfluence) {
     return 0
   }
 
@@ -31,7 +33,7 @@ const getProbabilityOfHiddenCardBeingInfluence = (
     gameState.players.reduce((agg, { deadInfluences }) => agg + deadInfluences.length, 0) +
     gameState.deckCount
 
-  return (countOfEachInfluenceInDeck - knownMatchedInfluenceCount) / (totalInfluenceCount - knownInfluences.length)
+  return (countOfEachInfluence - knownMatchedInfluenceCount) / (totalInfluenceCount - knownInfluences.length)
 }
 
 export const getProbabilityOfPlayerInfluence = (

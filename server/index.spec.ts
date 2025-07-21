@@ -2,6 +2,7 @@ import Chance from 'chance'
 import { io, Socket } from 'socket.io-client'
 import { Actions, DehydratedPlayer, DehydratedPublicGameState, DehydratedPublicPlayer, PlayerActions, Responses, ServerEvents } from '../shared/types/game'
 import { DehydratedPublicGameStateOrError } from './index'
+import { MAX_PLAYER_COUNT } from '../shared/helpers/playerCount'
 
 const chance = new Chance()
 
@@ -24,7 +25,7 @@ const validatePublicState = (gameState: DehydratedPublicGameState) => {
   gameState.players.forEach((player: DehydratedPlayer & DehydratedPublicPlayer) => {
     expect(player.id).toBeUndefined()
     expect(player.influences).toBeUndefined()
-    expect(player.influenceCount).toBeTruthy()
+    expect(player.influenceCount).toBeDefined()
     expect(player.name).toBeTruthy()
     expect(player.coins).toBeTruthy()
     expect(player.color).toBeTruthy()
@@ -248,7 +249,7 @@ describe('index', () => {
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < MAX_PLAYER_COUNT - 1; i++) {
               await postApi(PlayerActions.joinGame, { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) })
             }
 
