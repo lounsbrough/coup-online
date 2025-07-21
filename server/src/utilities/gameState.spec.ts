@@ -3,7 +3,6 @@ import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, mutateGam
 import { getCountOfEachInfluence, createDeckForPlayerCount } from "./deck"
 import { Actions, EventMessages, GameState, Influences, Player, PublicGameState } from '../../../shared/types/game'
 import { getValue, setValue } from "./storage"
-import { shuffle } from "./array"
 import { compressString, decompressString } from "./compression"
 import { getCurrentTimestamp } from "./time"
 import { dehydrateGameState } from "../../../shared/helpers/state"
