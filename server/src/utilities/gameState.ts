@@ -76,11 +76,11 @@ export const getCountOfEachInfluence = (playerCount: number): number => {
     return 3
   }
 
-  if (playerCount <= 8) {
+  if (playerCount >= 7 && playerCount <= 8) {
     return 4
   }
 
-  if (playerCount <= MAX_PLAYER_COUNT) {
+  if (playerCount >= 9 && playerCount <= MAX_PLAYER_COUNT) {
     return 5
   }
 

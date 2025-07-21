@@ -1,5 +1,5 @@
 import { Chance } from "chance"
-import { drawCardFromDeck } from "../utilities/gameState"
+import { drawCardFromDeck, getCountOfEachInfluence } from "../utilities/gameState"
 import { GameState, Influences, Player } from '../../../shared/types/game'
 import { shuffle } from "../utilities/array"
 import { moveTurnToNextPlayer, startGame } from "./logic"
@@ -9,7 +9,7 @@ jest.mock("../utilities/storage")
 
 const chance = new Chance()
 
-const getRandomPlayers = (count?: number) : Player[] =>
+const getRandomPlayers = (count: number) : Player[] =>
   chance.n(() => ({
     id: chance.string(),
     name: chance.string(),
@@ -24,11 +24,13 @@ const getRandomPlayers = (count?: number) : Player[] =>
   }), count ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT }))
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
-  const players = getRandomPlayers(playersCount)
+  const playerCount = playersCount ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT })
+
+  const players = getRandomPlayers(playerCount)
 
   const gameState: GameState = {
     deck: shuffle(Object.values(Influences)
-      .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
+      .flatMap((influence) => Array.from({ length: getCountOfEachInfluence(playerCount) }, () => influence))),
     eventLogs: [],
     chatMessages: [],
     lastEventTimestamp: chance.date(),

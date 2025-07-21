@@ -19,7 +19,7 @@ const getCurrentTimestampMock = jest.mocked(getCurrentTimestamp)
 
 const chance = new Chance()
 
-const getRandomPlayers = (state: GameState, count?: number): Player[] =>
+const getRandomPlayers = (state: GameState, count: number): Player[] =>
   chance.n(() => ({
     id: chance.string(),
     name: chance.string(),
@@ -31,12 +31,14 @@ const getRandomPlayers = (state: GameState, count?: number): Player[] =>
     deadInfluences: [],
     ai: false,
     grudges: {}
-  }), count ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT }))
+  }), count)
 
 const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
+  const playerCount = playersCount ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT })
+
   const gameState: GameState = {
     deck: shuffle(Object.values(Influences)
-      .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
+      .flatMap((influence) => Array.from({ length: getCountOfEachInfluence(playerCount) }, () => influence))),
     eventLogs: [],
     chatMessages: [],
     lastEventTimestamp: chance.date(),
@@ -49,7 +51,7 @@ const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) =>
     settings: { eventLogRetentionTurns: 100, allowRevive: true }
   }
 
-  gameState.players = getRandomPlayers(gameState, playersCount)
+  gameState.players = getRandomPlayers(gameState, playerCount)
   gameState.turnPlayer = chance.pickone(gameState.players).name
 
   return gameState
@@ -91,7 +93,7 @@ describe('gameState', () => {
         turn: gameState.turn,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
         roomId: gameState.roomId,
-        deckCount: 15 - gameState.players.length * 2,
+        deckCount: 5 * getCountOfEachInfluence(gameState.players.length) - gameState.players.length * 2,
         selfPlayer: {
           id: selfPlayer.id,
           name: selfPlayer.name,
@@ -208,7 +210,12 @@ describe('gameState', () => {
         error: `Game state must always have 1 to ${MAX_PLAYER_COUNT} players`
       },
       {
-        mutation: (state: GameState) => { state.players.push(...getRandomPlayers(state, 7 - state.players.length)) },
+        mutation: (state: GameState) => {
+          const playerCount = MAX_PLAYER_COUNT + 1
+          state.deck = shuffle(Object.values(Influences)
+            .flatMap((influence) => Array.from({ length: 5 }, () => influence)))
+          state.players = getRandomPlayers(state, playerCount)
+        },
         error: `Game state must always have 1 to ${MAX_PLAYER_COUNT} players`
       },
       {
