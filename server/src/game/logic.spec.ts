@@ -1,9 +1,9 @@
 import { Chance } from "chance"
-import { getCountOfEachInfluence } from "../utilities/gameState"
 import { GameState, Influences, Player } from '../../../shared/types/game'
 import { shuffle } from "../utilities/array"
 import { moveTurnToNextPlayer, startGame } from "./logic"
 import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
+import { getCountOfEachInfluence } from "../utilities/deck"
 
 jest.mock("../utilities/storage")
 

@@ -6,6 +6,7 @@ import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 import { getCurrentTimestamp } from './time'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
+import { getCountOfEachInfluence } from './deck'
 
 export const getGameState = async (
   roomId: string
@@ -69,22 +70,6 @@ export const getPublicGameState = ({ gameState, playerId }: {
     ...(gameState.turnPlayer && { turnPlayer: gameState.turnPlayer }),
     ...(gameState.resetGameRequest && { resetGameRequest: gameState.resetGameRequest })
   }
-}
-
-export const getCountOfEachInfluence = (playerCount: number): number => {
-  if (playerCount >= 0 && playerCount <= 6) {
-    return 3
-  }
-
-  if (playerCount >= 7 && playerCount <= 8) {
-    return 4
-  }
-
-  if (playerCount >= 9 && playerCount <= MAX_PLAYER_COUNT) {
-    return 5
-  }
-
-  throw new Error(`Invalid player count: ${playerCount}`)
 }
 
 export const validateGameState = (state: DehydratedGameState) => {

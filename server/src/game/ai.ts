@@ -1,7 +1,7 @@
-import { getCountOfEachInfluence } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 import { shuffle } from "../utilities/array"
+import { getCountOfEachInfluence } from "../utilities/deck"
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
   gameState.players.reduce((agg: Influences[], { deadInfluences }) => {

@@ -1,6 +1,7 @@
 import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, Influences, Player, Responses } from "../../../shared/types/game"
-import { createGameState, drawCardFromDeck, getCountOfEachInfluence, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
+import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
+import { getCountOfEachInfluence } from "../utilities/deck"
 import { GameMutationInputError } from "../utilities/errors"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {

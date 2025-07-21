@@ -2,7 +2,7 @@ import Chance from 'chance'
 import { DehydratedGameState, DehydratedPlayer, EventMessages, Influences } from '../../../shared/types/game'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { shuffle } from '../../../server/src/utilities/array'
-import { getCountOfEachInfluence } from '../../../server/src/utilities/gameState'
+import { getCountOfEachInfluence } from '../../../server/src/utilities/deck'
 
 const chance = new Chance()
 
