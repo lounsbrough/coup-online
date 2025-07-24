@@ -120,9 +120,15 @@ export const processPendingAction = (state: GameState) => {
   delete state.pendingAction
 }
 
+const getEvenlySpacedHueColors = (n: number) =>
+  Array.from({ length: n }, (_, i) => {
+    const angle = (i / n) * 2 * Math.PI
+    return `hsl(${angle * (180 / Math.PI)}, 50%, 50%)`
+  })
+
 const getNewGameState = (roomId: string, settings: GameSettings): GameState => ({
   roomId,
-  availablePlayerColors: shuffle(['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088', '#8A2BE2', '#AAD700', '#993399', '#FF3333']),
+  availablePlayerColors: shuffle(getEvenlySpacedHueColors(10)),
   players: [],
   deck: shuffle(createDeckForPlayerCount(0)),
   pendingInfluenceLoss: {},
