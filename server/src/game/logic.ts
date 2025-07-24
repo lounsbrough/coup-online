@@ -3,6 +3,7 @@ import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, 
 import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
 import { createDeckForPlayerCount } from "../utilities/deck"
 import { GameMutationInputError } from "../utilities/errors"
+import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
   const player = state.players.find(({ name }) => name === playerName)
@@ -120,9 +121,15 @@ export const processPendingAction = (state: GameState) => {
   delete state.pendingAction
 }
 
+const getEvenlySpacedHueColors = (n: number) =>
+  Array.from({ length: n }, (_, i) => {
+    const angle = (i / n) * 2 * Math.PI
+    return `hsl(${angle * (180 / Math.PI)}, 50%, 50%)`
+  })
+
 const getNewGameState = (roomId: string, settings: GameSettings): GameState => ({
   roomId,
-  availablePlayerColors: shuffle(['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088', '#8A2BE2', '#AAD700', '#993399', '#FF3333']),
+  availablePlayerColors: shuffle(getEvenlySpacedHueColors(MAX_PLAYER_COUNT)),
   players: [],
   deck: shuffle(createDeckForPlayerCount(0)),
   pendingInfluenceLoss: {},
