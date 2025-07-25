@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Route, Routes, Link } from 'react-router'
-import { Box, Button, Typography } from '@mui/material'
+import { Route, Routes, Link as RouterLink } from 'react-router'
+import { Box, Button, Link, Typography } from '@mui/material'
 import JoinGame from './pages/JoinGame'
 import CreateGame from './pages/CreateGame'
 import Home from './pages/Home'
@@ -63,7 +63,7 @@ function App() {
             >
               <header className="App-header">
                 <Box sx={{ whiteSpace: 'nowrap' }}>
-                  <Link to={'/'}>
+                  <Link component={RouterLink} to={'/'}>
                     <Button
                       size='large'
                       color='primary'
@@ -88,7 +88,7 @@ function App() {
                   } />
                   <Route path="join-game" element={<JoinGame />} />
                   <Route path="create-game" element={<CreateGame />} />
-                  <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link to={'/'}>{t('home')}</Link></Typography>} />
+                  <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link component={RouterLink} to={'/'}>{t('home')}</Link></Typography>} />
                 </Route>
               </Routes>
             </DualSideDrawer>

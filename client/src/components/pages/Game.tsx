@@ -1,8 +1,8 @@
-import { Alert, Box, Button, CircularProgress, Grid, Typography } from "@mui/material"
+import { Alert, Box, Button, CircularProgress, Grid, Link, Typography } from "@mui/material"
 import GameBoard from "../game/GameBoard"
 import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Link, useSearchParams } from "react-router"
+import { Link as RouterLink, useSearchParams } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { Visibility } from "@mui/icons-material"
 
@@ -34,7 +34,7 @@ function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
           </Typography>
         </Grid>
         <Grid>
-          <Link to={`/`}>
+          <Link component={RouterLink} to={`/`}>
             <Button variant="contained">
               {t('home')}
             </Button>

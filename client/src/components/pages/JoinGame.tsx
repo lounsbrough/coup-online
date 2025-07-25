@@ -1,8 +1,8 @@
 import { useCallback, useState, useRef } from "react"
 import { Analytics } from '@vercel/analytics/react'
-import { Box, Breadcrumbs, Button, Grid, TextField, Typography } from "@mui/material"
+import { Box, Breadcrumbs, Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { Person, Group, GroupAdd, Visibility } from "@mui/icons-material"
-import { Link, useNavigate, useSearchParams } from "react-router"
+import { Link as RouterLink, useNavigate, useSearchParams } from "react-router"
 import { PlayerActions } from '@shared'
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
@@ -33,7 +33,7 @@ function JoinGame() {
     <>
       <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link to='/'>
+        <Link component={RouterLink} to='/'>
           {t('home')}
         </Link>
         <Typography>
