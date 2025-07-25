@@ -2,21 +2,19 @@ import { useState } from "react"
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Switch, Typography, useTheme } from "@mui/material"
 import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
 import ColorModeToggle from "./ColorModeToggle"
-import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useSearchParams } from "react-router"
 import LanguageSelector from "./LanguageSelector"
 import { useTranslationContext } from "../contexts/TranslationsContext"
+import { useUserSettingsContext } from "../contexts/UserSettingsContext"
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [confirmActions, setConfirmActions] = useState<boolean>(
-    JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
-  )
   const [searchParams] = useSearchParams()
   const { isConnected } = useWebSocketContext()
   const { t } = useTranslationContext()
   const { isSmallScreen } = useTheme()
+  const { showChickens, confirmActions, setShowChickens, setConfirmActions } = useUserSettingsContext()
 
   const roomId = searchParams.get('roomId')
   const rowHeight = 36
@@ -87,7 +85,19 @@ function UserSettings() {
                 checked={confirmActions}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setConfirmActions(event.target.checked)
-                  localStorage.setItem(confirmActionsStorageKey, JSON.stringify(event.target.checked))
+                }}
+                slotProps={{ input: { 'aria-label': 'controlled' } }}
+              />
+            </Grid>
+            <Grid height={rowHeight} alignContent="center">
+              <Typography component="span">
+                {t('showChickens')} 🐓
+                :
+              </Typography>
+              <Switch
+                checked={showChickens}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setShowChickens(event.target.checked)
                 }}
                 slotProps={{ input: { 'aria-label': 'controlled' } }}
               />

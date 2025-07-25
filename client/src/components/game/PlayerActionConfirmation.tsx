@@ -3,10 +3,10 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Button, Grid, Typography, useTheme } from "@mui/material"
 import { Cancel, Check } from "@mui/icons-material"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
-import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { useUserSettingsContext } from "../../contexts/UserSettingsContext"
 
 function PlayerActionConfirmation({
   message,
@@ -24,25 +24,23 @@ function PlayerActionConfirmation({
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const theme = useTheme()
-
   const { trigger, isMutating } = useGameMutation<object>({ action })
-
-  const skipConfirmation = !JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
+  const { confirmActions } = useUserSettingsContext()
 
   useEffect(() => {
-    if (skipConfirmation) {
-      trigger(variables)
-    } else {
+    if (confirmActions) {
       autoSubmitInterval.current = setInterval(() => {
         setAutoSubmitProgress((prev) => Math.min(100, prev + 1))
       }, 50)
+    } else {
+      trigger(variables)
     }
 
     return () => {
       clearInterval(autoSubmitInterval.current)
       autoSubmitInterval.current = undefined
     }
-  }, [skipConfirmation, trigger, variables])
+  }, [confirmActions, trigger, variables])
 
   useEffect(() => {
     if (autoSubmitInterval.current && autoSubmitProgress === 100) {
@@ -52,7 +50,7 @@ function PlayerActionConfirmation({
     }
   }, [autoSubmitProgress, trigger, variables])
 
-  if (!gameState || skipConfirmation) {
+  if (!gameState || !confirmActions) {
     return null
   }
 

@@ -82,7 +82,8 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
   const defaultBackgroundColor = isLightMode ? '#ffffff' : '#212121'
 
   const materialTheme = useMemo(() => {
-    const primaryColor = isLightMode ? grey['700'] : grey['500']
+    const primaryColor = isLightMode ? grey['700'] : grey['400']
+    const secondaryColor = isLightMode ? grey['500'] : grey['600']
 
     const influenceColors = {
       [Influences.Assassin]: isLightMode ? '#7A0000' : '#B23535',
@@ -113,8 +114,11 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
         mode: activeColorMode,
         background: (isLightMode ? {} : { default: grey[800] }),
         primary: {
-          main: primaryColor
-        }
+          main: primaryColor,
+        },
+        secondary: {
+          main: secondaryColor,
+        },
       },
       isSmallScreen,
       isLargeScreen,

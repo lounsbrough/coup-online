@@ -10,7 +10,6 @@ import { MAX_PLAYER_COUNT, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import AddAiPlayer from "./AddAiPlayer"
-import BetaTag from "../utilities/BetaTag"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { useNavigate } from "react-router"
 import { useNotificationsContext } from "../../contexts/NotificationsContext"
@@ -78,7 +77,6 @@ function WaitingRoom() {
               disabled={gameState.players.length === MAX_PLAYER_COUNT}
             >
               {(t('addAiPlayer'))}
-              <BetaTag />
             </Button>
           </Grid>
         )}

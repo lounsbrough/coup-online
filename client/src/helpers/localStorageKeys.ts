@@ -1,6 +1,7 @@
 export const playerIdStorageKey = 'coupPlayerId'
 export const activeColorModeStorageKey = 'coupActiveColorMode'
 export const confirmActionsStorageKey = 'coupConfirmActions'
+export const showChickensStorageKey = 'coupShowChickens'
 export const activeLanguageStorageKey = 'coupActiveLanguage'
 export const eventLogRetentionTurnsStorageKey = 'coupEventLogRetentionTurns'
 export const allowReviveStorageKey = 'coupAllowRevive'

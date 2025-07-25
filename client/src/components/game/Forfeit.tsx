@@ -51,9 +51,10 @@ function Forfeit() {
               title={forfeitNotPossible && t('forfeitNotPossible')}>
               <span>
                 <Button
+                  color="secondary"
+                  variant="contained"
                   size="small"
                   startIcon={<ForfeitIcon />}
-                  variant='outlined'
                   disabled={forfeitNotPossible}
                   onClick={() => { setConfirmationOpen(true) }}
                 >
