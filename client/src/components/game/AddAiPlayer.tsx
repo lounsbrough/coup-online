@@ -6,7 +6,6 @@ import useGameMutation from "../../hooks/useGameMutation"
 import { AiPersonality, PlayerActions } from "@shared"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import BetaTag from "../utilities/BetaTag"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { chooseAiPersonalityStorageKey } from "../../helpers/localStorageKeys"
 
@@ -75,7 +74,6 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
     >
       <DialogTitle>
         {(t('addAiPlayer'))}
-        <BetaTag />
       </DialogTitle>
       <form
         onSubmit={(event) => {
