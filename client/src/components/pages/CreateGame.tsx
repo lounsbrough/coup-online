@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react"
-import { Box, Breadcrumbs, Button, Grid, Slider, Switch, TextField, Typography } from "@mui/material"
+import { Box, Breadcrumbs, Button, Grid, Link, Slider, Switch, TextField, Typography } from "@mui/material"
 import { AddCircle, Person } from "@mui/icons-material"
-import { Link, useNavigate } from "react-router"
+import { Link as RouterLink, useNavigate } from "react-router"
 import { getPlayerId } from "../../helpers/players"
 import { Analytics } from '@vercel/analytics/react'
 import { GameSettings, PlayerActions, DehydratedPublicGameState } from '@shared'
@@ -32,7 +32,7 @@ function CreateGame() {
     <>
       <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link to='/'>
+        <Link component={RouterLink} to='/'>
           {t('home')}
         </Link>
         <Typography>
