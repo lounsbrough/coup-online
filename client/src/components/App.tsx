@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Route, Routes, Link } from 'react-router'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, useTheme } from '@mui/material'
 import JoinGame from './pages/JoinGame'
 import CreateGame from './pages/CreateGame'
 import Home from './pages/Home'
@@ -22,15 +22,35 @@ import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
 import { NotificationsContextProvider } from '../contexts/NotificationsContext'
+import { useUserSettingsContext } from '../contexts/UserSettingsContext'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false)
   const [latestReadMessageId, setLatestReadMessageId] = useState<string | null>(null)
   const { t } = useTranslationContext()
+  const theme = useTheme()
+  const { showChickens } = useUserSettingsContext()
 
   return (
-    <div className="App">
+    <Box sx={{
+      textAlign: 'center',
+      ...(showChickens && {
+        '::before': {
+          content: '""',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: 'url(/chickens.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: theme.palette.mode === 'dark' ? 0.25 : 0.4,
+          zIndex: -1
+        }
+      })
+    }}>
       <NotificationsContextProvider>
         <WebSocketContextProvider>
           <GameStateContextProvider>
@@ -61,7 +81,15 @@ function App() {
                 </>
               )}
             >
-              <header className="App-header">
+              <header style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '2rem',
+                background: theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(5px)'
+              }}>
                 <Box sx={{ whiteSpace: 'nowrap' }}>
                   <Link to={'/'}>
                     <Button
@@ -95,7 +123,7 @@ function App() {
           </GameStateContextProvider>
         </WebSocketContextProvider>
       </NotificationsContextProvider>
-    </div>
+    </Box>
   )
 }
 
