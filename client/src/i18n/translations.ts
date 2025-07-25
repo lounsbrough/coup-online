@@ -143,6 +143,7 @@ export type Translations = ActionMessages & {
   send: TranslationsForString;
   settings: TranslationsForString;
   setup: TranslationsForString;
+  showChickens: TranslationsForString;
   skepticism: TranslationsForString;
   spectateGame: TranslationsForString;
   startGame: TranslationsForString;
@@ -1398,6 +1399,14 @@ const translations: Translations = {
     "fr-FR": "Configuration",
     "it-IT": "Impostazione",
     "pt-BR": "Configuração"
+  },
+  showChickens: {
+    "de-DE": "Hühner anzeigen",
+    "en-US": "Show Chickens",
+    "es-MX": "Mostrar Pollos",
+    "fr-FR": "Afficher les Poules",
+    "it-IT": "Mostra Polli",
+    "pt-BR": "Mostrar Galinhas"
   },
   skepticism: {
     "de-DE": "Skepsis",

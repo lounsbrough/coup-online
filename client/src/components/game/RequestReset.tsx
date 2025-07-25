@@ -39,9 +39,10 @@ function RequestReset() {
         {(!isResetPending || isResetMine || playerIsDead) && (
           <>
             <Button
+              color="secondary"
+              variant="contained"
               size="small"
               startIcon={<ResetIcon />}
-              variant='outlined'
               onClick={() => {
                 resetGameRequest.trigger({
                   roomId: gameState.roomId,
