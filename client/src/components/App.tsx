@@ -87,7 +87,9 @@ function App() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '2rem',
-                background: theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)',
+                background: theme.palette.mode === 'dark'
+                  ? 'rgba(0, 0, 0, 0.4)'
+                  : showChickens ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.1)',
                 backdropFilter: 'blur(5px)'
               }}>
                 <Box sx={{ whiteSpace: 'nowrap' }}>
