@@ -15,6 +15,7 @@ interface NotificationsContextType {
   notifications: Notification[];
   showNotification: (notification: Omit<Notification, 'id' | 'dismissed' | 'dismissTimeout'> & { id?: string }) => void;
   removeNotification: (id: string) => void;
+  playChime: () => void;
 }
 
 const NotificationsContext = createContext<NotificationsContextType>({
@@ -24,11 +25,72 @@ const NotificationsContext = createContext<NotificationsContextType>({
   },
   removeNotification: () => {
     console.warn('removeNotification called without a provider')
-  }
+  },
+  playChime: () => {
+    console.warn('playChime called without a provider')
+  },
 })
 
 interface NotificationsContextProviderProps {
   children: ReactNode;
+}
+
+function playChime(): void {
+  const AudioContext = window.AudioContext || (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext
+
+  if (!AudioContext) {
+    console.warn('Web Audio API is not supported in this browser.')
+    return
+  }
+
+  try {
+    const audioContext = new AudioContext()
+    const now = audioContext.currentTime
+
+    const oscillator1: OscillatorNode = audioContext.createOscillator()
+    const gainNode1: GainNode = audioContext.createGain()
+
+    oscillator1.connect(gainNode1)
+    gainNode1.connect(audioContext.destination)
+
+    oscillator1.type = 'sine'
+    oscillator1.frequency.setValueAtTime(440, now)
+
+    const duration1: number = 0.15
+
+    gainNode1.gain.setValueAtTime(1, now)
+    gainNode1.gain.exponentialRampToValueAtTime(0.001, now + duration1)
+
+    oscillator1.start(now)
+    oscillator1.stop(now + duration1)
+
+    const oscillator2: OscillatorNode = audioContext.createOscillator()
+    const gainNode2: GainNode = audioContext.createGain()
+
+    oscillator2.connect(gainNode2)
+    gainNode2.connect(audioContext.destination)
+
+    oscillator2.type = 'sine'
+    oscillator2.frequency.setValueAtTime(880, now + duration1 * 0.5)
+
+    const duration2: number = 0.3
+
+    gainNode2.gain.setValueAtTime(1, now + duration1 * 0.5)
+    gainNode2.gain.exponentialRampToValueAtTime(0.001, now + duration1 * 0.5 + duration2)
+
+    oscillator2.start(now + duration1 * 0.5)
+    oscillator2.stop(now + duration1 * 0.5 + duration2)
+
+    const totalDuration = duration1 + duration2
+
+    setTimeout(() => {
+      if (audioContext.state !== 'closed') {
+        audioContext.close().catch(error => console.error("Error closing AudioContext:", error))
+      }
+    }, (totalDuration + 0.1) * 1000)
+  } catch (error) {
+    console.error("Error playing chime sound:", error)
+  }
 }
 
 export function NotificationsContextProvider({ children }: NotificationsContextProviderProps) {
@@ -111,8 +173,8 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
   }, [dismissNotification])
 
   const contextValue = useMemo<NotificationsContextType>(
-    () => ({ notifications, showNotification, removeNotification }),
-    [notifications, showNotification, removeNotification]
+    () => ({ notifications, showNotification, removeNotification, playChime }),
+    [notifications, showNotification, removeNotification, playChime]
   )
 
   return (
