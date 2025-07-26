@@ -54,16 +54,23 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
     (localStorage.getItem(activeColorModeStorageKey) as AppColorMode | null) ?? SYSTEM_COLOR_MODE
   )
 
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
   const isLargeScreen = useMediaQuery('screen and (min-width: 1200px)')
 
-  let activeColorMode: PaletteMode
-  if (mode === SYSTEM_COLOR_MODE) {
-    activeColorMode = prefersDarkMode ? DARK_COLOR_MODE : LIGHT_COLOR_MODE
-  } else {
-    activeColorMode = mode
-  }
+  // Always use DARK_COLOR_MODE for now
+  const activeColorMode: PaletteMode = DARK_COLOR_MODE
+  const isLightMode = false
+
+  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+
+  // let activeColorMode: PaletteMode
+  // if (mode === SYSTEM_COLOR_MODE) {
+  //   activeColorMode = prefersDarkMode ? DARK_COLOR_MODE : LIGHT_COLOR_MODE
+  // } else {
+  //   activeColorMode = mode
+  // }
+
+  // const isLightMode = activeColorMode === LIGHT_COLOR_MODE
 
   const colorMode = useMemo(
     () => ({
@@ -78,7 +85,6 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
     localStorage.setItem(activeColorModeStorageKey, mode)
   }, [mode])
 
-  const isLightMode = activeColorMode === LIGHT_COLOR_MODE
   const defaultBackgroundColor = isLightMode ? '#ffffff' : '#212121'
 
   const materialTheme = useMemo(() => {

@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Switch, Typography, useTheme } from "@mui/material"
 import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
-import ColorModeToggle from "./ColorModeToggle"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useSearchParams } from "react-router"
 import LanguageSelector from "./LanguageSelector"
@@ -69,13 +68,13 @@ function UserSettings() {
                 <strong>{roomId}</strong>
               </Grid>
             )}
-            <Grid height={rowHeight} alignContent="center">
+            {/* <Grid height={rowHeight} alignContent="center">
               <Typography component="span" sx={{ mr: 2 }}>
                 {t('colorMode')}
                 :
               </Typography>
               <ColorModeToggle />
-            </Grid>
+            </Grid> */}
             <Grid height={rowHeight} alignContent="center">
               <Typography component="span">
                 {t('confirmActions')}
