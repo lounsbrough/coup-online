@@ -1,11 +1,10 @@
 import { createContext, useState, useMemo, useRef, useContext, useCallback, ReactNode } from 'react'
-import { Alert, Fade } from '@mui/material'
-import { AlertColor } from '@mui/material/Alert'
+import { Alert, AlertColor, Fade } from '@mui/material'
 
 interface Notification {
   id: string;
   message: string | ReactNode;
-  severity: 'success' | 'error' | 'warning' | 'info';
+  severity: AlertColor;
   eternal?: boolean;
   dismissTimeout?: ReturnType<typeof setTimeout>;
   dismissed?: boolean;
@@ -202,11 +201,11 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
             >
               <Alert
                 onClose={() => dismissNotification(id)}
-                severity={severity.toLowerCase() as AlertColor}
+                severity={severity}
                 sx={{ marginTop: 1, minWidth: '300px' }}
               >
                 <span style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
-                  {`${severity.toLowerCase()}: `}
+                  {`${severity}: `}
                 </span>
                 {message}
               </Alert>
