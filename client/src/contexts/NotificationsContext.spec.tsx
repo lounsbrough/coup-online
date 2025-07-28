@@ -1,6 +1,10 @@
 import { within, waitFor, act, render, fireEvent } from '@testing-library/react'
 import { NotificationsContextProvider, useNotificationsContext } from './NotificationsContext'
 
+jest.mock('./TranslationsContext', () => ({
+  useTranslationContext: () => ({ t: (key: string) => `[${key}](translated)` })
+}))
+
 function MockComponentThatWantsToShowNotification() {
   const { showNotification, removeNotification } = useNotificationsContext()
 
@@ -84,7 +88,7 @@ it('should show test error notification and should be dismissable', async () => 
   const firstNotificationSeveritySpan = firstNotification.querySelector('span')
   const secondNotification = secondNotificationMessage.parentElement!
 
-  expect(firstNotification).toHaveTextContent(/error: that button is the worst!/i)
+  expect(firstNotification).toHaveTextContent(/\[error\]\(translated\): that button is the worst!/i)
   expect(firstNotificationSeveritySpan).toHaveStyle({
     textTransform: 'capitalize', fontWeight: 'bold'
   })

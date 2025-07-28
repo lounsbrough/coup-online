@@ -1,5 +1,6 @@
 import { createContext, useState, useMemo, useRef, useContext, useCallback, ReactNode } from 'react'
 import { Alert, AlertColor, Fade } from '@mui/material'
+import { useTranslationContext } from './TranslationsContext'
 
 interface Notification {
   id: string;
@@ -95,6 +96,7 @@ function playChime(): void {
 export function NotificationsContextProvider({ children }: NotificationsContextProviderProps) {
   const notificationsContainerRef = useRef<HTMLDivElement>(null)
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const { t } = useTranslationContext()
 
   const dismissNotification = useCallback((id: string) => {
     setNotifications((existing) => {
@@ -205,7 +207,7 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
                 sx={{ marginTop: 1, minWidth: '300px' }}
               >
                 <span style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
-                  {`${severity}: `}
+                  {`${t(severity)}: `}
                 </span>
                 {message}
               </Alert>
