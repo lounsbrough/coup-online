@@ -183,6 +183,9 @@ it('should allow removing notification by id if exists', async () => {
   fireEvent.click(errorRemovingButton)
   await waitFor(() => expect(notificationMessage).not.toBeInTheDocument())
 
+  act(() => { jest.runOnlyPendingTimers() })
+  jest.useRealTimers()
+
   fireEvent.click(errorRemovingButton)
   await waitFor(() => expect(notificationMessage).not.toBeInTheDocument())
 })
