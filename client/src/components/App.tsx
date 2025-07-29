@@ -21,7 +21,6 @@ import DualSideDrawer from './utilities/DualSideDrawer'
 import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
-import { NotificationsContextProvider } from '../contexts/NotificationsContext'
 import { useUserSettingsContext } from '../contexts/UserSettingsContext'
 
 function App() {
@@ -51,80 +50,78 @@ function App() {
         }
       })
     }}>
-      <NotificationsContextProvider>
-        <WebSocketContextProvider>
-          <GameStateContextProvider>
-            <RulesBubble setRulesOpen={setLeftDrawerOpen} />
-            <ChatBubble chatOpen={rightDrawerOpen} setChatOpen={setRightDrawerOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
-            <DualSideDrawer
-              openLeft={leftDrawerOpen}
-              openRight={rightDrawerOpen}
-              setOpenLeft={setLeftDrawerOpen}
-              setOpenRight={setRightDrawerOpen}
-              leftDrawerContent={<RulesDrawerContent />}
-              leftDrawerHeader={(
-                <>
-                  <Gavel sx={{ mr: 1 }} />
-                  <span>{t('rules')}</span>
-                </>
-              )}
-              rightDrawerContent={(
-                <ChatDrawerContent
-                  setLatestReadMessageId={setLatestReadMessageId}
-                  chatOpen={rightDrawerOpen}
-                />
-              )}
-              rightDrawerHeader={(
-                <>
-                  <Chat sx={{ mr: 1 }} />
-                  <span>{t('chat')}</span>
-                </>
-              )}
-            >
-              <header style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '2rem',
-                background: theme.palette.mode === 'dark'
-                  ? 'rgba(0, 0, 0, 0.4)'
-                  : showChickens ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.1)',
-                backdropFilter: 'blur(5px)'
-              }}>
-                <Box sx={{ whiteSpace: 'nowrap' }}>
-                  <Link component={RouterLink} to={'/'}>
-                    <Button
-                      size='large'
-                      color='primary'
-                      startIcon={<Logo height='32px' />}
+      <WebSocketContextProvider>
+        <GameStateContextProvider>
+          <RulesBubble setRulesOpen={setLeftDrawerOpen} />
+          <ChatBubble chatOpen={rightDrawerOpen} setChatOpen={setRightDrawerOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
+          <DualSideDrawer
+            openLeft={leftDrawerOpen}
+            openRight={rightDrawerOpen}
+            setOpenLeft={setLeftDrawerOpen}
+            setOpenRight={setRightDrawerOpen}
+            leftDrawerContent={<RulesDrawerContent />}
+            leftDrawerHeader={(
+              <>
+                <Gavel sx={{ mr: 1 }} />
+                <span>{t('rules')}</span>
+              </>
+            )}
+            rightDrawerContent={(
+              <ChatDrawerContent
+                setLatestReadMessageId={setLatestReadMessageId}
+                chatOpen={rightDrawerOpen}
+              />
+            )}
+            rightDrawerHeader={(
+              <>
+                <Chat sx={{ mr: 1 }} />
+                <span>{t('chat')}</span>
+              </>
+            )}
+          >
+            <header style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '2rem',
+              background: theme.palette.mode === 'dark'
+                ? 'rgba(0, 0, 0, 0.4)'
+                : showChickens ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.1)',
+              backdropFilter: 'blur(5px)'
+            }}>
+              <Box sx={{ whiteSpace: 'nowrap' }}>
+                <Link component={RouterLink} to={'/'}>
+                  <Button
+                    size='large'
+                    color='primary'
+                    startIcon={<Logo height='32px' />}
+                  >
+                    <Typography component="span" sx={{
+                      fontSize: '2rem'
+                    }}
                     >
-                      <Typography component="span" sx={{
-                        fontSize: '2rem'
-                      }}
-                      >
-                        {t('title')}
-                      </Typography>
-                    </Button>
-                  </Link>
-                  <UserSettings />
-                </Box>
-              </header>
-              <Routes>
-                <Route path="/">
-                  <Route index element={<Home />} />
-                  <Route path="game" element={
-                    <Game leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
-                  } />
-                  <Route path="join-game" element={<JoinGame />} />
-                  <Route path="create-game" element={<CreateGame />} />
-                  <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link component={RouterLink} to={'/'}>{t('home')}</Link></Typography>} />
-                </Route>
-              </Routes>
-            </DualSideDrawer>
-          </GameStateContextProvider>
-        </WebSocketContextProvider>
-      </NotificationsContextProvider>
+                      {t('title')}
+                    </Typography>
+                  </Button>
+                </Link>
+                <UserSettings />
+              </Box>
+            </header>
+            <Routes>
+              <Route path="/">
+                <Route index element={<Home />} />
+                <Route path="game" element={
+                  <Game leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
+                } />
+                <Route path="join-game" element={<JoinGame />} />
+                <Route path="create-game" element={<CreateGame />} />
+                <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link component={RouterLink} to={'/'}>{t('home')}</Link></Typography>} />
+              </Route>
+            </Routes>
+          </DualSideDrawer>
+        </GameStateContextProvider>
+      </WebSocketContextProvider>
     </Box>
   )
 }

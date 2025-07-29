@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals'
 import { MaterialThemeContextProvider } from './contexts/MaterialThemeContext'
 import { TranslationContextProvider } from './contexts/TranslationsContext'
 import { UserSettingsContextProvider } from './contexts/UserSettingsContext'
+import { NotificationsContextProvider } from './contexts/NotificationsContext'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,9 +17,11 @@ root.render(
     <BrowserRouter>
       <MaterialThemeContextProvider>
         <TranslationContextProvider>
-          <UserSettingsContextProvider>
-            <App />
-          </UserSettingsContextProvider>
+          <NotificationsContextProvider>
+            <UserSettingsContextProvider>
+              <App />
+            </UserSettingsContextProvider>
+          </NotificationsContextProvider>
         </TranslationContextProvider>
       </MaterialThemeContextProvider>
     </BrowserRouter>

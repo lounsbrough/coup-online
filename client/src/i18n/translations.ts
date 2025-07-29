@@ -1,5 +1,6 @@
 import { Actions, EventMessages, Influences, Responses } from "@shared"
 import { AvailableLanguageCode } from "./availableLanguages"
+import { AlertColor } from "@mui/material"
 
 type TranslationsForString = { [key in AvailableLanguageCode]: string }
 
@@ -14,7 +15,9 @@ type ActionMessages = {
   [Actions.Tax]: TranslationsForString;
 }
 
-export type Translations = ActionMessages & {
+type AlertColorTranslations = { [key in AlertColor]: TranslationsForString }
+
+export type Translations = ActionMessages & AlertColorTranslations & {
   action: TranslationsForString;
   actions: TranslationsForString;
   add: TranslationsForString;
@@ -498,6 +501,14 @@ const translations: Translations = {
     "it-IT": "Effetto",
     "pt-BR": "Efeito",
   },
+  error: {
+    "de-DE": "Fehler",
+    "en-US": "Error",
+    "es-MX": "Error",
+    "fr-FR": "Erreur",
+    "it-IT": "Errore",
+    "pt-BR": "Erro",
+  },
   eventLog: {
     "de-DE": "Ereignisprotokoll",
     "en-US": "Event Log",
@@ -669,7 +680,7 @@ const translations: Translations = {
       "es-MX": "{{primaryPlayer}} ha {{action[[Revivido]]}} una influencia",
       "fr-FR": "{{primaryPlayer}} a {{action[[Réanime]]}} une influence",
       "it-IT": "{{primaryPlayer}} ha {{action[[Rivissuto]]}} un'influenza",
-      "pt-BR": "{{primaryPlayer}} {{action[[Revive]]}} uma influência",
+      "pt-BR": "{{primaryPlayer}} {{action[[Reviveu]]}} uma influência",
     },
     [Actions.Steal]: {
       "de-DE": "{{primaryPlayer}} hat von {{secondaryPlayer}} {{action[[Gestohlen]]}}",
@@ -935,6 +946,14 @@ const translations: Translations = {
     "fr-FR": "Duc",
     "it-IT": "Duca",
     "pt-BR": "Duque",
+  },
+  info: {
+    "de-DE": "Info",
+    "en-US": "Info",
+    "es-MX": "Info",
+    "fr-FR": "Info",
+    "it-IT": "Info",
+    "pt-BR": "Info",
   },
   inviteLinkCopied: {
     "de-DE": "Einladungslink kopiert",
@@ -1448,6 +1467,14 @@ const translations: Translations = {
     "it-IT": "Ruba 2 monete a qualcuno",
     "pt-BR": "Roubar 2 moedas de alguém"
   },
+  success: {
+    "de-DE": "Erfolg",
+    "en-US": "Success",
+    "es-MX": "Éxito",
+    "fr-FR": "Succès",
+    "it-IT": "Successo",
+    "pt-BR": "Sucesso"
+  },
   system: {
     "de-DE": "System",
     "en-US": "System",
@@ -1479,6 +1506,14 @@ const translations: Translations = {
     "fr-FR": "En attente des autres joueurs",
     "it-IT": "In attesa di altri giocatori",
     "pt-BR": "Aguardando outros jogadores"
+  },
+  warning: {
+    "de-DE": "Warnung",
+    "en-US": "Warning",
+    "es-MX": "Advertencia",
+    "fr-FR": "Avertissement",
+    "it-IT": "Avviso",
+    "pt-BR": "Aviso"
   },
   websocketsConnection: {
     "de-DE": "WebSockets-Verbindung",
