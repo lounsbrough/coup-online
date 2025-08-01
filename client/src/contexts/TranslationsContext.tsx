@@ -1,8 +1,7 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react'
 import { Typography, useTheme } from '@mui/material'
-import { Actions, EventMessages, Influences, PublicGameState } from '@shared'
+import { Actions, EventMessages, Influences, PublicGameState, AvailableLanguageCode } from '@shared'
 import { activeLanguageStorageKey } from '../helpers/localStorageKeys'
-import { AvailableLanguageCode } from '../i18n/availableLanguages'
 import translations, { Translations } from '../i18n/translations'
 
 type PlayerVariables = {

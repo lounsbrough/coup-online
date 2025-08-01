@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Typography } from "@mui/material"
+import { AvailableLanguageCode } from '@shared'
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import { AvailableLanguageCode } from "../../i18n/availableLanguages"
 import Skull from "../icons/Skull"
 
 const comments = {
