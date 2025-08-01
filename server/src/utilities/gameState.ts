@@ -1,7 +1,7 @@
 import { rehydrateGameState, isSameState, dehydrateGameState } from '../../../shared/helpers/state'
 import { EventMessage, GameState, DehydratedGameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { shuffle } from './array'
-import { GameMutationInputError } from './errors'
+import { GameMutationInputError, GameNotFoundError } from './errors'
 import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 import { getCurrentTimestamp } from './time'
@@ -14,7 +14,7 @@ export const getGameState = async (
   const compressed = await getValue(roomId.toUpperCase())
 
   if (!compressed) {
-    throw new GameMutationInputError(`Room ${roomId} does not exist`, 404)
+    throw new GameNotFoundError()
   }
 
   const state: DehydratedGameState = JSON.parse(decompressString(compressed))

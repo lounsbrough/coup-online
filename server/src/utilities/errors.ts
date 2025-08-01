@@ -8,3 +8,5 @@ export class GameMutationInputError extends Error {
     this.httpCode = httpCode
   }
 }
+
+export class GameNotFoundError extends Error {}
