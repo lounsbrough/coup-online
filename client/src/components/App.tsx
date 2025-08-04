@@ -52,7 +52,7 @@ function App() {
     }}>
       <WebSocketContextProvider>
         <GameStateContextProvider>
-          <RulesBubble setRulesOpen={setLeftDrawerOpen} />
+          <RulesBubble rulesOpen={leftDrawerOpen} setRulesOpen={setLeftDrawerOpen} />
           <ChatBubble chatOpen={rightDrawerOpen} setChatOpen={setRightDrawerOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
           <DualSideDrawer
             openLeft={leftDrawerOpen}
