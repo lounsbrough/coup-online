@@ -1,8 +1,9 @@
-import { Typography } from "@mui/material"
+import { Box } from "@mui/material"
 import { getWaitingOnPlayers } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { Circle } from "@mui/icons-material"
+import CoupTypography from '../utilities/CoupTypography'
 
 function WaitingOnOtherPlayers() {
   const { gameState } = useGameStateContext()
@@ -14,14 +15,14 @@ function WaitingOnOtherPlayers() {
 
   return (
     <>
-      <Typography variant="h6" my={1} fontWeight="bold">
+      <CoupTypography variant="h6" my={1} fontWeight="bold" addTextShadow>
         {t('waitingOnOtherPlayers')}
-      </Typography>
-      <Typography>
+      </CoupTypography>
+      <Box>
         {getWaitingOnPlayers(gameState).map(({ color }) =>
           <Circle key={color} sx={{ color }} />
         )}
-      </Typography>
+      </Box>
     </>
   )
 }

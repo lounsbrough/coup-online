@@ -1,12 +1,13 @@
 import { ReactNode, useEffect, useRef, useState } from "react"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Button, Grid, Typography, useTheme } from "@mui/material"
+import { Button, Grid, useTheme } from "@mui/material"
 import { Cancel, Check } from "@mui/icons-material"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { useUserSettingsContext } from "../../contexts/UserSettingsContext"
+import CoupTypography from '../utilities/CoupTypography'
 
 function PlayerActionConfirmation({
   message,
@@ -56,7 +57,9 @@ function PlayerActionConfirmation({
 
   return (
     <>
-      <Typography variant="h6" my={1} fontWeight="bold">{message}</Typography>
+      <CoupTypography variant="h6" my={1} fontWeight="bold" addTextShadow>
+        {message}
+      </CoupTypography>
       <Grid container spacing={2} justifyContent="center">
         <Grid>
           <Button

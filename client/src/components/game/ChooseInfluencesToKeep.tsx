@@ -1,11 +1,12 @@
 import { useState } from "react"
-import { Checkbox, Grid, Typography } from "@mui/material"
+import { Checkbox, Grid } from "@mui/material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { PlayerActions } from "@shared"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
+import CoupTypography from '../utilities/CoupTypography'
 
 function ChooseInfluencesToKeep() {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([])
@@ -44,11 +45,11 @@ function ChooseInfluencesToKeep() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+      <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t('chooseInfluencesToKeep', {
           count: influenceCountToKeep
         })}
-      </Typography>
+      </CoupTypography>
       <Grid container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))

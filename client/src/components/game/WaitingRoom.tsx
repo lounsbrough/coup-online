@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Grid, Typography, useTheme } from "@mui/material"
+import { Button, Grid, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
 import { ContentCopy, GroupAdd, PlayArrow } from "@mui/icons-material"
@@ -13,6 +13,7 @@ import AddAiPlayer from "./AddAiPlayer"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { useNavigate } from "react-router"
 import { useNotificationsContext } from "../../contexts/NotificationsContext"
+import CoupTypography from '../utilities/CoupTypography'
 
 function WaitingRoom() {
   const [addAiPlayerDialogOpen, setAddAiPlayerDialogOpen] = useState(false)
@@ -39,9 +40,10 @@ function WaitingRoom() {
           <Players inWaitingRoom />
         </Grid>
       </Grid>
-      <Typography variant="h5" m={3}>
+      <CoupTypography variant="h5" m={3} addTextShadow>
         {t('room')}
-        : <strong>{gameState.roomId}</strong></Typography>
+        : <strong>{gameState.roomId}</strong>
+      </CoupTypography>
       <Grid container direction='column' spacing={2}>
         <Grid>
           <QRCodeSVG
@@ -97,14 +99,14 @@ function WaitingRoom() {
               {(t('startGame'))}
             </Button>
             {gameState.players.length < 2 && (
-              <Typography sx={{ fontStyle: 'italic' }} mt={2}>
+              <CoupTypography sx={{ fontStyle: 'italic' }} mt={2} addTextShadow>
                 {t('addPlayersToStartGame')}
-              </Typography>
+              </CoupTypography>
             )}
             {gameState.players.length === 2 && (
-              <Typography sx={{ fontStyle: 'italic' }} mt={2}>
+              <CoupTypography sx={{ fontStyle: 'italic' }} mt={2} addTextShadow>
                 {t('startingPlayerBeginsWith1Coin')}
-              </Typography>
+              </CoupTypography>
             )}
           </Grid>
         )}

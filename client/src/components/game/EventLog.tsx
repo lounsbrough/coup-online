@@ -1,7 +1,8 @@
-import { Box, Typography, useTheme } from "@mui/material"
+import { Box, useTheme } from "@mui/material"
 import { useEffect, useRef } from "react"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import CoupTypography from '../utilities/CoupTypography'
 
 function EventLog() {
   const logBox = useRef<HTMLElement>(null)
@@ -22,9 +23,9 @@ function EventLog() {
 
   return (
     <>
-      <Typography sx={{ fontWeight: 700 }}>
+      <CoupTypography sx={{ fontWeight: 700 }} addTextShadow>
         {t('eventLog')}
-      </Typography>
+      </CoupTypography>
       <Box ref={logBox} sx={{
         width: '100%',
         maxHeight: '25dvh',
@@ -33,7 +34,7 @@ function EventLog() {
       }}>
         {gameState?.eventLogs.map((log, logIndex) => {
           return (
-            <Typography key={logIndex}>
+            <CoupTypography key={logIndex} addTextShadow>
               {t(log.event, {
                 action: log.action,
                 primaryPlayer: log.primaryPlayer,
@@ -41,7 +42,7 @@ function EventLog() {
                 primaryInfluence: log.influence,
                 gameState
               })}
-            </Typography>
+            </CoupTypography>
           )
         })}
       </Box>

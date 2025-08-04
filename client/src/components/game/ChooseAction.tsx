@@ -4,7 +4,7 @@ import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
-import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import CoupTypography from "../utilities/CoupTypography"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
 
@@ -43,14 +43,15 @@ function ChooseAction() {
   if (selectedAction) {
     return (
       <>
-        <TypographyWithBackButton
+        <CoupTypography
           my={1}
           variant="h6"
           fontWeight="bold"
           onBack={() => { setSelectedAction(undefined) }}
+          addTextShadow
         >
           {t('chooseATarget')}
-        </TypographyWithBackButton>
+        </CoupTypography>
         <Grid container spacing={2} justifyContent="center">
           {gameState.players.map((player) => {
             if (player.name === gameState.selfPlayer?.name || !player.influenceCount
@@ -84,9 +85,9 @@ function ChooseAction() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+      <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t('chooseAnAction')}
-      </Typography>
+      </CoupTypography>
       <Grid container spacing={2} justifyContent="center">
         {Object.entries(ActionAttributes)
           .sort((a, b) => a[0].localeCompare(b[0]))
