@@ -1,8 +1,9 @@
-import { Button, Grid, Typography } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import { useNavigate } from "react-router"
 import GitHubLinks from "../GitHubLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { AddCircle, GroupAdd } from "@mui/icons-material"
+import CoupTypography from '../utilities/CoupTypography'
 
 function Home() {
   const navigate = useNavigate()
@@ -10,12 +11,12 @@ function Home() {
 
   return (
     <>
-      <Typography variant="h4" sx={{ m: 5 }}>
+      <CoupTypography variant="h4" sx={{ m: 5 }} addTextShadow>
         {t('welcomeToCoup')}
-      </Typography>
-      <Typography variant="h5" sx={{ m: 5 }}>
+      </CoupTypography>
+      <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('briefDescriptionOfCoup')}
-      </Typography>
+      </CoupTypography>
       <Grid>
         <Button
           type="submit" sx={{ mt: 5 }}

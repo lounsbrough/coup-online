@@ -60,6 +60,8 @@ export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId,
 
   const fabBackground = getDiscreteGradient(unreadMessagePlayerColors)
 
+  if (chatOpen) return null
+
   return (
     <Tooltip title={t('chat')}>
       <Fab

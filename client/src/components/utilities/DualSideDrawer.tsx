@@ -79,6 +79,7 @@ const SideDrawer = ({ side, open, setOpen, desktopDrawerWidth, drawerContent, dr
       slotProps={{
         paper: {
           sx: {
+            background: theme.isLargeScreen ? 'rgba(0, 0, 0, 0.5)' : undefined,
             width: theme.isLargeScreen ? (open ? desktopDrawerWidth : 0) : undefined,
             boxSizing: 'border-box',
             overflowX: 'hidden',

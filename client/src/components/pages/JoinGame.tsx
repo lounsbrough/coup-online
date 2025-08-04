@@ -7,6 +7,7 @@ import { PlayerActions } from '@shared'
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import CoupTypography from '../utilities/CoupTypography'
 
 function JoinGame() {
   const [searchParams] = useSearchParams()
@@ -40,9 +41,9 @@ function JoinGame() {
           {t('joinExistingGame')}
         </Typography>
       </Breadcrumbs>
-      <Typography variant="h5" sx={{ m: 5 }}>
+      <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('joinExistingGame')}
-      </Typography>
+      </CoupTypography>
       <form
         ref={formRef}
         noValidate

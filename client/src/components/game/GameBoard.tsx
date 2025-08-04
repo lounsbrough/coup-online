@@ -11,6 +11,7 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import CardDeck from "../icons/CardDeck"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import Forfeit from "./Forfeit"
+import CoupTypography from '../utilities/CoupTypography'
 
 interface GameBoardProps {
   leftDrawerOpen: boolean
@@ -67,12 +68,12 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
         )}
         {turnPlayer && !gameIsOver && (
           <Box my={2}>
-            <Typography variant="h4">
+            <CoupTypography variant="h4" addTextShadow>
               {t('playerTurn', {
                 primaryPlayer: gameState.turnPlayer,
                 gameState
               })}
-            </Typography>
+            </CoupTypography>
           </Box>
         )}
         {!!gameState?.selfPlayer?.influences?.length && (
@@ -120,12 +121,15 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
                   })}
                 </Typography>
               }>
-              <Typography
+              <CoupTypography
                 display='flex'
                 alignItems='center'
                 component='span'
                 fontSize='smaller'
-              >{gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} /></Typography>
+                addTextShadow
+              >
+                {gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} />
+              </CoupTypography>
             </Tooltip>
           </Grid>
           <Grid size={12}>

@@ -1,7 +1,8 @@
-import { Box, Typography } from "@mui/material"
+import { Box } from "@mui/material"
 import { PublicPlayer } from '@shared'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import CoupTypography from '../utilities/CoupTypography'
 
 function Victory({ player }: { player: PublicPlayer }) {
   const { gameState } = useGameStateContext()
@@ -9,10 +10,12 @@ function Victory({ player }: { player: PublicPlayer }) {
 
   return (
     <Box>
-      <Typography variant="h1">{t('playerWins', {
-        primaryPlayer: player.name,
-        gameState
-      })}</Typography>
+      <CoupTypography variant="h1" addTextShadow>
+        {t('playerWins', {
+          primaryPlayer: player.name,
+          gameState
+        })}
+      </CoupTypography>
     </Box>
   )
 }

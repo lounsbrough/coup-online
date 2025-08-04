@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
-import { Typography } from "@mui/material"
 import { AvailableLanguageCode } from '@shared'
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import Skull from "../icons/Skull"
+import CoupTypography from '../utilities/CoupTypography'
 
 const comments = {
   'en-US': [
@@ -146,8 +146,8 @@ function SnarkyDeadComment() {
 
   return (
     <>
-      <Typography variant="h3"><Skull fontSize="large" /></Typography>
-      <Typography variant="h4">{comment}</Typography>
+      <CoupTypography variant="h3"><Skull fontSize="large" /></CoupTypography>
+      <CoupTypography variant="h4" addTextShadow>{comment}</CoupTypography>
     </>
   )
 }
