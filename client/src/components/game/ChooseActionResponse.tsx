@@ -1,10 +1,10 @@
-import { Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
-import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import CoupTypography from "../utilities/CoupTypography"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
 import getResponseIcon from "../../helpers/getResponseIcon"
@@ -44,14 +44,15 @@ function ChooseActionResponse() {
   if (selectedResponse) {
     return (
       <>
-        <TypographyWithBackButton
+        <CoupTypography
           my={1}
           variant="h6"
           fontWeight="bold"
           onBack={() => { setSelectedResponse(undefined) }}
+          addTextShadow
         >
           {t('claimAnInfluence')}
-        </TypographyWithBackButton>
+        </CoupTypography>
         <Grid container spacing={2} justifyContent="center">
           {Object.entries(InfluenceAttributes)
             .sort((a, b) => a[0].localeCompare(b[0]))
@@ -76,14 +77,14 @@ function ChooseActionResponse() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+      <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t(EventMessages.ActionPending, {
           action: gameState.pendingAction.action,
           gameState,
           primaryPlayer: gameState.turnPlayer!,
           secondaryPlayer: gameState.pendingAction.targetPlayer
         })}
-      </Typography>
+      </CoupTypography>
       <Grid container spacing={2} justifyContent="center">
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))

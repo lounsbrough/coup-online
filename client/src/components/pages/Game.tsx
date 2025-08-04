@@ -1,10 +1,11 @@
-import { Alert, Box, Button, CircularProgress, Grid, Link, Typography } from "@mui/material"
+import { Alert, Box, Button, CircularProgress, Grid, Link } from "@mui/material"
 import GameBoard from "../game/GameBoard"
 import WaitingRoom from "../game/WaitingRoom"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Link as RouterLink, useSearchParams } from "react-router"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { Visibility } from "@mui/icons-material"
+import CoupTypography from '../utilities/CoupTypography'
 
 interface GameProps {
   leftDrawerOpen: boolean
@@ -29,9 +30,9 @@ function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
     return (
       <Grid mt={2} container spacing={2} direction="column">
         <Grid>
-          <Typography variant="h6" my={3}>
+          <CoupTypography variant="h6" my={3} addTextShadow>
             {t('gameNotFound')}
-          </Typography>
+          </CoupTypography>
         </Grid>
         <Grid>
           <Link component={RouterLink} to={`/`}>

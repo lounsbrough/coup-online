@@ -8,6 +8,7 @@ import { GameSettings, PlayerActions, DehydratedPublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { allowReviveStorageKey, eventLogRetentionTurnsStorageKey } from "../../helpers/localStorageKeys"
+import CoupTypography from '../utilities/CoupTypography'
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
@@ -39,9 +40,9 @@ function CreateGame() {
           {t('createNewGame')}
         </Typography>
       </Breadcrumbs>
-      <Typography variant="h5" sx={{ m: 5 }}>
+      <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('createNewGame')}
-      </Typography>
+      </CoupTypography>
       <form
         onSubmit={(event) => {
           event.preventDefault()
@@ -73,10 +74,10 @@ function CreateGame() {
           </Grid>
           <Grid sx={{ maxWidth: '300px', width: '90%' }}>
             <Box mt={6}>
-              <Typography mt={2}>
+              <CoupTypography mt={2} addTextShadow>
                 {t('eventLogRetentionTurns')}
                 {`: ${eventLogRetentionTurns}`}
-              </Typography>
+              </CoupTypography>
               <Slider
                 data-testid='eventLogRetentionTurnsInput'
                 step={1}
@@ -93,9 +94,9 @@ function CreateGame() {
           </Grid>
           <Grid sx={{ maxWidth: '300px', width: '90%' }}>
             <Box mt={2}>
-              <Typography component="span" mt={2}>
+              <CoupTypography component="span" mt={2} addTextShadow>
                 {t('allowRevive')}:
-              </Typography>
+              </CoupTypography>
               <Switch
                 checked={allowRevive}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
