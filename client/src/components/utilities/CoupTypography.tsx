@@ -12,6 +12,17 @@ function CoupTypography({
   onBack?: () => void
   addTextShadow?: boolean
 }) {
+  const styledTypography = (
+    <Typography
+      {...props}
+      sx={addTextShadow
+        ? { ...props.sx, textShadow: '2px 2px 2px black' }
+        : (props.sx ?? {})}
+    >
+      {children}
+    </Typography>
+  )
+
   if (onBack) {
     return (
       <Grid container alignItems="center" justifyContent="center">
@@ -19,15 +30,7 @@ function CoupTypography({
           onClick={() => { onBack() }}
           sx={backButtonSx}
         ><ArrowBack /></IconButton>
-        <Typography
-          {...props}
-          sx={addTextShadow
-            ? { ...props.sx, textShadow: '2px 2px 2px black' }
-            : (props.sx ?? {})
-          }
-        >
-          {children}
-        </Typography>
+        {styledTypography}
         <IconButton
           sx={{ ...backButtonSx, visibility: 'hidden' }}
         ><ArrowBack /></IconButton>
@@ -35,17 +38,7 @@ function CoupTypography({
     )
   }
 
-  return (
-    <Typography
-      {...props}
-      sx={addTextShadow
-        ? { ...props.sx, textShadow: '2px 2px 2px black' }
-        : (props.sx ?? {})
-      }
-    >
-      {children}
-    </Typography>
-  )
+  return styledTypography
 }
 
 export default CoupTypography
