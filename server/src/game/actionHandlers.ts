@@ -7,6 +7,8 @@ import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewG
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
+import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
+import { translate } from '../i18n/translations'
 
 const getPlayerInRoom = (gameState: GameState, playerId: string) => {
   const player = gameState.players.find(({ id }) => id === playerId)
@@ -37,10 +39,11 @@ export const createGameHandler = async ({ playerId, playerName, settings }: {
   return { roomId, playerId }
 }
 
-export const joinGameHandler = async ({ roomId, playerId, playerName }: {
+export const joinGameHandler = async ({ roomId, playerId, playerName, language }: {
   roomId: string
   playerId: string
   playerName: string
+  language: AvailableLanguageCode
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -50,12 +53,22 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
     if (player.name.toUpperCase() !== playerName.toUpperCase()) {
       await mutateGameState(gameState, (state) => {
         if (state.isStarted) {
-          throw new GameMutationInputError(`You can join the game as "${player.name}"`)
+          throw new GameMutationInputError(
+            translate({
+              key: 'joinAsPlayerName',
+              language,
+              variables: { playerName: player.name }
+            })
+          )
         }
 
         const oldPlayer = state.players.find((player) => player.id === playerId)
         if (!oldPlayer) {
-          throw new GameMutationInputError('Unable to find player')
+          throw new GameMutationInputError(translate({
+            key: 'unableToFindItem',
+            language,
+            variables: { item: 'player' }
+          }))
         }
         state.players = [
           ...state.players.filter(({ id }) => id !== playerId),
@@ -66,7 +79,11 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
   } else {
     await mutateGameState(gameState, (state) => {
       if (state.players.length >= MAX_PLAYER_COUNT) {
-        throw new GameMutationInputError(`Room ${roomId} is full`)
+        throw new GameMutationInputError(translate({
+          key: 'roomIsFull',
+          language,
+          variables: { roomId }
+        }))
       }
 
       if (state.isStarted) {

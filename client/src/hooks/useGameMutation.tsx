@@ -5,6 +5,7 @@ import { useGameStateContext } from "../contexts/GameStateContext"
 import useSWRMutation from "swr/mutation"
 import { getBaseUrl } from "../helpers/api"
 import { useNotificationsContext } from "../contexts/NotificationsContext"
+import { useTranslationContext } from '../contexts/TranslationsContext'
 
 function useGameMutation<ParamsType>({ action, callback }: {
   action: PlayerActions,
@@ -16,6 +17,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
   const { socket, isConnected } = useWebSocketContext()
   const { setDehydratedGameState } = useGameStateContext()
   const { showNotification } = useNotificationsContext()
+  const { language } = useTranslationContext()
 
   const { trigger: triggerSwr, isMutating: isMutatingSwr } = useSWRMutation(`${getBaseUrl()}/${action}`, (async (url: string, { arg }: { arg: ParamsType }) => {
     setMutationError('')
@@ -44,18 +46,21 @@ function useGameMutation<ParamsType>({ action, callback }: {
       noSocketCallbackTimeout.current = setTimeout(() => {
         setIsMutatingSocket(false)
       }, 5000)
-      socket.emit(action, params, ({ error, gameState }: { error: string, gameState: DehydratedPublicGameState }) => {
-        clearTimeout(noSocketCallbackTimeout.current)
-        setIsMutatingSocket(false)
-        if (error) {
-          setMutationError(error)
-        } else {
-          callback?.(gameState)
-          setDehydratedGameState(gameState)
-        }
-      })
+      socket.emit(
+        action,
+        { ...params, language },
+        ({ error, gameState }: { error: string, gameState: DehydratedPublicGameState }) => {
+          clearTimeout(noSocketCallbackTimeout.current)
+          setIsMutatingSocket(false)
+          if (error) {
+            setMutationError(error)
+          } else {
+            callback?.(gameState)
+            setDehydratedGameState(gameState)
+          }
+        })
     }
-    : triggerSwr, [socket, isConnected, action, callback, triggerSwr, setDehydratedGameState])
+    : triggerSwr, [socket, isConnected, action, language, callback, triggerSwr, setDehydratedGameState])
 
   useEffect(() => {
     if (mutationError) {
