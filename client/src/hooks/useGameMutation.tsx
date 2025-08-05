@@ -24,7 +24,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
     return fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(arg)
+      body: JSON.stringify({ ...arg, language })
     }).then(async (res) => {
       if (res.ok) {
         const { gameState } = await res.json()
