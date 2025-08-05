@@ -38,12 +38,12 @@ export const translate = ({ key, language, variables }: {
       'pt-BR': "Sala não encontrada"
     },
     joinAsPlayerName: {
-      'de-DE': 'Du kannst dem Spiel als {{playerName}} beitreten',
-      'en-US': 'You can join the game as {{playerName}}',
-      'es-MX': 'Puedes unirte al juego como {{playerName}}',
-      'fr-FR': 'Vous pouvez rejoindre le jeu en tant que {{playerName}}',
-      'it-IT': 'Puoi unirti al gioco come {{playerName}}',
-      'pt-BR': 'Você pode entrar no jogo como {{playerName}}'
+      'de-DE': 'Du kannst dem Spiel als "{{playerName}}" beitreten',
+      'en-US': 'You can join the game as "{{playerName}}"',
+      'es-MX': 'Puedes unirte al juego como "{{playerName}}"',
+      'fr-FR': 'Vous pouvez rejoindre le jeu en tant que "{{playerName}}"',
+      'it-IT': 'Puoi unirti al gioco come "{{playerName}}"',
+      'pt-BR': 'Você pode entrar no jogo como "{{playerName}}"'
     },
     unableToFindItem: {
       'de-DE': 'Element {{item}} nicht gefunden',
