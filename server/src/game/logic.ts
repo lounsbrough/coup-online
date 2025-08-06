@@ -2,14 +2,14 @@ import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, Influences, Player, Responses } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
 import { createDeckForPlayerCount } from "../utilities/deck"
-import { GameMutationInputError } from "../utilities/errors"
+import { UnableToDetermineNextPlayerTurnError, UnableToFindPendingActionError, UnableToFindPlayerError } from "../utilities/errors"
 import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
   const player = state.players.find(({ name }) => name === playerName)
 
   if (!player) {
-    throw new GameMutationInputError('Player not found')
+    throw new UnableToFindPlayerError()
   }
 
   removeClaimedInfluence(player, influence)
@@ -45,7 +45,7 @@ export const promptPlayerToLoseInfluence = (
   const player = state.players.find(({ name }) => name === playerName)
 
   if (!player) {
-    throw new GameMutationInputError('Player not found')
+    throw new UnableToFindPlayerError()
   }
 
   const pendingInfluencesToKill = state.pendingInfluenceLoss[playerName]
@@ -67,14 +67,14 @@ export const promptPlayerToLoseInfluence = (
 
 export const processPendingAction = (state: GameState) => {
   if (!state.pendingAction) {
-    throw new GameMutationInputError('Pending Action not found')
+    throw new UnableToFindPendingActionError()
   }
 
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction!.targetPlayer)
 
   if (!actionPlayer) {
-    throw new GameMutationInputError('Action Player not found')
+    throw new UnableToFindPlayerError()
   }
 
   logEvent(state, {
@@ -86,7 +86,7 @@ export const processPendingAction = (state: GameState) => {
 
   if (state.pendingAction.action === Actions.Assassinate) {
     if (!targetPlayer) {
-      throw new GameMutationInputError('Target Player not found')
+      throw new UnableToFindPlayerError()
     }
 
     actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired!
@@ -103,7 +103,7 @@ export const processPendingAction = (state: GameState) => {
     actionPlayer.coins += 2
   } else if (state.pendingAction.action === Actions.Steal) {
     if (!targetPlayer) {
-      throw new GameMutationInputError('Target Player not found')
+      throw new UnableToFindPlayerError()
     }
 
     holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Steal] })
@@ -233,7 +233,7 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
   const player = state.players.find(({ name }) => name === playerName)
 
   if (!player) {
-    throw new GameMutationInputError('Player not found')
+    throw new UnableToFindPlayerError()
   }
 
   removeClaimedInfluence(player, influence)
@@ -258,7 +258,7 @@ export const moveTurnToNextPlayer = (state: GameState) => {
   let nextIndex = currentIndex + 1
   while (!state.players[nextIndex % state.players.length].influences.length) {
     if (nextIndex % state.players.length === currentIndex) {
-      throw new GameMutationInputError('Unable to determine next player turn')
+      throw new UnableToDetermineNextPlayerTurnError()
     }
 
     nextIndex++

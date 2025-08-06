@@ -5,12 +5,11 @@ import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, DehydratedPublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, setChatMessageDeletedHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler, setEmojiOnChatMessageHandler, forfeitGameHandler } from './src/game/actionHandlers'
-import { GameMutationInputError, GameNotFoundError } from './src/utilities/errors'
+import { GameMutationInputError, WrongPlayerIdOnSocketError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
 import { dehydratePublicGameState } from '../shared/helpers/state'
-import { translate } from './src/i18n/translations'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
 
 export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
@@ -501,7 +500,7 @@ io.on('connection', (socket) => {
             socket.data.playerId = playerId
           }
           if (playerId !== socket.data.playerId) {
-            throw new GameMutationInputError('playerId does not match socket')
+            throw new WrongPlayerIdOnSocketError()
           }
           const roomPrefix = 'coup-game-'
           const socketRoom = `${roomPrefix}${roomId}`
@@ -519,12 +518,12 @@ io.on('connection', (socket) => {
               if (isCallerSocket) callback?.({ gameState: publicGameState })
             } catch (error) {
               console.error(error, { event, params })
-              if (event === PlayerActions.checkAiMove) {
-                return
-              }
+              if (event === PlayerActions.checkAiMove) return
+
               if (error instanceof GameMutationInputError) {
-                pushToSocket.emit(ServerEvents.error, error.message)
-                if (isCallerSocket) callback?.({ error: error.message })
+                const message = error.getMessage(params.language)
+                pushToSocket.emit(ServerEvents.error, message)
+                if (isCallerSocket) callback?.({ error: message })
               } else {
                 pushToSocket.emit(ServerEvents.error, genericErrorMessage)
                 if (isCallerSocket) callback?.({ error: genericErrorMessage })
@@ -547,16 +546,12 @@ io.on('connection', (socket) => {
           }
         } catch (error) {
           console.error(error, { event, params })
-          if (event === PlayerActions.checkAiMove) {
-            return
-          }
-          if (error instanceof GameNotFoundError) {
-            const message = translate({ key: 'roomNotFound', language: params.language })
+          if (event === PlayerActions.checkAiMove) return
+
+          if (error instanceof GameMutationInputError) {
+            const message = error.getMessage(params.language)
             socket.emit(ServerEvents.error, message)
             callback?.({ error: message })
-          } else if (error instanceof GameMutationInputError) {
-            socket.emit(ServerEvents.error, error.message)
-            callback?.({ error: error.message })
           } else {
             socket.emit(ServerEvents.error, genericErrorMessage)
             callback?.({ error: genericErrorMessage })
@@ -580,16 +575,11 @@ const responseHandler = <T>(
     res.status(200).json({ gameState: publicGameState })
   } catch (error) {
     console.error(error, { event, props })
+    if (event === PlayerActions.checkAiMove) return
 
-    if (event === PlayerActions.checkAiMove) {
-      return
-    }
-
-    if (error instanceof GameNotFoundError) {
-      const message = translate({ key: 'roomNotFound', language: props.language })
-      res.status(404).send({ error: message })
-    } else if (error instanceof GameMutationInputError) {
-      res.status(error.httpCode).send({ error: error.message })
+    if (error instanceof GameMutationInputError) {
+      const message = error.getMessage(props.language)
+      res.status(error.httpCode || 400).send({ error: message })
     } else {
       res.status(500).send({ error: genericErrorMessage })
     }
