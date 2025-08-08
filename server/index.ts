@@ -11,6 +11,7 @@ import { getGameState, getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
 import { dehydratePublicGameState } from '../shared/helpers/state'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
+import { translate } from './src/i18n/translations'
 
 export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
 
@@ -50,7 +51,7 @@ const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 
     const result = schema.validate(req[requestProperty], { abortEarly: false })
     if (result.error) {
       res.status(400).json({
-        error: result.error.details.map(({ message }) => message).join(', ')
+        error: translate({ key: 'invalidUserRequest', language: req[requestProperty].language })
       })
       return
     }
@@ -490,7 +491,7 @@ io.on('connection', (socket) => {
       const result = joiSchema.validate(params, { abortEarly: false })
 
       if (result.error) {
-        const error = result.error.details.map(({ message }) => message).join(', ')
+        const error = translate({ key: 'invalidUserRequest', language: params.language })
         socket.emit(ServerEvents.error, error)
         callback?.({ error })
       } else {

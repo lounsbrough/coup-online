@@ -2,7 +2,7 @@ import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, Influences, Player, Responses } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
 import { createDeckForPlayerCount } from "../utilities/deck"
-import { UnableToDetermineNextPlayerTurnError, UnableToFindPendingActionError, UnableToFindPlayerError } from "../utilities/errors"
+import { ActionNotCurrentlyAllowedError, UnableToDetermineNextPlayerTurnError, UnableToFindPlayerError } from "../utilities/errors"
 import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
@@ -67,7 +67,7 @@ export const promptPlayerToLoseInfluence = (
 
 export const processPendingAction = (state: GameState) => {
   if (!state.pendingAction) {
-    throw new UnableToFindPendingActionError()
+    throw new ActionNotCurrentlyAllowedError()
   }
 
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)

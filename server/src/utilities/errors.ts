@@ -4,10 +4,77 @@ import { translate } from '../i18n/translations'
 export class GameMutationInputError extends Error {
   getMessage: (language: AvailableLanguageCode) => string
   httpCode?: number
+}
+
+export class ActionNotChallengeableError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
 
   constructor() {
     super()
-    throw new Error("Do not instantiate GameMutationInputError directly")
+    this.getMessage = (language) => translate({
+      key: 'actionNotChallengeable',
+      language
+    })
+  }
+}
+
+export class ActionNotCurrentlyAllowedError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'actionNotCurrentlyAllowed',
+      language
+    })
+  }
+}
+
+export class BlockMayNotBeBlockedError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'blockMayNotBeBlocked',
+      language
+    })
+  }
+}
+
+export class ClaimedInfluenceAlreadyConfirmedError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'claimedInfluenceAlreadyConfirmed',
+      language
+    })
+  }
+}
+
+export class ClaimedInfluenceInvalidError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'claimedInfluenceInvalid',
+      language
+    })
+  }
+}
+
+export class ClaimedInfluenceRequiredError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'claimedInfluenceRequired',
+      language
+    })
   }
 }
 
@@ -157,13 +224,37 @@ export class InvalidTurnPlayerError extends GameMutationInputError {
   }
 }
 
-export class PlayerDeadError extends GameMutationInputError {
+export class MessageDoesNotExistError extends GameMutationInputError {
   getMessage: (language: AvailableLanguageCode) => string
 
   constructor() {
     super()
     this.getMessage = (language) => translate({
-      key: 'youAreDead',
+      key: 'messageDoesNotExist',
+      language
+    })
+  }
+}
+
+export class MessageIsNotYoursError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'messageIsNotYours',
+      language
+    })
+  }
+}
+
+export class MissingInfluenceError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'missingInfluence',
       language
     })
   }
@@ -256,6 +347,18 @@ export class RoomNotFoundError extends GameMutationInputError {
   }
 }
 
+export class TargetPlayerIsSelfError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'targetPlayerIsSelf',
+      language
+    })
+  }
+}
+
 export class StateChangedSinceValidationError extends GameMutationInputError {
   getMessage: (language: AvailableLanguageCode) => string
 
@@ -304,18 +407,6 @@ export class UnableToDetermineNextPlayerTurnError extends GameMutationInputError
   }
 }
 
-export class UnableToFindPendingActionError extends GameMutationInputError {
-  getMessage: (language: AvailableLanguageCode) => string
-
-  constructor() {
-    super()
-    this.getMessage = (language) => translate({
-      key: 'unableToFindPendingAction',
-      language
-    })
-  }
-}
-
 export class UnableToFindPlayerError extends GameMutationInputError {
   getMessage: (language: AvailableLanguageCode) => string
 
@@ -347,6 +438,18 @@ export class WrongPlayerIdOnSocketError extends GameMutationInputError {
     super()
     this.getMessage = (language) => translate({
       key: 'wrongPlayerIdOnSocket',
+      language
+    })
+  }
+}
+
+export class YouAreDeadError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'youAreDead',
       language
     })
   }

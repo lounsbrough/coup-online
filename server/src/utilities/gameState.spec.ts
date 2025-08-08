@@ -7,6 +7,7 @@ import { compressString, decompressString } from "./compression"
 import { getCurrentTimestamp } from "./time"
 import { dehydrateGameState } from "../../../shared/helpers/state"
 import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
+import { EveryonePassedWithPendingDecisionError, IncorrectTotalCardCountError, InvalidPlayerCountError, PlayersMustHave2InfluencesError } from './errors'
 
 jest.mock("./storage")
 jest.mock("./compression")
@@ -206,7 +207,7 @@ describe('gameState', () => {
     it.each([
       {
         mutation: (state: GameState) => { state.players.length = 0 },
-        error: `Game state must always have 1 to ${MAX_PLAYER_COUNT} players`
+        error: InvalidPlayerCountError
       },
       {
         mutation: (state: GameState) => {
@@ -214,7 +215,7 @@ describe('gameState', () => {
           state.deck = createDeckForPlayerCount(MAX_PLAYER_COUNT)
           state.players = getRandomPlayers(state, playerCount)
         },
-        error: `Game state must always have 1 to ${MAX_PLAYER_COUNT} players`
+        error: InvalidPlayerCountError
       },
       {
         mutation: (state: GameState) => {
@@ -222,11 +223,11 @@ describe('gameState', () => {
           state.players[0].influences.push(...[drawCardFromDeck(state), drawCardFromDeck(state)])
           state.pendingInfluenceLoss[state.players[0].name] = [{ putBackInDeck: true }]
         },
-        error: "Players must have exactly 2 influences"
+        error: PlayersMustHave2InfluencesError
       },
       {
         mutation: (state: GameState) => { state.deck.splice(0, 1) },
-        error: "Incorrect total card count in game"
+        error: IncorrectTotalCardCountError
       },
       {
         mutation: (state: GameState) => {
@@ -236,7 +237,7 @@ describe('gameState', () => {
             claimConfirmed: false
           }
         },
-        error: "Everyone has passed but the action is still pending"
+        error: EveryonePassedWithPendingDecisionError
       },
       {
         mutation: (state: GameState) => {
@@ -246,7 +247,7 @@ describe('gameState', () => {
             claimedInfluence: chance.pickone(Object.values(Influences))
           }
         },
-        error: "Everyone has passed but the block is still pending"
+        error: EveryonePassedWithPendingDecisionError
       }
     ])('should throw $error', async ({ mutation, error }) => {
       const gameState = getRandomGameState()

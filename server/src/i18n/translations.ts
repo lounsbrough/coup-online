@@ -4,6 +4,54 @@ type TranslationsForString = { [key in AvailableLanguageCode]: string }
 type AllTranslations = { [key: string]: TranslationsForString }
 
 const translations = {
+  actionNotChallengeable: {
+    'de-DE': 'Diese Aktion kann nicht angefochten werden',
+    'en-US': 'This action cannot be challenged',
+    'es-MX': 'Esta acción no se puede impugnar',
+    'fr-FR': 'Cette action ne peut pas être contestée',
+    'it-IT': 'Questa azione non può essere contestata',
+    'pt-BR': 'Esta ação não pode ser contestada'
+  },
+  actionNotCurrentlyAllowed: {
+    'de-DE': 'Diese Aktion ist gerade nicht erlaubt',
+    'en-US': 'You can\'t take this action right now',
+    'es-MX': 'No puedes tomar esta acción en este momento',
+    'fr-FR': 'Vous ne pouvez pas effectuer cette action pour le moment',
+    'it-IT': 'Non puoi eseguire questa azione in questo momento',
+    'pt-BR': 'Você não pode realizar esta ação no momento'
+  },
+  blockMayNotBeBlocked: {
+    'de-DE': 'Du kannst einen Block nicht blockieren',
+    'en-US': 'You can\'t block a block',
+    'es-MX': 'No puedes bloquear un bloqueo',
+    'fr-FR': 'Vous ne pouvez pas bloquer un bloc',
+    'it-IT': 'Non puoi bloccare un blocco',
+    'pt-BR': 'Você não pode bloquear um bloqueio'
+  },
+  claimedInfluenceAlreadyConfirmed: {
+    'de-DE': 'Der beanspruchte Einfluss wurde bereits bestätigt',
+    'en-US': 'Claimed influence has already been confirmed',
+    'es-MX': 'La influencia reclamada ya ha sido confirmada',
+    'fr-FR': 'L\'influence revendiquée a déjà été confirmée',
+    'it-IT': 'L\'influenza rivendicata è già stata confermata',
+    'pt-BR': 'A influência reivindicada já foi confirmada'
+  },
+  claimedInfluenceInvalid: {
+    'de-DE': 'Der beanspruchte Einfluss ist ungültig',
+    'en-US': 'Claimed influence is invalid',
+    'es-MX': 'La influencia reclamada es inválida',
+    'fr-FR': 'L\'influence revendiquée est invalide',
+    'it-IT': 'L\'influenza rivendicata è invalida',
+    'pt-BR': 'A influência reivindicada é inválida'
+  },
+  claimedInfluenceRequired: {
+    'de-DE': 'Der beanspruchte Einfluss ist erforderlich',
+    'en-US': 'Claimed influence is required',
+    'es-MX': 'Se requiere influencia reclamada',
+    'fr-FR': 'L\'influence revendiquée est requise',
+    'it-IT': 'L\'influenza rivendicata è necessaria',
+    'pt-BR': 'A influência reivindicada é necessária'
+  },
   deckIsEmpty: {
     'de-DE': 'Das Deck ist leer',
     'en-US': 'Deck is empty',
@@ -92,6 +140,14 @@ const translations = {
     'it-IT': 'Giocatore di turno non valido',
     'pt-BR': 'Jogador de turno inválido'
   },
+  invalidUserRequest: {
+    'de-DE': 'Ungültige Benutzeranfrage',
+    'en-US': 'Invalid user request',
+    'es-MX': 'Solicitud de usuario no válida',
+    'fr-FR': 'Demande d\'utilisateur invalide',
+    'it-IT': 'Richiesta utente non valida',
+    'pt-BR': 'Solicitação de usuário inválida'
+  },
   joinAsPlayerName: {
     'de-DE': 'Du kannst dem Spiel als "{{playerName}}" beitreten',
     'en-US': 'You can join the game as "{{playerName}}"',
@@ -99,6 +155,30 @@ const translations = {
     'fr-FR': 'Vous pouvez rejoindre le jeu en tant que "{{playerName}}"',
     'it-IT': 'Puoi unirti al gioco come "{{playerName}}"',
     'pt-BR': 'Você pode entrar no jogo como "{{playerName}}"'
+  },
+  messageDoesNotExist: {
+    'de-DE': 'Nachricht existiert nicht',
+    'en-US': 'Message does not exist',
+    'es-MX': 'La mensaje no existe',
+    'fr-FR': 'Le message n\'existe pas',
+    'it-IT': 'Il messaggio non esiste',
+    'pt-BR': 'A mensagem não existe'
+  },
+  messageIsNotYours: {
+    'de-DE': 'Die Nachricht gehört dir nicht',
+    'en-US': 'Message is not yours',
+    'es-MX': 'El mensaje no es tuyo',
+    'fr-FR': 'Le message ne vous appartient pas',
+    'it-IT': 'Il messaggio non è tuo',
+    'pt-BR': 'A mensagem não é sua'
+  },
+  missingInfluence: {
+    'de-DE': 'Du hast den erforderlichen Einfluss nicht',
+    'en-US': 'You don\'t have the required influence',
+    'es-MX': 'No tienes la influencia requerida',
+    'fr-FR': 'Vous n\'avez pas l\'influence requise',
+    'it-IT': 'Non hai l\'influenza richiesta',
+    'pt-BR': 'Você não tem a influência necessária'
   },
   noDeadInfluences: {
     'de-DE': 'Keine toten Einflüsse',
@@ -163,6 +243,14 @@ const translations = {
     'fr-FR': 'L\'état a changé depuis la validation',
     'it-IT': 'Lo stato è cambiato dalla convalida',
     'pt-BR': 'O estado mudou desde a validação'
+  },
+  targetPlayerIsSelf: {
+    'de-DE': 'Du kannst dich nicht selbst anvisieren',
+    'en-US': 'You can not target yourself',
+    'es-MX': 'No puedes apuntarte a ti mismo',
+    'fr-FR': 'Vous ne pouvez pas vous cibler vous-même',
+    'it-IT': 'Non puoi mirare a te stesso',
+    'pt-BR': 'Você não pode se mirar'
   },
   targetPlayerNotAllowedForAction: {
     'de-DE': 'Zielspieler für Aktion nicht erlaubt',
