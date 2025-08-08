@@ -178,9 +178,11 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
     notificationsRef.current = notifications
   }, [notifications])
 
-  useEffect(() => () => {
+  const unmountHandler = () => {
     notificationsRef.current.forEach(({ dismissTimeout }) => clearTimeout(dismissTimeout))
-  }, [])
+  }
+
+  useEffect(() => unmountHandler, [])
 
   const contextValue = useMemo<NotificationsContextType>(
     () => ({ notifications, showNotification, removeNotification, playChime }),
