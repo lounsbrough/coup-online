@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo, useRef, useContext, useCallback, ReactNode } from 'react'
+import { createContext, useState, useMemo, useRef, useContext, useCallback, ReactNode, useEffect } from 'react'
 import { Alert, AlertColor, Fade } from '@mui/material'
 import { useTranslationContext } from './TranslationsContext'
 
@@ -172,6 +172,17 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
       }
     })
   }, [dismissNotification])
+
+  const notificationsRef = useRef<Notification[]>(notifications)
+  useEffect(() => {
+    notificationsRef.current = notifications
+  }, [notifications])
+
+  const unmountHandler = () => {
+    notificationsRef.current.forEach(({ dismissTimeout }) => clearTimeout(dismissTimeout))
+  }
+
+  useEffect(() => unmountHandler, [])
 
   const contextValue = useMemo<NotificationsContextType>(
     () => ({ notifications, showNotification, removeNotification, playChime }),
