@@ -51,7 +51,7 @@ const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 
     const result = schema.validate(req[requestProperty], { abortEarly: false })
     if (result.error) {
       res.status(400).json({
-        error: translate({ key: 'invalidUserRequest', language: req[requestProperty].language })
+        error: translate({ key: 'invalidUserRequest', language: req[requestProperty].language ?? AvailableLanguageCode['en-US'] })
       })
       return
     }
@@ -491,7 +491,7 @@ io.on('connection', (socket) => {
       const result = joiSchema.validate(params, { abortEarly: false })
 
       if (result.error) {
-        const error = translate({ key: 'invalidUserRequest', language: params.language })
+        const error = translate({ key: 'invalidUserRequest', language: params.language ?? AvailableLanguageCode['en-US'] })
         socket.emit(ServerEvents.error, error)
         callback?.({ error })
       } else {
