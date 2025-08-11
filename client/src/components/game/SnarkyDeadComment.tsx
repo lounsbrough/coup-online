@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
+import { AvailableLanguageCode } from '@shared'
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import { AvailableLanguageCode } from "../../i18n/availableLanguages"
 import Skull from "../icons/Skull"
 import CoupTypography from '../utilities/CoupTypography'
 

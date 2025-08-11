@@ -1,9 +1,8 @@
 import { useEffect } from "react"
 import { grey } from "@mui/material/colors"
-import { Actions, EventMessages, PublicGameState } from "@shared"
+import { Actions, EventMessages, PublicGameState, AvailableLanguageCode } from "@shared"
 import { TranslationContextProvider, useTranslationContext } from "./TranslationsContext"
 import { render } from '../../tests/utilities/render'
-import { AvailableLanguageCode } from "../i18n/availableLanguages"
 
 const TestTranslationComponent = ({ language }: { language: AvailableLanguageCode }) => {
   const { t, setLanguage } = useTranslationContext()

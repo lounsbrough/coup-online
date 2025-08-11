@@ -5,11 +5,13 @@ import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, DehydratedPublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, setChatMessageDeletedHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler, setEmojiOnChatMessageHandler, forfeitGameHandler } from './src/game/actionHandlers'
-import { GameMutationInputError } from './src/utilities/errors'
+import { GameMutationInputError, WrongPlayerIdOnSocketError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
 import { dehydratePublicGameState } from '../shared/helpers/state'
+import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
+import { translate } from './src/i18n/translations'
 
 export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
 
@@ -20,7 +22,7 @@ type ServerToClientEvents = {
 
 type ClientToServerEvents = {
   [action in PlayerActions]: (
-    params: unknown,
+    params: { language: AvailableLanguageCode } & unknown,
     callback?: (response: DehydratedPublicGameStateOrError) => void
   ) => Promise<void>
 }
@@ -42,13 +44,14 @@ const io = new ioServer<ClientToServerEvents, ServerToClientEvents, InterServerE
 })
 
 const playerNameRule = Joi.string().min(1).max(10).required()
+const languageRule = Joi.string().valid(...Object.values(AvailableLanguageCode)).required()
 
 const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.validate(req[requestProperty], { abortEarly: false })
     if (result.error) {
       res.status(400).json({
-        error: result.error.details.map(({ message }) => message).join(', ')
+        error: translate({ key: 'invalidUserRequest', language: req[requestProperty].language ?? AvailableLanguageCode['en-US'] })
       })
       return
     }
@@ -63,7 +66,7 @@ const eventHandlers: {
     handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean }>
     express: {
       method: 'post' | 'get'
-      parseParams: (req: Request) => unknown
+      parseParams: (req: Request) => { language: AvailableLanguageCode } & unknown
       validator: (schema: Joi.ObjectSchema) => (req: Request, res: Response, next: NextFunction) => void
     }
     joiSchema: Joi.ObjectSchema
@@ -76,13 +79,15 @@ const eventHandlers: {
       parseParams: (req) => {
         const roomId: string = req.query.roomId as string
         const playerId: string = req.query.playerId as string
-        return { roomId, playerId }
+        const language: AvailableLanguageCode = req.query.language as AvailableLanguageCode
+        return { roomId, playerId, language }
       },
       validator: validateExpressQuery
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
-      playerId: Joi.string().required()
+      playerId: Joi.string().required(),
+      language: languageRule
     })
   },
   [PlayerActions.createGame]: {
@@ -93,7 +98,8 @@ const eventHandlers: {
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName
         const settings: GameSettings = req.body.settings
-        return { playerId, playerName, settings }
+        const language: AvailableLanguageCode = req.body.language
+        return { playerId, playerName, settings, language }
       },
       validator: validateExpressBody
     },
@@ -103,7 +109,8 @@ const eventHandlers: {
       settings: Joi.object().keys({
         eventLogRetentionTurns: Joi.number().integer().min(1).max(100).required(),
         allowRevive: Joi.bool().required()
-      }).required()
+      }).required(),
+      language: languageRule
     })
   },
   [PlayerActions.joinGame]: {
@@ -114,14 +121,16 @@ const eventHandlers: {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName.trim()
-        return { roomId, playerId, playerName }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, playerName, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
-      playerName: playerNameRule
+      playerName: playerNameRule,
+      language: languageRule
     })
   },
   [PlayerActions.addAiPlayer]: {
@@ -133,7 +142,8 @@ const eventHandlers: {
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName.trim()
         const personality: AiPersonality | undefined = req.body.personality
-        return { roomId, playerId, playerName, personality }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, playerName, personality, language }
       },
       validator: validateExpressBody
     },
@@ -145,7 +155,8 @@ const eventHandlers: {
         vengefulness: Joi.number().integer().min(0).max(100).required(),
         honesty: Joi.number().integer().min(0).max(100).required(),
         skepticism: Joi.number().integer().min(0).max(100).required()
-      })
+      }),
+      language: languageRule
     })
   },
   [PlayerActions.removeFromGame]: {
@@ -156,14 +167,16 @@ const eventHandlers: {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName.trim()
-        return { roomId, playerId, playerName }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, playerName, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
-      playerName: playerNameRule
+      playerName: playerNameRule,
+      language: languageRule
     })
   },
   [PlayerActions.startGame]: {
@@ -173,13 +186,15 @@ const eventHandlers: {
       parseParams: (req) => {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
-        return { roomId, playerId }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
-      playerId: Joi.string().required()
+      playerId: Joi.string().required(),
+      language: languageRule
     })
   },
   [PlayerActions.resetGameRequest]: {
@@ -189,13 +204,15 @@ const eventHandlers: {
       parseParams: (req) => {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
-        return { roomId, playerId }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
-      playerId: Joi.string().required()
+      playerId: Joi.string().required(),
+      language: languageRule
     })
   },
   [PlayerActions.resetGameRequestCancel]: {
@@ -205,13 +222,15 @@ const eventHandlers: {
       parseParams: (req) => {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
-        return { roomId, playerId }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
-      playerId: Joi.string().required()
+      playerId: Joi.string().required(),
+      language: languageRule
     })
   },
   [PlayerActions.resetGame]: {
@@ -221,13 +240,15 @@ const eventHandlers: {
       parseParams: (req) => {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
-        return { roomId, playerId }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
-      playerId: Joi.string().required()
+      playerId: Joi.string().required(),
+      language: languageRule
     })
   },
   [PlayerActions.forfeit]: {
@@ -238,14 +259,16 @@ const eventHandlers: {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const replaceWithAi: boolean = req.body.replaceWithAi
-        return { roomId, playerId, replaceWithAi }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, replaceWithAi, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
-      replaceWithAi: Joi.bool().required()
+      replaceWithAi: Joi.bool().required(),
+      language: languageRule
     })
   },
   [PlayerActions.checkAiMove]: {
@@ -255,13 +278,15 @@ const eventHandlers: {
       parseParams: (req) => {
         const roomId: string = req.query.roomId as string
         const playerId: string = req.query.playerId as string
-        return { roomId, playerId }
+        const language: AvailableLanguageCode = req.query.language as AvailableLanguageCode
+        return { roomId, playerId, language }
       },
       validator: validateExpressQuery
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
-      playerId: Joi.string().required()
+      playerId: Joi.string().required(),
+      language: languageRule
     })
   },
   [PlayerActions.action]: {
@@ -273,7 +298,8 @@ const eventHandlers: {
         const playerId: string = req.body.playerId
         const action: Actions = req.body.action
         const targetPlayer: string | undefined = req.body.targetPlayer
-        return { roomId, playerId, action, targetPlayer }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, action, targetPlayer, language }
       },
       validator: validateExpressBody
     },
@@ -281,7 +307,8 @@ const eventHandlers: {
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
       action: Joi.string().allow(...Object.values(Actions)).required(),
-      targetPlayer: Joi.string()
+      targetPlayer: Joi.string(),
+      language: languageRule
     })
   },
   [PlayerActions.actionResponse]: {
@@ -293,7 +320,8 @@ const eventHandlers: {
         const playerId: string = req.body.playerId
         const response: Responses = req.body.response
         const claimedInfluence: Influences | undefined = req.body.claimedInfluence
-        return { roomId, playerId, response, claimedInfluence }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, response, claimedInfluence, language }
       },
       validator: validateExpressBody
     },
@@ -301,7 +329,8 @@ const eventHandlers: {
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
       response: Joi.string().allow(...Object.values(Responses)).required(),
-      claimedInfluence: Joi.string().allow(...Object.values(Influences))
+      claimedInfluence: Joi.string().allow(...Object.values(Influences)),
+      language: languageRule
     })
   },
   [PlayerActions.actionChallengeResponse]: {
@@ -312,14 +341,16 @@ const eventHandlers: {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const influence: Influences = req.body.influence
-        return { roomId, playerId, influence }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, influence, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
-      influence: Joi.string().allow(...Object.values(Influences)).required()
+      influence: Joi.string().allow(...Object.values(Influences)).required(),
+      language: languageRule
     })
   },
   [PlayerActions.blockResponse]: {
@@ -330,14 +361,16 @@ const eventHandlers: {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const response: Responses = req.body.response
-        return { roomId, playerId, response }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, response, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
-      response: Joi.string().allow(...Object.values(Responses)).required()
+      response: Joi.string().allow(...Object.values(Responses)).required(),
+      language: languageRule
     })
   },
   [PlayerActions.blockChallengeResponse]: {
@@ -348,14 +381,16 @@ const eventHandlers: {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const influence: Influences = req.body.influence
-        return { roomId, playerId, influence }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, influence, language }
       },
       validator: validateExpressBody
     },
     joiSchema: Joi.object().keys({
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
-      influence: Joi.string().allow(...Object.values(Influences)).required()
+      influence: Joi.string().allow(...Object.values(Influences)).required(),
+      language: languageRule
     })
   },
   [PlayerActions.loseInfluences]: {
@@ -366,7 +401,8 @@ const eventHandlers: {
         const roomId: string = req.body.roomId
         const playerId: string = req.body.playerId
         const influences: Influences[] = req.body.influences
-        return { roomId, playerId, influences }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, influences, language }
       },
       validator: validateExpressBody
     },
@@ -375,7 +411,8 @@ const eventHandlers: {
       playerId: Joi.string().required(),
       influences: Joi.array().items(
         Joi.string().allow(...Object.values(Influences)).required()
-      ).min(1).max(2).required()
+      ).min(1).max(2).required(),
+      language: languageRule
     })
   },
   [PlayerActions.sendChatMessage]: {
@@ -387,7 +424,8 @@ const eventHandlers: {
         const playerId: string = req.body.playerId
         const messageId: string = req.body.messageId
         const messageText: string = req.body.messageText.trim()
-        return { roomId, playerId, messageId, messageText }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, messageId, messageText, language }
       },
       validator: validateExpressBody
     },
@@ -395,7 +433,8 @@ const eventHandlers: {
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
       messageId: Joi.string().guid().required(),
-      messageText: Joi.string().required().max(500)
+      messageText: Joi.string().required().max(500),
+      language: languageRule
     })
   },
   [PlayerActions.setChatMessageDeleted]: {
@@ -407,7 +446,8 @@ const eventHandlers: {
         const playerId: string = req.body.playerId
         const messageId: string = req.body.messageId
         const deleted: boolean = req.body.deleted
-        return { roomId, playerId, messageId, deleted }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, messageId, deleted, language }
       },
       validator: validateExpressBody
     },
@@ -415,7 +455,8 @@ const eventHandlers: {
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
       messageId: Joi.string().guid().required(),
-      deleted: Joi.bool().required()
+      deleted: Joi.bool().required(),
+      language: languageRule
     })
   },
   [PlayerActions.setEmojiOnChatMessage]: {
@@ -428,7 +469,8 @@ const eventHandlers: {
         const messageId: string = req.body.messageId
         const emoji: string = req.body.emoji
         const selected: boolean = req.body.selected
-        return { roomId, playerId, messageId, emoji, selected }
+        const language: AvailableLanguageCode = req.body.language
+        return { roomId, playerId, messageId, emoji, selected, language }
       },
       validator: validateExpressBody
     },
@@ -437,7 +479,8 @@ const eventHandlers: {
       playerId: Joi.string().required(),
       messageId: Joi.string().guid().required(),
       emoji: Joi.string().required().max(20),
-      selected: Joi.bool().required()
+      selected: Joi.bool().required(),
+      language: languageRule
     })
   }
 }
@@ -448,7 +491,7 @@ io.on('connection', (socket) => {
       const result = joiSchema.validate(params, { abortEarly: false })
 
       if (result.error) {
-        const error = result.error.details.map(({ message }) => message).join(', ')
+        const error = translate({ key: 'invalidUserRequest', language: params.language ?? AvailableLanguageCode['en-US'] })
         socket.emit(ServerEvents.error, error)
         callback?.({ error })
       } else {
@@ -458,7 +501,7 @@ io.on('connection', (socket) => {
             socket.data.playerId = playerId
           }
           if (playerId !== socket.data.playerId) {
-            throw new GameMutationInputError('playerId does not match socket')
+            throw new WrongPlayerIdOnSocketError()
           }
           const roomPrefix = 'coup-game-'
           const socketRoom = `${roomPrefix}${roomId}`
@@ -476,12 +519,12 @@ io.on('connection', (socket) => {
               if (isCallerSocket) callback?.({ gameState: publicGameState })
             } catch (error) {
               console.error(error, { event, params })
-              if (event === PlayerActions.checkAiMove) {
-                return
-              }
+              if (event === PlayerActions.checkAiMove) return
+
               if (error instanceof GameMutationInputError) {
-                pushToSocket.emit(ServerEvents.error, error.message)
-                if (isCallerSocket) callback?.({ error: error.message })
+                const message = error.getMessage(params.language)
+                pushToSocket.emit(ServerEvents.error, message)
+                if (isCallerSocket) callback?.({ error: message })
               } else {
                 pushToSocket.emit(ServerEvents.error, genericErrorMessage)
                 if (isCallerSocket) callback?.({ error: genericErrorMessage })
@@ -504,12 +547,12 @@ io.on('connection', (socket) => {
           }
         } catch (error) {
           console.error(error, { event, params })
-          if (event === PlayerActions.checkAiMove) {
-            return
-          }
+          if (event === PlayerActions.checkAiMove) return
+
           if (error instanceof GameMutationInputError) {
-            socket.emit(ServerEvents.error, error.message)
-            callback?.({ error: error.message })
+            const message = error.getMessage(params.language)
+            socket.emit(ServerEvents.error, message)
+            callback?.({ error: message })
           } else {
             socket.emit(ServerEvents.error, genericErrorMessage)
             callback?.({ error: genericErrorMessage })
@@ -523,7 +566,7 @@ io.on('connection', (socket) => {
 const responseHandler = <T>(
   event: PlayerActions,
   handler: (props: T) => Promise<{ roomId: string, playerId: string }>
-) => async (res: Response<DehydratedPublicGameStateOrError>, props: T) => {
+) => async (res: Response<DehydratedPublicGameStateOrError>, props: { language: AvailableLanguageCode } & T) => {
   try {
     const { roomId, playerId } = await handler(props)
     const publicGameState = dehydratePublicGameState(getPublicGameState({
@@ -533,11 +576,11 @@ const responseHandler = <T>(
     res.status(200).json({ gameState: publicGameState })
   } catch (error) {
     console.error(error, { event, props })
-    if (event === PlayerActions.checkAiMove) {
-      return
-    }
+    if (event === PlayerActions.checkAiMove) return
+
     if (error instanceof GameMutationInputError) {
-      res.status(error.httpCode).send({ error: error.message })
+      const message = error.getMessage(props.language)
+      res.status(error.httpCode || 400).send({ error: message })
     } else {
       res.status(500).send({ error: genericErrorMessage })
     }

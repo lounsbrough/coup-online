@@ -13,7 +13,7 @@ export type AvailableLanguage = {
   name: string
 }
 
-const availableLanguages: AvailableLanguage[] = [
+export const availableLanguages: AvailableLanguage[] = [
   {
     code: AvailableLanguageCode["de-DE"],
     flag: "🇩🇪",
@@ -45,5 +45,3 @@ const availableLanguages: AvailableLanguage[] = [
     name: "Português",
   },
 ]
-
-export default availableLanguages

@@ -1,5 +1,4 @@
-import { Actions, EventMessages, Influences, Responses } from "@shared"
-import { AvailableLanguageCode } from "./availableLanguages"
+import { Actions, EventMessages, Influences, Responses, AvailableLanguageCode } from "@shared"
 import { AlertColor } from "@mui/material"
 
 type TranslationsForString = { [key in AvailableLanguageCode]: string }

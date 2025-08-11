@@ -5,6 +5,7 @@ import { getPlayerId } from '../helpers/players'
 import { useSearchParams } from 'react-router'
 import { useWebSocketContext } from './WebSocketContext'
 import { getBaseUrl } from '../helpers/api'
+import { useTranslationContext } from './TranslationsContext'
 
 type GameStateContextType = {
   gameState?: PublicGameState | undefined,
@@ -22,6 +23,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
   const [dehydratedGameState, setDehydratedGameState] = useState<DehydratedPublicGameState>()
   const [searchParams] = useSearchParams()
   const { socket, isConnected } = useWebSocketContext()
+  const { language } = useTranslationContext()
 
   const roomId = searchParams.get('roomId')
 
@@ -44,7 +46,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
   useSWR<void, Error>(
     roomId
-      ? `${getBaseUrl()}/${PlayerActions.gameState}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`
+      ? `${getBaseUrl()}/${PlayerActions.gameState}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}&language=${encodeURIComponent(language)}`
       : null,
     async function (input: RequestInfo, init?: RequestInit) {
       try {
@@ -71,14 +73,14 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
       console.error(error)
       setHasInitialStateLoaded(true)
     })
-    socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
+    socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId(), language })
 
     const intervalId = setInterval(() => {
-      socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId() })
+      socket.emit(PlayerActions.gameState, { roomId, playerId: getPlayerId(), language })
     }, 5000)
 
     return () => { clearInterval(intervalId) }
-  }, [roomId, socket, isConnected, setDehydratedGameStateIfChanged])
+  }, [roomId, socket, language, isConnected, setDehydratedGameStateIfChanged])
 
   const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)
   const gameIsOver = playersLeft?.length === 1
@@ -92,7 +94,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
     const interval = setInterval(() => {
       if (socket && isConnected) {
-        socket.emit(PlayerActions.checkAiMove, { roomId, playerId: getPlayerId() })
+        socket.emit(PlayerActions.checkAiMove, { roomId, playerId: getPlayerId(), language })
       } else {
         fetch(`${getBaseUrl()}/${PlayerActions.checkAiMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
           .then(handleGameStateResponse)
@@ -105,7 +107,7 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     return () => {
       clearInterval(interval)
     }
-  }, [roomId, socket, isConnected, aiPlayersActive, handleGameStateResponse])
+  }, [roomId, socket, isConnected, language, aiPlayersActive, handleGameStateResponse])
 
   const contextValue = { gameState, setDehydratedGameState, hasInitialStateLoaded }
 
