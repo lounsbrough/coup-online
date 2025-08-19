@@ -1,7 +1,10 @@
-import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
+import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PlayerActions, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 import { shuffle } from "../utilities/array"
 import { getCountOfEachInfluence } from "../utilities/deck"
+import { getGameState, getPublicGameState } from '../utilities/gameState'
+import { ActionNotCurrentlyAllowedError, UnableToFindPlayerError } from '../utilities/errors'
+import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
   gameState.players.reduce((agg: Influences[], { deadInfluences }) => {
@@ -464,4 +467,90 @@ export const decideInfluencesToLose = (gameState: PublicGameState): {
   )
 
   return { influences: lostInfluences }
+}
+
+export const getPlayerSuggestedMove = async ({ roomId, playerId }: {
+  roomId: string
+  playerId: string
+}) => {
+  const gameState = await getGameState(roomId)
+  const player = gameState.players.find(({ id }) => id === playerId)
+
+  if (!player) {
+    throw new UnableToFindPlayerError()
+  }
+
+  const playersLeft = gameState.players.filter(({ influences }) => influences.length)
+  const gameIsOver = playersLeft.length === 1
+
+  if (gameIsOver) {
+    return null
+  }
+
+  const playerState = getPublicGameState({ gameState, playerId })
+
+  const pendingLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
+  if (pendingLossPlayers.includes(player.name)) {
+    const { influences } = decideInfluencesToLose(playerState)
+
+    return [PlayerActions.loseInfluences, {
+      roomId,
+      playerId,
+      influences
+    }]
+  }
+
+  if (canPlayerChooseAction(playerState)) {
+    const { action, targetPlayer } = decideAction(playerState)
+
+    return [PlayerActions.action, {
+      roomId,
+      playerId,
+      action,
+      ...(targetPlayer && { targetPlayer })
+    }]
+  }
+
+  if (canPlayerChooseActionResponse(playerState)) {
+    const { response, claimedInfluence } = decideActionResponse(playerState)
+
+    return [PlayerActions.actionResponse, {
+      roomId,
+      playerId,
+      response,
+      ...(claimedInfluence && { claimedInfluence })
+    }]
+  }
+
+  if (canPlayerChooseActionChallengeResponse(playerState)) {
+    const { influence } = decideActionChallengeResponse(playerState)
+
+    return [PlayerActions.actionChallengeResponse, {
+      roomId,
+      playerId,
+      influence
+    }]
+  }
+
+  if (canPlayerChooseBlockResponse(playerState)) {
+    const { response } = decideBlockResponse(playerState)
+
+    return [PlayerActions.blockResponse, {
+      roomId,
+      playerId,
+      response
+    }]
+  }
+
+  if (canPlayerChooseBlockChallengeResponse(playerState)) {
+    const { influence } = decideBlockChallengeResponse(playerState)
+
+    return [PlayerActions.blockChallengeResponse, {
+      roomId,
+      playerId,
+      influence
+    }]
+  }
+
+  return null
 }
