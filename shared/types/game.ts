@@ -13,7 +13,8 @@ export enum Actions {
   Tax = 'Tax',
   ForeignAid = 'Foreign Aid',
   Income = 'Income',
-  Exchange = 'Exchange'
+  Exchange = 'Exchange',
+  Revive = 'Revive'
 }
 
 export enum PlayerActions {
@@ -26,6 +27,7 @@ export enum PlayerActions {
   resetGame = 'resetGame',
   resetGameRequest = 'resetGameRequest',
   resetGameRequestCancel = "resetGameRequestCancel",
+  forfeit = 'forfeit',
   checkAiMove = "checkAiMove",
   action = 'action',
   actionResponse = 'actionResponse',
@@ -34,7 +36,8 @@ export enum PlayerActions {
   blockChallengeResponse = 'blockChallengeResponse',
   loseInfluences = 'loseInfluences',
   sendChatMessage = 'sendChatMessage',
-  setChatMessageDeleted = 'setChatMessageDeleted'
+  setChatMessageDeleted = 'setChatMessageDeleted',
+  setEmojiOnChatMessage = 'setEmojiOnChatMessage'
 }
 
 export enum ServerEvents {
@@ -117,7 +120,13 @@ export const ActionAttributes: {
     challengeable: true,
     influenceRequired: Influences.Ambassador,
     requiresTarget: false
-  }
+  },
+  [Actions.Revive]: {
+    blockable: false,
+    challengeable: false,
+    coinsRequired: 10,
+    requiresTarget: false
+  },
 }
 
 export enum Responses {
@@ -129,8 +138,10 @@ export enum Responses {
 export enum EventMessages {
   GameStarted = 'GameStarted',
   PlayerDied = 'PlayerDied',
+  PlayerForfeited = 'PlayerForfeited',
   PlayerLostInfluence = 'PlayerLostInfluence',
   PlayerReplacedInfluence = 'PlayerReplacedInfluence',
+  PlayerReplacedWithAi = 'PlayerReplacedWithAi',
   ActionConfirm = 'ActionConfirm',
   ActionPending = 'ActionPending',
   ActionProcessed = 'ActionProcessed',
@@ -167,6 +178,7 @@ export type Player = {
   deadInfluences: Influences[]
   name: string
   ai: boolean
+  personalityHidden?: boolean
   personality?: AiPersonality
   grudges: {
     [playerName: string]: number
@@ -181,7 +193,7 @@ export type DehydratedPlayer = Omit<Player,
   unclaimedInfluences: Influences[]
 }
 
-export type PublicPlayer = Omit<Player, 'id' | 'influences'> & {
+export type PublicPlayer = Omit<Player, 'id' | 'influences' | 'personalityHidden'> & {
   influenceCount: number
 }
 
@@ -195,6 +207,7 @@ export type DehydratedPublicPlayer = Omit<PublicPlayer,
 
 export type GameSettings = {
   eventLogRetentionTurns: number
+  allowRevive: boolean
 }
 
 export type ChatMessage = {
@@ -203,10 +216,16 @@ export type ChatMessage = {
   timestamp: Date
   text: string
   deleted: boolean
+  emojis?: {
+    [emoji: string]: Set<string>
+  }
 }
 
-type DehydratedChatMessage = Omit<ChatMessage, 'timestamp'> & {
+export type DehydratedChatMessage = Omit<ChatMessage, 'timestamp' | 'emojis'> & {
   timestamp: string
+  emojis?: {
+    [emoji: string]: string[]
+  }
 }
 
 type PendingAction = {
@@ -281,7 +300,8 @@ export type PublicGameState = Pick<GameState,
   'lastEventTimestamp' |
   'pendingInfluenceLoss' |
   'roomId' |
-  'turn'
+  'turn' |
+  'settings'
 > & Partial<Pick<GameState,
   'pendingAction' |
   'pendingActionChallenge' |

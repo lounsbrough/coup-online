@@ -12,7 +12,7 @@ function GrowingButton({ ...props }: ButtonProps) {
     >
       <Button
         {...props}
-        disabled={!transitionDone || !!props.disabled}
+        disabled={!(process.env.REACT_APP_DISABLE_TRANSITIONS || transitionDone) || !!props.disabled}
       >
         {props.children}
       </Button>

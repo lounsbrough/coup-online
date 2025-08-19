@@ -1,8 +1,7 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react'
 import { Typography, useTheme } from '@mui/material'
-import { Actions, EventMessages, Influences, PublicGameState } from '@shared'
+import { Actions, EventMessages, Influences, PublicGameState, AvailableLanguageCode } from '@shared'
 import { activeLanguageStorageKey } from '../helpers/localStorageKeys'
-import { AvailableLanguageCode } from '../i18n/availableLanguages'
 import translations, { Translations } from '../i18n/translations'
 
 type PlayerVariables = {
@@ -39,16 +38,14 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
   const { influenceColors, actionColors } = useTheme()
 
   const getTranslation = useCallback((key: keyof Translations, variables?: Partial<TranslationVariables>): ReactNode => {
-    const effectiveTranslations = translations[language]
-
     const hasActionsKey =
       key === EventMessages.ActionConfirm
       || key === EventMessages.ActionPending
       || key === EventMessages.ActionProcessed
 
     let template = hasActionsKey
-      ? effectiveTranslations[key][variables!.action!]
-      : effectiveTranslations[key]
+      ? translations[key][variables!.action!]![language]
+      : translations[key][language]
 
     if (!variables || !template) {
       return template
@@ -70,7 +67,7 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
         if (typeof segment === 'string') {
           const matches = [...segment.matchAll(/(.*)\{\{action\[{0,2}(.*?)\]{0,2}\}\}(.*)/g)][0]
           if (matches) {
-            const effectiveAction = matches[2] || effectiveTranslations[variables.action!]
+            const effectiveAction = matches[2] || translations[variables.action!][language]
             segments.splice(i, 1,
               matches[1],
               <Typography
@@ -109,7 +106,7 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
                   fontSize='inherit'
                   sx={{ color: influenceColors?.[variables[influenceKey]!] }}
                 >
-                  {effectiveTranslations[variables[influenceKey]!]}
+                  {translations[variables[influenceKey]!][language]}
                 </Typography>,
                 matches[2]
               )

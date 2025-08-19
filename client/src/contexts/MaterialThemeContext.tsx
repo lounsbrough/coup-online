@@ -7,11 +7,13 @@ import { Actions, Influences } from '@shared'
 declare module '@mui/material/styles' {
   interface Theme {
     isSmallScreen: boolean
+    isLargeScreen: boolean
     actionColors: { [Action in Actions]: string }
     influenceColors: { [influence in Influences]: string }
   }
   interface ThemeOptions {
     isSmallScreen: boolean
+    isLargeScreen: boolean
     actionColors: { [Action in Actions]: string }
     influenceColors: { [influence in Influences]: string }
   }
@@ -52,16 +54,23 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
     (localStorage.getItem(activeColorModeStorageKey) as AppColorMode | null) ?? SYSTEM_COLOR_MODE
   )
 
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
   const isLargeScreen = useMediaQuery('screen and (min-width: 1200px)')
 
-  let activeColorMode: PaletteMode
-  if (mode === SYSTEM_COLOR_MODE) {
-    activeColorMode = prefersDarkMode ? DARK_COLOR_MODE : LIGHT_COLOR_MODE
-  } else {
-    activeColorMode = mode
-  }
+  // Always use DARK_COLOR_MODE for now
+  const activeColorMode: PaletteMode = DARK_COLOR_MODE
+  const isLightMode = false
+
+  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+
+  // let activeColorMode: PaletteMode
+  // if (mode === SYSTEM_COLOR_MODE) {
+  //   activeColorMode = prefersDarkMode ? DARK_COLOR_MODE : LIGHT_COLOR_MODE
+  // } else {
+  //   activeColorMode = mode
+  // }
+
+  // const isLightMode = activeColorMode === LIGHT_COLOR_MODE
 
   const colorMode = useMemo(
     () => ({
@@ -76,11 +85,11 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
     localStorage.setItem(activeColorModeStorageKey, mode)
   }, [mode])
 
-  const isLightMode = activeColorMode === LIGHT_COLOR_MODE
   const defaultBackgroundColor = isLightMode ? '#ffffff' : '#212121'
 
   const materialTheme = useMemo(() => {
-    const primaryColor = isLightMode ? grey['700'] : grey['500']
+    const primaryColor = isLightMode ? grey['700'] : grey['400']
+    const secondaryColor = isLightMode ? grey['500'] : grey['600']
 
     const influenceColors = {
       [Influences.Assassin]: isLightMode ? '#7A0000' : '#B23535',
@@ -96,25 +105,35 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
       [Actions.Exchange]: influenceColors[Influences.Ambassador],
       [Actions.ForeignAid]: primaryColor,
       [Actions.Income]: primaryColor,
+      [Actions.Revive]: primaryColor,
       [Actions.Steal]: influenceColors[Influences.Captain],
       [Actions.Tax]: influenceColors[Influences.Duke]
     }
 
     let theme = createTheme({
+      ...(process.env.REACT_APP_DISABLE_TRANSITIONS ? {
+        transitions: {
+          create: () => 'none',
+        }
+      } : {}),
       palette: {
         mode: activeColorMode,
         background: (isLightMode ? {} : { default: grey[800] }),
         primary: {
-          main: primaryColor
-        }
+          main: primaryColor,
+        },
+        secondary: {
+          main: secondaryColor,
+        },
       },
       isSmallScreen,
+      isLargeScreen,
       actionColors,
       influenceColors,
       spacing: isLargeScreen ? 8 : 4,
       components: {
         MuiTooltip: {
-          defaultProps: { enterTouchDelay: 50, leaveTouchDelay: 3000 }
+          defaultProps: { enterTouchDelay: 50, leaveTouchDelay: 3000, placement: 'top', arrow: true }
         },
         MuiTypography: {
           styleOverrides: {

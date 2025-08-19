@@ -1,6 +1,6 @@
 import { MenuItem, Select } from "@mui/material"
 import { SelectChangeEvent } from '@mui/material/Select'
-import availableLanguages, { AvailableLanguageCode } from "../i18n/availableLanguages"
+import { availableLanguages, AvailableLanguageCode } from '@shared'
 import { useTranslationContext } from "../contexts/TranslationsContext"
 
 function LanguageSelector() {

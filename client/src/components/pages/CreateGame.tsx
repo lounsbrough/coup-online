@@ -1,16 +1,23 @@
 import { useCallback, useState } from "react"
-import { Box, Breadcrumbs, Button, Grid2, Slider, TextField, Typography } from "@mui/material"
-import { AccountCircle } from "@mui/icons-material"
-import { Link, useNavigate } from "react-router"
+import { Box, Breadcrumbs, Button, Grid, Link, Slider, Switch, TextField, Typography } from "@mui/material"
+import { AddCircle, Person } from "@mui/icons-material"
+import { Link as RouterLink, useNavigate } from "react-router"
 import { getPlayerId } from "../../helpers/players"
 import { Analytics } from '@vercel/analytics/react'
 import { GameSettings, PlayerActions, DehydratedPublicGameState } from '@shared'
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { allowReviveStorageKey, eventLogRetentionTurnsStorageKey } from "../../helpers/localStorageKeys"
+import CoupTypography from '../utilities/CoupTypography'
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
-  const [eventLogRetentionTurns, setEventLogRetentionTurns] = useState(3)
+  const [eventLogRetentionTurns, setEventLogRetentionTurns] = useState<number>(
+    JSON.parse(localStorage.getItem(eventLogRetentionTurnsStorageKey) ?? JSON.stringify(3))
+  )
+  const [allowRevive, setAllowRevive] = useState<boolean>(
+    JSON.parse(localStorage.getItem(allowReviveStorageKey) ?? JSON.stringify(false))
+  )
   const navigate = useNavigate()
   const { t } = useTranslationContext()
 
@@ -18,7 +25,7 @@ function CreateGame() {
     navigate(`/game?roomId=${gameState.roomId}`)
   }, [navigate])
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     playerId: string, playerName: string, settings: GameSettings
   }>({ action: PlayerActions.createGame, callback: navigateToRoom })
 
@@ -26,30 +33,33 @@ function CreateGame() {
     <>
       <Analytics />
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link to='/'>
+        <Link component={RouterLink} to='/'>
           {t('home')}
         </Link>
         <Typography>
           {t('createNewGame')}
         </Typography>
       </Breadcrumbs>
-      <Typography variant="h5" sx={{ m: 5 }}>
+      <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('createNewGame')}
-      </Typography>
+      </CoupTypography>
       <form
         onSubmit={(event) => {
           event.preventDefault()
           trigger({
             playerId: getPlayerId(),
             playerName: playerName.trim(),
-            settings: { eventLogRetentionTurns }
+            settings: {
+              eventLogRetentionTurns,
+              allowRevive
+            }
           })
         }}
       >
-        <Grid2 container direction="column" alignItems='center'>
-          <Grid2>
+        <Grid container direction="column" alignItems='center'>
+          <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
-              <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+              <Person sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
                 data-testid='playerNameInput'
                 value={playerName}
@@ -61,14 +71,13 @@ function CreateGame() {
                 required
               />
             </Box>
-          </Grid2>
-
-          <Grid2 sx={{ maxWidth: '300px', width: '90%' }}>
-            <Box p={2} mt={2}>
-              <Typography mt={2}>
+          </Grid>
+          <Grid sx={{ maxWidth: '300px', width: '90%' }}>
+            <Box mt={6}>
+              <CoupTypography mt={2} addTextShadow>
                 {t('eventLogRetentionTurns')}
                 {`: ${eventLogRetentionTurns}`}
-              </Typography>
+              </CoupTypography>
               <Slider
                 data-testid='eventLogRetentionTurnsInput'
                 step={1}
@@ -76,24 +85,40 @@ function CreateGame() {
                 valueLabelDisplay="auto"
                 min={1}
                 max={100}
-                onChange={(_: Event, value: number | number[]) => {
-                  setEventLogRetentionTurns(value as number)
+                onChange={(_: Event, value: number) => {
+                  setEventLogRetentionTurns(value)
+                  localStorage.setItem(eventLogRetentionTurnsStorageKey, JSON.stringify(value))
                 }}
               />
             </Box>
-          </Grid2>
-        </Grid2>
-        <Grid2>
+          </Grid>
+          <Grid sx={{ maxWidth: '300px', width: '90%' }}>
+            <Box mt={2}>
+              <CoupTypography component="span" mt={2} addTextShadow>
+                {t('allowRevive')}:
+              </CoupTypography>
+              <Switch
+                checked={allowRevive}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setAllowRevive(event.target.checked)
+                  localStorage.setItem(allowReviveStorageKey, JSON.stringify(event.target.checked))
+                }}
+                slotProps={{ input: { 'aria-label': 'controlled' } }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid>
           <Button
             type="submit"
             sx={{ mt: 5 }}
             variant="contained"
-            disabled={isMutating}
+            loading={isMutating}
+            startIcon={<AddCircle />}
           >
             {t('createGame')}
           </Button>
-        </Grid2>
-        {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
+        </Grid>
       </form>
     </>
   )

@@ -2,6 +2,8 @@ import Chance from 'chance'
 import { io, Socket } from 'socket.io-client'
 import { Actions, DehydratedPlayer, DehydratedPublicGameState, DehydratedPublicPlayer, PlayerActions, Responses, ServerEvents } from '../shared/types/game'
 import { DehydratedPublicGameStateOrError } from './index'
+import { MAX_PLAYER_COUNT } from '../shared/helpers/playerCount'
+import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
 
 const chance = new Chance()
 
@@ -24,7 +26,7 @@ const validatePublicState = (gameState: DehydratedPublicGameState) => {
   gameState.players.forEach((player: DehydratedPlayer & DehydratedPublicPlayer) => {
     expect(player.id).toBeUndefined()
     expect(player.influences).toBeUndefined()
-    expect(player.influenceCount).toBeTruthy()
+    expect(player.influenceCount).toBeDefined()
     expect(player.name).toBeTruthy()
     expect(player.coins).toBeTruthy()
     expect(player.color).toBeTruthy()
@@ -33,8 +35,12 @@ const validatePublicState = (gameState: DehydratedPublicGameState) => {
 
 describe('index', () => {
   describe('rest endpoints', () => {
-    const getApi = async (endpoint: string) => {
-      const response = await fetch(`${baseUrl}/${endpoint}`, {
+    const getApi = async (endpoint: string, query: Record<string, string>) => {
+      if (!query.language) {
+        query.language = AvailableLanguageCode['en-US']
+      }
+
+      const response = await fetch(`${baseUrl}/${endpoint}?${new URLSearchParams(query)}`, {
         method: 'get',
         headers: { 'content-type': 'application/json' }
       })
@@ -48,7 +54,7 @@ describe('index', () => {
       const response = await fetch(`${baseUrl}/${endpoint}`, {
         method: 'post',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(body)
+        body: JSON.stringify({ language: AvailableLanguageCode['en-US'], ...body })
       })
 
       const json: DehydratedPublicGameStateOrError = await response.json()
@@ -63,7 +69,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const { json: { gameState } } = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const { json: { gameState } } = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             return { roomId: gameState?.roomId, playerId }
           },
@@ -72,7 +78,12 @@ describe('index', () => {
         },
         {
           getQueryParams: () => ({}),
-          error: '"roomId" is required, "playerId" is required',
+          error: 'Invalid user request',
+          status: 400
+        },
+        {
+          getQueryParams: () => ({ language: 'pt-BR' }),
+          error: 'Solicitação de usuário inválida',
           status: 400
         }
       ] as {
@@ -81,11 +92,8 @@ describe('index', () => {
         status: number
       }[])('should return $status $error', async ({ getQueryParams, error, status }) => {
         const queryParams = await getQueryParams()
-        const queryString = Object.entries(queryParams)
-          .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-          .join('&')
 
-        const response = await getApi(`gameState?${queryString}`)
+        const response = await getApi('gameState', queryParams)
 
         expect(response.status).toBe(status)
         if (error) {
@@ -102,14 +110,14 @@ describe('index', () => {
           body: {
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 10 }),
-            settings: { eventLogRetentionTurns: 100 }
+            settings: { eventLogRetentionTurns: 100, allowRevive: true }
           },
           error: '',
           status: 200
         },
         {
           body: {},
-          error: '"playerId" is required, "playerName" is required, "settings" is required',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -118,16 +126,34 @@ describe('index', () => {
             playerName: chance.string({ length: 10 }),
             settings: { }
           },
-          error: '"settings.eventLogRetentionTurns" is required',
+          error: 'Invalid user request',
+          status: 400
+        },
+        {
+          body: {
+            playerId: chance.string({ length: 10 }),
+            playerName: chance.string({ length: 10 }),
+            settings: { allowRevive: true }
+          },
+          error: 'Invalid user request',
+          status: 400
+        },
+        {
+          body: {
+            playerId: chance.string({ length: 10 }),
+            playerName: chance.string({ length: 10 }),
+            settings: { eventLogRetentionTurns: 100 }
+          },
+          error: 'Invalid user request',
           status: 400
         },
         {
           body: {
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 11 }),
-            settings: { eventLogRetentionTurns: 100 }
+            settings: { eventLogRetentionTurns: 100, allowRevive: true }
           },
-          error: '"playerName" length must be less than or equal to 10 characters long',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -136,7 +162,7 @@ describe('index', () => {
             playerName: chance.string({ length: 10 }),
             settings: { eventLogRetentionTurns: 0 }
           },
-          error: '"settings.eventLogRetentionTurns" must be greater than or equal to 1',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -145,7 +171,7 @@ describe('index', () => {
             playerName: chance.string({ length: 10 }),
             settings: { eventLogRetentionTurns: 101 }
           },
-          error: '"settings.eventLogRetentionTurns" must be less than or equal to 100',
+          error: 'Invalid user request',
           status: 400
         }
       ] as {
@@ -172,7 +198,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } =  response
             const roomId = gameState?.roomId
@@ -184,7 +210,7 @@ describe('index', () => {
         },
         {
           getBody: () => ({}),
-          error: '"roomId" is required, "playerId" is required, "playerName" is required',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -193,7 +219,7 @@ describe('index', () => {
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 11 })
           }),
-          error: '"playerName" length must be less than or equal to 10 characters long',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -202,7 +228,7 @@ describe('index', () => {
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 10 })
           }),
-          error: /Room .+ does not exist/,
+          error: 'Room not found',
           status: 404
         },
         {
@@ -210,7 +236,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -225,12 +251,12 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < MAX_PLAYER_COUNT - 1; i++) {
               await postApi(PlayerActions.joinGame, { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) })
             }
 
@@ -244,7 +270,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -254,7 +280,7 @@ describe('index', () => {
 
             return { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) }
           },
-          error: 'Game has already started',
+          error: 'Game is in progress',
           status: 400
         },
         {
@@ -262,14 +288,14 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
             return { roomId, playerId: chance.string({ length: 10 }), playerName }
           },
-          error: /Room .+ already has player named .+/,
+          error: /Room already has a player named .+/,
           status: 400
         }
       ] as {
@@ -306,7 +332,7 @@ describe('index', () => {
               name: chance.string({ length: 10 }),
             }
 
-            const response = await postApi(PlayerActions.createGame, { playerId: removingPlayer.id, playerName: removingPlayer.name, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId: removingPlayer.id, playerName: removingPlayer.name, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -320,7 +346,7 @@ describe('index', () => {
         },
         {
           testSetup: () => ({}),
-          error: '"roomId" is required, "playerId" is required, "playerName" is required',
+          error: 'Invalid user request',
           status: 400
         }
       ] as {
@@ -367,7 +393,7 @@ describe('index', () => {
             const response = await postApi(PlayerActions.createGame, {
               playerId: players[0].id,
               playerName: players[0].name,
-              settings: { eventLogRetentionTurns: 100 }
+              settings: { eventLogRetentionTurns: 100, allowRevive: true }
             })
 
             const { json: { gameState } } = response
@@ -388,7 +414,7 @@ describe('index', () => {
         },
         {
           getBody: () => ({}),
-          error: '"roomId" is required, "playerId" is required',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -396,7 +422,7 @@ describe('index', () => {
             roomId: chance.string({ length: 10 }),
             playerId: chance.string({ length: 10 })
           }),
-          error: /Room .+ does not exist/,
+          error: 'Room not found',
           status: 404
         },
         {
@@ -404,14 +430,14 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
             return { roomId, playerId: chance.string({ length: 10 }) }
           },
-          error: 'Player not in game',
+          error: 'Player is not in the game',
           status: 400
         }
       ] as {
@@ -448,7 +474,7 @@ describe('index', () => {
             const response = await postApi(PlayerActions.createGame, {
               playerId: players[0].id,
               playerName: players[0].name,
-              settings: { eventLogRetentionTurns: 100 }
+              settings: { eventLogRetentionTurns: 100, allowRevive: true }
             })
 
             const { json: { gameState } } = response
@@ -470,7 +496,7 @@ describe('index', () => {
         },
         {
           getBody: () => ({}),
-          error: '"roomId" is required, "playerId" is required',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -478,7 +504,7 @@ describe('index', () => {
             roomId: chance.string({ length: 10 }),
             playerId: chance.string({ length: 10 })
           }),
-          error: /Room .+ does not exist/,
+          error: 'Room not found',
           status: 404
         },
         {
@@ -486,14 +512,14 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
             return { roomId, playerId: chance.string({ length: 10 }) }
           },
-          error: 'Player not in game',
+          error: 'Player is not in the game',
           status: 400
         }
       ] as {
@@ -530,7 +556,7 @@ describe('index', () => {
             let response = await postApi(PlayerActions.createGame, {
               playerId: players[0].id,
               playerName: players[0].name,
-              settings: { eventLogRetentionTurns: 100 }
+              settings: { eventLogRetentionTurns: 100, allowRevive: true }
             })
 
             let { json: { gameState } } = response
@@ -574,7 +600,7 @@ describe('index', () => {
         },
         {
           getBody: () => ({}),
-          error: '"roomId" is required, "playerId" is required',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -582,7 +608,7 @@ describe('index', () => {
             roomId: chance.string({ length: 10 }),
             playerId: chance.string({ length: 10 })
           }),
-          error: /Room .+ does not exist/,
+          error: 'Room not found',
           status: 404
         },
         {
@@ -590,14 +616,14 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
             return { roomId, playerId: chance.string({ length: 10 }) }
           },
-          error: 'Player not in game',
+          error: 'Player is not in the game',
           status: 400
         },
         {
@@ -605,7 +631,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -619,7 +645,7 @@ describe('index', () => {
 
             return { roomId, playerId }
           },
-          error: 'Current game is in progress',
+          error: 'Game is in progress',
           status: 400
         }
       ] as {
@@ -656,7 +682,7 @@ describe('index', () => {
             const response = await postApi(PlayerActions.createGame, {
               playerId: players[0].id,
               playerName: players[0].name,
-              settings: { eventLogRetentionTurns: 100 }
+              settings: { eventLogRetentionTurns: 100, allowRevive: true }
             })
 
             const { json: { gameState } } = response
@@ -675,7 +701,7 @@ describe('index', () => {
         },
         {
           getBody: () => ({}),
-          error: '"roomId" is required, "playerId" is required',
+          error: 'Invalid user request',
           status: 400
         },
         {
@@ -683,7 +709,7 @@ describe('index', () => {
             roomId: chance.string({ length: 10 }),
             playerId: chance.string({ length: 10 })
           }),
-          error: /Room .+ does not exist/,
+          error: 'Room not found',
           status: 404
         },
         {
@@ -691,14 +717,14 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
             return { roomId, playerId: chance.string({ length: 10 }) }
           },
-          error: 'Player not in game',
+          error: 'Player is not in the game',
           status: 400
         },
         {
@@ -706,14 +732,14 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
             return { roomId, playerId }
           },
-          error: 'Game must have at least 2 players to start',
+          error: 'Game needs at least 2 players to start',
           status: 400
         },
         {
@@ -721,7 +747,7 @@ describe('index', () => {
             const playerId = chance.string({ length: 10 })
             const playerName = chance.string({ length: 10 })
 
-            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100 } })
+            const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
             const { json: { gameState } } = response
             const roomId = gameState?.roomId
@@ -736,7 +762,7 @@ describe('index', () => {
 
             return { roomId, playerId }
           },
-          error: 'Game has already started',
+          error: 'Game is in progress',
           status: 400
         }
       ] as {
@@ -789,71 +815,80 @@ describe('index', () => {
     it('should be able to establish a connection to the socket server', async () => {
       const socket = await getConnectedSocket()
 
-      expect(socket.connected).toBe(true)
-
-      socket.close()
+      try {
+        expect(socket.connected).toBe(true)
+      } finally {
+        socket.close()
+      }
     })
 
     it('should create game, join game, start game', async () => {
       const socket1 = await getConnectedSocket()
       const socket2 = await getConnectedSocket()
+      try {
+        const player1 = {
+          playerId: chance.string({ length: 10 }),
+          playerName: chance.string({ length: 10 })
+        }
+        const player2 = {
+          playerId: chance.string({ length: 10 }),
+          playerName: chance.string({ length: 10 })
+        }
 
-      const player1 = {
-        playerId: chance.string({ length: 10 }),
-        playerName: chance.string({ length: 10 })
+        let gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.createGame, {})
+        await expect(gameStatePromises[0]).rejects.toThrow('Invalid user request')
+
+        gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.createGame, {
+          ...player1,
+          settings: { eventLogRetentionTurns: 100, allowRevive: true },
+          language: AvailableLanguageCode['en-US']
+        })
+        const { roomId } = await gameStatePromises[0]
+
+        gameStatePromises = getGameStatePromises([socket1, socket2])
+        socket2.emit(PlayerActions.joinGame, { roomId, ...player2, language: AvailableLanguageCode['en-US'] })
+        await Promise.all(gameStatePromises)
+
+        gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.joinGame, {})
+        await expect(gameStatePromises[0]).rejects.toThrow('Invalid user request')
+
+        gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.joinGame, { language: AvailableLanguageCode['pt-BR'] })
+        await expect(gameStatePromises[0]).rejects.toThrow('Solicitação de usuário inválida')
+
+        gameStatePromises = getGameStatePromises([socket2])
+        socket2.emit(PlayerActions.joinGame, {
+          roomId: chance.string({ length: 10 }),
+          playerId: chance.string({ length: 10 }),
+          playerName: chance.string({ length: 10 }),
+          language: AvailableLanguageCode['en-US']
+        })
+        await expect(gameStatePromises[0]).rejects.toThrow('Room not found')
+
+        gameStatePromises = getGameStatePromises([socket1, socket2])
+        socket1.emit(PlayerActions.startGame, { roomId, playerId: player1.playerId, language: AvailableLanguageCode['en-US'] })
+        await Promise.all(gameStatePromises)
+
+        gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.gameState, { roomId, playerId: player2.playerId, language: AvailableLanguageCode['en-US'] })
+        await expect(gameStatePromises[0]).rejects.toThrow('Wrong player ID on socket')
+
+        gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.gameState, { roomId, playerId: player1.playerId, language: AvailableLanguageCode['en-US'] })
+        const gameState = await gameStatePromises[0]
+
+        validatePublicState(gameState)
+
+        expect(gameState.players).toContainEqual(expect.objectContaining({ name: player1.playerName }))
+        expect(gameState.players).toContainEqual(expect.objectContaining({ name: player2.playerName }))
+        expect(gameState.isStarted).toBe(true)
+      } finally {
+        socket1.close()
+        socket2.close()
       }
-      const player2 = {
-        playerId: chance.string({ length: 10 }),
-        playerName: chance.string({ length: 10 })
-      }
-
-      let gameStatePromises = getGameStatePromises([socket1])
-      socket1.emit(PlayerActions.createGame, {})
-      await expect(gameStatePromises[0]).rejects.toThrow('"playerId" is required, "playerName" is required, "settings" is required')
-
-      gameStatePromises = getGameStatePromises([socket1])
-      socket1.emit(PlayerActions.createGame, {
-        ...player1,
-        settings: { eventLogRetentionTurns: 100 }
-      })
-      const { roomId } = await gameStatePromises[0]
-
-      gameStatePromises = getGameStatePromises([socket1, socket2])
-      socket2.emit(PlayerActions.joinGame, { roomId, ...player2 })
-      await Promise.all(gameStatePromises)
-
-      gameStatePromises = getGameStatePromises([socket1])
-      socket1.emit(PlayerActions.joinGame, {})
-      await expect(gameStatePromises[0]).rejects.toThrow('"roomId" is required, "playerId" is required, "playerName" is required')
-
-      gameStatePromises = getGameStatePromises([socket2])
-      socket2.emit(PlayerActions.joinGame, {
-        roomId: chance.string({ length: 10 }),
-        playerId: chance.string({ length: 10 }),
-        playerName: chance.string({ length: 10 })
-      })
-      await expect(gameStatePromises[0]).rejects.toThrow(/Room .+ does not exist/)
-
-      gameStatePromises = getGameStatePromises([socket1, socket2])
-      socket1.emit(PlayerActions.startGame, { roomId, playerId: player1.playerId })
-      await Promise.all(gameStatePromises)
-
-      gameStatePromises = getGameStatePromises([socket1])
-      socket1.emit(PlayerActions.gameState, { roomId, playerId: player2.playerId })
-      await expect(gameStatePromises[0]).rejects.toThrow('playerId does not match socket')
-
-      gameStatePromises = getGameStatePromises([socket1])
-      socket1.emit(PlayerActions.gameState, { roomId, playerId: player1.playerId })
-      const gameState = await gameStatePromises[0]
-
-      validatePublicState(gameState)
-
-      expect(gameState.players).toContainEqual(expect.objectContaining({ name: player1.playerName }))
-      expect(gameState.players).toContainEqual(expect.objectContaining({ name: player2.playerName }))
-      expect(gameState.isStarted).toBe(true)
-
-      socket1.close()
-      socket2.close()
     })
   })
 })

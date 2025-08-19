@@ -1,4 +1,4 @@
-import { Badge, Button, Grid2, Paper, Tooltip, Typography, useTheme } from "@mui/material"
+import { Badge, Button, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { Close, MonetizationOn } from "@mui/icons-material"
@@ -16,7 +16,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
   const { t } = useTranslationContext()
   const theme = useTheme()
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string, playerName: string
   }>({ action: PlayerActions.removeFromGame })
 
@@ -30,17 +30,22 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
 
   return (
     <>
-      <Grid2 container justifyContent="center" spacing={3}>
+      <Grid container justifyContent="center" spacing={3}>
         {gameState.players
           .map(({ name, color, coins, influenceCount, deadInfluences, ai, personality }, index) => {
-            const playerColor = influenceCount ? color : '#777777'
+            const playerColor = gameState.isStarted && !influenceCount ? '#777777' : color
             const cardTextColor = theme.palette.mode === LIGHT_COLOR_MODE ? 'white' : 'black'
             const isWaitingOnPlayer = waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
+
+            const influences = gameState.isStarted ? [
+              ...deadInfluences,
+              ...Array.from({ length: influenceCount }, () => undefined)
+            ] : Array.from({ length: 2 }, () => undefined)
 
             return (
               <Badge
                 key={index}
-                invisible={!inWaitingRoom || (!ai && humanPlayers.length === 1)}
+                invisible={!inWaitingRoom || (!ai && humanPlayers.length === 1) || !gameState.selfPlayer}
                 badgeContent={
                   <Button
                     sx={{
@@ -73,7 +78,7 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                     background: playerColor,
                     borderRadius: 3,
                     p: 1,
-                    width: '6rem',
+                    width: theme.isLargeScreen ? '7rem' : '6rem',
                     transition: theme.transitions.create(['transform', 'box-shadow']),
                     animation: isWaitingOnPlayer ? 'pulsePlayer 1.5s infinite' : undefined,
                     "@keyframes pulsePlayer": {
@@ -92,37 +97,41 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                   <Typography variant="h6" sx={{ color: cardTextColor }}>
                     {ai && (
                       <Tooltip title={
-                        <>
+                        personality ? (
+                          <>
+                            <Typography>
+                              {t('vengefulness')}
+                              {`: ${personality?.vengefulness}`}%
+                            </Typography>
+                            <Typography>
+                              {t('honesty')}
+                              {`: ${personality?.honesty}`}%
+                            </Typography>
+                            <Typography>
+                              {t('skepticism')}
+                              {`: ${personality?.skepticism}`}%
+                            </Typography>
+                          </>
+                        ) : (
                           <Typography>
-                            {t('vengefulness')}
-                            {`: ${personality?.vengefulness}`}%
+                            {t('personalityIsHidden')}
                           </Typography>
-                          <Typography>
-                            {t('honesty')}
-                            {`: ${personality?.honesty}`}%
-                          </Typography>
-                          <Typography>
-                            {t('skepticism')}
-                            {`: ${personality?.skepticism}`}%
-                          </Typography>
-                        </>
+                        )
                       }>
                         <Bot sx={{ verticalAlign: 'text-bottom' }} />
                       </Tooltip>
                     )}
                     <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
                   </Typography>
-                  <Grid2
+                  <Grid
                     container mt={0.5}
                     spacing={1}
                     justifyContent='center'
+                    flexWrap="nowrap"
                   >
-                    {[
-                      ...Array.from({ length: influenceCount }, () => undefined),
-                      ...deadInfluences
-                    ].map((influence, index) => {
+                    {influences.map((influence, index) => {
                       return (
-                        <Grid2
+                        <Grid
                           key={index}
                           sx={{
                             justifyContent: 'center',
@@ -146,16 +155,15 @@ function Players({ inWaitingRoom = false }: { inWaitingRoom?: boolean }) {
                               <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
                             </span>
                           </Tooltip>
-                        </Grid2>
+                        </Grid>
                       )
                     })}
-                  </Grid2>
+                  </Grid>
                 </Paper>
               </Badge>
             )
           })}
-      </Grid2>
-      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
+      </Grid>
     </>
   )
 }

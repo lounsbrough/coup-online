@@ -1,4 +1,4 @@
-import { Grid2, Paper, Typography, useTheme } from "@mui/material"
+import { Grid, Paper, Typography, useTheme } from "@mui/material"
 import { Influences } from '@shared'
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
@@ -16,23 +16,21 @@ function InfluenceCard({ influence }: {
       alignContent: 'center',
       background: influence ? influenceColors[influence] : 'rgba(120, 120, 120, 0.5)',
       borderRadius: '0.5rem',
-      p: 2,
-      width: '9rem',
-      aspectRatio: 4
+      p: 2
     }}>
-      <Grid2 container flexWrap="nowrap" spacing={1} justifyContent="center" alignItems="center">
-        <Grid2>
+      <Grid container flexWrap="nowrap" spacing={1} justifyContent="center" alignItems="center">
+        <Grid>
           <InfluenceIcon influence={influence} />
-        </Grid2>
-        <Grid2>
+        </Grid>
+        <Grid>
           <Typography
             variant="h6"
             sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}
           >
             {t(influence)}
           </Typography>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </Paper>
   )
 }

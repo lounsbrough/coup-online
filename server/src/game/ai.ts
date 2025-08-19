@@ -1,7 +1,7 @@
-import { countOfEachInfluenceInDeck } from "../utilities/gameState"
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 import { shuffle } from "../utilities/array"
+import { getCountOfEachInfluence } from "../utilities/deck"
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
   gameState.players.reduce((agg: Influences[], { deadInfluences }) => {
@@ -22,7 +22,9 @@ const getProbabilityOfHiddenCardBeingInfluence = (
 
   const knownMatchedInfluenceCount = knownInfluences.filter((i) => i === influence).length
 
-  if (knownMatchedInfluenceCount === countOfEachInfluenceInDeck) {
+  const countOfEachInfluence = getCountOfEachInfluence(gameState.players.length)
+
+  if (knownMatchedInfluenceCount === countOfEachInfluence) {
     return 0
   }
 
@@ -31,7 +33,7 @@ const getProbabilityOfHiddenCardBeingInfluence = (
     gameState.players.reduce((agg, { deadInfluences }) => agg + deadInfluences.length, 0) +
     gameState.deckCount
 
-  return (countOfEachInfluenceInDeck - knownMatchedInfluenceCount) / (totalInfluenceCount - knownInfluences.length)
+  return (countOfEachInfluence - knownMatchedInfluenceCount) / (totalInfluenceCount - knownInfluences.length)
 }
 
 export const getProbabilityOfPlayerInfluence = (
@@ -211,13 +213,18 @@ export const decideAction = (gameState: PublicGameState): {
   }
 
   const endGameAction = checkEndGameAction(gameState)
-  if (endGameAction) {
-    return endGameAction
-  }
+  if (endGameAction) return endGameAction
 
   let willCoup = false
+  let willRevive = false
   if (gameState.selfPlayer?.coins >= 10) {
-    willCoup = true
+    if (gameState.settings.allowRevive
+      && gameState.selfPlayer.influences.length === 1
+      && Math.random() > 0.2) {
+      willRevive = true
+    } else {
+      willCoup = true
+    }
   } else if (gameState.selfPlayer?.coins >= 7) {
     willCoup = Math.random() > 0.5
   }
@@ -226,6 +233,8 @@ export const decideAction = (gameState: PublicGameState): {
     const targetPlayer = decideCoupTarget(gameState)
     return { action: Actions.Coup, targetPlayer: targetPlayer.name }
   }
+
+  if (willRevive) return { action: Actions.Revive }
 
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100

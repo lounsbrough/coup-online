@@ -5,15 +5,15 @@
 
 .cheat-sheet-table th {
   font-size: larger;
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   padding: 4px 0;
 }
 
 .cheat-sheet-table td {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1rem;
   vertical-align: middle;
-  height: 50px;
+  height: 70px;
   white-space: nowrap;
   padding: 0 8px;
   color: white;
@@ -21,10 +21,6 @@
 
 .cheat-sheet-table td span {
   vertical-align: middle;
-}
-
-.cheat-sheet-table,.small-screen td {
-  height: 70px;
 }
 
 @media screen and (max-width: 899px) {

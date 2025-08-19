@@ -1,12 +1,12 @@
 import { rehydrateGameState, isSameState, dehydrateGameState } from '../../../shared/helpers/state'
 import { EventMessage, GameState, DehydratedGameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
 import { shuffle } from './array'
-import { GameMutationInputError } from './errors'
+import { DeckIsEmptyError, EveryonePassedWithPendingDecisionError, IncorrectTotalCardCountError, InvalidPlayerCountError, InvalidTurnPlayerError, PlayersMustHave2InfluencesError, RoomNotFoundError, StateChangedSinceValidationError } from './errors'
 import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 import { getCurrentTimestamp } from './time'
-
-export const countOfEachInfluenceInDeck = 3
+import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
+import { getCountOfEachInfluence } from './deck'
 
 export const getGameState = async (
   roomId: string
@@ -14,7 +14,7 @@ export const getGameState = async (
   const compressed = await getValue(roomId.toUpperCase())
 
   if (!compressed) {
-    throw new GameMutationInputError(`Room ${roomId} does not exist`, 404)
+    throw new RoomNotFoundError()
   }
 
   const state: DehydratedGameState = JSON.parse(decompressString(compressed))
@@ -41,7 +41,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
       color: player.color,
       ai: player.ai,
       grudges: player.grudges,
-      ...(player.personality && { personality: player.personality })
+      ...(!player.personalityHidden && player.personality && { personality: player.personality })
     })
     if (player.id === playerId) {
       selfPlayer = player
@@ -50,7 +50,11 @@ export const getPublicGameState = ({ gameState, playerId }: {
 
   return {
     eventLogs: gameState.eventLogs,
-    chatMessages: gameState.chatMessages,
+    chatMessages: gameState.chatMessages.map((chatMessage) => ({
+      ...chatMessage,
+      text: chatMessage.deleted ? '' : chatMessage.text
+    })),
+    settings: gameState.settings,
     lastEventTimestamp: gameState.lastEventTimestamp,
     isStarted: gameState.isStarted,
     pendingInfluenceLoss: gameState.pendingInfluenceLoss,
@@ -69,18 +73,18 @@ export const getPublicGameState = ({ gameState, playerId }: {
 }
 
 export const validateGameState = (state: DehydratedGameState) => {
-  if (state.players.length < 1 || state.players.length > 6) {
-    throw new GameMutationInputError("Game state must always have 1 to 6 players")
+  if (state.players.length < 1 || state.players.length > MAX_PLAYER_COUNT) {
+    throw new InvalidPlayerCountError(MAX_PLAYER_COUNT)
   }
   if (state.isStarted && !state.players.find((player) => player.name === state.turnPlayer)?.influences.length) {
-    throw new GameMutationInputError("Invalid turn player")
+    throw new InvalidTurnPlayerError()
   }
-  if (state.players.some((player) =>
+  if (state.isStarted && state.players.some((player) =>
     (player.influences.length + player.deadInfluences.length) -
     (state.pendingInfluenceLoss[player.name]?.filter(({ putBackInDeck }) => putBackInDeck)?.length ?? 0)
     !== 2)
   ) {
-    throw new GameMutationInputError("Players must have exactly 2 influences")
+    throw new PlayersMustHave2InfluencesError()
   }
   const cardCounts = Object.fromEntries(Object.values(Influences).map((influence) => [influence, 0]))
   state.deck.forEach((card) => cardCounts[card]++)
@@ -88,17 +92,21 @@ export const validateGameState = (state: DehydratedGameState) => {
     influences.forEach((card) => cardCounts[card]++)
     deadInfluences.forEach((card) => cardCounts[card]++)
   })
-  if (Object.values(cardCounts).some((count) => count !== countOfEachInfluenceInDeck)) {
-    throw new GameMutationInputError("Incorrect total card count in game")
+
+  const countOfEachInfluence = getCountOfEachInfluence(state.players.length)
+  if (Object.values(cardCounts).some((count) => count !== countOfEachInfluence)) {
+    throw new IncorrectTotalCardCountError()
   }
-  if (state.pendingAction?.pendingPlayers?.length === 0
+
+  if ((
+    state.pendingAction?.pendingPlayers?.length === 0
     && !state.pendingActionChallenge
-    && !state.pendingBlock) {
-    throw new GameMutationInputError('Everyone has passed but the action is still pending')
-  }
-  if (state.pendingBlock?.pendingPlayers?.length === 0
-    && !state.pendingBlockChallenge) {
-    throw new GameMutationInputError('Everyone has passed but the block is still pending')
+    && !state.pendingBlock
+  ) || (
+    state.pendingBlock?.pendingPlayers?.length === 0
+    && !state.pendingBlockChallenge
+  )) {
+    throw new EveryonePassedWithPendingDecisionError()
   }
 }
 
@@ -122,7 +130,7 @@ export const mutateGameState = async (
   const dehydratedValidatedGameState = dehydrateGameState(validatedState)
 
   if (!isSameState(dehydrateGameState(gameState), dehydratedValidatedGameState)) {
-    throw new GameMutationInputError('State has changed since validation, rejecting mutation')
+    throw new StateChangedSinceValidationError()
   }
 
   mutation(gameState)
@@ -144,7 +152,7 @@ export const shuffleDeck = (state: GameState) => {
 
 export const drawCardFromDeck = (state: GameState): Influences => {
   if (!state.deck.length) {
-    throw new GameMutationInputError('Deck is empty')
+    throw new DeckIsEmptyError()
   }
 
   return state.deck.pop()!

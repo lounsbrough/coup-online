@@ -1,7 +1,9 @@
-import { Button, Grid2, Typography } from "@mui/material"
+import { Button, Grid } from "@mui/material"
 import { useNavigate } from "react-router"
 import GitHubLinks from "../GitHubLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { AddCircle, GroupAdd } from "@mui/icons-material"
+import CoupTypography from '../utilities/CoupTypography'
 
 function Home() {
   const navigate = useNavigate()
@@ -9,26 +11,28 @@ function Home() {
 
   return (
     <>
-      <Typography variant="h4" sx={{ m: 5 }}>
+      <CoupTypography variant="h4" sx={{ m: 5 }} addTextShadow>
         {t('welcomeToCoup')}
-      </Typography>
-      <Typography variant="h5" sx={{ m: 5 }}>
+      </CoupTypography>
+      <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('briefDescriptionOfCoup')}
-      </Typography>
-      <Grid2>
+      </CoupTypography>
+      <Grid>
         <Button
           type="submit" sx={{ mt: 5 }}
           variant="contained"
           onClick={() => { navigate(`/create-game`) }}
+          startIcon={<AddCircle />}
         >{t('createNewGame')}</Button>
-      </Grid2>
-      <Grid2>
+      </Grid>
+      <Grid>
         <Button
           type="submit" sx={{ mt: 5 }}
           variant="contained"
           onClick={() => { navigate(`/join-game`) }}
+          startIcon={<GroupAdd />}
         >{t('joinExistingGame')}</Button>
-      </Grid2>
+      </Grid>
       <GitHubLinks />
     </>
   )

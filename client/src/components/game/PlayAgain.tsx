@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material"
+import { Button } from "@mui/material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { PlayerActions } from "@shared"
@@ -9,7 +9,7 @@ function PlayAgain() {
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
-  const { trigger, isMutating, error } = useGameMutation<{
+  const { trigger, isMutating } = useGameMutation<{
     roomId: string, playerId: string
   }>({ action: PlayerActions.resetGame })
 
@@ -27,11 +27,10 @@ function PlayAgain() {
           })
         }}
         variant="contained"
-        disabled={isMutating}
+        loading={isMutating}
       >
         {t('playAgain')}
       </Button>
-      {error && <Typography color='error' sx={{ fontWeight: 700, mt: 3 }}>{error}</Typography>}
     </>
   )
 }

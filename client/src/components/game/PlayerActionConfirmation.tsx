@@ -1,12 +1,13 @@
 import { ReactNode, useEffect, useRef, useState } from "react"
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Button, Grid2, Typography, useTheme } from "@mui/material"
+import { Button, Grid, useTheme } from "@mui/material"
 import { Cancel, Check } from "@mui/icons-material"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
-import { confirmActionsStorageKey } from "../../helpers/localStorageKeys"
 import { PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { useUserSettingsContext } from "../../contexts/UserSettingsContext"
+import CoupTypography from '../utilities/CoupTypography'
 
 function PlayerActionConfirmation({
   message,
@@ -24,25 +25,23 @@ function PlayerActionConfirmation({
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const theme = useTheme()
-
-  const { trigger, isMutating, error } = useGameMutation<object>({ action })
-
-  const skipConfirmation = !JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
+  const { trigger, isMutating } = useGameMutation<object>({ action })
+  const { confirmActions } = useUserSettingsContext()
 
   useEffect(() => {
-    if (skipConfirmation) {
-      trigger(variables)
-    } else {
+    if (confirmActions) {
       autoSubmitInterval.current = setInterval(() => {
         setAutoSubmitProgress((prev) => Math.min(100, prev + 1))
       }, 50)
+    } else {
+      trigger(variables)
     }
 
     return () => {
       clearInterval(autoSubmitInterval.current)
       autoSubmitInterval.current = undefined
     }
-  }, [skipConfirmation, trigger, variables])
+  }, [confirmActions, trigger, variables])
 
   useEffect(() => {
     if (autoSubmitInterval.current && autoSubmitProgress === 100) {
@@ -52,15 +51,17 @@ function PlayerActionConfirmation({
     }
   }, [autoSubmitProgress, trigger, variables])
 
-  if (!gameState || skipConfirmation) {
+  if (!gameState || !confirmActions) {
     return null
   }
 
   return (
     <>
-      <Typography variant="h6" my={1} fontWeight="bold">{message}</Typography>
-      <Grid2 container spacing={2} justifyContent="center">
-        <Grid2>
+      <CoupTypography variant="h6" my={1} fontWeight="bold" addTextShadow>
+        {message}
+      </CoupTypography>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid>
           <Button
             startIcon={<Cancel />}
             variant="contained"
@@ -74,8 +75,8 @@ function PlayerActionConfirmation({
           >
             {t('cancel')}
           </Button>
-        </Grid2>
-        <Grid2>
+        </Grid>
+        <Grid>
           <Button
             startIcon={(
               <Check />
@@ -98,13 +99,12 @@ function PlayerActionConfirmation({
               setAutoSubmitProgress(100)
               trigger(variables)
             }}
-            disabled={isMutating}
+            loading={isMutating}
           >
             {t('confirm')}
           </Button>
-        </Grid2>
-      </Grid2>
-      {error && <Typography color='error' sx={{ mt: 3, fontWeight: 700 }}>{error}</Typography>}
+        </Grid>
+      </Grid>
     </>
   )
 }

@@ -1,9 +1,8 @@
 import { useEffect } from "react"
 import { grey } from "@mui/material/colors"
-import { Actions, EventMessages, PublicGameState } from "@shared"
+import { Actions, EventMessages, PublicGameState, AvailableLanguageCode } from "@shared"
 import { TranslationContextProvider, useTranslationContext } from "./TranslationsContext"
 import { render } from '../../tests/utilities/render'
-import { AvailableLanguageCode } from "../i18n/availableLanguages"
 
 const TestTranslationComponent = ({ language }: { language: AvailableLanguageCode }) => {
   const { t, setLanguage } = useTranslationContext()
@@ -41,9 +40,9 @@ describe('TranslationContextProvider', () => {
     )
 
     expect(getByTestId(`${EventMessages.ActionProcessed}-${Actions.Coup}`))
-      .toHaveTextContent('David golpeou Bob')
+      .toHaveTextContent('David Golpeou Bob')
     expect(getByText('David')).toHaveStyle({ color: 'blue' })
-    expect(getByText('golpeou')).toHaveStyle({ color: grey['700'] })
+    expect(getByText('Golpeou')).toHaveStyle({ color: grey['400'] })
     expect(getByText('Bob')).toHaveStyle({ color: 'red' })
   })
 

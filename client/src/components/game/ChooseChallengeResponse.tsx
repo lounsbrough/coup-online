@@ -1,4 +1,4 @@
-import { Grid2, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import { EventMessages, Influences, PlayerActions } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
@@ -6,6 +6,7 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
+import CoupTypography from '../utilities/CoupTypography'
 
 function ChooseChallengeResponse() {
   const [selectedInfluence, setSelectedInfluence] = useState<Influences>()
@@ -41,25 +42,25 @@ function ChooseChallengeResponse() {
 
   return (
     <>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+      <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t(EventMessages.ChallengePending, {
           gameState,
           primaryPlayer: challengingPlayer,
           secondaryPlayer: challengedPlayer
         })}
-      </Typography>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+      </CoupTypography>
+      <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t('chooseInfluenceToReveal')}
-      </Typography>
+      </CoupTypography>
       {gameState.pendingBlock?.claimedInfluence && (
-        <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+        <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
           {t('influenceWasClaimed', {
             gameState,
             primaryInfluence: gameState.pendingBlock?.claimedInfluence
           })}
-        </Typography>
+        </CoupTypography>
       )}
-      <Grid2 container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
@@ -74,7 +75,7 @@ function ChooseChallengeResponse() {
               {t(influence as Influences)}
             </GrowingButton>
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }

@@ -41,7 +41,7 @@ describe('Games', () => {
         isStarted: true,
         turnPlayer: david,
         eventLogs: [],
-        settings: { eventLogRetentionTurns: 100 }
+        settings: { eventLogRetentionTurns: 100, allowRevive: true },
       }
     })
 
@@ -90,6 +90,28 @@ describe('Games', () => {
     cy.get('input[type="checkbox"]').eq(1).click()
 
     cy.loadPlayer(gameUrl, harper)
+    cy.clickGameBoardButton(Actions.Tax)
+
+    cy.loadPlayer(gameUrl, david)
+    cy.clickGameBoardButton(Responses.Pass)
+    cy.clickGameBoardButton(Actions.Income)
+
+    cy.loadPlayer(gameUrl, harper)
+    cy.clickGameBoardButton(Actions.Revive)
+
+    cy.loadPlayer(gameUrl, david)
+    cy.clickGameBoardButton(Actions.Income)
+
+    for (let i = 0; i < 3; i++) {
+      cy.loadPlayer(gameUrl, harper)
+      cy.clickGameBoardButton(Actions.Tax)
+
+      cy.loadPlayer(gameUrl, david)
+      cy.clickGameBoardButton(Responses.Pass)
+      cy.clickGameBoardButton(Actions.Income)
+    }
+
+    cy.loadPlayer(gameUrl, harper)
     cy.clickGameBoardButton(Actions.Coup)
     cy.clickGameBoardButton(david)
 
@@ -100,21 +122,22 @@ describe('Games', () => {
     cy.contains('Harper is trying to Steal from David')
     cy.contains('Harper Stole from David')
     cy.contains('David collected Income')
-    cy.contains('Harper is trying to receive Foreign Aid')
+    cy.contains('Harper is trying to collect Foreign Aid')
     cy.contains('David is trying to block Harper as Duke')
-    cy.contains('Harper is challenging David')
+    cy.contains('Harper is trying to challenge David')
     cy.contains('Harper successfully challenged David')
     cy.contains('David failed to block Harper')
     cy.contains('David lost their Contessa')
-    cy.contains('Harper received Foreign Aid')
+    cy.contains('Harper collected Foreign Aid')
     cy.contains('David is trying to Assassinate Harper')
     cy.contains('David Assassinated Harper')
     cy.contains('Harper lost their Duke')
-    cy.contains('Harper received Foreign Aid')
+    cy.contains('Harper collected Foreign Aid')
     cy.contains('David is trying to Exchange influences')
     cy.contains('David Exchanged influences')
+    cy.contains('Harper Revived an influence')
     cy.contains('Harper Couped David')
     cy.contains(/David lost their .+/)
-    cy.contains('David is out!')
+    cy.contains('David has died!')
   })
 })

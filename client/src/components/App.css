@@ -1,14 +1,8 @@
-.App {
-  text-align: center;
+:root {
+  --app-header-height: 54px;
+  --app-content-height: calc(100vh - var(--app-header-height));
 }
 
 .App-header {
-  height: 54px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+  height: var(--app-header-height);
 }

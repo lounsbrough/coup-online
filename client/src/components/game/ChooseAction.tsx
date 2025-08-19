@@ -1,10 +1,10 @@
-import { Grid2, Tooltip, Typography, useTheme } from "@mui/material"
+import { Box, Grid, Tooltip, Typography, useTheme } from "@mui/material"
 import { ActionAttributes, Actions, PlayerActions, EventMessages } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
-import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import CoupTypography from "../utilities/CoupTypography"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
 
@@ -43,15 +43,16 @@ function ChooseAction() {
   if (selectedAction) {
     return (
       <>
-        <TypographyWithBackButton
+        <CoupTypography
           my={1}
           variant="h6"
           fontWeight="bold"
           onBack={() => { setSelectedAction(undefined) }}
+          addTextShadow
         >
           {t('chooseATarget')}
-        </TypographyWithBackButton>
-        <Grid2 container spacing={2} justifyContent="center">
+        </CoupTypography>
+        <Grid container spacing={2} justifyContent="center">
           {gameState.players.map((player) => {
             if (player.name === gameState.selfPlayer?.name || !player.influenceCount
             ) {
@@ -77,29 +78,42 @@ function ChooseAction() {
               variant="contained"
             >{player.name}</GrowingButton>
           })}
-        </Grid2>
+        </Grid>
       </>
     )
   }
 
   return (
     <>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+      <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t('chooseAnAction')}
-      </Typography>
-      <Grid2 container spacing={2} justifyContent="center">
+      </CoupTypography>
+      <Grid container spacing={2} justifyContent="center">
         {Object.entries(ActionAttributes)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map(([action, actionAttributes], index) => {
-            const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer!.coins < actionAttributes.coinsRequired
-
-            if (gameState.selfPlayer!.coins >= 10 && action !== Actions.Coup) {
+            if (gameState.selfPlayer!.coins >= 10 && ![Actions.Coup, Actions.Revive].includes(action as Actions)) {
               return null
             }
 
+            if (!gameState.settings.allowRevive && action === Actions.Revive) {
+              return null
+            }
+
+            const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer!.coins < actionAttributes.coinsRequired
+            const noDeadInfluencesForRevive = action === Actions.Revive && !gameState.selfPlayer!.deadInfluences.length
+            const isActionDisabled = lackingCoins || noDeadInfluencesForRevive
+
             return (
-              <Grid2 key={index}>
-                <Tooltip title={lackingCoins && t('notEnoughCoins')}>
+              <Grid key={index}>
+                <Tooltip
+                  title={isActionDisabled && (
+                    <Box sx={{ textAlign: 'center' }}>
+                      {lackingCoins && <Typography>{t('notEnoughCoins', { count: actionAttributes.coinsRequired })}</Typography>}
+                      {noDeadInfluencesForRevive && <Typography>{t('noDeadInfluences')}</Typography>}
+                    </Box>
+                  )}
+                  placement="top">
                   <span>
                     <GrowingButton
                       onClick={() => {
@@ -107,16 +121,16 @@ function ChooseAction() {
                       }}
                       color={action as Actions}
                       variant="contained"
-                      disabled={lackingCoins}
+                      disabled={isActionDisabled}
                     >
                       {t(action as Actions)}
                     </GrowingButton>
                   </span>
                 </Tooltip>
-              </Grid2>
+              </Grid>
             )
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }

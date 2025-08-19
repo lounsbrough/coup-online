@@ -1,4 +1,4 @@
-import { Grid2 } from "@mui/material"
+import { Grid } from "@mui/material"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import InfluenceCard from "./InfluenceCard"
 
@@ -10,12 +10,20 @@ function PlayerInfluences() {
   }
 
   return (
-    <Grid2 container justifyContent="center" spacing={3}>
+    <Grid
+      container
+      justifyContent="center"
+      spacing={3}
+      sx={{ width: '100%', maxWidth: '30rem' }}
+    >
       {gameState.selfPlayer.influences
         .sort((a, b) => a.localeCompare(b))
-        .map((influence, index) =>
-          <InfluenceCard key={`${influence}-${index}`} influence={influence} />)}
-    </Grid2>
+        .map((influence, index) => (
+          <Grid key={`${influence}-${index}`} size={{ xs: 6 }}>
+            <InfluenceCard influence={influence} />
+          </Grid>
+        ))}
+    </Grid>
   )
 }
 

@@ -1,13 +1,15 @@
 import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, Influences, Player, Responses } from "../../../shared/types/game"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
-import { GameMutationInputError } from "../utilities/errors"
+import { createDeckForPlayerCount } from "../utilities/deck"
+import { ActionNotCurrentlyAllowedError, UnableToDetermineNextPlayerTurnError, UnableToFindPlayerError } from "../utilities/errors"
+import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
   const player = state.players.find(({ name }) => name === playerName)
 
   if (!player) {
-    throw new GameMutationInputError('Player not found')
+    throw new UnableToFindPlayerError()
   }
 
   removeClaimedInfluence(player, influence)
@@ -43,7 +45,7 @@ export const promptPlayerToLoseInfluence = (
   const player = state.players.find(({ name }) => name === playerName)
 
   if (!player) {
-    throw new GameMutationInputError('Player not found')
+    throw new UnableToFindPlayerError()
   }
 
   const pendingInfluencesToKill = state.pendingInfluenceLoss[playerName]
@@ -65,14 +67,14 @@ export const promptPlayerToLoseInfluence = (
 
 export const processPendingAction = (state: GameState) => {
   if (!state.pendingAction) {
-    throw new GameMutationInputError('Pending Action not found')
+    throw new ActionNotCurrentlyAllowedError()
   }
 
   const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
   const targetPlayer = state.players.find(({ name }) => name === state.pendingAction!.targetPlayer)
 
   if (!actionPlayer) {
-    throw new GameMutationInputError('Action Player not found')
+    throw new UnableToFindPlayerError()
   }
 
   logEvent(state, {
@@ -84,7 +86,7 @@ export const processPendingAction = (state: GameState) => {
 
   if (state.pendingAction.action === Actions.Assassinate) {
     if (!targetPlayer) {
-      throw new GameMutationInputError('Target Player not found')
+      throw new UnableToFindPlayerError()
     }
 
     actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired!
@@ -101,7 +103,7 @@ export const processPendingAction = (state: GameState) => {
     actionPlayer.coins += 2
   } else if (state.pendingAction.action === Actions.Steal) {
     if (!targetPlayer) {
-      throw new GameMutationInputError('Target Player not found')
+      throw new UnableToFindPlayerError()
     }
 
     holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Steal] })
@@ -119,16 +121,17 @@ export const processPendingAction = (state: GameState) => {
   delete state.pendingAction
 }
 
-const buildGameDeck = () => {
-  return Object.values(Influences)
-    .flatMap((influence) => Array.from({ length: 3 }, () => influence))
-}
+const getEvenlySpacedHueColors = (n: number) =>
+  Array.from({ length: n }, (_, i) => {
+    const angle = (i / n) * 2 * Math.PI
+    return `hsl(${angle * (180 / Math.PI)}, 50%, 50%)`
+  })
 
 const getNewGameState = (roomId: string, settings: GameSettings): GameState => ({
   roomId,
-  availablePlayerColors: shuffle(['#13CC63', '#3399dd', '#FD6C33', '#00CCDD', '#FFC303', '#FA0088']),
+  availablePlayerColors: shuffle(getEvenlySpacedHueColors(MAX_PLAYER_COUNT)),
   players: [],
-  deck: shuffle(buildGameDeck()),
+  deck: shuffle(createDeckForPlayerCount(0)),
   pendingInfluenceLoss: {},
   isStarted: false,
   eventLogs: [],
@@ -143,27 +146,35 @@ export const addPlayerToGame = ({
   playerId,
   playerName,
   ai = false,
-  aiPersonality,
+  personality,
 }: {
   state: GameState
   playerId: string
   playerName: string
   ai?: boolean
-  aiPersonality?: AiPersonality
+  personality?: AiPersonality
 }) => {
+  const randomPersonality = () => Math.floor(Math.random() * 101)
+
   state.players.push({
     id: playerId,
     name: playerName,
     coins: 2,
-    influences: Array.from({ length: 2 }, () => drawCardFromDeck(state)),
+    influences: [],
     deadInfluences: [],
     claimedInfluences: new Set(),
     unclaimedInfluences: new Set(),
     color: state.availablePlayerColors.shift()!,
     ai,
     grudges: {},
-    ...(aiPersonality && { personality: aiPersonality })
+    personalityHidden: ai && !personality,
+    ...(ai && { personality: personality ?? {
+        honesty: randomPersonality(),
+        skepticism: randomPersonality(),
+        vengefulness: randomPersonality(),
+      }})
   })
+  state.deck = createDeckForPlayerCount(state.players.length)
 }
 
 export const removePlayerFromGame = (state: GameState, playerName: string) => {
@@ -172,7 +183,7 @@ export const removePlayerFromGame = (state: GameState, playerName: string) => {
     1
   )[0]
   state.availablePlayerColors.push(player.color)
-  state.deck.push(...player.influences, ...player.deadInfluences)
+  state.deck = createDeckForPlayerCount(state.players.length)
 }
 
 export const createNewGame = async (roomId: string, playerId: string, playerName: string, gameSettings: GameSettings) => {
@@ -181,9 +192,12 @@ export const createNewGame = async (roomId: string, playerId: string, playerName
   await createGameState(roomId, newGameState)
 }
 
-export const startGame = async (gameState: GameState) => {
+export const startGame = (gameState: GameState) => {
   gameState.isStarted = true
   gameState.players = shuffle(gameState.players)
+  gameState.players.forEach((player) => {
+    player.influences.push(...Array.from({ length: 2 }, () => drawCardFromDeck(gameState)))
+  })
   if (gameState.players.length === 2) {
     gameState.players[0].coins = 1
   }
@@ -203,22 +217,23 @@ export const resetGame = async (roomId: string) => {
   newGameState.players = oldGameState.players.map((player) => ({
     ...player,
     coins: 2,
-    influences: Array.from({ length: 2 }, () => drawCardFromDeck(newGameState)),
+    influences: [],
     claimedInfluences: new Set(),
     unclaimedInfluences: new Set(),
     deadInfluences: [],
     grudges: {}
   }))
+  newGameState.deck = createDeckForPlayerCount(newGameState.players.length)
   newGameState.availablePlayerColors = oldGameState.availablePlayerColors
   newGameState.chatMessages = oldGameState.chatMessages
   await createGameState(roomId, newGameState)
 }
 
-export const revealAndReplaceInfluence = (state: GameState, playerName: string, influence: Influences) => {
+export const revealAndReplaceInfluence = (state: GameState, playerName: string, influence: Influences, log: boolean = true) => {
   const player = state.players.find(({ name }) => name === playerName)
 
   if (!player) {
-    throw new GameMutationInputError('Player not found')
+    throw new UnableToFindPlayerError()
   }
 
   removeClaimedInfluence(player, influence)
@@ -228,11 +243,13 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
   )[0])
   shuffleDeck(state)
   player.influences.push(drawCardFromDeck(state))
-  logEvent(state, {
-    event: EventMessages.PlayerReplacedInfluence,
-    primaryPlayer: player.name,
-    influence
-  })
+  if (log) {
+    logEvent(state, {
+      event: EventMessages.PlayerReplacedInfluence,
+      primaryPlayer: player.name,
+      influence
+    })
+  }
 }
 
 export const moveTurnToNextPlayer = (state: GameState) => {
@@ -241,7 +258,7 @@ export const moveTurnToNextPlayer = (state: GameState) => {
   let nextIndex = currentIndex + 1
   while (!state.players[nextIndex % state.players.length].influences.length) {
     if (nextIndex % state.players.length === currentIndex) {
-      throw new GameMutationInputError('Unable to determine next player turn')
+      throw new UnableToDetermineNextPlayerTurnError()
     }
 
     nextIndex++

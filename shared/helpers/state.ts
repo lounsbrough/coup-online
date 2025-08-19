@@ -1,9 +1,15 @@
-import { GameState, PublicGameState, DehydratedGameState, DehydratedPublicGameState } from "../types/game";
+import { GameState, PublicGameState, DehydratedGameState, DehydratedPublicGameState, ChatMessage, DehydratedChatMessage } from "../types/game";
 
 const arraySortReplacer = (_: string, value: any) => (value instanceof Array ? [...value].sort() : value)
 
 export const isSameState = (a: DehydratedGameState | DehydratedPublicGameState, b: DehydratedGameState | DehydratedPublicGameState) =>
   JSON.stringify(a, arraySortReplacer) === JSON.stringify(b, arraySortReplacer)
+
+const getRequiredChatMessageFields = <T extends ChatMessage | DehydratedChatMessage>(chatMessage: T): Omit<T, 'emojis'> => {
+  const required = {...chatMessage}
+  delete required.emojis
+  return required
+}
 
 const dehydrateCommonGameState = (hydrated: GameState | PublicGameState) => ({
   eventLogs: hydrated.eventLogs,
@@ -12,8 +18,13 @@ const dehydrateCommonGameState = (hydrated: GameState | PublicGameState) => ({
   turn: hydrated.turn,
   lastEventTimestamp: hydrated.lastEventTimestamp.toISOString(),
   chatMessages: hydrated.chatMessages.map((message) => ({
-    ...message,
-    timestamp: message.timestamp.toISOString()
+    ...getRequiredChatMessageFields(message),
+    timestamp: message.timestamp.toISOString(),
+    ...(message.emojis && {
+      emojis: Object.fromEntries(
+        Object.entries(message.emojis).map(([emoji, playerNames]) => ([emoji, [...playerNames]]))
+      )
+    }),
   })),
   ...(hydrated.pendingAction && {
     pendingAction: {
@@ -59,6 +70,7 @@ export const dehydrateGameState = (hydrated: GameState) : DehydratedGameState =>
 export const dehydratePublicGameState = (hydrated: PublicGameState) : DehydratedPublicGameState => ({
   ...dehydrateCommonGameState(hydrated),
   deckCount: hydrated.deckCount,
+  settings: hydrated.settings,
   players: hydrated.players.map((player) => ({
     ...player,
     claimedInfluences: [...player.claimedInfluences],
@@ -80,8 +92,13 @@ const rehydrateCommonGameState = (dehydrated: DehydratedGameState | DehydratedPu
   turn: dehydrated.turn,
   lastEventTimestamp: new Date(dehydrated.lastEventTimestamp),
   chatMessages: dehydrated.chatMessages.map((message) => ({
-    ...message,
-    timestamp: new Date(message.timestamp)
+    ...getRequiredChatMessageFields(message),
+    timestamp: new Date(message.timestamp),
+    ...(message.emojis && {
+      emojis: Object.fromEntries(
+        Object.entries(message.emojis).map(([emoji, playerNames]) => ([emoji, new Set(playerNames)]))
+      )
+    }),
   })),
   ...(dehydrated.pendingAction && {
     pendingAction: {
@@ -129,6 +146,7 @@ export const rehydrateGameState = (dehydrated: DehydratedGameState): GameState =
 export const rehydratePublicGameState = (dehydrated: DehydratedPublicGameState): PublicGameState => ({
   ...rehydrateCommonGameState(dehydrated),
   deckCount: dehydrated.deckCount,
+  settings: dehydrated.settings,
   players: dehydrated.players.map((player) => ({
     ...player,
     claimedInfluences: new Set(player.claimedInfluences),

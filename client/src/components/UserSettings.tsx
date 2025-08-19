@@ -1,22 +1,19 @@
 import { useState } from "react"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, Switch, Typography, useTheme } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Switch, Typography, useTheme } from "@mui/material"
 import { CancelOutlined, CheckCircle, Settings } from "@mui/icons-material"
-import ColorModeToggle from "./ColorModeToggle"
-import { confirmActionsStorageKey } from "../helpers/localStorageKeys"
 import { useWebSocketContext } from "../contexts/WebSocketContext"
 import { useSearchParams } from "react-router"
 import LanguageSelector from "./LanguageSelector"
 import { useTranslationContext } from "../contexts/TranslationsContext"
+import { useUserSettingsContext } from "../contexts/UserSettingsContext"
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [confirmActions, setConfirmActions] = useState<boolean>(
-    JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true))
-  )
   const [searchParams] = useSearchParams()
   const { isConnected } = useWebSocketContext()
   const { t } = useTranslationContext()
   const { isSmallScreen } = useTheme()
+  const { showChickens, confirmActions, setShowChickens, setConfirmActions } = useUserSettingsContext()
 
   const roomId = searchParams.get('roomId')
   const rowHeight = 36
@@ -31,7 +28,7 @@ function UserSettings() {
             setModalOpen(true)
           }}
         >
-          <Settings />
+          <Settings sx={{ fontSize: '2rem' }} />
         </IconButton>
       ) : (
         <Button
@@ -48,30 +45,37 @@ function UserSettings() {
         open={modalOpen}
         onClose={() => { setModalOpen(false) }}
       >
-        <DialogTitle mb={2}>{t('settings')}</DialogTitle>
+        <DialogTitle mb={2}>
+          <Box display="flex" alignItems="center">
+            <Typography flexGrow={1} textAlign="center" variant='h5'>
+              <Settings sx={{ verticalAlign: 'middle', mr: 1 }} />
+              <span style={{ verticalAlign: 'middle' }}>{t('settings')}</span>
+            </Typography>
+          </Box>
+        </DialogTitle>
         <DialogContent>
-          <Grid2 container spacing={3} direction="column">
-            <Grid2 height={rowHeight} alignContent="center" sx={{ whiteSpace: 'nowrap' }}>
+          <Grid container spacing={3} direction="column">
+            <Grid height={rowHeight} alignContent="center" sx={{ whiteSpace: 'nowrap' }}>
               <Typography component="span" sx={{ mr: 2 }}>{t('language')}:</Typography>
               <LanguageSelector />
-            </Grid2>
+            </Grid>
             {roomId && (
-              <Grid2 height={rowHeight} alignContent="center">
+              <Grid height={rowHeight} alignContent="center">
                 <Typography component="span" sx={{ mr: 1 }}>
                   {t('room')}
                   :
                 </Typography>
                 <strong>{roomId}</strong>
-              </Grid2>
+              </Grid>
             )}
-            <Grid2 height={rowHeight} alignContent="center">
+            {/* <Grid height={rowHeight} alignContent="center">
               <Typography component="span" sx={{ mr: 2 }}>
                 {t('colorMode')}
                 :
               </Typography>
               <ColorModeToggle />
-            </Grid2>
-            <Grid2 height={rowHeight} alignContent="center">
+            </Grid> */}
+            <Grid height={rowHeight} alignContent="center">
               <Typography component="span">
                 {t('confirmActions')}
                 :
@@ -80,12 +84,24 @@ function UserSettings() {
                 checked={confirmActions}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setConfirmActions(event.target.checked)
-                  localStorage.setItem(confirmActionsStorageKey, JSON.stringify(event.target.checked))
                 }}
-                inputProps={{ 'aria-label': 'controlled' }}
+                slotProps={{ input: { 'aria-label': 'controlled' } }}
               />
-            </Grid2>
-            <Grid2 height={rowHeight} alignContent="center">
+            </Grid>
+            <Grid height={rowHeight} alignContent="center">
+              <Typography component="span">
+                {t('showChickens')} 🐓
+                :
+              </Typography>
+              <Switch
+                checked={showChickens}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setShowChickens(event.target.checked)
+                }}
+                slotProps={{ input: { 'aria-label': 'controlled' } }}
+              />
+            </Grid>
+            <Grid height={rowHeight} alignContent="center">
               <Typography component="span" sx={{ mr: 1 }}>
                 {t('websocketsConnection')}
                 :
@@ -93,8 +109,8 @@ function UserSettings() {
               {isConnected
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
                 : <CancelOutlined color="error" sx={{ verticalAlign: 'middle' }} />}
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button variant='contained' onClick={() => { setModalOpen(false) }}>

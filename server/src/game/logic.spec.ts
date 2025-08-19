@@ -1,14 +1,14 @@
 import { Chance } from "chance"
-import { drawCardFromDeck } from "../utilities/gameState"
-import { GameState, Influences, Player } from '../../../shared/types/game'
-import { shuffle } from "../utilities/array"
+import { GameState, Player } from '../../../shared/types/game'
 import { moveTurnToNextPlayer, startGame } from "./logic"
+import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
+import { createDeckForPlayerCount } from "../utilities/deck"
 
 jest.mock("../utilities/storage")
 
 const chance = new Chance()
 
-const getRandomPlayers = (count?: number) : Player[] =>
+const getRandomPlayers = (count: number) : Player[] =>
   chance.n(() => ({
     id: chance.string(),
     name: chance.string(),
@@ -20,30 +20,34 @@ const getRandomPlayers = (count?: number) : Player[] =>
     deadInfluences: [],
     ai: false,
     grudges: {}
-  }), count ?? chance.natural({ min: 2, max: 6 }))
+  }), count)
 
-const getRandomGameState = ({ playersCount }: { playersCount?: number } = {}) => {
-  const players = getRandomPlayers(playersCount)
+const getRandomGameState = ({ playersCount, isStarted }: {
+  playersCount?: number
+  isStarted?: boolean
+} = {}) => {
+  const playerCount = playersCount ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT })
+
+  const players = getRandomPlayers(playerCount)
 
   const gameState: GameState = {
-    deck: shuffle(Object.values(Influences)
-      .flatMap((influence) => Array.from({ length: 3 }, () => influence))),
+    deck: createDeckForPlayerCount(playerCount),
     eventLogs: [],
     chatMessages: [],
     lastEventTimestamp: chance.date(),
-    isStarted: chance.bool(),
-    availablePlayerColors: chance.n(chance.color, 6),
+    isStarted: false,
+    availablePlayerColors: chance.n(chance.color, MAX_PLAYER_COUNT),
     players,
     pendingInfluenceLoss: {},
     roomId: chance.string(),
     turn: chance.natural(),
     turnPlayer: chance.pickone(players).name,
-    settings: { eventLogRetentionTurns: 100 }
+    settings: { eventLogRetentionTurns: 100, allowRevive: true }
   }
 
-  gameState.players.forEach((player) => {
-    player.influences.push(...Array.from({ length: 2 }, () => drawCardFromDeck(gameState)))
-  })
+  if (isStarted) {
+    startGame(gameState)
+  }
 
   return gameState
 }
@@ -61,7 +65,6 @@ describe('logic', () => {
 
     it('should give starting player 1 coin in 2 player game', () => {
       const gameState = getRandomGameState({ playersCount: 2 })
-      gameState.isStarted = false
       startGame(gameState)
       expect(gameState.players[0].coins).toBe(1)
     })
@@ -75,7 +78,7 @@ describe('logic', () => {
 
   describe('moveTurnToNextPlayer', () => {
     it('should move turn to next player', () => {
-      const gameState = getRandomGameState()
+      const gameState = getRandomGameState({ isStarted: true })
 
       let previous = gameState.turnPlayer
       moveTurnToNextPlayer(gameState)
@@ -86,7 +89,8 @@ describe('logic', () => {
     })
 
     it('should skip players with no influences left', () => {
-      const gameState = getRandomGameState({ playersCount: 6 })
+      const gameState = getRandomGameState({ playersCount: 6, isStarted: true })
+
       gameState.players[1].influences = []
       gameState.players[4].influences = []
       gameState.turnPlayer = gameState.players[0].name
@@ -99,7 +103,8 @@ describe('logic', () => {
     })
 
     it('should wrap back to beginning of player list', () => {
-      const gameState = getRandomGameState({ playersCount: 3 })
+      const gameState = getRandomGameState({ playersCount: 3, isStarted: true })
+
       gameState.players[1].influences = []
       gameState.turnPlayer = gameState.players[0].name
       moveTurnToNextPlayer(gameState)

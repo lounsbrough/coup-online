@@ -1,12 +1,13 @@
-import { Grid2, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
-import TypographyWithBackButton from "../utilities/TypographyWithBackButton"
+import CoupTypography from "../utilities/CoupTypography"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
+import getResponseIcon from "../../helpers/getResponseIcon"
 
 function ChooseActionResponse() {
   const [selectedResponse, setSelectedResponse] = useState<Responses>()
@@ -43,15 +44,16 @@ function ChooseActionResponse() {
   if (selectedResponse) {
     return (
       <>
-        <TypographyWithBackButton
+        <CoupTypography
           my={1}
           variant="h6"
           fontWeight="bold"
           onBack={() => { setSelectedResponse(undefined) }}
+          addTextShadow
         >
           {t('claimAnInfluence')}
-        </TypographyWithBackButton>
-        <Grid2 container spacing={2} justifyContent="center">
+        </CoupTypography>
+        <Grid container spacing={2} justifyContent="center">
           {Object.entries(InfluenceAttributes)
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map(([influence, influenceAttributes]) => {
@@ -68,22 +70,22 @@ function ChooseActionResponse() {
                 variant="contained"
               >{t(influence as Influences)}</GrowingButton>
             })}
-        </Grid2>
+        </Grid>
       </>
     )
   }
 
   return (
     <>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', my: 1 }}>
+      <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t(EventMessages.ActionPending, {
           action: gameState.pendingAction.action,
           gameState,
           primaryPlayer: gameState.turnPlayer!,
           secondaryPlayer: gameState.pendingAction.targetPlayer
         })}
-      </Typography>
-      <Grid2 container spacing={2} justifyContent="center">
+      </CoupTypography>
+      <Grid container spacing={2} justifyContent="center">
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map((response, index) => {
@@ -102,16 +104,19 @@ function ChooseActionResponse() {
               return null
             }
 
+            const ResponseIcon = getResponseIcon(response)
+
             return <GrowingButton
               key={index}
               onClick={() => {
                 setSelectedResponse(response as Responses)
               }} variant="contained"
+              startIcon={<ResponseIcon />}
             >
               {t(response)}
             </GrowingButton>
           })}
-      </Grid2>
+      </Grid>
     </>
   )
 }
