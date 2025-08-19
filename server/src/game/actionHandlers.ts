@@ -312,7 +312,7 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   const unchangedResponse = { roomId, playerId, stateUnchanged: true }
   const changedResponse = { roomId, playerId }
 
-  const timeToPonderLifeChoices = 500 + Math.floor(Math.random() * 1000)
+  const timeToPonderLifeChoices = 300 + Math.floor(Math.random() * 700)
   if (new Date() < new Date(gameState.lastEventTimestamp.getTime() + timeToPonderLifeChoices)) {
     return unchangedResponse
   }
