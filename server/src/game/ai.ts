@@ -3,7 +3,7 @@ import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./a
 import { shuffle } from "../utilities/array"
 import { getCountOfEachInfluence } from "../utilities/deck"
 import { getGameState, getPublicGameState } from '../utilities/gameState'
-import { ActionNotCurrentlyAllowedError, UnableToFindPlayerError } from '../utilities/errors'
+import { UnableToFindPlayerError } from '../utilities/errors'
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 
 const getRevealedInfluences = (gameState: PublicGameState, influence?: Influences) =>
