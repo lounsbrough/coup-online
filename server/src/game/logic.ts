@@ -123,13 +123,34 @@ export const processPendingAction = (state: GameState) => {
 
 const getEvenlySpacedHueColors = (n: number) =>
   Array.from({ length: n }, (_, i) => {
-    const angle = (i / n) * 2 * Math.PI
-    return `hsl(${angle * (180 / Math.PI)}, 50%, 50%)`
+    const angle = ((i + 0.5) / n) * 2 * Math.PI
+    return `hsl(${Math.round(angle * (180 / Math.PI))}, 35%, 50%)`
   })
+
+const distributeColorsWithFixedStep = (colors: string[]): string[] => {
+  const n = colors.length
+  const step = 3
+
+  if (n > 1 && n % step === 0) {
+    throw new Error(
+      `Step size of ${step} is not coprime to array length ${n}. The output array may not contain all original elements if a random start is used.`
+    )
+  }
+
+  const startIndex = Math.floor(Math.random() * n)
+  const result: string[] = []
+  let currentIndex = startIndex
+  for (let i = 0; i < n; i++) {
+    result.push(colors[currentIndex])
+    currentIndex = (currentIndex + step) % n
+  }
+
+  return result
+}
 
 const getNewGameState = (roomId: string, settings: GameSettings): GameState => ({
   roomId,
-  availablePlayerColors: shuffle(getEvenlySpacedHueColors(MAX_PLAYER_COUNT)),
+  availablePlayerColors: distributeColorsWithFixedStep(getEvenlySpacedHueColors(MAX_PLAYER_COUNT)),
   players: [],
   deck: shuffle(createDeckForPlayerCount(0)),
   pendingInfluenceLoss: {},
