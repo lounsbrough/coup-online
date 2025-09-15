@@ -5,15 +5,15 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@fontsource/roboto": "^5.2.6",
+    "@fontsource/roboto": "^5.2.7",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.3.1",
-    "@types/react": "^19.1.12",
+    "@types/node": "^24.4.0",
+    "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vercel/analytics": "^1.5.0",
     "colord": "^2.9.3",
@@ -22,7 +22,7 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router": "^7.8.2",
+    "react-router": "^7.9.1",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.8.1",
     "swr": "^2.3.6",
@@ -56,14 +56,14 @@
     ]
   },
   "devDependencies": {
-    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.5",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.6",
     "@eslint/js": "^9.35.0",
     "@shared": "../shared",
     "@types/chance": "^1.1.7",
     "chance": "^1.1.13",
-    "cypress": "^15.1.0",
+    "cypress": "^15.2.0",
     "esbuild": "^0.25.9",
-    "globals": "^16.3.0",
-    "typescript-eslint": "^8.42.0"
+    "globals": "^16.4.0",
+    "typescript-eslint": "^8.43.0"
   }
 }
