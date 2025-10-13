@@ -5,46 +5,6 @@ import Skull from "../icons/Skull"
 import CoupTypography from '../utilities/CoupTypography'
 
 const comments = {
-  'en-US': [
-    `Every loss is a learning opportunity.`,
-    `You did the best you could.`,
-    `Don't let this defeat you.`,
-    `Don't worry, it's not your fault.`,
-    `You're a natural at this whole losing thing.`,
-    `Maybe you should try a different game.`,
-    `I'm starting to think you're actually trying to lose.`,
-    `You've perfected the skill of coming in last.`,
-    `You're a true champion of failure.`,
-    `You've managed to make losing look easy.`,
-    `You're so bad, you're almost bad enough to be good.`,
-    `I guess you'll have to stick to playing solitaire from now on.`,
-    `You're a natural-born loser.`,
-    `You're so good at losing, you should get a trophy.`,
-    `You're the best at being the worst.`,
-    `You've mastered the art of losing.`,
-    `You're a walking, talking, losing machine.`,
-    `You're the worst player I've ever seen.`
-  ],
-  'pt-BR': [
-    `Cada perda é uma oportunidade de aprendizado.`,
-    `Você fez o melhor que pôde.`,
-    `Não deixe isso derrotar você.`,
-    `Não se preocupe, não é sua culpa.`,
-    `Você tem talento para toda essa coisa de perder.`,
-    `Talvez você devesse tentar um jogo diferente.`,
-    `Estou começando a pensar que você está realmente tentando perder.`,
-    `Você aperfeiçoou a habilidade de chegar por último.`,
-    `Você é um verdadeiro campeão do fracasso.`,
-    `Você conseguiu fazer com que perder parecesse fácil.`,
-    `Você é tão ruim, você é quase ruim o suficiente para ser bom.`,
-    `Acho que você terá que continuar jogando paciência de agora em diante.`,
-    `Você é um perdedor nato.`,
-    `Você é tão bom em perder que deveria ganhar um troféu.`,
-    `Você é o melhor em ser o pior.`,
-    `Você dominou a arte de perder.`,
-    `Você é uma máquina que anda, fala e perde.`,
-    `Você é o pior jogador que já vi.`
-  ],
   'de-DE': [
     `Jede Niederlage ist eine Lernmöglichkeit.`,
     `Du hast dein Bestes gegeben.`,
@@ -64,6 +24,26 @@ const comments = {
     `Du hast die Kunst des Verlierens gemeistert.`,
     `Du bist eine wandelnde, sprechende Verlierermaschine.`,
     `Du bist der schlechteste Spieler, den ich je gesehen habe.`
+  ],
+  'en-US': [
+    `Every loss is a learning opportunity.`,
+    `You did the best you could.`,
+    `Don't let this defeat you.`,
+    `Don't worry, it's not your fault.`,
+    `You're a natural at this whole losing thing.`,
+    `Maybe you should try a different game.`,
+    `I'm starting to think you're actually trying to lose.`,
+    `You've perfected the skill of coming in last.`,
+    `You're a true champion of failure.`,
+    `You've managed to make losing look easy.`,
+    `You're so bad, you're almost bad enough to be good.`,
+    `I guess you'll have to stick to playing solitaire from now on.`,
+    `You're a natural-born loser.`,
+    `You're so good at losing, you should get a trophy.`,
+    `You're the best at being the worst.`,
+    `You've mastered the art of losing.`,
+    `You're a walking, talking, losing machine.`,
+    `You're the worst player I've ever seen.`
   ],
   'es-MX': [
     `Cada pérdida es una oportunidad para aprender.`,
@@ -105,6 +85,26 @@ const comments = {
     `Tu es une machine à perdre ambulante et parlante.`,
     `Tu es le pire joueur que j'aie jamais vu.`
   ],
+  'hi-IN': [
+    `हर हार एक सीखने का अवसर है।`,
+    `आपने अपनी पूरी कोशिश की।`,
+    `इससे आपको निराश नहीं होना चाहिए।`,
+    `चिंता मत करो, यह आपकी गलती नहीं है।`,
+    `आप हारने में स्वाभाविक हैं।`,
+    `शायद आपको कोई और खेल आजमाना चाहिए।`,
+    `मैं सोचने लगा हूँ कि आप सच में हारने की कोशिश कर रहे हैं।`,
+    `आपने अंतिम स्थान पर पहुँचने की कला को परिपूर्ण कर लिया है।`,
+    `आप असफलता के सच्चे चैंपियन हैं।`,
+    `आपने हारने को आसान बना दिया है।`,
+    `आप इतने खराब हैं कि आप लगभग अच्छे हैं।`,
+    `मुझे लगता है कि आपको अब से केवल सोलिटेयर खेलना होगा।`,
+    `आप जन्मजात हारने वाले हैं।`,
+    `आप हारने में इतने अच्छे हैं कि आपको एक ट्रॉफी मिलनी चाहिए।`,
+    `आप सबसे खराब होने में सबसे अच्छे हैं।`,
+    `आपने हारने की कला में महारत हासिल कर ली है।`,
+    `आप एक चलती-फिरती हारने की मशीन हैं।`,
+    `आप सबसे खराब खिलाड़ी हैं जिसे मैंने कभी देखा है।`
+  ],
   'it-IT': [
     `Ogni sconfitta è un'opportunità per imparare.`,
     `Hai fatto del tuo meglio.`,
@@ -124,7 +124,27 @@ const comments = {
     `HaiMasterizzato l'arte di perdere.`,
     `Sei una macchina per perdere che cammina e parla.`,
     `Sei il peggior giocatore che abbia mai visto.`
-  ]
+  ],
+  'pt-BR': [
+    `Cada perda é uma oportunidade de aprendizado.`,
+    `Você fez o melhor que pôde.`,
+    `Não deixe isso derrotar você.`,
+    `Não se preocupe, não é sua culpa.`,
+    `Você tem talento para toda essa coisa de perder.`,
+    `Talvez você devesse tentar um jogo diferente.`,
+    `Estou começando a pensar que você está realmente tentando perder.`,
+    `Você aperfeiçoou a habilidade de chegar por último.`,
+    `Você é um verdadeiro campeão do fracasso.`,
+    `Você conseguiu fazer com que perder parecesse fácil.`,
+    `Você é tão ruim, você é quase ruim o suficiente para ser bom.`,
+    `Acho que você terá que continuar jogando paciência de agora em diante.`,
+    `Você é um perdedor nato.`,
+    `Você é tão bom em perder que deveria ganhar um troféu.`,
+    `Você é o melhor em ser o pior.`,
+    `Você dominou a arte de perder.`,
+    `Você é uma máquina que anda, fala e perde.`,
+    `Você é o pior jogador que já vi.`
+  ],
 }
 
 const getRandomComment = (language: AvailableLanguageCode): string => {

@@ -15,7 +15,7 @@ export default [
     }
   },
   {
-    files: ['**/translations.ts'],
+    files: ['**/translations.ts', '**/SnarkyDeadComment.tsx'],
     rules: { 'sort-keys': ['error', 'asc'] }
   }
 ]
