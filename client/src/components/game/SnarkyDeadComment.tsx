@@ -3,10 +3,10 @@ import { AvailableLanguageCode } from '@shared'
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import Skull from "../icons/Skull"
 import CoupTypography from '../utilities/CoupTypography'
-import translations from '../../i18n/translations'
+import { snarkyDeadComments } from '../../i18n/translations'
 
 const getRandomComment = (language: AvailableLanguageCode): string => {
-  const commentsForLanguage = translations.snarkyDeadComments[language]
+  const commentsForLanguage = snarkyDeadComments[language]
   return commentsForLanguage[Math.floor(Math.random() * commentsForLanguage.length)]
 }
 
