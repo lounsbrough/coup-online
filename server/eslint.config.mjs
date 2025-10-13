@@ -13,5 +13,9 @@ export default [
     rules: {
       semi: ['error', 'never']
     }
+  },
+  {
+    files: ['**/translations.ts'],
+    rules: { 'sort-keys': ['error', 'asc'] }
   }
 ]
