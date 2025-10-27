@@ -12,13 +12,13 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.7.2",
+    "@types/node": "^24.9.1",
     "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.1",
+    "@types/react-dom": "^19.2.2",
     "@vercel/analytics": "^1.5.0",
     "colord": "^2.9.3",
-    "emoji-picker-react": "^4.14.0",
-    "eslint": "^9.37.0",
+    "emoji-picker-react": "^4.14.2",
+    "eslint": "^9.38.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -56,14 +56,14 @@
     ]
   },
   "devDependencies": {
-    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.6",
-    "@eslint/js": "^9.37.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.7",
+    "@eslint/js": "^9.38.0",
     "@shared": "../shared",
     "@types/chance": "^1.1.7",
     "chance": "^1.1.13",
-    "cypress": "^15.4.0",
-    "esbuild": "^0.25.10",
+    "cypress": "^15.5.0",
+    "esbuild": "^0.25.11",
     "globals": "^16.4.0",
-    "typescript-eslint": "^8.46.0"
+    "typescript-eslint": "^8.46.2"
   }
 }
