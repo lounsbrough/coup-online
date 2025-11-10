@@ -6,8 +6,8 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.8",
-    "@mui/icons-material": "^7.3.4",
-    "@mui/material": "^7.3.4",
+    "@mui/icons-material": "^7.3.5",
+    "@mui/material": "^7.3.5",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -18,7 +18,7 @@
     "@vercel/analytics": "^1.5.0",
     "colord": "^2.9.3",
     "emoji-picker-react": "^4.15.0",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -57,13 +57,13 @@
   },
   "devDependencies": {
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.7",
-    "@eslint/js": "^9.39.0",
+    "@eslint/js": "^9.39.1",
     "@shared": "../shared",
     "@types/chance": "^1.1.7",
     "chance": "^1.1.13",
-    "cypress": "^15.5.0",
-    "esbuild": "^0.25.12",
+    "cypress": "^15.6.0",
+    "esbuild": "^0.27.0",
     "globals": "^16.5.0",
-    "typescript-eslint": "^8.46.2"
+    "typescript-eslint": "^8.46.3"
   }
 }
