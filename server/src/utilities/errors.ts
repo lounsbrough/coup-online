@@ -321,6 +321,19 @@ export class RoomAlreadyHasPlayerError extends GameMutationInputError {
   }
 }
 
+export class RoomIdAlreadyExistsError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor(roomId: string) {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'roomIdAlreadyExists',
+      language,
+      variables: { roomId }
+    })
+  }
+}
+
 export class RoomIsFullError extends GameMutationInputError {
   getMessage: (language: AvailableLanguageCode) => string
 

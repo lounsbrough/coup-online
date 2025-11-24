@@ -247,6 +247,15 @@ const translations = {
     'it-IT': 'La stanza ha già un giocatore di nome "{{playerName}}"',
     'pt-BR': 'A sala já tem um jogador chamado "{{playerName}}"',
   },
+  roomIdAlreadyExists: {
+    'de-DE': 'Der Raum mit der ID "{{roomId}}" existiert bereits',
+    'en-US': 'Room with ID "{{roomId}}" already exists',
+    'es-MX': 'La sala con ID "{{roomId}}" ya existe',
+    'fr-FR': 'La chambre avec l\'ID "{{roomId}}" existe déjà',
+    'hi-IN': 'ID "{{roomId}}" वाला कमरा पहले से मौजूद है',
+    'it-IT': 'La stanza con ID "{{roomId}}" esiste già',
+    'pt-BR': 'A sala com ID "{{roomId}}" já existe',
+  },
   roomIsFull: {
     'de-DE': 'Der Raum {{roomId}} ist voll',
     'en-US': 'Room {{roomId}} is full',
