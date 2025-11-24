@@ -3,7 +3,8 @@ import { Actions, Influences, Responses } from '../../../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, blockChallengeResponseHandler, blockResponseHandler, createGameHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, startGameHandler } from './actionHandlers'
 import { getValue, setValue } from '../utilities/storage'
 import { getGameState, mutateGameState } from '../utilities/gameState'
-import { ActionNotChallengeableError, ActionNotCurrentlyAllowedError, ClaimedInfluenceAlreadyConfirmedError, ClaimedInfluenceInvalidError, ClaimedInfluenceRequiredError, DifferentPlayerNameError, GameInProgressError, GameNotInProgressError, InsufficientCoinsError, InvalidActionAt10CoinsError, MissingInfluenceError, PlayerNotInGameError, TargetPlayerIsSelfError, TargetPlayerRequiredForActionError } from '../utilities/errors'
+import * as identifiers from '../utilities/identifiers'
+import { ActionNotChallengeableError, ActionNotCurrentlyAllowedError, ClaimedInfluenceAlreadyConfirmedError, ClaimedInfluenceInvalidError, ClaimedInfluenceRequiredError, DifferentPlayerNameError, GameInProgressError, GameNotInProgressError, InsufficientCoinsError, InvalidActionAt10CoinsError, MissingInfluenceError, PlayerNotInGameError, RoomIdAlreadyExistsError, TargetPlayerIsSelfError, TargetPlayerRequiredForActionError } from '../utilities/errors'
 
 jest.mock('../utilities/storage')
 
@@ -27,6 +28,11 @@ setValueMock.mockImplementation(async (key: string, value: string) => {
 const chance = new Chance()
 
 describe('actionHandlers', () => {
+  let generateRoomIdSpy: jest.SpyInstance | undefined
+  afterEach(() => {
+    generateRoomIdSpy?.mockRestore()
+  })
+
   describe('game scenarios', () => {
     const [david, marissa, harper, hailey] =
       ['David', 'Marissa', 'Harper', 'Hailey'].map((name) => ({
@@ -132,6 +138,21 @@ describe('actionHandlers', () => {
 
       await startGameHandler({ roomId, playerId: hailey.playerId })
       await expect(startGameHandler({ roomId, playerId: harper.playerId })).rejects.toThrow(GameInProgressError)
+    })
+
+    it('creating new game can not wipe out existing game when room id conflicts', async () => {
+      generateRoomIdSpy = jest.spyOn(identifiers, 'generateRoomId')
+        .mockReturnValue('DUPLICATE')
+
+        await createGameHandler({
+          ...harper,
+          settings: { eventLogRetentionTurns: 100, allowRevive: true }
+        })
+
+        await expect(createGameHandler({
+          ...harper,
+          settings: { eventLogRetentionTurns: 100, allowRevive: true }
+        })).rejects.toThrow(RoomIdAlreadyExistsError)
     })
 
     it('everyone passes on action', async () => {
