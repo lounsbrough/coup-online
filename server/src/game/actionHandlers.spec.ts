@@ -28,9 +28,9 @@ setValueMock.mockImplementation(async (key: string, value: string) => {
 const chance = new Chance()
 
 describe('actionHandlers', () => {
-  let generateRoomIdSpy: jest.SpyInstance<string, []> | undefined;
+  let generateRoomIdSpy: jest.SpyInstance | undefined
   afterEach(() => {
-    generateRoomIdSpy?.mockRestore();
+    generateRoomIdSpy?.mockRestore()
   })
 
   describe('game scenarios', () => {
