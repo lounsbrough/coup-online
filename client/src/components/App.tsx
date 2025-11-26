@@ -23,6 +23,10 @@ import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
 import { useUserSettingsContext } from '../contexts/UserSettingsContext'
 
+const isNovember = () => new Date().getMonth() === 10
+
+const backgroundImage = isNovember() ? 'url(/turkeys.jpeg)' : 'url(/chickens.jpeg)'
+
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false)
@@ -42,7 +46,7 @@ function App() {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: 'url(/chickens.jpeg)',
+          backgroundImage,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           opacity: theme.palette.mode === 'dark' ? 0.25 : 0.4,
