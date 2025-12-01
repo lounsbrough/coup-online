@@ -22,10 +22,9 @@ import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
 import { useUserSettingsContext } from '../contexts/UserSettingsContext'
+import { isTurkeyTime } from '../helpers/easter-eggs'
 
-const isNovember = () => new Date().getMonth() === 10
-
-const backgroundImage = isNovember() ? 'url(/turkeys.jpeg)' : 'url(/chickens.jpeg)'
+const backgroundImage = isTurkeyTime ? 'url(/turkeys.jpeg)' : 'url(/chickens.jpeg)';
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)

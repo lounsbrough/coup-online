@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router"
 import LanguageSelector from "./LanguageSelector"
 import { useTranslationContext } from "../contexts/TranslationsContext"
 import { useUserSettingsContext } from "../contexts/UserSettingsContext"
+import { isTurkeyTime } from '../helpers/easter-eggs'
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -99,7 +100,7 @@ function UserSettings() {
             </Grid>
             <Grid height={rowHeight} alignContent="center">
               <Typography component="span">
-                {t('showChickens')} 🐓
+                {isTurkeyTime ? `${t('showTurkeys')} 🦃` : `${t('showChickens')} 🐓`}
                 :
               </Typography>
               <Switch

@@ -147,6 +147,7 @@ export type Translations = ActionMessages & AlertColorTranslations & {
   settings: TranslationsForString;
   setup: TranslationsForString;
   showChickens: TranslationsForString;
+  showTurkeys: TranslationsForString;
   skepticism: TranslationsForString;
   spectateGame: TranslationsForString;
   startGame: TranslationsForString;
@@ -1592,6 +1593,15 @@ const translations: Translations = {
     "hi-IN": "मुर्गियों को दिखाएं",
     "it-IT": "Mostra Polli",
     "pt-BR": "Mostrar Galinhas",
+  },
+  showTurkeys: {
+    "de-DE": "Truthähne anzeigen",
+    "en-US": "Show Turkeys",
+    "es-MX": "Mostrar Pavos",
+    "fr-FR": "Afficher les Dindes",
+    "hi-IN": "टर्की दिखाएं",
+    "it-IT": "Mostra Tacchini",
+    "pt-BR": "Mostrar Perus",
   },
   skepticism: {
     "de-DE": "Skepsis",
