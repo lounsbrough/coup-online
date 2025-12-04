@@ -148,6 +148,7 @@ export type Translations = ActionMessages & AlertColorTranslations & {
   setup: TranslationsForString;
   showChickens: TranslationsForString;
   showTurkeys: TranslationsForString;
+  showSnowmen: TranslationsForString;
   skepticism: TranslationsForString;
   spectateGame: TranslationsForString;
   startGame: TranslationsForString;
@@ -1602,6 +1603,15 @@ const translations: Translations = {
     "hi-IN": "टर्की दिखाएं",
     "it-IT": "Mostra Tacchini",
     "pt-BR": "Mostrar Perus",
+  },
+  showSnowmen: {
+    "de-DE": "Schneemänner anzeigen",
+    "en-US": "Show Snowmen",
+    "es-MX": "Mostrar Muñecos de Nieve",
+    "fr-FR": "Afficher les Bonhommes de Neige",
+    "hi-IN": "स्नोमेन दिखाएं",
+    "it-IT": "Mostra Pupazzi di Neve",
+    "pt-BR": "Mostrar Bonecos de Neve",
   },
   skepticism: {
     "de-DE": "Skepsis",
