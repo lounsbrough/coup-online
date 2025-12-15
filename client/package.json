@@ -18,10 +18,10 @@
     "@vercel/analytics": "^1.6.1",
     "colord": "^2.9.3",
     "emoji-picker-react": "^4.16.1",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "qrcode.react": "^4.2.0",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "react-router": "^7.10.1",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.8.1",
@@ -57,13 +57,13 @@
   },
   "devDependencies": {
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.2",
     "@shared": "../shared",
     "@types/chance": "^1.1.7",
     "chance": "^1.1.13",
     "cypress": "^15.7.1",
     "esbuild": "^0.27.1",
     "globals": "^16.5.0",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.49.0"
   }
 }
