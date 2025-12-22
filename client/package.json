@@ -9,7 +9,7 @@
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
+    "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
@@ -22,10 +22,10 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-router": "^7.10.1",
+    "react-router": "^7.11.0",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.8.1",
-    "swr": "^2.3.7",
+    "swr": "^2.3.8",
     "typescript": "^5.9.2",
     "web-vitals": "^5.1.0"
   },
@@ -61,9 +61,9 @@
     "@shared": "../shared",
     "@types/chance": "^1.1.7",
     "chance": "^1.1.13",
-    "cypress": "^15.7.1",
-    "esbuild": "^0.27.1",
+    "cypress": "^15.8.1",
+    "esbuild": "^0.27.2",
     "globals": "^16.5.0",
-    "typescript-eslint": "^8.49.0"
+    "typescript-eslint": "^8.50.0"
   }
 }
