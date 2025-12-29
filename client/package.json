@@ -24,7 +24,7 @@
     "react-dom": "^19.2.3",
     "react-router": "^7.11.0",
     "react-scripts": "5.0.1",
-    "socket.io-client": "^4.8.1",
+    "socket.io-client": "^4.8.3",
     "swr": "^2.3.8",
     "typescript": "^5.9.2",
     "web-vitals": "^5.1.0"
@@ -64,6 +64,6 @@
     "cypress": "^15.8.1",
     "esbuild": "^0.27.2",
     "globals": "^16.5.0",
-    "typescript-eslint": "^8.50.0"
+    "typescript-eslint": "^8.50.1"
   }
 }
