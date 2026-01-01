@@ -147,6 +147,7 @@ export type Translations = ActionMessages & AlertColorTranslations & {
   settings: TranslationsForString;
   setup: TranslationsForString;
   showChickens: TranslationsForString;
+  showFireworks: TranslationsForString;
   showSnowmen: TranslationsForString;
   showTurkeys: TranslationsForString;
   skepticism: TranslationsForString;
@@ -1594,6 +1595,15 @@ const translations: Translations = {
     "hi-IN": "मुर्गियों को दिखाएं",
     "it-IT": "Mostra Polli",
     "pt-BR": "Mostrar Galinhas",
+  },
+  showFireworks: {
+    "de-DE": "Feuerwerk anzeigen",
+    "en-US": "Show Fireworks",
+    "es-MX": "Mostrar Fuegos Artificiales",
+    "fr-FR": "Afficher les Feux d'Artifice",
+    "hi-IN": "आतिशबाज़ी दिखाएं",
+    "it-IT": "Mostra Fuochi d'Artificio",
+    "pt-BR": "Mostrar Fogos de Artifício",
   },
   showSnowmen: {
     "de-DE": "Schneemänner anzeigen",
