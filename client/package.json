@@ -63,7 +63,7 @@
     "chance": "^1.1.13",
     "cypress": "^15.8.1",
     "esbuild": "^0.27.2",
-    "globals": "^16.5.0",
+    "globals": "^17.0.0",
     "typescript-eslint": "^8.51.0"
   }
 }
