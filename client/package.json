@@ -12,7 +12,7 @@
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.10.1",
+    "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vercel/analytics": "^1.6.1",
@@ -64,6 +64,6 @@
     "cypress": "^15.8.1",
     "esbuild": "^0.27.2",
     "globals": "^16.5.0",
-    "typescript-eslint": "^8.50.1"
+    "typescript-eslint": "^8.51.0"
   }
 }
