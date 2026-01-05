@@ -37,7 +37,7 @@
     "@types/ws": "^8.18.1",
     "chance": "^1.1.13",
     "eslint": "^9.39.2",
-    "globals": "^16.5.0",
+    "globals": "^17.0.0",
     "jest": "^30.2.0",
     "pre-commit": "^1.2.2",
     "socket.io-client": "^4.8.3",
