@@ -8,6 +8,7 @@ import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { chooseAiPersonalityStorageKey } from "../../helpers/localStorageKeys"
+import { usePersistedState } from '../../hooks/usePersistedState'
 
 const botNameIdeas = [
   'R2-D2',
@@ -25,12 +26,12 @@ const botNameIdeas = [
   'Replicant'
 ]
 
-function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
+function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readonly<{
   addAiPlayerDialogOpen: boolean
   setAddAiPlayerDialogOpen: (open: boolean) => void
-}) {
+}>) {
   const [botName, setBotName] = useState('')
-  const [choosePersonality, setChoosePersonality] = useState<boolean>(localStorage.getItem(chooseAiPersonalityStorageKey) !== JSON.stringify(false))
+  const [choosePersonality, setChoosePersonality] = usePersistedState<boolean>(chooseAiPersonalityStorageKey, true)
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
 
@@ -122,7 +123,6 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: {
               checked={choosePersonality}
               onChange={(event) => {
                 setChoosePersonality(event.target.checked)
-                localStorage.setItem(chooseAiPersonalityStorageKey, JSON.stringify(event.target.checked))
               }}
               slotProps={{ input: { 'aria-label': 'controlled' } }}
             />

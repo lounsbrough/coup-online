@@ -1,18 +1,19 @@
-import { createContext, useState, useMemo, useContext, ReactNode } from 'react'
-import { confirmActionsStorageKey, showChickensStorageKey } from '../helpers/localStorageKeys'
+import { createContext, useMemo, useContext, ReactNode } from 'react'
+import { confirmActionsStorageKey, showBackgroundImageStorageKey } from '../helpers/localStorageKeys'
+import { usePersistedState } from '../hooks/usePersistedState';
 
 interface UserSettingsContextType {
-  showChickens: boolean;
+  showBackgroundImage: boolean;
   confirmActions: boolean;
-  setShowChickens: (value: boolean) => void;
+  setShowBackgroundImage: (value: boolean) => void;
   setConfirmActions: (value: boolean) => void;
 }
 
 const UserSettingsContext = createContext<UserSettingsContextType>({
-  showChickens: true,
+  showBackgroundImage: true,
   confirmActions: true,
-  setShowChickens: () => {
-    console.warn('setShowChickens called without a provider')
+  setShowBackgroundImage: () => {
+    console.warn('setShowBackgroundImage called without a provider')
   },
   setConfirmActions: () => {
     console.warn('setConfirmActions called without a provider')
@@ -23,28 +24,18 @@ interface UserSettingsContextProviderProps {
   children: ReactNode;
 }
 
-export function UserSettingsContextProvider({ children }: UserSettingsContextProviderProps) {
-  const [showChickens, setShowChickens] = useState<boolean>(JSON.parse(localStorage.getItem(showChickensStorageKey) ?? JSON.stringify(true)))
-  const [confirmActions, setConfirmActions] = useState<boolean>(JSON.parse(localStorage.getItem(confirmActionsStorageKey) ?? JSON.stringify(true)))
-
-  const setShowChickensHandler = (value: boolean) => {
-    setShowChickens(value)
-    localStorage.setItem(showChickensStorageKey, JSON.stringify(value))
-  }
-
-  const setConfirmActionsHandler = (value: boolean) => {
-    setConfirmActions(value)
-    localStorage.setItem(confirmActionsStorageKey, JSON.stringify(value))
-  }
+export function UserSettingsContextProvider({ children }: Readonly<UserSettingsContextProviderProps>) {
+  const [showBackgroundImage, setShowBackgroundImage] = usePersistedState<boolean>(showBackgroundImageStorageKey, true)
+  const [confirmActions, setConfirmActions] = usePersistedState<boolean>(confirmActionsStorageKey, true)
 
   const contextValue = useMemo<UserSettingsContextType>(
     () => ({
-      showChickens,
+      showBackgroundImage,
       confirmActions,
-      setShowChickens: setShowChickensHandler,
-      setConfirmActions: setConfirmActionsHandler
+      setShowBackgroundImage,
+      setConfirmActions
     }),
-    [showChickens, confirmActions, setShowChickensHandler, setConfirmActionsHandler]
+    [showBackgroundImage, confirmActions, setShowBackgroundImage, setConfirmActions]
   )
 
   return (

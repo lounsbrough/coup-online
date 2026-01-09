@@ -16,7 +16,7 @@ interface ChatBubbleProps {
   setLatestReadMessageId: (id: string | null) => void
 }
 
-export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId, setLatestReadMessageId }: ChatBubbleProps) {
+export default function ChatBubble({ chatOpen, setChatOpen, latestReadMessageId, setLatestReadMessageId }: Readonly<ChatBubbleProps>) {
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false)
   const [unreadMessagePlayerColors, setUnreadMessagePlayerColors] = useState<string[]>([])
   const { gameState } = useGameStateContext()

@@ -108,7 +108,8 @@ const eventHandlers: {
       playerName: playerNameRule,
       settings: Joi.object().keys({
         eventLogRetentionTurns: Joi.number().integer().min(1).max(100).required(),
-        allowRevive: Joi.bool().required()
+        allowRevive: Joi.bool().required(),
+        speedRoundSeconds: Joi.number().integer().min(1).max(60)
       }).required(),
       language: languageRule
     })

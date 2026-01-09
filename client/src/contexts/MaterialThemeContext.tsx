@@ -1,8 +1,9 @@
-import { useState, useMemo, createContext, useEffect, useContext, ReactNode } from 'react'
+import { useMemo, createContext, useContext, ReactNode } from 'react'
 import { createTheme, useMediaQuery, PaletteMode, GlobalStyles, ThemeProvider, PaletteColor } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { activeColorModeStorageKey } from '../helpers/localStorageKeys'
 import { Actions, Influences } from '@shared'
+import { usePersistedState } from '../hooks/usePersistedState'
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -49,9 +50,10 @@ export const ColorModeContext = createContext<ColorModeContextType>({
   setColorMode: () => { }
 })
 
-export function MaterialThemeContextProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<AppColorMode>(
-    (localStorage.getItem(activeColorModeStorageKey) as AppColorMode | null) ?? SYSTEM_COLOR_MODE
+export function MaterialThemeContextProvider({ children }: Readonly<{ children: ReactNode }>) {
+  const [mode, setMode] = usePersistedState<AppColorMode>(
+    activeColorModeStorageKey,
+    SYSTEM_COLOR_MODE
   )
 
   const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
@@ -80,10 +82,6 @@ export function MaterialThemeContextProvider({ children }: { children: ReactNode
     }),
     [mode, activeColorMode]
   )
-
-  useEffect(() => {
-    localStorage.setItem(activeColorModeStorageKey, mode)
-  }, [mode])
 
   const defaultBackgroundColor = isLightMode ? '#ffffff' : '#212121'
 

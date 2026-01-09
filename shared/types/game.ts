@@ -208,6 +208,7 @@ export type DehydratedPublicPlayer = Omit<PublicPlayer,
 export type GameSettings = {
   eventLogRetentionTurns: number
   allowRevive: boolean
+  speedRoundSeconds?: number
 }
 
 export type ChatMessage = {

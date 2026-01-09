@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Grid, useTheme } from "@mui/material"
+import { Box, Button, Grid, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
 import { ContentCopy, GroupAdd, PlayArrow } from "@mui/icons-material"
@@ -98,16 +98,28 @@ function WaitingRoom() {
             >
               {(t('startGame'))}
             </Button>
-            {gameState.players.length < 2 && (
-              <CoupTypography sx={{ fontStyle: 'italic' }} mt={2} addTextShadow>
-                {t('addPlayersToStartGame')}
-              </CoupTypography>
-            )}
-            {gameState.players.length === 2 && (
-              <CoupTypography sx={{ fontStyle: 'italic' }} mt={2} addTextShadow>
-                {t('startingPlayerBeginsWith1Coin')}
-              </CoupTypography>
-            )}
+            <Box sx={{ fontStyle: 'italic' }}>
+              {gameState.players.length < 2 && (
+                <CoupTypography mt={2} addTextShadow>
+                  {t('addPlayersToStartGame')}
+                </CoupTypography>
+              )}
+              {gameState.players.length === 2 && (
+                <CoupTypography mt={2} addTextShadow>
+                  {t('startingPlayerBeginsWith1Coin')}
+                </CoupTypography>
+              )}
+              {gameState.settings.allowRevive && (
+                <CoupTypography mt={2} addTextShadow>
+                  {t('reviveIsEnabled')}
+                </CoupTypography>
+              )}
+              {gameState.settings.speedRoundSeconds && (
+                <CoupTypography mt={2} addTextShadow>
+                  {t('speedRoundSeconds')}: {gameState.settings.speedRoundSeconds}
+                </CoupTypography>
+              )}
+            </Box>
           </Grid>
         )}
         {!gameState.selfPlayer && (
