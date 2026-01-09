@@ -1,13 +1,13 @@
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError } from "../utilities/errors"
-import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
+import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, PlayerActions, Responses } from "../../../shared/types/game"
 import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { getValue } from '../utilities/storage'
 import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
+import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
-import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
 
 const getPlayerInRoom = ({ gameState, playerId }: {
@@ -317,107 +317,33 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   const unchangedResponse = { roomId, playerId, stateUnchanged: true }
   const changedResponse = { roomId, playerId }
 
-  const playersLeft = gameState.players.filter(({ influences }) => influences.length)
-  const gameIsOver = playersLeft.length === 1
-
-  const timeToPonderLifeChoices = 500 + Math.floor(Math.random() * 1000)
-  if (gameIsOver || new Date() < new Date(gameState.lastEventTimestamp.getTime() + timeToPonderLifeChoices)) {
+  const timeToPonderLifeChoices = 300 + Math.floor(Math.random() * 700)
+  if (new Date() < new Date(gameState.lastEventTimestamp.getTime() + timeToPonderLifeChoices)) {
     return unchangedResponse
   }
 
-  const pendingLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
-  const nextPendingLossAiPlayer = gameState.players.find(({ ai, name }) =>
-    ai && pendingLossPlayers.includes(name))
-  if (nextPendingLossAiPlayer) {
-    const { influences } = decideInfluencesToLose(
-      getPublicGameState({ gameState, playerId: nextPendingLossAiPlayer.id })
-    )
+  const aiPlayersLeft = gameState.players.filter(({ influences }) => influences.length)
 
-    await loseInfluencesHandler({
-      roomId,
-      playerId: nextPendingLossAiPlayer.id,
-      influences
-    })
+  for (const aiPlayer of aiPlayersLeft) {
+    const suggestedMove = await getPlayerSuggestedMove({ roomId, playerId: aiPlayer.id })
+    if (!suggestedMove) continue
+    const [move, params] = suggestedMove
 
-    return changedResponse
-  }
-
-  const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
-
-  const turnPlayerState = getPublicGameState({ gameState, playerId: turnPlayer!.id })
-
-  if (turnPlayer?.ai && canPlayerChooseAction(turnPlayerState)) {
-    const { action, targetPlayer } = decideAction(turnPlayerState)
-
-    await actionHandler({
-      roomId,
-      playerId: turnPlayer.id,
-      action,
-      ...(targetPlayer && { targetPlayer })
-    })
-
-    return changedResponse
-  }
-
-  let nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
-    ai && canPlayerChooseActionResponse(getPublicGameState({ gameState, playerId: id })))
-  if (nextPendingAiPlayer) {
-    const { response, claimedInfluence } = decideActionResponse(
-      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
-    )
-
-    await actionResponseHandler({
-      roomId,
-      playerId: nextPendingAiPlayer.id,
-      response,
-      ...(claimedInfluence && { claimedInfluence })
-    })
-
-    return changedResponse
-  }
-
-  if (turnPlayer?.ai && canPlayerChooseActionChallengeResponse(turnPlayerState)) {
-    const { influence } = decideActionChallengeResponse(
-      getPublicGameState({ gameState, playerId: turnPlayer.id })
-    )
-
-    await actionChallengeResponseHandler({
-      roomId,
-      playerId: turnPlayer.id,
-      influence
-    })
-
-    return changedResponse
-  }
-
-  nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
-    ai && canPlayerChooseBlockResponse(getPublicGameState({ gameState, playerId: id })))
-  if (nextPendingAiPlayer) {
-    const { response } = decideBlockResponse(
-      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
-    )
-
-    await blockResponseHandler({
-      roomId,
-      playerId: nextPendingAiPlayer.id,
-      response
-    })
-
-    return changedResponse
-  }
-
-  nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
-    ai && canPlayerChooseBlockChallengeResponse(getPublicGameState({ gameState, playerId: id })))
-  if (nextPendingAiPlayer) {
-    const { influence } = decideBlockChallengeResponse(
-      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
-    )
-
-    await blockChallengeResponseHandler({
-      roomId,
-      playerId: nextPendingAiPlayer.id,
-      influence
-    })
+    if (move === PlayerActions.loseInfluences) {
+      loseInfluencesHandler(params as Parameters<typeof loseInfluencesHandler>[0])
+    } else if (move === PlayerActions.action) {
+      actionHandler(params as Parameters<typeof actionHandler>[0])
+    } else if (move === PlayerActions.actionResponse) {
+      actionResponseHandler(params as Parameters<typeof actionResponseHandler>[0])
+    } else if (move === PlayerActions.actionChallengeResponse) {
+      actionChallengeResponseHandler(params as Parameters<typeof actionChallengeResponseHandler>[0])
+    } else if (move === PlayerActions.blockResponse) {
+      blockResponseHandler(params as Parameters<typeof blockResponseHandler>[0])
+    } else if (move === PlayerActions.blockChallengeResponse) {
+      blockChallengeResponseHandler(params as Parameters<typeof blockChallengeResponseHandler>[0])
+    } else {
+      throw new ActionNotCurrentlyAllowedError()
+    }
 
     return changedResponse
   }
