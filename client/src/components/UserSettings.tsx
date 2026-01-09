@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router"
 import LanguageSelector from "./LanguageSelector"
 import { useTranslationContext } from "../contexts/TranslationsContext"
 import { useUserSettingsContext } from "../contexts/UserSettingsContext"
-import { getShowImageLabel } from '../helpers/easter-eggs'
+import { getShowImageLabel } from '../helpers/easterEggs'
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)

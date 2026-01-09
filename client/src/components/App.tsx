@@ -22,7 +22,7 @@ import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
 import { useUserSettingsContext } from '../contexts/UserSettingsContext'
-import { getBackgroundImage } from '../helpers/easter-eggs'
+import { getBackgroundImage } from '../helpers/easterEggs'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
