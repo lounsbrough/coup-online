@@ -11,7 +11,12 @@ function persistToStorage<T>(storageKey: string, value: T): void {
 export function usePersistedState<T>(storageKey: string, defaultValue: T): [T, (newValue: T) => void] {
   const [value, setValue] = useState<T>(() => {
     const storedValue = localStorage.getItem(storageKey)
-    return storedValue ? JSON.parse(storedValue) : defaultValue
+    try {
+      return storedValue ? JSON.parse(storedValue) : defaultValue
+    } catch {
+      // If users have invalid data in localStorage, fall back to default
+      return defaultValue
+    }
   })
 
   const persistAndSetValue = useCallback(
