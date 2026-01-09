@@ -308,7 +308,7 @@ export const startGameHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
-export const checkAiMoveHandler = async ({ roomId, playerId }: {
+export const checkAutoMoveHandler = async ({ roomId, playerId }: {
   roomId: string
   playerId: string
 }) => {

@@ -94,9 +94,9 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
     const interval = setInterval(() => {
       if (socket && isConnected) {
-        socket.emit(PlayerActions.checkAiMove, { roomId, playerId: getPlayerId(), language })
+        socket.emit(PlayerActions.checkAutoMove, { roomId, playerId: getPlayerId(), language })
       } else {
-        fetch(`${getBaseUrl()}/${PlayerActions.checkAiMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
+        fetch(`${getBaseUrl()}/${PlayerActions.checkAutoMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
           .then(handleGameStateResponse)
           .catch((error) => {
             console.error(error)

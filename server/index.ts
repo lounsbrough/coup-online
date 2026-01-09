@@ -1,10 +1,10 @@
-import http from 'http'
+import http from 'node:http'
 import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
 import { Actions, Influences, Responses, DehydratedPublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
-import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAiMoveHandler, createGameHandler, setChatMessageDeletedHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler, setEmojiOnChatMessageHandler, forfeitGameHandler } from './src/game/actionHandlers'
+import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAutoMoveHandler, createGameHandler, setChatMessageDeletedHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler, setEmojiOnChatMessageHandler, forfeitGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError, WrongPlayerIdOnSocketError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
 import { getGameState, getPublicGameState } from './src/utilities/gameState'
@@ -22,7 +22,7 @@ type ServerToClientEvents = {
 
 type ClientToServerEvents = {
   [action in PlayerActions]: (
-    params: { language: AvailableLanguageCode } & unknown,
+    params: { language: AvailableLanguageCode } & Record<string, unknown>,
     callback?: (response: DehydratedPublicGameStateOrError) => void
   ) => Promise<void>
 }
@@ -66,7 +66,7 @@ const eventHandlers: {
     handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean }>
     express: {
       method: 'post' | 'get'
-      parseParams: (req: Request) => { language: AvailableLanguageCode } & unknown
+      parseParams: (req: Request) => { language: AvailableLanguageCode } & Record<string, unknown>
       validator: (schema: Joi.ObjectSchema) => (req: Request, res: Response, next: NextFunction) => void
     }
     joiSchema: Joi.ObjectSchema
@@ -272,8 +272,8 @@ const eventHandlers: {
       language: languageRule
     })
   },
-  [PlayerActions.checkAiMove]: {
-    handler: checkAiMoveHandler,
+  [PlayerActions.checkAutoMove]: {
+    handler: checkAutoMoveHandler,
     express: {
       method: 'get',
       parseParams: (req) => {
@@ -507,7 +507,7 @@ io.on('connection', (socket) => {
           const roomPrefix = 'coup-game-'
           const socketRoom = `${roomPrefix}${roomId}`
           const currentRooms = [...socket.rooms]
-          if (roomId && !currentRooms.some((room) => room === socketRoom)) {
+          if (roomId && !currentRooms.includes(socketRoom)) {
             await Promise.all(currentRooms.map((currentRoom) => socket.leave(currentRoom)))
             await socket.join(socketRoom)
           }
@@ -520,7 +520,7 @@ io.on('connection', (socket) => {
               if (isCallerSocket) callback?.({ gameState: publicGameState })
             } catch (error) {
               console.error(error, { event, params })
-              if (event === PlayerActions.checkAiMove) return
+              if (event === PlayerActions.checkAutoMove) return
 
               if (error instanceof GameMutationInputError) {
                 const message = error.getMessage(params.language)
@@ -537,18 +537,18 @@ io.on('connection', (socket) => {
             return
           }
 
-          if (event !== PlayerActions.gameState) {
+          if (event === PlayerActions.gameState) {
+            await emitGameStateChanged(socket)
+          } else {
             const roomSocketIds = io.of('/').adapter.rooms.get(socketRoom)
             if (roomSocketIds) {
               const roomSockets = [...roomSocketIds].map((socketId) => io.sockets.sockets.get(socketId))
               roomSockets.forEach(emitGameStateChanged)
             }
-          } else {
-            await emitGameStateChanged(socket)
           }
         } catch (error) {
           console.error(error, { event, params })
-          if (event === PlayerActions.checkAiMove) return
+          if (event === PlayerActions.checkAutoMove) return
 
           if (error instanceof GameMutationInputError) {
             const message = error.getMessage(params.language)
@@ -577,7 +577,7 @@ const responseHandler = <T>(
     res.status(200).json({ gameState: publicGameState })
   } catch (error) {
     console.error(error, { event, props })
-    if (event === PlayerActions.checkAiMove) return
+    if (event === PlayerActions.checkAutoMove) return
 
     if (error instanceof GameMutationInputError) {
       const message = error.getMessage(props.language)
