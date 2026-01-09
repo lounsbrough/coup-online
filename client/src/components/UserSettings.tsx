@@ -6,12 +6,13 @@ import { useSearchParams } from "react-router"
 import LanguageSelector from "./LanguageSelector"
 import { useTranslationContext } from "../contexts/TranslationsContext"
 import { useUserSettingsContext } from "../contexts/UserSettingsContext"
+import { getShowImageLabel } from '../helpers/easter-eggs'
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [searchParams] = useSearchParams()
   const { isConnected } = useWebSocketContext()
-  const { t } = useTranslationContext()
+  const { t, language } = useTranslationContext()
   const { isSmallScreen } = useTheme()
   const { showChickens, confirmActions, setShowChickens, setConfirmActions } = useUserSettingsContext()
 
@@ -99,7 +100,7 @@ function UserSettings() {
             </Grid>
             <Grid height={rowHeight} alignContent="center">
               <Typography component="span">
-                {t('showChickens')} 🐓
+                {getShowImageLabel(language)}
                 :
               </Typography>
               <Switch

@@ -147,6 +147,9 @@ export type Translations = ActionMessages & AlertColorTranslations & {
   settings: TranslationsForString;
   setup: TranslationsForString;
   showChickens: TranslationsForString;
+  showFireworks: TranslationsForString;
+  showSnowmen: TranslationsForString;
+  showTurkeys: TranslationsForString;
   skepticism: TranslationsForString;
   spectateGame: TranslationsForString;
   startGame: TranslationsForString;
@@ -1592,6 +1595,33 @@ const translations: Translations = {
     "hi-IN": "मुर्गियों को दिखाएं",
     "it-IT": "Mostra Polli",
     "pt-BR": "Mostrar Galinhas",
+  },
+  showFireworks: {
+    "de-DE": "Feuerwerk anzeigen",
+    "en-US": "Show Fireworks",
+    "es-MX": "Mostrar Fuegos Artificiales",
+    "fr-FR": "Afficher les Feux d'Artifice",
+    "hi-IN": "आतिशबाज़ी दिखाएं",
+    "it-IT": "Mostra Fuochi d'Artificio",
+    "pt-BR": "Mostrar Fogos de Artifício",
+  },
+  showSnowmen: {
+    "de-DE": "Schneemänner anzeigen",
+    "en-US": "Show Snowmen",
+    "es-MX": "Mostrar Muñecos de Nieve",
+    "fr-FR": "Afficher les Bonhommes de Neige",
+    "hi-IN": "स्नोमेन दिखाएं",
+    "it-IT": "Mostra Pupazzi di Neve",
+    "pt-BR": "Mostrar Bonecos de Neve",
+  },
+  showTurkeys: {
+    "de-DE": "Truthähne anzeigen",
+    "en-US": "Show Turkeys",
+    "es-MX": "Mostrar Pavos",
+    "fr-FR": "Afficher les Dindes",
+    "hi-IN": "टर्की दिखाएं",
+    "it-IT": "Mostra Tacchini",
+    "pt-BR": "Mostrar Perus",
   },
   skepticism: {
     "de-DE": "Skepsis",

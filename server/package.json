@@ -19,31 +19,31 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^2.2.0",
+    "body-parser": "^2.2.1",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "joi": "^18.0.1",
-    "redis": "^5.8.3",
-    "socket.io": "^4.8.1"
+    "express": "^5.2.1",
+    "joi": "^18.0.2",
+    "redis": "^5.10.0",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
-    "@eslint/js": "^9.37.0",
+    "@eslint/js": "^9.39.2",
     "@types/body-parser": "^1.19.6",
     "@types/chance": "^1.1.7",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
+    "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.7.2",
+    "@types/node": "^24.10.4",
     "@types/ws": "^8.18.1",
     "chance": "^1.1.13",
-    "eslint": "^9.37.0",
-    "globals": "^16.4.0",
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
     "jest": "^30.2.0",
     "pre-commit": "^1.2.2",
-    "socket.io-client": "^4.8.1",
-    "ts-jest": "^29.4.5",
+    "socket.io-client": "^4.8.3",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.0"
+    "typescript-eslint": "^8.51.0"
   }
 }

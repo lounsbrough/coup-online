@@ -22,6 +22,7 @@ import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
 import { useUserSettingsContext } from '../contexts/UserSettingsContext'
+import { getBackgroundImage } from '../helpers/easter-eggs'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -42,7 +43,7 @@ function App() {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: 'url(/chickens.jpeg)',
+          backgroundImage: getBackgroundImage(),
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           opacity: theme.palette.mode === 'dark' ? 0.25 : 0.4,

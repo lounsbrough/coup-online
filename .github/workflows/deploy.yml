@@ -21,7 +21,7 @@ jobs:
     concurrency: deploy-server-${{ inputs.environment }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: ./.github/actions/setup-node
 
     - run: |
@@ -43,14 +43,14 @@ jobs:
     if: ${{ inputs.environment == 'production' }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: ./.github/actions/setup-node
 
     - uses: webfactory/ssh-agent@v0.9.1
       with:
         ssh-private-key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
 
-    - uses: appleboy/ssh-action@v1.2.2
+    - uses: appleboy/ssh-action@v1.2.4
       with:
         host: lounsbrough.com
         username: pi
@@ -71,7 +71,7 @@ jobs:
     concurrency: deploy-client-${{ inputs.environment }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: ./.github/actions/setup-node
 
     - run: |
