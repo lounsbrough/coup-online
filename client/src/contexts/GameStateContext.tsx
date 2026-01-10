@@ -97,7 +97,11 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
 
     const interval = setInterval(() => {
       if (socket && isConnected) {
-        socket.emit(PlayerActions.checkAutoMove, { roomId, playerId: getPlayerId(), language })
+        socket.emit(PlayerActions.checkAutoMove, { roomId, playerId: getPlayerId(), language }, ({ gameState }: { gameState?: DehydratedPublicGameState }) => {
+          if (gameState) {
+            setDehydratedGameStateIfChanged(gameState)
+          }
+        })
       } else {
         fetch(`${getBaseUrl()}/${PlayerActions.checkAutoMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
           .then(handleGameStateResponse)
@@ -105,7 +109,7 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
             console.error(error)
           })
       }
-    }, isConnected ? 1000 : 2000)
+    }, isConnected ? 500 : 1000)
 
     return () => {
       clearInterval(interval)

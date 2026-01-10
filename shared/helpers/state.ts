@@ -1,12 +1,12 @@
 import { GameState, PublicGameState, DehydratedGameState, DehydratedPublicGameState, ChatMessage, DehydratedChatMessage } from "../types/game";
 
-const arraySortReplacer = (_: string, value: any) => (value instanceof Array ? [...value].sort() : value)
+const arraySortReplacer = (_: string, value: any) => (Array.isArray(value) ? [...value].sort() : value)
 
 export const isSameState = (a: DehydratedGameState | DehydratedPublicGameState, b: DehydratedGameState | DehydratedPublicGameState) =>
   JSON.stringify(a, arraySortReplacer) === JSON.stringify(b, arraySortReplacer)
 
 const getRequiredChatMessageFields = <T extends ChatMessage | DehydratedChatMessage>(chatMessage: T): Omit<T, 'emojis'> => {
-  const required = {...chatMessage}
+  const required = { ...chatMessage }
   delete required.emojis
   return required
 }
@@ -55,7 +55,7 @@ const dehydrateCommonGameState = (hydrated: GameState | PublicGameState) => ({
   }),
 })
 
-export const dehydrateGameState = (hydrated: GameState) : DehydratedGameState => ({
+export const dehydrateGameState = (hydrated: GameState): DehydratedGameState => ({
   ...dehydrateCommonGameState(hydrated),
   deck: hydrated.deck,
   settings: hydrated.settings,
@@ -67,7 +67,7 @@ export const dehydrateGameState = (hydrated: GameState) : DehydratedGameState =>
   })),
 })
 
-export const dehydratePublicGameState = (hydrated: PublicGameState) : DehydratedPublicGameState => ({
+export const dehydratePublicGameState = (hydrated: PublicGameState): DehydratedPublicGameState => ({
   ...dehydrateCommonGameState(hydrated),
   deckCount: hydrated.deckCount,
   settings: hydrated.settings,
