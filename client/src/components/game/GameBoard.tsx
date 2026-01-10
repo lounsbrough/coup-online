@@ -12,13 +12,14 @@ import CardDeck from "../icons/CardDeck"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import Forfeit from "./Forfeit"
 import CoupTypography from '../utilities/CoupTypography'
+import SpeedRoundTimer from './SpeedRoundTimer'
 
 interface GameBoardProps {
   leftDrawerOpen: boolean
   rightDrawerOpen: boolean
 }
 
-function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
+function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>) {
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const theme = useTheme()
@@ -47,6 +48,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
   return (
     <Grid container className="game-board">
       <Grid size={{ xs: 12, sm: 12, md: 0, lg: drawerIsOpen ? 0 : 3 }} />
+      <SpeedRoundTimer />
       <Grid
         p={2}
         size={{ xs: 12, sm: 12, md: 9, lg: drawerIsOpen ? 9 : 6 }}
