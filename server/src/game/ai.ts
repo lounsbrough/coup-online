@@ -170,7 +170,7 @@ const checkEndGameAction = (gameState: PublicGameState): {
       }
 
       return chanceOfAssassin + Math.random() * 0.1 > chanceOfCaptain + Math.random() * 0.1
-       ? assassinate : steal
+        ? assassinate : steal
     }
   }
 
@@ -215,9 +215,6 @@ export const decideAction = (gameState: PublicGameState): {
     throw new Error('AI could not determine self player')
   }
 
-  const endGameAction = checkEndGameAction(gameState)
-  if (endGameAction) return endGameAction
-
   let willCoup = false
   let willRevive = false
   if (gameState.selfPlayer?.coins >= 10) {
@@ -229,6 +226,9 @@ export const decideAction = (gameState: PublicGameState): {
       willCoup = true
     }
   } else if (gameState.selfPlayer?.coins >= 7) {
+    const endGameAction = checkEndGameAction(gameState)
+    if (endGameAction) return endGameAction
+
     willCoup = Math.random() > 0.5
   }
 
