@@ -97,9 +97,9 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
 
     const interval = setInterval(() => {
       if (socket && isConnected) {
-        socket.emit(PlayerActions.checkAutoMove, { roomId, playerId: getPlayerId(), language }, ({ gameState }: { gameState?: DehydratedPublicGameState }) => {
-          if (gameState) {
-            setDehydratedGameStateIfChanged(gameState)
+        socket.emit(PlayerActions.checkAutoMove, { roomId, playerId: getPlayerId(), language }, ({ gameState: newGameState }: { gameState?: DehydratedPublicGameState }) => {
+          if (newGameState) {
+            setDehydratedGameStateIfChanged(newGameState)
           }
         })
       } else {
