@@ -35,6 +35,13 @@ const genericErrorMessage = 'Unexpected error processing request'
 
 const port = process.env.EXPRESS_PORT || 8008
 
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error)
+})
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+})
+
 const app = express()
 app.use(cors())
 app.use(json())
@@ -593,6 +600,19 @@ getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }
   app[express.method](`/${event}`, express.validator(joiSchema), (req, res) => {
     return responseHandler(event, handler)(res, express.parseParams(req))
   })
+})
+
+// Express error handling middleware
+app.use((error: unknown, req: Request, res: Response) => {
+  console.error('Unhandled Express error:', error)
+
+  if (error instanceof GameMutationInputError) {
+    const language = req.body?.language || req.query?.language || AvailableLanguageCode['en-US']
+    const message = error.getMessage(language)
+    res.status(error.httpCode || 400).json({ error: message })
+  } else {
+    res.status(500).json({ error: genericErrorMessage })
+  }
 })
 
 server.listen(port, function () {
