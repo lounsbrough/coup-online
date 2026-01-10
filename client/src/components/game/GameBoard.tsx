@@ -18,7 +18,7 @@ interface GameBoardProps {
   rightDrawerOpen: boolean
 }
 
-function GameBoard({ leftDrawerOpen, rightDrawerOpen }: GameBoardProps) {
+function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>) {
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const theme = useTheme()

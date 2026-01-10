@@ -17,7 +17,7 @@ interface ChatDrawerContentProps {
 
 export default function ChatDrawerContent({
   chatOpen, setLatestReadMessageId
-}: ChatDrawerContentProps) {
+}: Readonly<ChatDrawerContentProps>) {
   const scrollingMessageDrawerRef = useRef<HTMLElement>(null)
   const [pendingMessageText, setPendingMessageText] = useState('')
   const [pendingMessageId, setPendingMessageId] = useState('')

@@ -60,7 +60,6 @@ function JoinGame() {
               playerName: playerName.trim()
             })
           } else if (buttonId === 'spectateGameButton') {
-            console.log('removing required attribute from player name input')
             playerNameInputRef.current!.removeAttribute('required')
             if (formRef.current!.checkValidity()) spectateTrigger({
               roomId: roomId.trim(),

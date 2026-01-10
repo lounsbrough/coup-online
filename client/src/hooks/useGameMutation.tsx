@@ -49,12 +49,12 @@ function useGameMutation<ParamsType>({ action, callback }: {
       socket.emit(
         action,
         { ...params, language },
-        ({ error, gameState }: { error: string, gameState: DehydratedPublicGameState }) => {
+        ({ error, gameState }: { error?: string, gameState?: DehydratedPublicGameState }) => {
           clearTimeout(noSocketCallbackTimeout.current)
           setIsMutatingSocket(false)
           if (error) {
             setMutationError(error)
-          } else {
+          } else if (gameState) {
             callback?.(gameState)
             setDehydratedGameState(gameState)
           }
