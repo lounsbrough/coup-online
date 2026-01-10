@@ -114,7 +114,7 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
     return () => {
       clearInterval(interval)
     }
-  }, [roomId, socket, isConnected, language, autoMovePlayersActive, handleGameStateResponse])
+  }, [roomId, socket, isConnected, language, autoMovePlayersActive, handleGameStateResponse, setDehydratedGameStateIfChanged])
 
   const contextValue = useMemo(() => ({
     gameState,
