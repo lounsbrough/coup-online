@@ -40,7 +40,8 @@ const SpeedRoundTimer: React.FC = () => {
   const progress = (msRemaining / initialMs) * 100
   const displaySeconds = Math.ceil(msRemaining / 1000)
   const hue = (msRemaining / initialMs) * 120
-  const currentColor = `hsl(${hue}, 85%, 45%)`
+  const borderColor = `hsl(${hue}, 75%, 45%)`
+  const backgroundColor = `hsla(${hue}, 75%, 45%, 0.15)`
 
   return (
     <Box
@@ -51,6 +52,8 @@ const SpeedRoundTimer: React.FC = () => {
         justifyContent: 'center',
         width: size,
         height: size,
+        background: backgroundColor,
+        borderRadius: '50%',
         animation: 'pulseTimer 1.5s infinite',
         "@keyframes pulseTimer": {
           "0%": { transform: 'scale(1)' },
@@ -63,10 +66,10 @@ const SpeedRoundTimer: React.FC = () => {
         variant="determinate"
         value={progress}
         size={size}
-        thickness={4.5}
+        thickness={6}
         enableTrackSlot
         sx={{
-          color: currentColor,
+          color: borderColor,
           transition: 'color 0.1s linear',
         }}
       />
@@ -81,8 +84,6 @@ const SpeedRoundTimer: React.FC = () => {
       >
         <Typography
           sx={{
-            color: currentColor,
-            transition: 'color 0.1s linear',
             fontWeight: 800,
             fontSize: `${size * 0.4}px`,
             lineHeight: 1,
