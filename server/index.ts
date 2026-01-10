@@ -511,6 +511,11 @@ io.on('connection', (socket) => {
             await Promise.all(currentRooms.map((currentRoom) => socket.leave(currentRoom)))
             await socket.join(socketRoom)
           }
+
+          if (stateUnchanged) {
+            return
+          }
+
           const fullGameState = await getGameState(roomId)
           const emitGameStateChanged = async (pushToSocket: Socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId
@@ -531,10 +536,6 @@ io.on('connection', (socket) => {
                 if (isCallerSocket) callback?.({ error: genericErrorMessage })
               }
             }
-          }
-
-          if (stateUnchanged) {
-            return
           }
 
           if (event === PlayerActions.gameState) {
