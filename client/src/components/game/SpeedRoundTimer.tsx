@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Box, CircularProgress, Typography } from '@mui/material'
 import { useGameStateContext } from '../../contexts/GameStateContext'
 
-const size = 80
+const size = 60
 
 const SpeedRoundTimer: React.FC = () => {
   const { gameState } = useGameStateContext()
@@ -11,7 +11,7 @@ const SpeedRoundTimer: React.FC = () => {
   const lastEventTimestamp = gameState?.lastEventTimestamp
   const initialMs = (speedRoundSeconds ?? 0) * 1000
 
-  const [msRemaining, setMsRemaining] = useState<number>(0)
+  const [msRemaining, setMsRemaining] = useState<number | undefined>(undefined)
 
   useEffect(() => {
     if (!lastEventTimestamp || !initialMs) return
@@ -33,7 +33,7 @@ const SpeedRoundTimer: React.FC = () => {
     return () => clearInterval(timer)
   }, [lastEventTimestamp, initialMs])
 
-  if (!gameState || !speedRoundSeconds || msRemaining <= 0) {
+  if (!gameState || !speedRoundSeconds || msRemaining === undefined) {
     return null
   }
 
