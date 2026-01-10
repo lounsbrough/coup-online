@@ -543,7 +543,7 @@ io.on('connection', (socket) => {
             const roomSocketIds = io.of('/').adapter.rooms.get(socketRoom)
             if (roomSocketIds) {
               const roomSockets = [...roomSocketIds].map((socketId) => io.sockets.sockets.get(socketId))
-              roomSockets.forEach(emitGameStateChanged)
+              await Promise.all(roomSockets.map(emitGameStateChanged))
             }
           }
         } catch (error) {
