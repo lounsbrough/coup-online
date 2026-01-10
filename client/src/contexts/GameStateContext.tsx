@@ -18,7 +18,7 @@ export const GameStateContext = createContext<GameStateContextType>({
   hasInitialStateLoaded: false
 })
 
-export function GameStateContextProvider({ children }: { children: ReactNode }) {
+export function GameStateContextProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [hasInitialStateLoaded, setHasInitialStateLoaded] = useState(false)
   const [dehydratedGameState, setDehydratedGameState] = useState<DehydratedPublicGameState>()
   const [searchParams] = useSearchParams()
@@ -84,11 +84,14 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
   const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)
   const gameIsOver = playersLeft?.length === 1
-  const aiPlayersActive = gameState?.isStarted && !gameIsOver && gameState?.players.some(({ ai, influenceCount }) =>
-    ai && influenceCount)
+  const timeToAutoMove = gameState?.settings.speedRoundSeconds
+    ? Date.now() > gameState.lastEventTimestamp.getTime() + gameState.settings.speedRoundSeconds * 1000
+    : false
+  const autoMovePlayersActive = gameState?.isStarted && !gameIsOver && (timeToAutoMove || gameState?.players.some(({ ai, influenceCount }) =>
+    ai && influenceCount))
 
   useEffect(() => {
-    if (!roomId || !aiPlayersActive) {
+    if (!roomId || !autoMovePlayersActive) {
       return
     }
 
@@ -107,9 +110,13 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
     return () => {
       clearInterval(interval)
     }
-  }, [roomId, socket, isConnected, language, aiPlayersActive, handleGameStateResponse])
+  }, [roomId, socket, isConnected, language, autoMovePlayersActive, handleGameStateResponse])
 
-  const contextValue = { gameState, setDehydratedGameState, hasInitialStateLoaded }
+  const contextValue = useMemo(() => ({
+    gameState,
+    setDehydratedGameState,
+    hasInitialStateLoaded
+  }), [gameState, setDehydratedGameState, hasInitialStateLoaded])
 
   return (
     <GameStateContext.Provider value={contextValue}>

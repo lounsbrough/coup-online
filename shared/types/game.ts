@@ -136,21 +136,22 @@ export enum Responses {
 }
 
 export enum EventMessages {
+  ActionConfirm = 'ActionConfirm',
+  ActionPending = 'ActionPending',
+  ActionProcessed = 'ActionProcessed',
+  ForcedMoveProcessed = 'ForcedMoveProcessed',
+  BlockPending = 'BlockPending',
+  BlockSuccessful = 'BlockSuccessful',
+  BlockFailed = 'BlockFailed',
+  ChallengePending = 'ChallengePending',
+  ChallengeSuccessful = 'ChallengeSuccessful',
+  ChallengeFailed = 'ChallengeFailed',
   GameStarted = 'GameStarted',
   PlayerDied = 'PlayerDied',
   PlayerForfeited = 'PlayerForfeited',
   PlayerLostInfluence = 'PlayerLostInfluence',
   PlayerReplacedInfluence = 'PlayerReplacedInfluence',
   PlayerReplacedWithAi = 'PlayerReplacedWithAi',
-  ActionConfirm = 'ActionConfirm',
-  ActionPending = 'ActionPending',
-  ActionProcessed = 'ActionProcessed',
-  ChallengePending = 'ChallengePending',
-  ChallengeSuccessful = 'ChallengeSuccessful',
-  ChallengeFailed = 'ChallengeFailed',
-  BlockPending = 'BlockPending',
-  BlockSuccessful = 'BlockSuccessful',
-  BlockFailed = 'BlockFailed',
 }
 
 export type EventMessage = {
