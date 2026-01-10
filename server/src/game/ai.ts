@@ -364,7 +364,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
 
   if (isBlockable) {
     for (const legalBlockInfluence of legalBlockInfluences) {
-      const hasLegalBlockingInfluence = gameState.selfPlayer?.influences.some((i) => i === legalBlockInfluence)
+      const hasLegalBlockingInfluence = gameState.selfPlayer?.influences.includes(legalBlockInfluence)
       if (hasLegalBlockingInfluence && !randomlyDecideToNotUseOwnedInfluence()) {
         return { response: Responses.Block, claimedInfluence: legalBlockInfluence }
       }
