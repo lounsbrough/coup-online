@@ -738,18 +738,19 @@ const translations: Translations = {
   },
   [EventMessages.ForcedMoveProcessed]: {
     'de-DE':
-      '{{primaryPlayer}} hat zu lange gebraucht und das System hat einen Zug für sie ausgewählt',
-    'en-US': '{{primaryPlayer}} took too long and the system chose a move for them',
+      '⏱️ {{primaryPlayer}} hat zu lange gebraucht, also hat das System einen Zug für sie ausgewählt',
+    'en-US':
+      '⏱️ {{primaryPlayer}} took too long so the system chose a move for them',
     'es-MX':
-      '{{primaryPlayer}} tardó demasiado y el sistema eligió un movimiento por ellos',
+      '⏱️ {{primaryPlayer}} tardó demasiado, así que el sistema eligió un movimiento por ellos',
     'fr-FR':
-      '{{primaryPlayer}} a pris trop de temps et le système a choisi un coup pour eux',
+      '⏱️ {{primaryPlayer}} a pris trop de temps, donc le système a choisi un coup pour eux',
     'hi-IN':
-      '{{primaryPlayer}} को बहुत अधिक समय लग गया और सिस्टम ने उनके लिए एक चाल चुनी',
+      '⏱️ {{primaryPlayer}} को बहुत अधिक समय लग गया इसलिए सिस्टम ने उनके लिए एक चाल चुनी',
     'it-IT':
-      '{{primaryPlayer}} ha impiegato troppo tempo e il sistema ha scelto una mossa per loro',
+      '⏱️ {{primaryPlayer}} ha impiegato troppo tempo, quindi il sistema ha scelto una mossa per loro',
     'pt-BR':
-      '{{primaryPlayer}} demorou muito e o sistema escolheu um movimento para eles',
+      '⏱️ {{primaryPlayer}} demorou muito, então o sistema escolheu uma jogada para eles',
   },
   [EventMessages.ActionProcessed]: {
     [Actions.Assassinate]: {
