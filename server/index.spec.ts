@@ -124,7 +124,7 @@ describe('index', () => {
           body: {
             playerId: chance.string({ length: 10 }),
             playerName: chance.string({ length: 10 }),
-            settings: { }
+            settings: {}
           },
           error: 'Invalid user request',
           status: 400
@@ -200,7 +200,7 @@ describe('index', () => {
 
             const response = await postApi(PlayerActions.createGame, { playerId, playerName, settings: { eventLogRetentionTurns: 100, allowRevive: true } })
 
-            const { json: { gameState } } =  response
+            const { json: { gameState } } = response
             const roomId = gameState?.roomId
 
             return { roomId, playerId: chance.string({ length: 10 }), playerName: chance.string({ length: 10 }) }
@@ -849,7 +849,11 @@ describe('index', () => {
 
         gameStatePromises = getGameStatePromises([socket1, socket2])
         socket2.emit(PlayerActions.joinGame, { roomId, ...player2, language: AvailableLanguageCode['en-US'] })
-        await Promise.all(gameStatePromises)
+        let returnedGameStates = await Promise.all(gameStatePromises)
+        returnedGameStates.forEach((returnedGameState) => {
+          expect(returnedGameState.players.length).toBe(2)
+          expect(returnedGameState.isStarted).toBe(false)
+        })
 
         gameStatePromises = getGameStatePromises([socket1])
         socket1.emit(PlayerActions.joinGame, {})
@@ -870,7 +874,10 @@ describe('index', () => {
 
         gameStatePromises = getGameStatePromises([socket1, socket2])
         socket1.emit(PlayerActions.startGame, { roomId, playerId: player1.playerId, language: AvailableLanguageCode['en-US'] })
-        await Promise.all(gameStatePromises)
+        returnedGameStates = await Promise.all(gameStatePromises)
+        returnedGameStates.forEach((returnedGameState) => {
+          expect(returnedGameState.isStarted).toBe(true)
+        })
 
         gameStatePromises = getGameStatePromises([socket1])
         socket1.emit(PlayerActions.gameState, { roomId, playerId: player2.playerId, language: AvailableLanguageCode['en-US'] })
