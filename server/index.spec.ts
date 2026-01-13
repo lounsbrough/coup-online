@@ -916,11 +916,11 @@ describe('index', () => {
 
         gameStatePromises = getGameStatePromises([socket1, socket2])
         socket2.emit(PlayerActions.joinGame, { roomId, ...player2, language: AvailableLanguageCode['en-US'] })
-        await Promise.all(gameStatePromises);
+        await Promise.all(gameStatePromises)
 
         gameStatePromises = getGameStatePromises([socket1, socket2])
         socket1.emit(PlayerActions.addAiPlayer, { roomId, playerId: player1.playerId, playerName: robotPlayerName, language: AvailableLanguageCode['pt-BR'] })
-        await Promise.all(gameStatePromises);
+        await Promise.all(gameStatePromises)
 
         gameStatePromises = getGameStatePromises([socket1, socket2])
         socket1.emit(PlayerActions.startGame, { roomId, playerId: player1.playerId, language: AvailableLanguageCode['en-US'] })

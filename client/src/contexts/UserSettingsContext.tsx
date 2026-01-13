@@ -1,12 +1,12 @@
 import { createContext, useMemo, useContext, ReactNode } from 'react'
 import { confirmActionsStorageKey, showBackgroundImageStorageKey } from '../helpers/localStorageKeys'
-import { usePersistedState } from '../hooks/usePersistedState';
+import { usePersistedState } from '../hooks/usePersistedState'
 
 interface UserSettingsContextType {
-  showBackgroundImage: boolean;
-  confirmActions: boolean;
-  setShowBackgroundImage: (value: boolean) => void;
-  setConfirmActions: (value: boolean) => void;
+  showBackgroundImage: boolean
+  confirmActions: boolean
+  setShowBackgroundImage: (value: boolean) => void
+  setConfirmActions: (value: boolean) => void
 }
 
 const UserSettingsContext = createContext<UserSettingsContextType>({
@@ -21,7 +21,7 @@ const UserSettingsContext = createContext<UserSettingsContextType>({
 })
 
 interface UserSettingsContextProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 export function UserSettingsContextProvider({ children }: Readonly<UserSettingsContextProviderProps>) {

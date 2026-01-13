@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react'
 import {
   Box,
   Breadcrumbs,
@@ -9,48 +9,48 @@ import {
   Switch,
   TextField,
   Typography,
-} from '@mui/material';
-import { AddCircle, Person } from '@mui/icons-material';
-import { Link as RouterLink, useNavigate } from 'react-router';
-import { getPlayerId } from '../../helpers/players';
-import { Analytics } from '@vercel/analytics/react';
+} from '@mui/material'
+import { AddCircle, Person } from '@mui/icons-material'
+import { Link as RouterLink, useNavigate } from 'react-router'
+import { getPlayerId } from '../../helpers/players'
+import { Analytics } from '@vercel/analytics/react'
 import {
   GameSettings,
   PlayerActions,
   DehydratedPublicGameState,
-} from '@shared';
-import useGameMutation from '../../hooks/useGameMutation';
-import { useTranslationContext } from '../../contexts/TranslationsContext';
+} from '@shared'
+import useGameMutation from '../../hooks/useGameMutation'
+import { useTranslationContext } from '../../contexts/TranslationsContext'
 import {
   allowReviveStorageKey,
   eventLogRetentionTurnsStorageKey,
   speedRoundEnabledStorageKey,
   speedRoundSecondsStorageKey,
-} from '../../helpers/localStorageKeys';
-import CoupTypography from '../utilities/CoupTypography';
-import { usePersistedState } from '../../hooks/usePersistedState';
+} from '../../helpers/localStorageKeys'
+import CoupTypography from '../utilities/CoupTypography'
+import { usePersistedState } from '../../hooks/usePersistedState'
 
 function CreateGame() {
-  const [playerName, setPlayerName] = useState('');
-  const [eventLogRetentionTurns, setEventLogRetentionTurns] = usePersistedState<number>(eventLogRetentionTurnsStorageKey, 3);
-  const [allowRevive, setAllowRevive] = usePersistedState<boolean>(allowReviveStorageKey, false);
-  const [speedRoundEnabled, setSpeedRoundEnabled] = usePersistedState<boolean>(speedRoundEnabledStorageKey, false);
-  const [speedRoundSeconds, setSpeedRoundSeconds] = usePersistedState<number>(speedRoundSecondsStorageKey, 10);
-  const navigate = useNavigate();
-  const { t } = useTranslationContext();
+  const [playerName, setPlayerName] = useState('')
+  const [eventLogRetentionTurns, setEventLogRetentionTurns] = usePersistedState<number>(eventLogRetentionTurnsStorageKey, 3)
+  const [allowRevive, setAllowRevive] = usePersistedState<boolean>(allowReviveStorageKey, false)
+  const [speedRoundEnabled, setSpeedRoundEnabled] = usePersistedState<boolean>(speedRoundEnabledStorageKey, false)
+  const [speedRoundSeconds, setSpeedRoundSeconds] = usePersistedState<number>(speedRoundSecondsStorageKey, 10)
+  const navigate = useNavigate()
+  const { t } = useTranslationContext()
 
   const navigateToRoom = useCallback(
     (gameState: DehydratedPublicGameState) => {
-      navigate(`/game?roomId=${gameState.roomId}`);
+      navigate(`/game?roomId=${gameState.roomId}`)
     },
     [navigate]
-  );
+  )
 
   const { trigger, isMutating } = useGameMutation<{
-    playerId: string;
-    playerName: string;
-    settings: GameSettings;
-  }>({ action: PlayerActions.createGame, callback: navigateToRoom });
+    playerId: string
+    playerName: string
+    settings: GameSettings
+  }>({ action: PlayerActions.createGame, callback: navigateToRoom })
 
   return (
     <>
@@ -66,7 +66,7 @@ function CreateGame() {
       </CoupTypography>
       <form
         onSubmit={(event) => {
-          event.preventDefault();
+          event.preventDefault()
           trigger({
             playerId: getPlayerId(),
             playerName: playerName.trim(),
@@ -75,7 +75,7 @@ function CreateGame() {
               allowRevive,
               ...(speedRoundEnabled && { speedRoundSeconds }),
             },
-          });
+          })
         }}
       >
         <Grid container direction="column" alignItems="center">
@@ -86,7 +86,7 @@ function CreateGame() {
                 data-testid="playerNameInput"
                 value={playerName}
                 onChange={(event) => {
-                  setPlayerName(event.target.value.slice(0, 10));
+                  setPlayerName(event.target.value.slice(0, 10))
                 }}
                 label={t('whatIsYourName')}
                 variant="standard"
@@ -108,7 +108,7 @@ function CreateGame() {
                 min={1}
                 max={100}
                 onChange={(_: Event, value: number) => {
-                  setEventLogRetentionTurns(value);
+                  setEventLogRetentionTurns(value)
                 }}
               />
             </Box>
@@ -121,7 +121,7 @@ function CreateGame() {
               <Switch
                 checked={allowRevive}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setAllowRevive(event.target.checked);
+                  setAllowRevive(event.target.checked)
                 }}
                 slotProps={{ input: { 'aria-label': 'controlled' } }}
               />
@@ -135,7 +135,7 @@ function CreateGame() {
               <Switch
                 checked={speedRoundEnabled}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setSpeedRoundEnabled(event.target.checked);
+                  setSpeedRoundEnabled(event.target.checked)
                 }}
                 slotProps={{ input: { 'aria-label': 'controlled' } }}
               />
@@ -156,7 +156,7 @@ function CreateGame() {
                   min={1}
                   max={60}
                   onChange={(_: Event, value: number) => {
-                    setSpeedRoundSeconds(value);
+                    setSpeedRoundSeconds(value)
                   }}
                 />
               </Box>
@@ -176,7 +176,7 @@ function CreateGame() {
         </Grid>
       </form>
     </>
-  );
+  )
 }
 
-export default CreateGame;
+export default CreateGame

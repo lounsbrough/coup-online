@@ -4,180 +4,180 @@ import {
   Influences,
   Responses,
   AvailableLanguageCode,
-} from '@shared';
-import { AlertColor } from '@mui/material';
+} from '@shared'
+import { AlertColor } from '@mui/material'
 
-type TranslationsForString = { [key in AvailableLanguageCode]: string };
+type TranslationsForString = { [key in AvailableLanguageCode]: string }
 
 type ActionMessages = {
-  [Actions.Assassinate]: TranslationsForString;
-  [Actions.Coup]: TranslationsForString;
-  [Actions.Exchange]: TranslationsForString;
-  [Actions.ForeignAid]: TranslationsForString;
-  [Actions.Income]: TranslationsForString;
-  [Actions.Revive]: TranslationsForString;
-  [Actions.Steal]: TranslationsForString;
-  [Actions.Tax]: TranslationsForString;
-};
+  [Actions.Assassinate]: TranslationsForString
+  [Actions.Coup]: TranslationsForString
+  [Actions.Exchange]: TranslationsForString
+  [Actions.ForeignAid]: TranslationsForString
+  [Actions.Income]: TranslationsForString
+  [Actions.Revive]: TranslationsForString
+  [Actions.Steal]: TranslationsForString
+  [Actions.Tax]: TranslationsForString
+}
 
-type AlertColorTranslations = { [key in AlertColor]: TranslationsForString };
+type AlertColorTranslations = { [key in AlertColor]: TranslationsForString }
 
 export type Translations = ActionMessages &
   AlertColorTranslations & {
-    action: TranslationsForString;
-    actions: TranslationsForString;
-    add: TranslationsForString;
-    addAiPlayer: TranslationsForString;
-    addPlayersToStartGame: TranslationsForString;
-    allowRevive: TranslationsForString;
-    anyone: TranslationsForString;
-    block: TranslationsForString;
-    blockAsInfluence: TranslationsForString;
-    briefDescriptionOfCoup: TranslationsForString;
-    cancel: TranslationsForString;
-    cardCountInDeck: TranslationsForString;
-    challenge: TranslationsForString;
-    chat: TranslationsForString;
-    cheatSheet: TranslationsForString;
-    chooseATarget: TranslationsForString;
-    chooseAnAction: TranslationsForString;
-    chooseInfluenceToLose: TranslationsForString;
-    chooseInfluenceToReveal: TranslationsForString;
-    chooseInfluencesToKeep: TranslationsForString;
-    choosePersonality: TranslationsForString;
-    claimAnInfluence: TranslationsForString;
-    close: TranslationsForString;
-    collectCoins: TranslationsForString;
-    colorMode: TranslationsForString;
-    confirm: TranslationsForString;
-    confirmActions: TranslationsForString;
-    contents: TranslationsForString;
-    copyInviteLink: TranslationsForString;
-    createGame: TranslationsForString;
-    createNewGame: TranslationsForString;
-    draw2InfluencesAndDiscard2: TranslationsForString;
-    dark: TranslationsForString;
-    effect: TranslationsForString;
-    eventLog: TranslationsForString;
-    eventLogRetentionTurns: TranslationsForString;
-    [EventMessages.ActionConfirm]: ActionMessages;
-    [EventMessages.ActionPending]: Partial<ActionMessages>;
-    [EventMessages.ActionProcessed]: ActionMessages;
-    [EventMessages.ForcedMoveProcessed]: TranslationsForString;
-    [EventMessages.BlockFailed]: TranslationsForString;
-    [EventMessages.BlockPending]: TranslationsForString;
-    [EventMessages.BlockSuccessful]: TranslationsForString;
-    [EventMessages.ChallengeFailed]: TranslationsForString;
-    [EventMessages.ChallengePending]: TranslationsForString;
-    [EventMessages.ChallengeSuccessful]: TranslationsForString;
-    [EventMessages.GameStarted]: TranslationsForString;
-    [EventMessages.PlayerDied]: TranslationsForString;
-    [EventMessages.PlayerForfeited]: TranslationsForString;
-    [EventMessages.PlayerLostInfluence]: TranslationsForString;
-    [EventMessages.PlayerReplacedInfluence]: TranslationsForString;
-    [EventMessages.PlayerReplacedWithAi]: TranslationsForString;
-    forfeit: TranslationsForString;
-    forfeitConfirmationMessage: TranslationsForString;
-    forfeitConfirmationTitle: TranslationsForString;
-    forfeitKillInfluences: TranslationsForString;
-    forfeitNotPossible: TranslationsForString;
-    forfeitReplaceWithAi: TranslationsForString;
-    fullRules: TranslationsForString;
-    gameNotFound: TranslationsForString;
-    goal: TranslationsForString;
-    home: TranslationsForString;
-    honesty: TranslationsForString;
-    influence: TranslationsForString;
-    influenceWasClaimed: TranslationsForString;
-    influences: TranslationsForString;
-    [Influences.Ambassador]: TranslationsForString;
-    [Influences.Assassin]: TranslationsForString;
-    [Influences.Captain]: TranslationsForString;
-    [Influences.Contessa]: TranslationsForString;
-    [Influences.Duke]: TranslationsForString;
-    inviteLinkCopied: TranslationsForString;
-    joinExistingGame: TranslationsForString;
-    joinGame: TranslationsForString;
-    keepInfluences: TranslationsForString;
-    killAnInfluence: TranslationsForString;
-    language: TranslationsForString;
-    learnToPlay: TranslationsForString;
-    light: TranslationsForString;
-    loseInfluence: TranslationsForString;
-    losingAChallenge: TranslationsForString;
-    losingInfluence: TranslationsForString;
-    messageWasDeleted: TranslationsForString;
-    noChatMessages: TranslationsForString;
-    noDeadInfluences: TranslationsForString;
-    notEnoughCoins: TranslationsForString;
-    numberOfPlayers: TranslationsForString;
-    pageNotFound: TranslationsForString;
-    payCoins: TranslationsForString;
-    personalityIsHidden: TranslationsForString;
-    playAgain: TranslationsForString;
-    playerTurn: TranslationsForString;
-    playerWantToReset: TranslationsForString;
-    playerWins: TranslationsForString;
-    random: TranslationsForString;
-    reportBug: TranslationsForString;
-    reportIncorrectTranslation: TranslationsForString;
-    requestFeature: TranslationsForString;
-    resetGame: TranslationsForString;
-    [Responses.Block]: TranslationsForString;
-    [Responses.Challenge]: TranslationsForString;
-    [Responses.Pass]: TranslationsForString;
-    revealInfluence: TranslationsForString;
-    reviveAnInfluence: TranslationsForString;
-    reviveIsEnabled: TranslationsForString;
-    room: TranslationsForString;
-    rules: TranslationsForString;
-    rulesActions: TranslationsForString;
-    rulesAmbassador: TranslationsForString;
-    rulesAssassin: TranslationsForString;
-    rulesAssassinate: TranslationsForString;
-    rulesBlock: TranslationsForString;
-    rulesCaptain: TranslationsForString;
-    rulesChallenge: TranslationsForString;
-    rulesContents: TranslationsForString;
-    rulesContessa: TranslationsForString;
-    rulesCoup: TranslationsForString;
-    rulesDuke: TranslationsForString;
-    rulesExchange: TranslationsForString;
-    rulesForeignAid: TranslationsForString;
-    rulesGoal: TranslationsForString;
-    rulesIncome: TranslationsForString;
-    rulesInfluences: TranslationsForString;
-    rulesLosingAChallenge: TranslationsForString;
-    rulesLosingInfluence: TranslationsForString;
-    rulesRevive: TranslationsForString;
-    rulesSetup: TranslationsForString;
-    rulesSteal: TranslationsForString;
-    rulesTax: TranslationsForString;
-    send: TranslationsForString;
-    settings: TranslationsForString;
-    setup: TranslationsForString;
-    showChickens: TranslationsForString;
-    showFireworks: TranslationsForString;
-    showSnowmen: TranslationsForString;
-    showTurkeys: TranslationsForString;
-    skepticism: TranslationsForString;
-    spectateGame: TranslationsForString;
-    speedRound: TranslationsForString;
-    speedRoundSeconds: TranslationsForString;
-    startGame: TranslationsForString;
-    startingPlayerBeginsWith1Coin: TranslationsForString;
-    steal2CoinsFromSomeone: TranslationsForString;
-    system: TranslationsForString;
-    title: TranslationsForString;
-    vengefulness: TranslationsForString;
-    waitingOnOtherPlayers: TranslationsForString;
-    websocketsConnection: TranslationsForString;
-    welcomeToCoup: TranslationsForString;
-    whatIsBotsName: TranslationsForString;
-    whatIsYourName: TranslationsForString;
-    writeNewMessage: TranslationsForString;
-    youAreSpectating: TranslationsForString;
-  };
+    action: TranslationsForString
+    actions: TranslationsForString
+    add: TranslationsForString
+    addAiPlayer: TranslationsForString
+    addPlayersToStartGame: TranslationsForString
+    allowRevive: TranslationsForString
+    anyone: TranslationsForString
+    block: TranslationsForString
+    blockAsInfluence: TranslationsForString
+    briefDescriptionOfCoup: TranslationsForString
+    cancel: TranslationsForString
+    cardCountInDeck: TranslationsForString
+    challenge: TranslationsForString
+    chat: TranslationsForString
+    cheatSheet: TranslationsForString
+    chooseATarget: TranslationsForString
+    chooseAnAction: TranslationsForString
+    chooseInfluenceToLose: TranslationsForString
+    chooseInfluenceToReveal: TranslationsForString
+    chooseInfluencesToKeep: TranslationsForString
+    choosePersonality: TranslationsForString
+    claimAnInfluence: TranslationsForString
+    close: TranslationsForString
+    collectCoins: TranslationsForString
+    colorMode: TranslationsForString
+    confirm: TranslationsForString
+    confirmActions: TranslationsForString
+    contents: TranslationsForString
+    copyInviteLink: TranslationsForString
+    createGame: TranslationsForString
+    createNewGame: TranslationsForString
+    draw2InfluencesAndDiscard2: TranslationsForString
+    dark: TranslationsForString
+    effect: TranslationsForString
+    eventLog: TranslationsForString
+    eventLogRetentionTurns: TranslationsForString
+    [EventMessages.ActionConfirm]: ActionMessages
+    [EventMessages.ActionPending]: Partial<ActionMessages>
+    [EventMessages.ActionProcessed]: ActionMessages
+    [EventMessages.ForcedMoveProcessed]: TranslationsForString
+    [EventMessages.BlockFailed]: TranslationsForString
+    [EventMessages.BlockPending]: TranslationsForString
+    [EventMessages.BlockSuccessful]: TranslationsForString
+    [EventMessages.ChallengeFailed]: TranslationsForString
+    [EventMessages.ChallengePending]: TranslationsForString
+    [EventMessages.ChallengeSuccessful]: TranslationsForString
+    [EventMessages.GameStarted]: TranslationsForString
+    [EventMessages.PlayerDied]: TranslationsForString
+    [EventMessages.PlayerForfeited]: TranslationsForString
+    [EventMessages.PlayerLostInfluence]: TranslationsForString
+    [EventMessages.PlayerReplacedInfluence]: TranslationsForString
+    [EventMessages.PlayerReplacedWithAi]: TranslationsForString
+    forfeit: TranslationsForString
+    forfeitConfirmationMessage: TranslationsForString
+    forfeitConfirmationTitle: TranslationsForString
+    forfeitKillInfluences: TranslationsForString
+    forfeitNotPossible: TranslationsForString
+    forfeitReplaceWithAi: TranslationsForString
+    fullRules: TranslationsForString
+    gameNotFound: TranslationsForString
+    goal: TranslationsForString
+    home: TranslationsForString
+    honesty: TranslationsForString
+    influence: TranslationsForString
+    influenceWasClaimed: TranslationsForString
+    influences: TranslationsForString
+    [Influences.Ambassador]: TranslationsForString
+    [Influences.Assassin]: TranslationsForString
+    [Influences.Captain]: TranslationsForString
+    [Influences.Contessa]: TranslationsForString
+    [Influences.Duke]: TranslationsForString
+    inviteLinkCopied: TranslationsForString
+    joinExistingGame: TranslationsForString
+    joinGame: TranslationsForString
+    keepInfluences: TranslationsForString
+    killAnInfluence: TranslationsForString
+    language: TranslationsForString
+    learnToPlay: TranslationsForString
+    light: TranslationsForString
+    loseInfluence: TranslationsForString
+    losingAChallenge: TranslationsForString
+    losingInfluence: TranslationsForString
+    messageWasDeleted: TranslationsForString
+    noChatMessages: TranslationsForString
+    noDeadInfluences: TranslationsForString
+    notEnoughCoins: TranslationsForString
+    numberOfPlayers: TranslationsForString
+    pageNotFound: TranslationsForString
+    payCoins: TranslationsForString
+    personalityIsHidden: TranslationsForString
+    playAgain: TranslationsForString
+    playerTurn: TranslationsForString
+    playerWantToReset: TranslationsForString
+    playerWins: TranslationsForString
+    random: TranslationsForString
+    reportBug: TranslationsForString
+    reportIncorrectTranslation: TranslationsForString
+    requestFeature: TranslationsForString
+    resetGame: TranslationsForString
+    [Responses.Block]: TranslationsForString
+    [Responses.Challenge]: TranslationsForString
+    [Responses.Pass]: TranslationsForString
+    revealInfluence: TranslationsForString
+    reviveAnInfluence: TranslationsForString
+    reviveIsEnabled: TranslationsForString
+    room: TranslationsForString
+    rules: TranslationsForString
+    rulesActions: TranslationsForString
+    rulesAmbassador: TranslationsForString
+    rulesAssassin: TranslationsForString
+    rulesAssassinate: TranslationsForString
+    rulesBlock: TranslationsForString
+    rulesCaptain: TranslationsForString
+    rulesChallenge: TranslationsForString
+    rulesContents: TranslationsForString
+    rulesContessa: TranslationsForString
+    rulesCoup: TranslationsForString
+    rulesDuke: TranslationsForString
+    rulesExchange: TranslationsForString
+    rulesForeignAid: TranslationsForString
+    rulesGoal: TranslationsForString
+    rulesIncome: TranslationsForString
+    rulesInfluences: TranslationsForString
+    rulesLosingAChallenge: TranslationsForString
+    rulesLosingInfluence: TranslationsForString
+    rulesRevive: TranslationsForString
+    rulesSetup: TranslationsForString
+    rulesSteal: TranslationsForString
+    rulesTax: TranslationsForString
+    send: TranslationsForString
+    settings: TranslationsForString
+    setup: TranslationsForString
+    showChickens: TranslationsForString
+    showFireworks: TranslationsForString
+    showSnowmen: TranslationsForString
+    showTurkeys: TranslationsForString
+    skepticism: TranslationsForString
+    spectateGame: TranslationsForString
+    speedRound: TranslationsForString
+    speedRoundSeconds: TranslationsForString
+    startGame: TranslationsForString
+    startingPlayerBeginsWith1Coin: TranslationsForString
+    steal2CoinsFromSomeone: TranslationsForString
+    system: TranslationsForString
+    title: TranslationsForString
+    vengefulness: TranslationsForString
+    waitingOnOtherPlayers: TranslationsForString
+    websocketsConnection: TranslationsForString
+    welcomeToCoup: TranslationsForString
+    whatIsBotsName: TranslationsForString
+    whatIsYourName: TranslationsForString
+    writeNewMessage: TranslationsForString
+    youAreSpectating: TranslationsForString
+  }
 
 const translations: Translations = {
   action: {
@@ -2023,7 +2023,7 @@ const translations: Translations = {
     'it-IT': 'Stai assistendo',
     'pt-BR': 'Você está assistindo',
   },
-};
+}
 
 export const snarkyDeadComments: { [key in AvailableLanguageCode]: string[] } =
 {
@@ -2167,6 +2167,6 @@ export const snarkyDeadComments: { [key in AvailableLanguageCode]: string[] } =
     `Você é uma máquina que anda, fala e perde.`,
     `Você é o pior jogador que já vi.`,
   ],
-};
+}
 
-export default translations;
+export default translations
