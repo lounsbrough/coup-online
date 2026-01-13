@@ -84,10 +84,8 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
 
   const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)
   const gameIsOver = playersLeft?.length === 1
-  const timeToAutoMove = gameState?.settings.speedRoundSeconds
-    ? Date.now() > gameState.lastEventTimestamp.getTime() + gameState.settings.speedRoundSeconds * 1000
-    : false
-  const autoMovePlayersActive = gameState?.isStarted && !gameIsOver && (timeToAutoMove || gameState?.players.some(({ ai, influenceCount }) =>
+  const speedRoundActive = gameState?.settings.speedRoundSeconds
+  const autoMovePlayersActive = gameState?.isStarted && !gameIsOver && (speedRoundActive || gameState?.players.some(({ ai, influenceCount }) =>
     ai && influenceCount))
 
   useEffect(() => {
