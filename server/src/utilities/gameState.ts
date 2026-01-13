@@ -141,7 +141,13 @@ export const mutateGameState = async (
     return
   }
 
-  dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
+  // We will not treat a pass as an event that updates the lastEventTimestamp
+  // This impacts speed rounds and AI move delays
+  const wasActionPass = dehydratedGameState.pendingAction && dehydratedValidatedGameState.pendingAction && dehydratedGameState.pendingAction.pendingPlayers.length !== dehydratedValidatedGameState.pendingAction.pendingPlayers.length
+  const wasBlockPass = dehydratedGameState.pendingBlock && dehydratedValidatedGameState.pendingBlock && dehydratedGameState.pendingBlock.pendingPlayers.length !== dehydratedValidatedGameState.pendingBlock.pendingPlayers.length
+  if (!wasActionPass && !wasBlockPass) {
+    dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
+  }
 
   await setGameState(validatedState.roomId, dehydratedGameState)
 }

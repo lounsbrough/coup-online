@@ -1,11 +1,11 @@
 import crypto from 'node:crypto'
-import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError } from "../utilities/errors"
+import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError, SpeedRoundTimerExpiredError } from "../utilities/errors"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, PlayerActions, Responses } from "../../../shared/types/game"
 import { getGameState, getPublicGameState, logEvent, logForcedMove, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { getValue } from '../utilities/storage'
 import { shuffle } from '../utilities/array'
-import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
@@ -321,9 +321,7 @@ export const checkAutoMoveHandler = async ({ roomId, playerId }: {
   const remainingPlayers = gameState.players.filter(({ influences }) => influences.length)
   const playersForAutoMove = []
   let isForcedMove = false
-  if (gameState.settings.speedRoundSeconds &&
-    Date.now() > gameState.lastEventTimestamp.getTime() + gameState.settings.speedRoundSeconds * 1000) {
-    // Time's up! This is a speed round, let's go people!
+  if (isSpeedRoundTimerExpired(gameState)) {
     playersForAutoMove.push(...shuffle(remainingPlayers))
     isForcedMove = true
   } else {
@@ -362,6 +360,12 @@ export const checkAutoMoveHandler = async ({ roomId, playerId }: {
   return unchangedResponse
 }
 
+const enforceSpeedRoundTimer = (gameState: GameState, isForcedMove?: boolean) => {
+  if (!isForcedMove && isSpeedRoundTimerExpired(gameState)) {
+    throw new SpeedRoundTimerExpiredError()
+  }
+}
+
 export const actionHandler = async ({ roomId, playerId, action, targetPlayer, isForcedMove }: {
   roomId: string
   playerId: string
@@ -370,6 +374,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
   isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -584,6 +590,8 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
 }) => {
   const gameState = await getGameState(roomId)
 
+  enforceSpeedRoundTimer(gameState, isForcedMove)
+
   const player = getPlayerInRoom({ gameState, playerId })
 
   if (!player.influences.length) {
@@ -673,6 +681,8 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
   isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -816,6 +826,8 @@ export const blockResponseHandler = async ({ roomId, playerId, response, isForce
 }) => {
   const gameState = await getGameState(roomId)
 
+  enforceSpeedRoundTimer(gameState, isForcedMove)
+
   const player = getPlayerInRoom({ gameState, playerId })
 
   if (!player.influences.length) {
@@ -865,6 +877,8 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
   isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -970,6 +984,8 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences, isFo
   isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 

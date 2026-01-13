@@ -7,39 +7,39 @@ const size = 60
 const SpeedRoundTimer: React.FC = () => {
   const { gameState } = useGameStateContext()
 
-  const speedRoundSeconds = gameState?.settings?.speedRoundSeconds
   const lastEventTimestamp = gameState?.lastEventTimestamp
-  const initialMs = (speedRoundSeconds ?? 0) * 1000
+  const speedRoundMs = (gameState?.settings?.speedRoundSeconds ?? 0) * 1000
 
   const [msRemaining, setMsRemaining] = useState<number | undefined>(undefined)
 
   useEffect(() => {
-    if (!lastEventTimestamp || !initialMs) return
+    if (!lastEventTimestamp || !speedRoundMs) return
 
     const updateTimer = () => {
-      const startTime = typeof lastEventTimestamp === 'number'
-        ? lastEventTimestamp
-        : lastEventTimestamp.getTime()
+      const startTime =
+        typeof lastEventTimestamp === 'number'
+          ? lastEventTimestamp
+          : lastEventTimestamp.getTime()
 
       const elapsed = Date.now() - startTime
-      const remaining = Math.max(0, initialMs - elapsed)
+      const remaining = Math.max(0, speedRoundMs - elapsed)
 
       setMsRemaining(remaining)
     }
 
     updateTimer()
-    const timer = setInterval(updateTimer, 50)
+    const timer = setInterval(updateTimer, 100)
 
     return () => clearInterval(timer)
-  }, [lastEventTimestamp, initialMs])
+  }, [lastEventTimestamp, speedRoundMs])
 
-  if (!gameState || !speedRoundSeconds || msRemaining === undefined) {
+  if (!gameState || !speedRoundMs || msRemaining === undefined) {
     return null
   }
 
-  const progress = (msRemaining / initialMs) * 100
+  const progress = Math.round((msRemaining / speedRoundMs) * 100)
   const displaySeconds = Math.ceil(msRemaining / 1000)
-  const hue = (msRemaining / initialMs) * 120
+  const hue = (msRemaining / speedRoundMs) * 120
   const borderColor = `hsl(${hue}, 75%, 45%)`
   const backgroundColor = `hsla(${hue}, 75%, 45%, 0.15)`
 
@@ -55,10 +55,10 @@ const SpeedRoundTimer: React.FC = () => {
         background: backgroundColor,
         borderRadius: '50%',
         animation: 'pulseTimer 1.5s infinite',
-        "@keyframes pulseTimer": {
-          "0%": { transform: 'scale(1)' },
-          "50%": { transform: 'scale(1.06)' },
-          "100%": { transform: 'scale(1)' }
+        '@keyframes pulseTimer': {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.06)' },
+          '100%': { transform: 'scale(1)' },
         },
       }}
     >
@@ -88,7 +88,7 @@ const SpeedRoundTimer: React.FC = () => {
             fontSize: `${size * 0.4}px`,
             lineHeight: 1,
             fontVariantNumeric: 'tabular-nums',
-            userSelect: 'none'
+            userSelect: 'none',
           }}
         >
           {displaySeconds}
