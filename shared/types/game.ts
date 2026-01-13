@@ -212,6 +212,7 @@ export type DehydratedPublicPlayer = Omit<
 export type GameSettings = {
   eventLogRetentionTurns: number;
   allowRevive: boolean;
+  aiMoveDelayMs?: number;
   speedRoundSeconds?: number;
 };
 

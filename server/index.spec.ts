@@ -787,28 +787,22 @@ describe('index', () => {
   describe('socket messages', () => {
     const getConnectedSocket = async () => {
       const socket = io(baseUrl)
-      const promise = new Promise((resolve) => {
+      await new Promise((resolve) => {
         socket.on('connect', () => { resolve(undefined) })
       })
-      await promise
       return socket
     }
 
     const getGameStatePromises = (sockets: Socket[]) => {
       return sockets.map((socket) => {
-        let resolver: (value?: unknown) => void
-        let rejector: (error: Error) => void
-        const promise = new Promise<DehydratedPublicGameState>((resolve, reject) => {
-          resolver = resolve
-          rejector = reject
+        return new Promise<DehydratedPublicGameState>((resolve, reject) => {
+          socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState: DehydratedPublicGameState) => {
+            resolve(gameState)
+          })
+          socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error: string) => {
+            reject(new Error(error))
+          })
         })
-        socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (gameState: DehydratedPublicGameState) => {
-          resolver(gameState)
-        })
-        socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error: string) => {
-          rejector(new Error(error))
-        })
-        return promise
       })
     }
 
@@ -888,6 +882,70 @@ describe('index', () => {
         const gameState = await gameStatePromises[0]
 
         validatePublicState(gameState)
+
+        expect(gameState.players).toContainEqual(expect.objectContaining({ name: player1.playerName }))
+        expect(gameState.players).toContainEqual(expect.objectContaining({ name: player2.playerName }))
+        expect(gameState.isStarted).toBe(true)
+      } finally {
+        socket1.close()
+        socket2.close()
+      }
+    })
+
+    it('should emit up-to-date state', async () => {
+      const socket1 = await getConnectedSocket()
+      const socket2 = await getConnectedSocket()
+      try {
+        const player1 = {
+          playerId: chance.string({ length: 10 }),
+          playerName: chance.string({ length: 10 })
+        }
+        const player2 = {
+          playerId: chance.string({ length: 10 }),
+          playerName: chance.string({ length: 10 })
+        }
+        const robotPlayerName = 'bob'
+
+        let gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.createGame, {
+          ...player1,
+          settings: { eventLogRetentionTurns: 100, allowRevive: true, aiMoveDelayMs: 0 },
+          language: AvailableLanguageCode['en-US']
+        })
+        const { roomId } = await gameStatePromises[0]
+
+        gameStatePromises = getGameStatePromises([socket1, socket2])
+        socket2.emit(PlayerActions.joinGame, { roomId, ...player2, language: AvailableLanguageCode['en-US'] })
+        await Promise.all(gameStatePromises);
+
+        gameStatePromises = getGameStatePromises([socket1, socket2])
+        socket1.emit(PlayerActions.addAiPlayer, { roomId, playerId: player1.playerId, playerName: robotPlayerName, language: AvailableLanguageCode['pt-BR'] })
+        await Promise.all(gameStatePromises);
+
+        gameStatePromises = getGameStatePromises([socket1, socket2])
+        socket1.emit(PlayerActions.startGame, { roomId, playerId: player1.playerId, language: AvailableLanguageCode['en-US'] })
+        await Promise.all(gameStatePromises)
+
+        gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.gameState, { roomId, playerId: player1.playerId, language: AvailableLanguageCode['en-US'] })
+        let gameState = await gameStatePromises[0]
+
+        let currentTurnPlayer = gameState.turnPlayer
+        while (currentTurnPlayer !== robotPlayerName) {
+          const isPlayer1Turn = currentTurnPlayer === player1.playerName
+          const currentPlayerSocket = isPlayer1Turn ? socket1 : socket2
+          const waitingPlayerSocket = isPlayer1Turn ? socket2 : socket1
+          gameStatePromises = getGameStatePromises([currentPlayerSocket, waitingPlayerSocket])
+          currentPlayerSocket.emit(PlayerActions.action, { roomId, playerId: isPlayer1Turn ? player1.playerId : player2.playerId, action: Actions.Income, language: AvailableLanguageCode['en-US'] })
+          gameState = (await Promise.all(gameStatePromises))[0]
+          currentTurnPlayer = gameState.turnPlayer
+        }
+
+        expect((gameState.eventLogs.at(-1)!).primaryPlayer).not.toBe(robotPlayerName)
+        gameStatePromises = getGameStatePromises([socket2])
+        socket1.emit(PlayerActions.checkAutoMove, { roomId, playerId: player1.playerId, language: AvailableLanguageCode['en-US'] })
+        gameState = await gameStatePromises[0]
+        expect((gameState.eventLogs.at(-1)!).primaryPlayer).toBe(robotPlayerName)
 
         expect(gameState.players).toContainEqual(expect.objectContaining({ name: player1.playerName }))
         expect(gameState.players).toContainEqual(expect.objectContaining({ name: player2.playerName }))

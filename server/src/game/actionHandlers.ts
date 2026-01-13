@@ -327,9 +327,9 @@ export const checkAutoMoveHandler = async ({ roomId, playerId }: {
     playersForAutoMove.push(...shuffle(remainingPlayers))
     isForcedMove = true
   } else {
-    // AI Players move after a short pause
-    const timeForMachinesToPonderLifeChoices = 300 + Math.floor(Math.random() * 700)
-    if (Date.now() < gameState.lastEventTimestamp.getTime() + timeForMachinesToPonderLifeChoices) {
+    // AI players move after a short pause
+    const timeForMachinesToPonderLifeChoices = gameState.settings.aiMoveDelayMs ?? 500
+    if (timeForMachinesToPonderLifeChoices && Date.now() < gameState.lastEventTimestamp.getTime() + timeForMachinesToPonderLifeChoices) {
       return unchangedResponse
     }
     playersForAutoMove.push(...remainingPlayers.filter(({ ai }) => ai))
@@ -341,17 +341,17 @@ export const checkAutoMoveHandler = async ({ roomId, playerId }: {
     const [move, params] = suggestedMove
 
     if (move === PlayerActions.loseInfluences) {
-      loseInfluencesHandler({ ...(params as Parameters<typeof loseInfluencesHandler>[0]), isForcedMove })
+      await loseInfluencesHandler({ ...(params as Parameters<typeof loseInfluencesHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.action) {
-      actionHandler({ ...(params as Parameters<typeof actionHandler>[0]), isForcedMove })
+      await actionHandler({ ...(params as Parameters<typeof actionHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.actionResponse) {
-      actionResponseHandler({ ...(params as Parameters<typeof actionResponseHandler>[0]), isForcedMove })
+      await actionResponseHandler({ ...(params as Parameters<typeof actionResponseHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.actionChallengeResponse) {
-      actionChallengeResponseHandler({ ...(params as Parameters<typeof actionChallengeResponseHandler>[0]), isForcedMove })
+      await actionChallengeResponseHandler({ ...(params as Parameters<typeof actionChallengeResponseHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.blockResponse) {
-      blockResponseHandler({ ...(params as Parameters<typeof blockResponseHandler>[0]), isForcedMove })
+      await blockResponseHandler({ ...(params as Parameters<typeof blockResponseHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.blockChallengeResponse) {
-      blockChallengeResponseHandler({ ...(params as Parameters<typeof blockChallengeResponseHandler>[0]), isForcedMove })
+      await blockChallengeResponseHandler({ ...(params as Parameters<typeof blockChallengeResponseHandler>[0]), isForcedMove })
     } else {
       throw new ActionNotCurrentlyAllowedError()
     }
