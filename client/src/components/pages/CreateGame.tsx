@@ -153,7 +153,7 @@ function CreateGame() {
                   step={1}
                   value={speedRoundSeconds}
                   valueLabelDisplay="auto"
-                  min={1}
+                  min={5}
                   max={60}
                   onChange={(_: Event, value: number) => {
                     setSpeedRoundSeconds(value)

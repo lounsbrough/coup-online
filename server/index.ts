@@ -117,7 +117,7 @@ const eventHandlers: {
         eventLogRetentionTurns: Joi.number().integer().min(1).max(100).required(),
         allowRevive: Joi.bool().required(),
         aiMoveDelayMs: Joi.number().integer().min(0).max(10000),
-        speedRoundSeconds: Joi.number().integer().min(1).max(60)
+        speedRoundSeconds: Joi.number().integer().min(5).max(60)
       }).required(),
       language: languageRule
     })
