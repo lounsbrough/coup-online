@@ -372,6 +372,18 @@ export class TargetPlayerIsSelfError extends GameMutationInputError {
   }
 }
 
+export class SpeedRoundTimerExpiredError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'speedRoundTimerExpired',
+      language
+    })
+  }
+}
+
 export class StateChangedSinceValidationError extends GameMutationInputError {
   getMessage: (language: AvailableLanguageCode) => string
 

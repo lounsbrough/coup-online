@@ -22,7 +22,7 @@ import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
 import { useUserSettingsContext } from '../contexts/UserSettingsContext'
-import { getBackgroundImage } from '../helpers/easter-eggs'
+import { getBackgroundImage } from '../helpers/easterEggs'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -30,12 +30,12 @@ function App() {
   const [latestReadMessageId, setLatestReadMessageId] = useState<string | null>(null)
   const { t } = useTranslationContext()
   const theme = useTheme()
-  const { showChickens } = useUserSettingsContext()
+  const { showBackgroundImage } = useUserSettingsContext()
 
   return (
     <Box sx={{
       textAlign: 'center',
-      ...(showChickens && {
+      ...(showBackgroundImage && {
         '::before': {
           content: '""',
           position: 'fixed',
@@ -88,7 +88,7 @@ function App() {
               gap: '2rem',
               background: theme.palette.mode === 'dark'
                 ? 'rgba(0, 0, 0, 0.4)'
-                : showChickens ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.1)',
+                : showBackgroundImage ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.1)',
               backdropFilter: 'blur(5px)'
             }}>
               <Box sx={{ whiteSpace: 'nowrap' }}>
@@ -111,7 +111,7 @@ function App() {
             </header>
             <Routes>
               <Route path="/">
-                <Route index element={<Home />} />
+                <Route index element={<Home setRulesOpen={setLeftDrawerOpen} />} />
                 <Route path="game" element={
                   <Game leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
                 } />

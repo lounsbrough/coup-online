@@ -7,7 +7,7 @@ export const getPlayerId = () => {
     return existingPlayerId
   }
 
-  const playerId = window.crypto.randomUUID()
+  const playerId = globalThis.crypto.randomUUID()
   localStorage.setItem(playerIdStorageKey, playerId)
   return playerId
 }

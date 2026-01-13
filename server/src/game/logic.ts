@@ -14,7 +14,7 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
 
   removeClaimedInfluence(player, influence)
   player.influences.splice(
-    player.influences.findIndex((i) => i === influence),
+    player.influences.indexOf(influence),
     1
   )
   player.deadInfluences.push(influence)
@@ -79,9 +79,9 @@ export const processPendingAction = (state: GameState) => {
 
   logEvent(state, {
     event: EventMessages.ActionProcessed,
-    action: state.pendingAction!.action,
-    primaryPlayer: actionPlayer!.name,
-    ...(targetPlayer?.name && {secondaryPlayer: targetPlayer?.name})
+    action: state.pendingAction.action,
+    primaryPlayer: actionPlayer.name,
+    ...(targetPlayer?.name && { secondaryPlayer: targetPlayer?.name })
   })
 
   if (state.pendingAction.action === Actions.Assassinate) {
@@ -189,11 +189,13 @@ export const addPlayerToGame = ({
     ai,
     grudges: {},
     personalityHidden: ai && !personality,
-    ...(ai && { personality: personality ?? {
+    ...(ai && {
+      personality: personality ?? {
         honesty: randomPersonality(),
         skepticism: randomPersonality(),
         vengefulness: randomPersonality(),
-      }})
+      }
+    })
   })
   state.deck = createDeckForPlayerCount(state.players.length)
 }
@@ -259,7 +261,7 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
 
   removeClaimedInfluence(player, influence)
   state.deck.push(player.influences.splice(
-    player.influences.findIndex((i) => i === influence),
+    player.influences.indexOf(influence),
     1
   )[0])
   shuffleDeck(state)
@@ -330,4 +332,11 @@ export const removeUnclaimedInfluence = (player: Player, influence?: Influences)
   } else {
     player.unclaimedInfluences.clear()
   }
+}
+
+export const isSpeedRoundTimerExpired = (gameState: GameState) => {
+  if (!gameState.settings.speedRoundSeconds) {
+    return false
+  }
+  return Date.now() > gameState.lastEventTimestamp.getTime() + gameState.settings.speedRoundSeconds * 1000
 }

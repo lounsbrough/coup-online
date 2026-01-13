@@ -2,10 +2,14 @@ import { Button, Grid } from "@mui/material"
 import { useNavigate } from "react-router"
 import GitHubLinks from "../GitHubLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import { AddCircle, GroupAdd } from "@mui/icons-material"
+import { AddCircle, Gavel, GroupAdd } from "@mui/icons-material"
 import CoupTypography from '../utilities/CoupTypography'
 
-function Home() {
+interface HomeProps {
+  setRulesOpen: (open: boolean) => void
+}
+
+function Home({ setRulesOpen }: Readonly<HomeProps>) {
   const navigate = useNavigate()
   const { t } = useTranslationContext()
 
@@ -19,7 +23,17 @@ function Home() {
       </CoupTypography>
       <Grid>
         <Button
-          type="submit" sx={{ mt: 5 }}
+          type="submit"
+          sx={{ mt: 5 }}
+          variant='contained'
+          onClick={() => setRulesOpen(true)}
+          startIcon={<Gavel />}
+        >{t('learnToPlay')}</Button>
+      </Grid>
+      <Grid>
+        <Button
+          type="submit"
+          sx={{ mt: 5 }}
           variant="contained"
           onClick={() => { navigate(`/create-game`) }}
           startIcon={<AddCircle />}
@@ -27,7 +41,8 @@ function Home() {
       </Grid>
       <Grid>
         <Button
-          type="submit" sx={{ mt: 5 }}
+          type="submit"
+          sx={{ mt: 5 }}
           variant="contained"
           onClick={() => { navigate(`/join-game`) }}
           startIcon={<GroupAdd />}

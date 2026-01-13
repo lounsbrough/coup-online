@@ -1,8 +1,9 @@
-import { createContext, useContext, ReactNode, useState, useCallback } from 'react'
+import { createContext, useContext, ReactNode, useCallback, useMemo } from 'react'
 import { Typography, useTheme } from '@mui/material'
 import { Actions, EventMessages, Influences, PublicGameState, AvailableLanguageCode } from '@shared'
 import { activeLanguageStorageKey } from '../helpers/localStorageKeys'
 import translations, { Translations } from '../i18n/translations'
+import { usePersistedState } from '../hooks/usePersistedState'
 
 type PlayerVariables = {
   primaryPlayer: string | undefined
@@ -29,12 +30,11 @@ type TranslationContextType = {
 export const TranslationContext = createContext<TranslationContextType>({ t: () => null, language: AvailableLanguageCode['en-US'], setLanguage: () => { } })
 
 const availableCodes = new Set<string>(Object.values(AvailableLanguageCode))
-const defaultLanguage = localStorage.getItem(activeLanguageStorageKey) as AvailableLanguageCode
-  ?? navigator.languages.find((preferred) => availableCodes.has(preferred))
+const defaultLanguage = navigator.languages.find((preferred) => availableCodes.has(preferred)) as AvailableLanguageCode
   ?? AvailableLanguageCode['en-US']
 
-export function TranslationContextProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<AvailableLanguageCode>(defaultLanguage)
+export function TranslationContextProvider({ children }: Readonly<{ children: ReactNode }>) {
+  const [language, setLanguage] = usePersistedState<AvailableLanguageCode>(activeLanguageStorageKey, defaultLanguage)
   const { influenceColors, actionColors } = useTheme()
 
   const getTranslation = useCallback((key: keyof Translations, variables?: Partial<TranslationVariables>): ReactNode => {
@@ -149,16 +149,16 @@ export function TranslationContextProvider({ children }: { children: ReactNode }
     return segments
   }, [language, influenceColors, actionColors])
 
+  const contextValue = useMemo(() => ({
+    t: getTranslation,
+    language,
+    setLanguage: (l: AvailableLanguageCode) => {
+      setLanguage(l)
+    }
+  }), [getTranslation, language, setLanguage])
+
   return (
-    <TranslationContext.Provider value={{
-      t: getTranslation,
-      language,
-      setLanguage: useCallback((l: AvailableLanguageCode) => {
-        setLanguage(l)
-        localStorage.setItem(activeLanguageStorageKey, l)
-      }, [setLanguage])
-    }}
-    >
+    <TranslationContext.Provider value={contextValue}>
       {children}
     </TranslationContext.Provider>
   )

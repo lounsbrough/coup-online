@@ -18,7 +18,7 @@ export const GameStateContext = createContext<GameStateContextType>({
   hasInitialStateLoaded: false
 })
 
-export function GameStateContextProvider({ children }: { children: ReactNode }) {
+export function GameStateContextProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [hasInitialStateLoaded, setHasInitialStateLoaded] = useState(false)
   const [dehydratedGameState, setDehydratedGameState] = useState<DehydratedPublicGameState>()
   const [searchParams] = useSearchParams()
@@ -84,32 +84,41 @@ export function GameStateContextProvider({ children }: { children: ReactNode }) 
 
   const playersLeft = gameState?.players.filter(({ influenceCount }) => influenceCount)
   const gameIsOver = playersLeft?.length === 1
-  const aiPlayersActive = gameState?.isStarted && !gameIsOver && gameState?.players.some(({ ai, influenceCount }) =>
-    ai && influenceCount)
+  const speedRoundActive = gameState?.settings.speedRoundSeconds
+  const autoMovePlayersActive = gameState?.isStarted && !gameIsOver && (speedRoundActive || gameState?.players.some(({ ai, influenceCount }) =>
+    ai && influenceCount))
 
   useEffect(() => {
-    if (!roomId || !aiPlayersActive) {
+    if (!roomId || !autoMovePlayersActive) {
       return
     }
 
     const interval = setInterval(() => {
       if (socket && isConnected) {
-        socket.emit(PlayerActions.checkAiMove, { roomId, playerId: getPlayerId(), language })
+        socket.emit(PlayerActions.checkAutoMove, { roomId, playerId: getPlayerId(), language }, ({ gameState: newGameState }: { gameState?: DehydratedPublicGameState }) => {
+          if (newGameState) {
+            setDehydratedGameStateIfChanged(newGameState)
+          }
+        })
       } else {
-        fetch(`${getBaseUrl()}/${PlayerActions.checkAiMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
+        fetch(`${getBaseUrl()}/${PlayerActions.checkAutoMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
           .then(handleGameStateResponse)
           .catch((error) => {
             console.error(error)
           })
       }
-    }, isConnected ? 1000 : 2000)
+    }, isConnected ? 500 : 1000)
 
     return () => {
       clearInterval(interval)
     }
-  }, [roomId, socket, isConnected, language, aiPlayersActive, handleGameStateResponse])
+  }, [roomId, socket, isConnected, language, autoMovePlayersActive, handleGameStateResponse, setDehydratedGameStateIfChanged])
 
-  const contextValue = { gameState, setDehydratedGameState, hasInitialStateLoaded }
+  const contextValue = useMemo(() => ({
+    gameState,
+    setDehydratedGameState,
+    hasInitialStateLoaded
+  }), [gameState, setDehydratedGameState, hasInitialStateLoaded])
 
   return (
     <GameStateContext.Provider value={contextValue}>

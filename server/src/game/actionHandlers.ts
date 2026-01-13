@@ -1,13 +1,14 @@
-import crypto from 'crypto'
-import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError } from "../utilities/errors"
-import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, Responses } from "../../../shared/types/game"
-import { getGameState, getPublicGameState, logEvent, mutateGameState } from "../utilities/gameState"
+import crypto from 'node:crypto'
+import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError, SpeedRoundTimerExpiredError } from "../utilities/errors"
+import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, PlayerActions, Responses } from "../../../shared/types/game"
+import { getGameState, getPublicGameState, logEvent, logForcedMove, mutateGameState } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { getValue } from '../utilities/storage'
-import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { shuffle } from '../utilities/array'
+import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
+import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
-import { decideAction, decideActionChallengeResponse, decideActionResponse, decideBlockChallengeResponse, decideBlockResponse, decideInfluencesToLose } from './ai'
 import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
 
 const getPlayerInRoom = ({ gameState, playerId }: {
@@ -308,7 +309,7 @@ export const startGameHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
-export const checkAiMoveHandler = async ({ roomId, playerId }: {
+export const checkAutoMoveHandler = async ({ roomId, playerId }: {
   roomId: string
   playerId: string
 }) => {
@@ -317,107 +318,41 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   const unchangedResponse = { roomId, playerId, stateUnchanged: true }
   const changedResponse = { roomId, playerId }
 
-  const playersLeft = gameState.players.filter(({ influences }) => influences.length)
-  const gameIsOver = playersLeft.length === 1
-
-  const timeToPonderLifeChoices = 500 + Math.floor(Math.random() * 1000)
-  if (gameIsOver || new Date() < new Date(gameState.lastEventTimestamp.getTime() + timeToPonderLifeChoices)) {
-    return unchangedResponse
+  const remainingPlayers = gameState.players.filter(({ influences }) => influences.length)
+  const playersForAutoMove = []
+  let isForcedMove = false
+  if (isSpeedRoundTimerExpired(gameState)) {
+    playersForAutoMove.push(...shuffle(remainingPlayers))
+    isForcedMove = true
+  } else {
+    // AI players move after a short pause
+    const timeForMachinesToPonderLifeChoices = gameState.settings.aiMoveDelayMs ?? 500
+    if (timeForMachinesToPonderLifeChoices && Date.now() < gameState.lastEventTimestamp.getTime() + timeForMachinesToPonderLifeChoices) {
+      return unchangedResponse
+    }
+    playersForAutoMove.push(...remainingPlayers.filter(({ ai }) => ai))
   }
 
-  const pendingLossPlayers = Object.keys(gameState.pendingInfluenceLoss)
-  const nextPendingLossAiPlayer = gameState.players.find(({ ai, name }) =>
-    ai && pendingLossPlayers.includes(name))
-  if (nextPendingLossAiPlayer) {
-    const { influences } = decideInfluencesToLose(
-      getPublicGameState({ gameState, playerId: nextPendingLossAiPlayer.id })
-    )
+  for (const playerForAutoMove of playersForAutoMove) {
+    const suggestedMove = await getPlayerSuggestedMove({ roomId, playerId: playerForAutoMove.id })
+    if (!suggestedMove) continue
+    const [move, params] = suggestedMove
 
-    await loseInfluencesHandler({
-      roomId,
-      playerId: nextPendingLossAiPlayer.id,
-      influences
-    })
-
-    return changedResponse
-  }
-
-  const turnPlayer = gameState.players.find(({ name }) => name === gameState.turnPlayer)
-
-  const turnPlayerState = getPublicGameState({ gameState, playerId: turnPlayer!.id })
-
-  if (turnPlayer?.ai && canPlayerChooseAction(turnPlayerState)) {
-    const { action, targetPlayer } = decideAction(turnPlayerState)
-
-    await actionHandler({
-      roomId,
-      playerId: turnPlayer.id,
-      action,
-      ...(targetPlayer && { targetPlayer })
-    })
-
-    return changedResponse
-  }
-
-  let nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
-    ai && canPlayerChooseActionResponse(getPublicGameState({ gameState, playerId: id })))
-  if (nextPendingAiPlayer) {
-    const { response, claimedInfluence } = decideActionResponse(
-      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
-    )
-
-    await actionResponseHandler({
-      roomId,
-      playerId: nextPendingAiPlayer.id,
-      response,
-      ...(claimedInfluence && { claimedInfluence })
-    })
-
-    return changedResponse
-  }
-
-  if (turnPlayer?.ai && canPlayerChooseActionChallengeResponse(turnPlayerState)) {
-    const { influence } = decideActionChallengeResponse(
-      getPublicGameState({ gameState, playerId: turnPlayer.id })
-    )
-
-    await actionChallengeResponseHandler({
-      roomId,
-      playerId: turnPlayer.id,
-      influence
-    })
-
-    return changedResponse
-  }
-
-  nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
-    ai && canPlayerChooseBlockResponse(getPublicGameState({ gameState, playerId: id })))
-  if (nextPendingAiPlayer) {
-    const { response } = decideBlockResponse(
-      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
-    )
-
-    await blockResponseHandler({
-      roomId,
-      playerId: nextPendingAiPlayer.id,
-      response
-    })
-
-    return changedResponse
-  }
-
-  nextPendingAiPlayer = gameState.players.find(({ ai, id }) =>
-    ai && canPlayerChooseBlockChallengeResponse(getPublicGameState({ gameState, playerId: id })))
-  if (nextPendingAiPlayer) {
-    const { influence } = decideBlockChallengeResponse(
-      getPublicGameState({ gameState, playerId: nextPendingAiPlayer.id })
-    )
-
-    await blockChallengeResponseHandler({
-      roomId,
-      playerId: nextPendingAiPlayer.id,
-      influence
-    })
+    if (move === PlayerActions.loseInfluences) {
+      await loseInfluencesHandler({ ...(params as Parameters<typeof loseInfluencesHandler>[0]), isForcedMove })
+    } else if (move === PlayerActions.action) {
+      await actionHandler({ ...(params as Parameters<typeof actionHandler>[0]), isForcedMove })
+    } else if (move === PlayerActions.actionResponse) {
+      await actionResponseHandler({ ...(params as Parameters<typeof actionResponseHandler>[0]), isForcedMove })
+    } else if (move === PlayerActions.actionChallengeResponse) {
+      await actionChallengeResponseHandler({ ...(params as Parameters<typeof actionChallengeResponseHandler>[0]), isForcedMove })
+    } else if (move === PlayerActions.blockResponse) {
+      await blockResponseHandler({ ...(params as Parameters<typeof blockResponseHandler>[0]), isForcedMove })
+    } else if (move === PlayerActions.blockChallengeResponse) {
+      await blockChallengeResponseHandler({ ...(params as Parameters<typeof blockChallengeResponseHandler>[0]), isForcedMove })
+    } else {
+      throw new ActionNotCurrentlyAllowedError()
+    }
 
     return changedResponse
   }
@@ -425,13 +360,22 @@ export const checkAiMoveHandler = async ({ roomId, playerId }: {
   return unchangedResponse
 }
 
-export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: {
+const enforceSpeedRoundTimer = (gameState: GameState, isForcedMove?: boolean) => {
+  if (!isForcedMove && isSpeedRoundTimerExpired(gameState)) {
+    throw new SpeedRoundTimerExpiredError()
+  }
+}
+
+export const actionHandler = async ({ roomId, playerId, action, targetPlayer, isForcedMove }: {
   roomId: string
   playerId: string
   action: Actions
   targetPlayer?: string
+  isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -475,6 +419,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
   if (!ActionAttributes[action].blockable && !ActionAttributes[action].challengeable) {
     if (action === Actions.Coup) {
       await mutateGameState(gameState, (state) => {
+        if (isForcedMove) logForcedMove(state, player)
+
         if (!targetPlayer) {
           throw new TargetPlayerRequiredForActionError()
         }
@@ -505,6 +451,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
       })
     } else if (action === Actions.Revive) {
       await mutateGameState(gameState, (state) => {
+        if (isForcedMove) logForcedMove(state, player)
+
         const revivePlayer = state.players.find(({ id }) => id === playerId)
 
         if (!revivePlayer) {
@@ -535,6 +483,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
       })
     } else if (action === Actions.Income) {
       await mutateGameState(gameState, (state) => {
+        if (isForcedMove) logForcedMove(state, player)
+
         const incomePlayer = state.players.find(({ id }) => id === playerId)
 
         if (!incomePlayer) {
@@ -560,6 +510,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer }: 
     }
   } else {
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: player.id }))) {
         throw new ActionNotCurrentlyAllowedError()
       }
@@ -629,13 +581,16 @@ export const processPassActionResponse = (state: GameState, playerName: string) 
   }
 }
 
-export const actionResponseHandler = async ({ roomId, playerId, response, claimedInfluence }: {
+export const actionResponseHandler = async ({ roomId, playerId, response, claimedInfluence, isForcedMove }: {
   roomId: string
   playerId: string
   response: Responses
   claimedInfluence?: Influences
+  isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -649,6 +604,8 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
 
   if (response === Responses.Pass) {
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       processPassActionResponse(state, player.name)
     })
   } else if (response === Responses.Challenge) {
@@ -661,6 +618,8 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     }
 
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       state.pendingActionChallenge = {
         sourcePlayer: player.name
       }
@@ -675,7 +634,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       throw new ClaimedInfluenceRequiredError()
     }
 
-    if (InfluenceAttributes[claimedInfluence as Influences].legalBlock !== gameState.pendingAction!.action) {
+    if (InfluenceAttributes[claimedInfluence].legalBlock !== gameState.pendingAction!.action) {
       throw new ClaimedInfluenceInvalidError()
     }
 
@@ -686,6 +645,8 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     }
 
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       if (!state.pendingAction) {
         throw new ActionNotCurrentlyAllowedError()
       }
@@ -713,12 +674,15 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
   return { roomId, playerId }
 }
 
-export const actionChallengeResponseHandler = async ({ roomId, playerId, influence }: {
+export const actionChallengeResponseHandler = async ({ roomId, playerId, influence, isForcedMove }: {
   roomId: string
   playerId: string
   influence: Influences
+  isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -734,8 +698,10 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     throw new MissingInfluenceError()
   }
 
-  if (InfluenceAttributes[influence as Influences].legalAction === gameState.pendingAction!.action) {
+  if (InfluenceAttributes[influence].legalAction === gameState.pendingAction!.action) {
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       if (!state.pendingAction || !state.pendingActionChallenge) {
         throw new ActionNotCurrentlyAllowedError()
       }
@@ -750,7 +716,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       logEvent(state, {
         event: EventMessages.ChallengeFailed,
         primaryPlayer: challengePlayer.name,
-        secondaryPlayer: state.turnPlayer!
+        secondaryPlayer: state.turnPlayer
       })
       promptPlayerToLoseInfluence(state, challengePlayer.name)
       delete state.pendingActionChallenge
@@ -781,6 +747,8 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     })
   } else {
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
       const challengePlayer = state.players.find(({ name }) => name === state.pendingActionChallenge?.sourcePlayer)
 
@@ -822,7 +790,7 @@ export const processPassBlockResponse = (state: GameState, playerName: string) =
       throw new UnableToFindPlayerError()
     }
 
-    const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+    const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
     if (claimedInfluence) {
       addClaimedInfluence(actionPlayer, claimedInfluence)
     }
@@ -850,12 +818,15 @@ export const processPassBlockResponse = (state: GameState, playerName: string) =
   }
 }
 
-export const blockResponseHandler = async ({ roomId, playerId, response }: {
+export const blockResponseHandler = async ({ roomId, playerId, response, isForcedMove }: {
   roomId: string
   playerId: string
   response: Responses
+  isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -873,6 +844,8 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
 
   if (response === Responses.Challenge) {
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
 
       if (!blockPlayer) {
@@ -888,6 +861,8 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
     })
   } else if (response === Responses.Pass) {
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       processPassBlockResponse(state, player.name)
     })
   }
@@ -895,12 +870,15 @@ export const blockResponseHandler = async ({ roomId, playerId, response }: {
   return { roomId, playerId }
 }
 
-export const blockChallengeResponseHandler = async ({ roomId, playerId, influence }: {
+export const blockChallengeResponseHandler = async ({ roomId, playerId, influence, isForcedMove }: {
   roomId: string
   playerId: string
   influence: Influences
+  isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -918,6 +896,8 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
 
   if (influence === gameState.pendingBlock!.claimedInfluence) {
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       if (!state.pendingAction || !state.pendingBlock) {
         throw new ActionNotCurrentlyAllowedError()
       }
@@ -929,7 +909,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
         throw new UnableToFindPlayerError()
       }
 
-      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
       if (claimedInfluence) {
         addClaimedInfluence(actionPlayer, claimedInfluence)
       }
@@ -958,6 +938,8 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     })
   } else {
     await mutateGameState(gameState, (state) => {
+      if (isForcedMove) logForcedMove(state, player)
+
       const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
       const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
       const challengePlayer = state.players.find(({ name }) => name === state.pendingBlockChallenge?.sourcePlayer)
@@ -995,12 +977,15 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
   return { roomId, playerId }
 }
 
-export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
+export const loseInfluencesHandler = async ({ roomId, playerId, influences, isForcedMove }: {
   roomId: string
   playerId: string
   influences: Influences[]
+  isForcedMove?: boolean
 }) => {
   const gameState = await getGameState(roomId)
+
+  enforceSpeedRoundTimer(gameState, isForcedMove)
 
   const player = getPlayerInRoom({ gameState, playerId })
 
@@ -1023,6 +1008,8 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
   }
 
   await mutateGameState(gameState, (state) => {
+    if (isForcedMove) logForcedMove(state, player)
+
     const losingPlayer = state.players.find(({ id }) => id === playerId)
 
     if (!losingPlayer) {
@@ -1040,7 +1027,7 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences }: {
 
       if (putBackInDeck) {
         const removedInfluence = losingPlayer.influences.splice(
-          losingPlayer.influences.findIndex((i) => i === influence),
+          losingPlayer.influences.indexOf(influence),
           1
         )[0]
         state.deck.unshift(removedInfluence)
@@ -1130,12 +1117,12 @@ export const setEmojiOnChatMessageHandler = async ({
   emoji,
   selected,
 }: {
-  roomId: string;
-  playerId: string;
-  messageId: string;
-  emoji: string;
-  selected: boolean;
-  language: AvailableLanguageCode;
+  roomId: string
+  playerId: string
+  messageId: string
+  emoji: string
+  selected: boolean
+  language: AvailableLanguageCode
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -1151,19 +1138,15 @@ export const setEmojiOnChatMessageHandler = async ({
     }
 
     if (selected) {
-      if (!existingMessage.emojis) {
-        existingMessage.emojis = {}
-      }
+      existingMessage.emojis ??= {}
       if (!existingMessage.emojis[emoji]) {
         existingMessage.emojis[emoji] = new Set()
       }
       existingMessage.emojis[emoji].add(player.name)
-    } else {
-      if (existingMessage.emojis?.[emoji]) {
-        existingMessage.emojis[emoji].delete(player.name)
-        if (!existingMessage.emojis[emoji].size) {
-          delete existingMessage.emojis[emoji]
-        }
+    } else if (existingMessage.emojis?.[emoji]) {
+      existingMessage.emojis[emoji].delete(player.name)
+      if (!existingMessage.emojis[emoji].size) {
+        delete existingMessage.emojis[emoji]
       }
     }
   })

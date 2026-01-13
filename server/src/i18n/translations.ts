@@ -274,6 +274,15 @@ const translations = {
     'it-IT': "Stanza non trovata",
     'pt-BR': "Sala não encontrada",
   },
+  speedRoundTimerExpired: {
+    'de-DE': 'Die Zeit für die Schnellrunde ist abgelaufen',
+    'en-US': 'Speed round timer has expired',
+    'es-MX': 'El temporizador de la ronda rápida ha expirado',
+    'fr-FR': 'Le minuteur du tour rapide a expiré',
+    'hi-IN': 'स्पीड राउंड टाइमर समाप्त हो गया है',
+    'it-IT': 'Il timer del round veloce è scaduto',
+    'pt-BR': 'O cronômetro da rodada rápida expirou',
+  },
   stateChangedSinceValidation: {
     'de-DE': 'Der Status hat sich seit der Validierung geändert',
     'en-US': 'State has changed since validation',

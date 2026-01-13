@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router"
 import LanguageSelector from "./LanguageSelector"
 import { useTranslationContext } from "../contexts/TranslationsContext"
 import { useUserSettingsContext } from "../contexts/UserSettingsContext"
-import { getShowImageLabel } from '../helpers/easter-eggs'
+import { getShowImageLabel } from '../helpers/easterEggs'
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -14,7 +14,7 @@ function UserSettings() {
   const { isConnected } = useWebSocketContext()
   const { t, language } = useTranslationContext()
   const { isSmallScreen } = useTheme()
-  const { showChickens, confirmActions, setShowChickens, setConfirmActions } = useUserSettingsContext()
+  const { showBackgroundImage, confirmActions, setShowBackgroundImage, setConfirmActions } = useUserSettingsContext()
 
   const roomId = searchParams.get('roomId')
   const rowHeight = 36
@@ -104,9 +104,9 @@ function UserSettings() {
                 :
               </Typography>
               <Switch
-                checked={showChickens}
+                checked={showBackgroundImage}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setShowChickens(event.target.checked)
+                  setShowBackgroundImage(event.target.checked)
                 }}
                 slotProps={{ input: { 'aria-label': 'controlled' } }}
               />

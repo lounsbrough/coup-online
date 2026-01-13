@@ -11,9 +11,7 @@ const createRedisClient = () =>
 
 let redisClientPromise: Promise<RedisClientType> | undefined
 const getRedisClientPromise = () => {
-  if (!redisClientPromise) {
-    redisClientPromise = createRedisClient() as Promise<RedisClientType>
-  }
+  redisClientPromise ??= createRedisClient() as Promise<RedisClientType>
   return redisClientPromise
 }
 

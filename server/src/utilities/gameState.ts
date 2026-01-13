@@ -1,5 +1,5 @@
 import { rehydrateGameState, isSameState, dehydrateGameState } from '../../../shared/helpers/state'
-import { EventMessage, GameState, DehydratedGameState, Influences, Player, PublicGameState, PublicPlayer } from '../../../shared/types/game'
+import { EventMessage, GameState, DehydratedGameState, Influences, Player, PublicGameState, PublicPlayer, EventMessages } from '../../../shared/types/game'
 import { shuffle } from './array'
 import { DeckIsEmptyError, EveryonePassedWithPendingDecisionError, IncorrectTotalCardCountError, InvalidPlayerCountError, InvalidTurnPlayerError, PlayersMustHave2InfluencesError, RoomNotFoundError, StateChangedSinceValidationError } from './errors'
 import { getValue, setValue } from './storage'
@@ -103,9 +103,9 @@ export const validateGameState = (state: DehydratedGameState) => {
     && !state.pendingActionChallenge
     && !state.pendingBlock
   ) || (
-    state.pendingBlock?.pendingPlayers?.length === 0
-    && !state.pendingBlockChallenge
-  )) {
+      state.pendingBlock?.pendingPlayers?.length === 0
+      && !state.pendingBlockChallenge
+    )) {
     throw new EveryonePassedWithPendingDecisionError()
   }
 }
@@ -141,7 +141,13 @@ export const mutateGameState = async (
     return
   }
 
-  dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
+  // We will not treat a pass as an event that updates the lastEventTimestamp
+  // This impacts speed rounds and AI move delays
+  const wasActionPass = dehydratedGameState.pendingAction && dehydratedValidatedGameState.pendingAction && dehydratedGameState.pendingAction.pendingPlayers.length !== dehydratedValidatedGameState.pendingAction.pendingPlayers.length
+  const wasBlockPass = dehydratedGameState.pendingBlock && dehydratedValidatedGameState.pendingBlock && dehydratedGameState.pendingBlock.pendingPlayers.length !== dehydratedValidatedGameState.pendingBlock.pendingPlayers.length
+  if (!wasActionPass && !wasBlockPass) {
+    dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
+  }
 
   await setGameState(validatedState.roomId, dehydratedGameState)
 }
@@ -163,4 +169,11 @@ export const logEvent = (state: GameState, log: Omit<EventMessage, 'turn'>) => {
   state.eventLogs = state.eventLogs.filter(({ turn }) =>
     state.turn - turn < state.settings.eventLogRetentionTurns
   )
+}
+
+export const logForcedMove = (state: GameState, player: Player) => {
+  logEvent(state, {
+    event: EventMessages.ForcedMoveProcessed,
+    primaryPlayer: player.name
+  })
 }

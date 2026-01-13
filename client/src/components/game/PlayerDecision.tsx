@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '@shared'
 import ChooseAction from "./ChooseAction"
 import ChooseActionResponse from "./ChooseActionResponse"
@@ -7,6 +8,7 @@ import ChooseBlockResponse from "./ChooseBlockResponse"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import ChooseInfluencesToKeep from "./ChooseInfluencesToKeep"
 import WaitingOnOtherPlayers from "./WaitingOnOtherPlayers"
+import SpeedRoundTimer from './SpeedRoundTimer'
 
 function PlayerDecision() {
   const { gameState } = useGameStateContext()
@@ -15,33 +17,32 @@ function PlayerDecision() {
     return null
   }
 
+  let decision: React.ReactNode = null
+
   const pendingInfluenceLoss = gameState.pendingInfluenceLoss[gameState.selfPlayer.name]
   if (pendingInfluenceLoss) {
-    if (pendingInfluenceLoss[0].putBackInDeck) {
-      return <ChooseInfluencesToKeep />
-    } else {
-      return <ChooseInfluenceToLose />
-    }
+    decision = pendingInfluenceLoss[0].putBackInDeck ? <ChooseInfluencesToKeep /> : <ChooseInfluenceToLose />
+  } else if (canPlayerChooseAction(gameState)) {
+    decision = <ChooseAction />
+  } else if (canPlayerChooseActionResponse(gameState)) {
+    decision = <ChooseActionResponse />
+  } else if (canPlayerChooseActionChallengeResponse(gameState)) {
+    decision = <ChooseChallengeResponse />
+  } else if (gameState.pendingBlock && canPlayerChooseBlockResponse(gameState)) {
+    decision = <ChooseBlockResponse />
+  } else if (canPlayerChooseBlockChallengeResponse(gameState)) {
+    decision = <ChooseChallengeResponse />
   }
 
-  if (canPlayerChooseAction(gameState)) {
-    return <ChooseAction />
-  }
-
-  if (canPlayerChooseActionResponse(gameState)) {
-    return <ChooseActionResponse />
-  }
-
-  if (canPlayerChooseActionChallengeResponse(gameState)) {
-    return <ChooseChallengeResponse />
-  }
-
-  if (gameState.pendingBlock && canPlayerChooseBlockResponse(gameState)) {
-    return <ChooseBlockResponse />
-  }
-
-  if (canPlayerChooseBlockChallengeResponse(gameState)) {
-    return <ChooseChallengeResponse />
+  if (decision) {
+    return (
+      <>
+        {decision}
+        <Box mt={3}>
+          <SpeedRoundTimer />
+        </Box>
+      </>
+    )
   }
 
   return (
