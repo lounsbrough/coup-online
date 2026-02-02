@@ -13,19 +13,19 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.6",
-    "@types/react": "^19.2.9",
+    "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "@vercel/analytics": "^1.6.1",
     "colord": "^2.9.3",
-    "emoji-picker-react": "^4.17.1",
+    "emoji-picker-react": "^4.17.4",
     "eslint": "^9.39.2",
     "qrcode.react": "^4.2.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "react-router": "^7.13.0",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.8.3",
-    "swr": "^2.3.8",
+    "swr": "^2.4.0",
     "typescript": "^5.9.3",
     "web-vitals": "^5.1.0"
   },
@@ -63,7 +63,7 @@
     "chance": "^1.1.13",
     "cypress": "^15.9.0",
     "esbuild": "^0.27.2",
-    "globals": "^17.1.0",
-    "typescript-eslint": "^8.53.1"
+    "globals": "^17.3.0",
+    "typescript-eslint": "^8.54.0"
   }
 }
