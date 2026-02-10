@@ -143,8 +143,16 @@ export const mutateGameState = async (
 
   // We will not treat a pass as an event that updates the lastEventTimestamp
   // This impacts speed rounds and AI move delays
-  const wasActionPass = dehydratedGameState.pendingAction && dehydratedValidatedGameState.pendingAction && dehydratedGameState.pendingAction.pendingPlayers.length !== dehydratedValidatedGameState.pendingAction.pendingPlayers.length
-  const wasBlockPass = dehydratedGameState.pendingBlock && dehydratedValidatedGameState.pendingBlock && dehydratedGameState.pendingBlock.pendingPlayers.length !== dehydratedValidatedGameState.pendingBlock.pendingPlayers.length
+  const wasActionPass =
+    !dehydratedGameState.pendingBlock &&
+    !dehydratedValidatedGameState.pendingBlock &&
+    dehydratedGameState.pendingAction &&
+    dehydratedValidatedGameState.pendingAction &&
+    dehydratedGameState.pendingAction.pendingPlayers.length !== dehydratedValidatedGameState.pendingAction.pendingPlayers.length
+  const wasBlockPass =
+    dehydratedGameState.pendingBlock &&
+    dehydratedValidatedGameState.pendingBlock &&
+    dehydratedGameState.pendingBlock.pendingPlayers.length !== dehydratedValidatedGameState.pendingBlock.pendingPlayers.length
   if (!wasActionPass && !wasBlockPass) {
     dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
   }
