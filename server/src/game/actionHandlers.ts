@@ -570,15 +570,16 @@ export const processPassActionResponse = (state: GameState, playerName: string) 
     }
   }
 
-  if (state.pendingAction.pendingPlayers.size === 1) {
-    const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
-    if (claimedInfluence) {
-      addClaimedInfluence(actionPlayer, claimedInfluence)
-    }
-    processPendingAction(state)
-  } else {
+  if (state.pendingAction.pendingPlayers.size > 1) {
     state.pendingAction.pendingPlayers.delete(playerName)
+    return { updateLastEventTimestamp: false }
   }
+
+  const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
+  if (claimedInfluence) {
+    addClaimedInfluence(actionPlayer, claimedInfluence)
+  }
+  processPendingAction(state)
 }
 
 export const actionResponseHandler = async ({ roomId, playerId, response, claimedInfluence, isForcedMove }: {
@@ -606,7 +607,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
-      processPassActionResponse(state, player.name)
+      return processPassActionResponse(state, player.name)
     })
   } else if (response === Responses.Challenge) {
     if (gameState.pendingAction!.claimConfirmed) {
@@ -782,40 +783,41 @@ export const processPassBlockResponse = (state: GameState, playerName: string) =
     throw new ActionNotCurrentlyAllowedError()
   }
 
-  if (state.pendingBlock.pendingPlayers.size === 1) {
-    const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
-    const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
+  if (state.pendingBlock.pendingPlayers.size > 1) {
+    state.pendingBlock.pendingPlayers.delete(playerName)
+    return { updateLastEventTimestamp: false }
+  }
 
-    if (!actionPlayer || !blockPlayer) {
+  const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
+  const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
+
+  if (!actionPlayer || !blockPlayer) {
+    throw new UnableToFindPlayerError()
+  }
+
+  const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
+  if (claimedInfluence) {
+    addClaimedInfluence(actionPlayer, claimedInfluence)
+  }
+  addClaimedInfluence(blockPlayer, state.pendingBlock?.claimedInfluence)
+  logEvent(state, {
+    event: EventMessages.BlockSuccessful,
+    primaryPlayer: blockPlayer.name,
+    secondaryPlayer: state.turnPlayer!
+  })
+  if (state.pendingAction.action === Actions.Assassinate) {
+    const assassin = state.players.find(({ name }) => name === state.turnPlayer)
+
+    if (!assassin) {
       throw new UnableToFindPlayerError()
     }
 
-    const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
-    if (claimedInfluence) {
-      addClaimedInfluence(actionPlayer, claimedInfluence)
-    }
-    addClaimedInfluence(blockPlayer, state.pendingBlock?.claimedInfluence)
-    logEvent(state, {
-      event: EventMessages.BlockSuccessful,
-      primaryPlayer: blockPlayer.name,
-      secondaryPlayer: state.turnPlayer!
-    })
-    if (state.pendingAction.action === Actions.Assassinate) {
-      const assassin = state.players.find(({ name }) => name === state.turnPlayer)
-
-      if (!assassin) {
-        throw new UnableToFindPlayerError()
-      }
-
-      assassin.coins -= ActionAttributes.Assassinate.coinsRequired!
-    }
-    moveTurnToNextPlayer(state)
-    delete state.pendingBlock
-    delete state.pendingActionChallenge
-    delete state.pendingAction
-  } else {
-    state.pendingBlock.pendingPlayers.delete(playerName)
+    assassin.coins -= ActionAttributes.Assassinate.coinsRequired!
   }
+  moveTurnToNextPlayer(state)
+  delete state.pendingBlock
+  delete state.pendingActionChallenge
+  delete state.pendingAction
 }
 
 export const blockResponseHandler = async ({ roomId, playerId, response, isForcedMove }: {
@@ -863,7 +865,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response, isForce
     await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
-      processPassBlockResponse(state, player.name)
+      return processPassBlockResponse(state, player.name)
     })
   }
 
