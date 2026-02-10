@@ -121,9 +121,11 @@ export const createGameState = async (roomId: string, gameState: GameState) => {
   await setGameState(roomId, dehydrateGameState(gameState))
 }
 
+export type PostMutationOptions = { updateLastEventTimestamp?: boolean }
+
 export const mutateGameState = async (
   validatedState: GameState,
-  mutation: (state: GameState) => void
+  mutation: (state: GameState) => PostMutationOptions | void
 ) => {
   const gameState = await getGameState(validatedState.roomId)
 
@@ -133,7 +135,7 @@ export const mutateGameState = async (
     throw new StateChangedSinceValidationError()
   }
 
-  mutation(gameState)
+  const { updateLastEventTimestamp = true } = mutation(gameState) ?? {}
 
   const dehydratedGameState = dehydrateGameState(gameState)
 
@@ -141,11 +143,7 @@ export const mutateGameState = async (
     return
   }
 
-  // We will not treat a pass as an event that updates the lastEventTimestamp
-  // This impacts speed rounds and AI move delays
-  const wasActionPass = dehydratedGameState.pendingAction && dehydratedValidatedGameState.pendingAction && dehydratedGameState.pendingAction.pendingPlayers.length !== dehydratedValidatedGameState.pendingAction.pendingPlayers.length
-  const wasBlockPass = dehydratedGameState.pendingBlock && dehydratedValidatedGameState.pendingBlock && dehydratedGameState.pendingBlock.pendingPlayers.length !== dehydratedValidatedGameState.pendingBlock.pendingPlayers.length
-  if (!wasActionPass && !wasBlockPass) {
+  if (updateLastEventTimestamp) {
     dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
   }
 
