@@ -1,5 +1,5 @@
-import { vi } from 'vitest';
-import { Chance } from 'chance';
+import { vi } from 'vitest'
+import { Chance } from 'chance'
 import {
   Actions,
   Influences,
@@ -7,20 +7,20 @@ import {
   PublicGameState,
   PublicPlayer,
   Responses,
-} from '../../../shared/types/game';
+} from '../../../shared/types/game'
 import {
   decideAction,
   decideActionResponse,
   getOpponents,
   getPlayerDangerFactor,
   getProbabilityOfPlayerInfluence,
-} from './ai';
-import { randomlyDecideToBluff } from './aiRandomness';
+} from './ai'
+import { randomlyDecideToBluff } from './aiRandomness'
 
-const chance = new Chance();
-vi.mock('./aiRandomness');
+const chance = new Chance()
+vi.mock('./aiRandomness')
 
-const randomlyDecideToBluffMock = vi.mocked(randomlyDecideToBluff);
+const randomlyDecideToBluffMock = vi.mocked(randomlyDecideToBluff)
 
 describe('ai', () => {
   const getRandomPlayer = (): Player => ({
@@ -34,7 +34,7 @@ describe('ai', () => {
     color: chance.string(),
     ai: chance.bool(),
     grudges: {},
-  });
+  })
 
   const getRandomPublicPlayer = (): PublicPlayer => ({
     name: chance.string(),
@@ -46,7 +46,7 @@ describe('ai', () => {
     color: chance.string(),
     ai: chance.bool(),
     grudges: {},
-  });
+  })
 
   const getRandomPublicGameState = ({
     players,
@@ -66,22 +66,22 @@ describe('ai', () => {
       pendingInfluenceLoss: {},
       settings: { eventLogRetentionTurns: 3, allowRevive: true },
       roomId: chance.string(),
-    };
+    }
 
     gameState.players = players.map((player) => {
       return {
         ...getRandomPublicPlayer(),
         ...player,
-      };
-    });
+      }
+    })
     gameState.selfPlayer = {
       ...getRandomPlayer(),
       ...selfPlayer,
-    };
-    gameState.turnPlayer = gameState.selfPlayer!.name;
+    }
+    gameState.turnPlayer = gameState.selfPlayer!.name
 
-    return gameState;
-  };
+    return gameState
+  }
 
   describe('getProbabilityOfPlayerInfluence', () => {
     const testCases: {
@@ -199,7 +199,7 @@ describe('ai', () => {
         probability: 0,
         anyPlayerProbability: 0,
       },
-    ];
+    ]
 
     it.each(testCases)(
       'should return $probability for $testCase',
@@ -219,13 +219,13 @@ describe('ai', () => {
       }) => {
         expect(
           getProbabilityOfPlayerInfluence(gameState, influence, playerName),
-        ).toBeCloseTo(probability);
+        ).toBeCloseTo(probability)
         expect(
           getProbabilityOfPlayerInfluence(gameState, influence),
-        ).toBeCloseTo(anyPlayerProbability);
+        ).toBeCloseTo(anyPlayerProbability)
       },
-    );
-  });
+    )
+  })
 
   describe('getPlayerDangerFactor', () => {
     const testCases: {
@@ -278,15 +278,15 @@ describe('ai', () => {
         },
         dangerFactor: 32,
       },
-    ];
+    ]
 
     it.each(testCases)(
       'should return $dangerFactor for $testCase',
       ({ player, dangerFactor }) => {
-        expect(getPlayerDangerFactor(player)).toBeCloseTo(dangerFactor);
+        expect(getPlayerDangerFactor(player)).toBeCloseTo(dangerFactor)
       },
-    );
-  });
+    )
+  })
 
   describe('getOpponents', () => {
     it.each([
@@ -329,9 +329,9 @@ describe('ai', () => {
         ],
       },
     ])('should return $expected for $testCase', ({ gameState, expected }) => {
-      expect(getOpponents(gameState)).toEqual(expected);
-    });
-  });
+      expect(getOpponents(gameState)).toEqual(expected)
+    })
+  })
 
   describe('decideAction', () => {
     it('should choose Coup if 10 or more coins and Revive not enabled', () => {
@@ -372,8 +372,8 @@ describe('ai', () => {
       ).toEqual({
         action: Actions.Coup,
         targetPlayer: 'david',
-      });
-    });
+      })
+    })
 
     it('should choose Coup if 7 or more coins and checkmate', () => {
       expect(
@@ -413,11 +413,11 @@ describe('ai', () => {
       ).toEqual({
         action: Actions.Coup,
         targetPlayer: 'david',
-      });
-    });
+      })
+    })
 
     it('should bluff influence on actions with some randomness', () => {
-      randomlyDecideToBluffMock.mockReturnValue(true);
+      randomlyDecideToBluffMock.mockReturnValue(true)
 
       const decidedAction = decideAction({
         roomId: chance.string(),
@@ -459,13 +459,13 @@ describe('ai', () => {
         settings: { eventLogRetentionTurns: 3, allowRevive: false },
         pendingInfluenceLoss: {},
         deckCount: 11,
-      });
+      })
 
-      expect(decidedAction.action).toBe(Actions.Tax);
-    });
+      expect(decidedAction.action).toBe(Actions.Tax)
+    })
 
     it('should not bluff influence if all are dead', () => {
-      randomlyDecideToBluffMock.mockReturnValue(true);
+      randomlyDecideToBluffMock.mockReturnValue(true)
 
       const decidedAction = decideAction({
         roomId: chance.string(),
@@ -507,11 +507,11 @@ describe('ai', () => {
         settings: { eventLogRetentionTurns: 3, allowRevive: true },
         pendingInfluenceLoss: {},
         deckCount: 11,
-      });
+      })
 
-      expect(decidedAction.action).not.toBe(Actions.Tax);
-    });
-  });
+      expect(decidedAction.action).not.toBe(Actions.Tax)
+    })
+  })
 
   describe('decideActionResponse', () => {
     it('should not block when player holds or claims last influence, challenge makes more sense', () => {
@@ -562,7 +562,7 @@ describe('ai', () => {
           pendingInfluenceLoss: {},
           deckCount: 11,
         }),
-      ).toEqual({ response: Responses.Challenge });
-    });
-  });
-});
+      ).toEqual({ response: Responses.Challenge })
+    })
+  })
+})
