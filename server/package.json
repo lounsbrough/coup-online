@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p tsconfig.check.json",
     "test": "vitest run --coverage",
     "build": "rm -rf dist && tsc",
     "dev": "ts-node index.ts",

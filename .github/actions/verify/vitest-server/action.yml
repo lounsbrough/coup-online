@@ -5,6 +5,10 @@ runs:
   steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-node
+    - run: |
+        cd server
+        pnpm typecheck
+      shell: bash
     - run: sudo apt-get install -y redis-tools redis-server
       shell: bash
     - run: redis-cli ping

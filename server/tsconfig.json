@@ -11,15 +11,11 @@
     "baseUrl": ".",
     "strictNullChecks": true,
     "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
     "paths": {
-      "*": [
-        "node_modules/*",
-        "src/types/*"
-      ]
+      "*": ["node_modules/*", "src/types/*"]
     }
   },
-  "include": [
-    "./**/*",
-    "../shared/types/game.ts"
-  ]
+  "include": ["./**/*", "../shared/types/game.ts"],
+  "exclude": ["**/*.spec.ts", "node_modules"]
 }
