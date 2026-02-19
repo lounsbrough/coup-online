@@ -1,14 +1,26 @@
-import { Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Slider, Switch, TextField, Typography } from "@mui/material"
-import { useState } from "react"
-import { Casino } from "@mui/icons-material"
-import Bot from "../icons/Bot"
-import useGameMutation from "../../hooks/useGameMutation"
-import { AiPersonality, PlayerActions } from "@shared"
-import { getPlayerId } from "../../helpers/players"
-import { useGameStateContext } from "../../contexts/GameStateContext"
-import { useTranslationContext } from "../../contexts/TranslationsContext"
-import { chooseAiPersonalityStorageKey } from "../../helpers/localStorageKeys"
-import { usePersistedState } from '../../hooks/usePersistedState'
+import {
+  Box,
+  Button,
+  Collapse,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slider,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
+import { Casino } from '@mui/icons-material';
+import Bot from '../icons/Bot';
+import useGameMutation from '../../hooks/useGameMutation';
+import { AiPersonality, PlayerActions } from '@shared';
+import { getPlayerId } from '../../helpers/players';
+import { useGameStateContext } from '../../contexts/GameStateContext';
+import { useTranslationContext } from '../../contexts/TranslationsContext';
+import { chooseAiPersonalityStorageKey } from '../../helpers/localStorageKeys';
+import { usePersistedState } from '../../hooks/usePersistedState';
 
 const botNameIdeas = [
   'R2-D2',
@@ -23,77 +35,90 @@ const botNameIdeas = [
   'Gort',
   'Cylon',
   'Sentinel',
-  'Replicant'
-]
+  'Replicant',
+];
 
-function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readonly<{
-  addAiPlayerDialogOpen: boolean
-  setAddAiPlayerDialogOpen: (open: boolean) => void
+function AddAiPlayer({
+  addAiPlayerDialogOpen,
+  setAddAiPlayerDialogOpen,
+}: Readonly<{
+  addAiPlayerDialogOpen: boolean;
+  setAddAiPlayerDialogOpen: (open: boolean) => void;
 }>) {
-  const [botName, setBotName] = useState('')
-  const [choosePersonality, setChoosePersonality] = usePersistedState<boolean>(chooseAiPersonalityStorageKey, true)
-  const { gameState } = useGameStateContext()
-  const { t } = useTranslationContext()
+  const [botName, setBotName] = useState('');
+  const [choosePersonality, setChoosePersonality] = usePersistedState<boolean>(
+    chooseAiPersonalityStorageKey,
+    true,
+  );
+  const { gameState } = useGameStateContext();
+  const { t } = useTranslationContext();
 
   const { trigger, isMutating } = useGameMutation<{
-    roomId: string, playerId: string, playerName: string, personality?: AiPersonality
+    roomId: string;
+    playerId: string;
+    playerName: string;
+    personality?: AiPersonality;
   }>({
     action: PlayerActions.addAiPlayer,
     callback: () => {
-      setAddAiPlayerDialogOpen(false)
-      setBotName('')
-    }
-  })
+      setAddAiPlayerDialogOpen(false);
+      setBotName('');
+    },
+  });
 
-  const minSliderValue = 0
-  const maxSliderValue = 100
+  const minSliderValue = 0;
+  const maxSliderValue = 100;
 
-  const [vengefulness, setVengefulness] = useState<number>(50)
-  const [honesty, setHonesty] = useState<number>(50)
-  const [skepticism, setSkepticism] = useState<number>(50)
+  const [vengefulness, setVengefulness] = useState<number>(50);
+  const [honesty, setHonesty] = useState<number>(50);
+  const [skepticism, setSkepticism] = useState<number>(50);
 
   const handleVengefulnessChange = (_: Event, value: number) => {
-    setVengefulness(value as number)
-  }
+    setVengefulness(value as number);
+  };
   const handleHonestyChange = (_: Event, value: number) => {
-    setHonesty(value as number)
-  }
+    setHonesty(value as number);
+  };
   const handleSkepticismChange = (_: Event, value: number) => {
-    setSkepticism(value as number)
-  }
+    setSkepticism(value as number);
+  };
 
   if (!gameState) {
-    return null
+    return null;
   }
 
   return (
     <Dialog
       open={addAiPlayerDialogOpen}
-      onClose={() => { setAddAiPlayerDialogOpen(false) }}
+      onClose={() => {
+        setAddAiPlayerDialogOpen(false);
+      }}
       aria-labelledby="add-ai-player"
       aria-describedby="add-ai-player"
     >
-      <DialogTitle>
-        {(t('addAiPlayer'))}
-      </DialogTitle>
+      <DialogTitle>{t('addAiPlayer')}</DialogTitle>
       <form
         onSubmit={(event) => {
-          event.preventDefault()
+          event.preventDefault();
           trigger({
             roomId: gameState.roomId,
             playerId: getPlayerId(),
             playerName: botName.trim(),
-            ...(choosePersonality && { personality: { vengefulness, honesty, skepticism } })
-          })
+            ...(choosePersonality && {
+              personality: { vengefulness, honesty, skepticism },
+            }),
+          });
         }}
       >
         <DialogContent>
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
             <Bot sx={{ mr: 1, my: 0.5 }} />
             <TextField
+              name="coup-game-bot-name"
+              autoComplete="off"
               value={botName}
               onChange={(event) => {
-                setBotName(event.target.value.slice(0, 10))
+                setBotName(event.target.value.slice(0, 10));
               }}
               label={t('whatIsBotsName')}
               variant="standard"
@@ -104,10 +129,16 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readon
               sx={{ ml: 1 }}
               startIcon={<Casino />}
               onClick={() => {
-                const unusedIdeas = botNameIdeas.filter((idea) =>
-                  idea !== botName &&
-                  !gameState.players.some(({ name }) => name.toUpperCase() === idea.toUpperCase()))
-                setBotName(unusedIdeas[Math.floor(Math.random() * unusedIdeas.length)])
+                const unusedIdeas = botNameIdeas.filter(
+                  (idea) =>
+                    idea !== botName &&
+                    !gameState.players.some(
+                      ({ name }) => name.toUpperCase() === idea.toUpperCase(),
+                    ),
+                );
+                setBotName(
+                  unusedIdeas[Math.floor(Math.random() * unusedIdeas.length)],
+                );
               }}
               disabled={isMutating}
             >
@@ -115,14 +146,11 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readon
             </Button>
           </Box>
           <Box mt={4}>
-            <Typography component="span">
-              {t('choosePersonality')}
-              :
-            </Typography>
+            <Typography component="span">{t('choosePersonality')}:</Typography>
             <Switch
               checked={choosePersonality}
               onChange={(event) => {
-                setChoosePersonality(event.target.checked)
+                setChoosePersonality(event.target.checked);
               }}
               slotProps={{ input: { 'aria-label': 'controlled' } }}
             />
@@ -171,22 +199,20 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readon
         <DialogActions>
           <Button
             variant="contained"
-            onClick={() => { setAddAiPlayerDialogOpen(false) }}
+            onClick={() => {
+              setAddAiPlayerDialogOpen(false);
+            }}
             disabled={isMutating}
           >
             {t('cancel')}
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            loading={isMutating}
-          >
+          <Button type="submit" variant="contained" loading={isMutating}>
             {t('add')}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
-  )
+  );
 }
 
-export default AddAiPlayer
+export default AddAiPlayer;

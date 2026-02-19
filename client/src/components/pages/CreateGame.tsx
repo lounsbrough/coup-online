@@ -83,6 +83,8 @@ function CreateGame() {
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <Person sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
               <TextField
+                name="coup-game-player-name"
+                autoComplete="off"
                 data-testid="playerNameInput"
                 value={playerName}
                 onChange={(event) => {
