@@ -91,6 +91,8 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readon
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
             <Bot sx={{ mr: 1, my: 0.5 }} />
             <TextField
+              name="coup-game-bot-name"
+              autoComplete="off"
               value={botName}
               onChange={(event) => {
                 setBotName(event.target.value.slice(0, 10))
