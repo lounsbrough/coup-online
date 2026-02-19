@@ -34,8 +34,8 @@
     "build": "pnpm build-shared && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "pnpm build-shared && vitest run",
+    "test:watch": "pnpm build-shared && vitest"
   },
   "browserslist": {
     "production": [
