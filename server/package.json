@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p tsconfig.check.json",
     "test": "vitest run --coverage",
     "build": "rm -rf dist && tsc",
     "dev": "ts-node index.ts",
@@ -23,26 +24,26 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "joi": "^18.0.2",
-    "redis": "^5.10.0",
+    "redis": "^5.11.0",
     "socket.io": "^4.8.3"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@types/body-parser": "^1.19.6",
     "@types/chance": "^1.1.7",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.0.6",
+    "@types/node": "^25.3.0",
     "@types/ws": "^8.18.1",
     "@vitest/coverage-v8": "^4.0.18",
     "chance": "^1.1.13",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "globals": "^17.3.0",
     "pre-commit": "^1.2.2",
     "socket.io-client": "^4.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.55.0",
+    "typescript-eslint": "^8.56.0",
     "vitest": "^4.0.18"
   }
 }

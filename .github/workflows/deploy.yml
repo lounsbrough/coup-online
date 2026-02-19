@@ -21,20 +21,20 @@ jobs:
     concurrency: deploy-server-${{ inputs.environment }}
 
     steps:
-    - uses: actions/checkout@v6
-    - uses: ./.github/actions/setup-node
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup-node
 
-    - run: |
-        cd server
-        vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
-        vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
-        pnpm build
-        if [ "${{ inputs.environment }}" = "production" ]; then
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        else
-          vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        fi
-        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+      - run: |
+          cd server
+          vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
+          vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+          pnpm build
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          else
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          fi
+          vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
   deploy-server-raspberry-pi:
     needs: verify
@@ -43,27 +43,27 @@ jobs:
     if: ${{ inputs.environment == 'production' }}
 
     steps:
-    - uses: actions/checkout@v6
-    - uses: ./.github/actions/setup-node
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup-node
 
-    - uses: webfactory/ssh-agent@v0.9.1
-      with:
-        ssh-private-key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
+      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
 
-    - uses: appleboy/ssh-action@v1.2.5
-      with:
-        host: lounsbrough.com
-        username: pi
-        key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
-        port: 8222
-        script: |
-          set -e
-          cd /var/www/html/coup-online/server
-          git pull
-          sudo npm i -g pnpm
-          pnpm i
-          pnpm build
-          /home/pi/.local/share/pnpm/pm2 restart coup-online
+      - uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        with:
+          host: lounsbrough.com
+          username: pi
+          key: ${{ secrets.SOCKET_SERVER_SSH_KEY }}
+          port: 8222
+          script: |
+            set -e
+            cd /var/www/html/coup-online/server
+            git pull
+            sudo npm i -g pnpm
+            pnpm i
+            pnpm build
+            /home/pi/.local/share/pnpm/pm2 restart coup-online
 
   deploy-client-vercel:
     needs: verify
@@ -71,16 +71,16 @@ jobs:
     concurrency: deploy-client-${{ inputs.environment }}
 
     steps:
-    - uses: actions/checkout@v6
-    - uses: ./.github/actions/setup-node
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: ./.github/actions/setup-node
 
-    - run: |
-        cd client
-        vercel link --yes --project coup-client --token=${{ secrets.VERCEL_TOKEN }}
-        vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
-        if [ "${{ inputs.environment }}" = "production" ]; then
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        else
-          vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        fi
-        vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+      - run: |
+          cd client
+          vercel link --yes --project coup-client --token=${{ secrets.VERCEL_TOKEN }}
+          vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          else
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          fi
+          vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}

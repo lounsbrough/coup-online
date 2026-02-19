@@ -1,5 +1,6 @@
-import { Chance } from "chance"
-import { shuffle } from "./array"
+import { describe, it, expect } from 'vitest'
+import { Chance } from 'chance'
+import { shuffle } from './array'
 
 const chance = new Chance()
 
