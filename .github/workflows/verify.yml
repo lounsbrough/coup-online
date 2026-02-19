@@ -10,20 +10,20 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - uses: ./.github/actions/verify/lint
-  jest-server:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/verify/lint
+  vitest-server:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - uses: ./.github/actions/verify/jest-server
-  jest-client:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/verify/vitest-server
+  vitest-client:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - uses: ./.github/actions/verify/jest-client
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/verify/vitest-client
   cypress-client:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - uses: ./.github/actions/verify/cypress-client
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/verify/cypress-client

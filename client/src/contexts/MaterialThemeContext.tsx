@@ -1,5 +1,12 @@
 import { useMemo, createContext, useContext, ReactNode } from 'react'
-import { createTheme, useMediaQuery, PaletteMode, GlobalStyles, ThemeProvider, PaletteColor } from '@mui/material'
+import {
+  createTheme,
+  useMediaQuery,
+  PaletteMode,
+  GlobalStyles,
+  ThemeProvider,
+  PaletteColor,
+} from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { activeColorModeStorageKey } from '../helpers/localStorageKeys'
 import { Actions, Influences } from '@shared'
@@ -7,29 +14,31 @@ import { usePersistedState } from '../hooks/usePersistedState'
 
 declare module '@mui/material/styles' {
   interface Theme {
-    isSmallScreen: boolean
-    isLargeScreen: boolean
-    actionColors: { [Action in Actions]: string }
-    influenceColors: { [influence in Influences]: string }
+    isSmallScreen: boolean;
+    isLargeScreen: boolean;
+    actionColors: { [Action in Actions]: string };
+    influenceColors: { [influence in Influences]: string };
   }
   interface ThemeOptions {
-    isSmallScreen: boolean
-    isLargeScreen: boolean
-    actionColors: { [Action in Actions]: string }
-    influenceColors: { [influence in Influences]: string }
+    isSmallScreen: boolean;
+    isLargeScreen: boolean;
+    actionColors: { [Action in Actions]: string };
+    influenceColors: { [influence in Influences]: string };
   }
 
-  type CustomPalette = Record<Influences, PaletteColor> & Record<Actions, PaletteColor>;
-  type CustomPaletteOptions = Partial<Record<Influences, PaletteColor>> & Partial<Record<Actions, PaletteColor>>;
+  type CustomPalette = Record<Influences, PaletteColor> &
+    Record<Actions, PaletteColor>;
+  type CustomPaletteOptions = Partial<Record<Influences, PaletteColor>> &
+    Partial<Record<Actions, PaletteColor>>;
 
-  interface Palette extends CustomPalette { }
-  interface PaletteOptions extends CustomPaletteOptions { }
+  interface Palette extends CustomPalette {}
+  interface PaletteOptions extends CustomPaletteOptions {}
 }
 
 declare module '@mui/material/Button' {
   type CustomButtonOverrides = Record<Influences, true> & Record<Actions, true>;
 
-  interface ButtonPropsColorOverrides extends CustomButtonOverrides { }
+  interface ButtonPropsColorOverrides extends CustomButtonOverrides {}
 }
 
 export const LIGHT_COLOR_MODE = 'light'
@@ -39,21 +48,23 @@ export const SYSTEM_COLOR_MODE = 'system'
 export type AppColorMode = PaletteMode | typeof SYSTEM_COLOR_MODE;
 
 type ColorModeContextType = {
-  colorMode: PaletteMode
-  internalColorMode: AppColorMode,
-  setColorMode: (newMode: AppColorMode) => void
-}
+  colorMode: PaletteMode;
+  internalColorMode: AppColorMode;
+  setColorMode: (newMode: AppColorMode) => void;
+};
 
 export const ColorModeContext = createContext<ColorModeContextType>({
   colorMode: DARK_COLOR_MODE,
   internalColorMode: SYSTEM_COLOR_MODE,
-  setColorMode: () => { }
+  setColorMode: () => {},
 })
 
-export function MaterialThemeContextProvider({ children }: Readonly<{ children: ReactNode }>) {
+export function MaterialThemeContextProvider({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const [mode, setMode] = usePersistedState<AppColorMode>(
     activeColorModeStorageKey,
-    SYSTEM_COLOR_MODE
+    SYSTEM_COLOR_MODE,
   )
 
   const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
@@ -78,9 +89,9 @@ export function MaterialThemeContextProvider({ children }: Readonly<{ children: 
     () => ({
       colorMode: activeColorMode,
       internalColorMode: mode,
-      setColorMode: (newMode: AppColorMode) => setMode(newMode)
+      setColorMode: (newMode: AppColorMode) => setMode(newMode),
     }),
-    [mode, activeColorMode]
+    [mode, activeColorMode],
   )
 
   const defaultBackgroundColor = isLightMode ? '#ffffff' : '#212121'
@@ -94,7 +105,7 @@ export function MaterialThemeContextProvider({ children }: Readonly<{ children: 
       [Influences.Contessa]: isLightMode ? '#9B6000' : '#C38E3A',
       [Influences.Captain]: isLightMode ? '#00338A' : '#3868BA',
       [Influences.Ambassador]: isLightMode ? '#3D6600' : '#78A831',
-      [Influences.Duke]: isLightMode ? '#73007B' : '#AA35B2'
+      [Influences.Duke]: isLightMode ? '#73007B' : '#AA35B2',
     }
 
     const actionColors = {
@@ -105,18 +116,20 @@ export function MaterialThemeContextProvider({ children }: Readonly<{ children: 
       [Actions.Income]: primaryColor,
       [Actions.Revive]: primaryColor,
       [Actions.Steal]: influenceColors[Influences.Captain],
-      [Actions.Tax]: influenceColors[Influences.Duke]
+      [Actions.Tax]: influenceColors[Influences.Duke],
     }
 
     let theme = createTheme({
-      ...(process.env.REACT_APP_DISABLE_TRANSITIONS ? {
-        transitions: {
-          create: () => 'none',
-        }
-      } : {}),
+      ...(import.meta.env.VITE_DISABLE_TRANSITIONS
+        ? {
+            transitions: {
+              create: () => 'none',
+            },
+          }
+        : {}),
       palette: {
         mode: activeColorMode,
-        background: (isLightMode ? {} : { default: grey[800] }),
+        background: isLightMode ? {} : { default: grey[800] },
         primary: {
           main: primaryColor,
         },
@@ -131,64 +144,67 @@ export function MaterialThemeContextProvider({ children }: Readonly<{ children: 
       spacing: isLargeScreen ? 8 : 4,
       components: {
         MuiTooltip: {
-          defaultProps: { enterTouchDelay: 50, leaveTouchDelay: 3000, placement: 'top', arrow: true }
+          defaultProps: {
+            enterTouchDelay: 50,
+            leaveTouchDelay: 3000,
+            placement: 'top',
+            arrow: true,
+          },
         },
         MuiTypography: {
           styleOverrides: {
             body1: {
-              fontSize: isLargeScreen ? undefined : '1rem'
+              fontSize: isLargeScreen ? undefined : '1rem',
             },
             body2: {
-              fontSize: isLargeScreen ? undefined : '0.9rem'
+              fontSize: isLargeScreen ? undefined : '0.9rem',
             },
             h1: {
-              fontSize: isLargeScreen ? undefined : '1.7rem'
+              fontSize: isLargeScreen ? undefined : '1.7rem',
             },
             h2: {
-              fontSize: isLargeScreen ? undefined : '1.6rem'
+              fontSize: isLargeScreen ? undefined : '1.6rem',
             },
             h3: {
-              fontSize: isLargeScreen ? undefined : '1.5rem'
+              fontSize: isLargeScreen ? undefined : '1.5rem',
             },
             h4: {
-              fontSize: isLargeScreen ? undefined : '1.4rem'
+              fontSize: isLargeScreen ? undefined : '1.4rem',
             },
             h5: {
-              fontSize: isLargeScreen ? undefined : '1.3rem'
+              fontSize: isLargeScreen ? undefined : '1.3rem',
             },
             h6: {
-              fontSize: isLargeScreen ? undefined : '1.2rem'
-            }
-          }
-        }
-      }
+              fontSize: isLargeScreen ? undefined : '1.2rem',
+            },
+          },
+        },
+      },
     })
 
     const customPaletteColors = Object.fromEntries([
-      ...Object.values(Influences)
-        .map((influence) => [
-          influence,
-          theme.palette.augmentColor({
-            color: {
-              main: theme.influenceColors[influence],
-            },
-            name: influence,
-          })
-        ]),
-      ...Object.values(Actions)
-        .map((action) => [
-          action,
-          theme.palette.augmentColor({
-            color: {
-              main: theme.actionColors[action],
-            },
-            name: action,
-          })
-        ])
+      ...Object.values(Influences).map((influence) => [
+        influence,
+        theme.palette.augmentColor({
+          color: {
+            main: theme.influenceColors[influence],
+          },
+          name: influence,
+        }),
+      ]),
+      ...Object.values(Actions).map((action) => [
+        action,
+        theme.palette.augmentColor({
+          color: {
+            main: theme.actionColors[action],
+          },
+          name: action,
+        }),
+      ]),
     ])
 
     theme = createTheme(theme, {
-      palette: customPaletteColors
+      palette: customPaletteColors,
     })
 
     return theme
@@ -200,15 +216,13 @@ export function MaterialThemeContextProvider({ children }: Readonly<{ children: 
         styles={{
           body: {
             backgroundColor: `${defaultBackgroundColor} !important`,
-            colorScheme: activeColorMode
+            colorScheme: activeColorMode,
           },
-          html: { colorScheme: activeColorMode }
+          html: { colorScheme: activeColorMode },
         }}
       />
       <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={materialTheme}>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider theme={materialTheme}>{children}</ThemeProvider>
       </ColorModeContext.Provider>
     </>
   )

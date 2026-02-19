@@ -1,15 +1,16 @@
+import { vi } from 'vitest'
 import * as redis from 'redis'
-import Chance from "chance"
-import { getValue, setValue } from "./storage"
+import Chance from 'chance'
+import { getValue, setValue } from './storage'
 
 const expectedRedisStorage: { [key: string]: string } = {}
 
-jest.mock('redis', () => {
+vi.mock('redis', () => {
   const mockRedisClient = {
-    on: jest.fn().mockReturnThis(),
-    connect: jest.fn(),
-    get: jest.fn((key: string) => Promise.resolve(expectedRedisStorage[key])),
-    set: jest.fn((key: string, value: string, options?: redis.SetOptions) => {
+    on: vi.fn().mockReturnThis(),
+    connect: vi.fn(),
+    get: vi.fn((key: string) => Promise.resolve(expectedRedisStorage[key])),
+    set: vi.fn((key: string, value: string, options?: redis.SetOptions) => {
       expectedRedisStorage[key] = value
       if (options?.EX) {
         setTimeout(() => {
@@ -22,7 +23,7 @@ jest.mock('redis', () => {
   mockRedisClient.connect.mockResolvedValue(mockRedisClient)
 
   return {
-    createClient: jest.fn(() => mockRedisClient)
+    createClient: vi.fn(() => mockRedisClient),
   }
 })
 
@@ -53,7 +54,9 @@ describe('storage', () => {
       expect(await setValue(key, value, 0.1)).toBeUndefined()
       expect(expectedRedisStorage[key]).toBe(value)
 
-      await new Promise((resolve) => { setTimeout(resolve, 101) })
+      await new Promise((resolve) => {
+        setTimeout(resolve, 101)
+      })
       expect(expectedRedisStorage[key]).toBeUndefined()
     })
   })

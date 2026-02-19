@@ -1,14 +1,28 @@
-import { createContext, useContext, ReactNode, useMemo, useEffect, useState } from 'react'
-import { io, Socket } from "socket.io-client"
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useMemo,
+  useEffect,
+  useState,
+} from 'react'
+import { io, Socket } from 'socket.io-client'
 
-const socketUrl = process.env.REACT_APP_SOCKET_SERVER_URL ?? 'http://localhost:8008'
-const socketPath = process.env.REACT_APP_SOCKET_SERVER_PATH ?? ''
+const socketUrl =
+  import.meta.env.VITE_SOCKET_SERVER_URL ?? 'http://localhost:8008'
+const socketPath = import.meta.env.VITE_SOCKET_SERVER_PATH ?? ''
 
-type WebSocketContextType = { socket?: Socket, isConnected: boolean }
+type WebSocketContextType = { socket?: Socket; isConnected: boolean };
 
-export const WebSocketContext = createContext<WebSocketContextType>({ isConnected: false })
+export const WebSocketContext = createContext<WebSocketContextType>({
+  isConnected: false,
+})
 
-export function WebSocketContextProvider({ children }: { children: ReactNode }) {
+export function WebSocketContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [isConnected, setIsConnected] = useState<boolean>(false)
   const socket = useMemo(() => io(socketUrl, { path: socketPath }), [])
 
@@ -22,7 +36,9 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
         console.log('trying to reconnect to socket')
         socket.disconnect()
         socket.connect()
-        await new Promise((resolve) => { setTimeout(resolve, 2000) })
+        await new Promise((resolve) => {
+          setTimeout(resolve, 2000)
+        })
       }
       setIsConnected(true)
     })

@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "jest --coverage",
+    "test": "vitest run --coverage",
     "build": "rm -rf dist && tsc",
     "dev": "ts-node index.ts",
     "start": "node dist/server/index.js"
@@ -32,18 +32,17 @@
     "@types/chance": "^1.1.7",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25.0.6",
     "@types/ws": "^8.18.1",
+    "@vitest/coverage-v8": "^4.0.18",
     "chance": "^1.1.13",
     "eslint": "^9.39.2",
     "globals": "^17.3.0",
-    "jest": "^30.2.0",
     "pre-commit": "^1.2.2",
     "socket.io-client": "^4.8.3",
-    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.55.0"
+    "typescript-eslint": "^8.55.0",
+    "vitest": "^4.0.18"
   }
 }

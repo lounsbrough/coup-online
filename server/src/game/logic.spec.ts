@@ -1,32 +1,40 @@
-import { Chance } from "chance"
+import { vi } from 'vitest'
+import { Chance } from 'chance'
 import { GameState, Player } from '../../../shared/types/game'
-import { moveTurnToNextPlayer, startGame } from "./logic"
-import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
-import { createDeckForPlayerCount } from "../utilities/deck"
+import { moveTurnToNextPlayer, startGame } from './logic'
+import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
+import { createDeckForPlayerCount } from '../utilities/deck'
 
-jest.mock("../utilities/storage")
+vi.mock('../utilities/storage')
 
 const chance = new Chance()
 
-const getRandomPlayers = (count: number) : Player[] =>
-  chance.n(() => ({
-    id: chance.string(),
-    name: chance.string(),
-    color: chance.color(),
-    coins: 2,
-    influences: [],
-    claimedInfluences: new Set(),
-    unclaimedInfluences: new Set(),
-    deadInfluences: [],
-    ai: false,
-    grudges: {}
-  }), count)
+const getRandomPlayers = (count: number): Player[] =>
+  chance.n(
+    () => ({
+      id: chance.string(),
+      name: chance.string(),
+      color: chance.color(),
+      coins: 2,
+      influences: [],
+      claimedInfluences: new Set(),
+      unclaimedInfluences: new Set(),
+      deadInfluences: [],
+      ai: false,
+      grudges: {},
+    }),
+    count,
+  )
 
-const getRandomGameState = ({ playersCount, isStarted }: {
-  playersCount?: number
-  isStarted?: boolean
+const getRandomGameState = ({
+  playersCount,
+  isStarted,
+}: {
+  playersCount?: number;
+  isStarted?: boolean;
 } = {}) => {
-  const playerCount = playersCount ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT })
+  const playerCount =
+    playersCount ?? chance.natural({ min: 2, max: MAX_PLAYER_COUNT })
 
   const players = getRandomPlayers(playerCount)
 
@@ -42,7 +50,7 @@ const getRandomGameState = ({ playersCount, isStarted }: {
     roomId: chance.string(),
     turn: chance.natural(),
     turnPlayer: chance.pickone(players).name,
-    settings: { eventLogRetentionTurns: 100, allowRevive: true }
+    settings: { eventLogRetentionTurns: 100, allowRevive: true },
   }
 
   if (isStarted) {
@@ -53,7 +61,7 @@ const getRandomGameState = ({ playersCount, isStarted }: {
 }
 
 describe('logic', () => {
-  afterEach(jest.clearAllMocks)
+  afterEach(() => vi.clearAllMocks())
 
   describe('startGame', () => {
     it('should set started flag', () => {
@@ -89,7 +97,10 @@ describe('logic', () => {
     })
 
     it('should skip players with no influences left', () => {
-      const gameState = getRandomGameState({ playersCount: 6, isStarted: true })
+      const gameState = getRandomGameState({
+        playersCount: 6,
+        isStarted: true,
+      })
 
       gameState.players[1].influences = []
       gameState.players[4].influences = []
@@ -103,7 +114,10 @@ describe('logic', () => {
     })
 
     it('should wrap back to beginning of player list', () => {
-      const gameState = getRandomGameState({ playersCount: 3, isStarted: true })
+      const gameState = getRandomGameState({
+        playersCount: 3,
+        isStarted: true,
+      })
 
       gameState.players[1].influences = []
       gameState.turnPlayer = gameState.players[0].name
