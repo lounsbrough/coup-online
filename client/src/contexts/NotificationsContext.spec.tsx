@@ -1,7 +1,8 @@
 import { within, waitFor, act, render, fireEvent } from '@testing-library/react'
+import { vi } from 'vitest'
 import { NotificationsContextProvider, useNotificationsContext } from './NotificationsContext'
 
-jest.mock('./TranslationsContext', () => ({
+vi.mock('./TranslationsContext', () => ({
   useTranslationContext: () => ({ t: (key: string) => `[${key}](translated)` })
 }))
 
@@ -60,12 +61,12 @@ function MockComponentThatWantsToShowNotification() {
 }
 
 beforeEach(() => {
-  jest.useFakeTimers()
+  vi.useFakeTimers({ shouldAdvanceTime: true })
 })
 
 afterEach(() => {
-  jest.clearAllMocks()
-  jest.useRealTimers()
+  vi.clearAllMocks()
+  vi.useRealTimers()
 })
 
 it('should show test error notification and should be dismissable', async () => {
@@ -140,9 +141,9 @@ it('should auto dismiss notification after 6 seconds', async () => {
   const errorText = /that button is the worst!/i
   await findByText(errorText)
 
-  act(() => jest.advanceTimersByTime(6000))
-  act(() => jest.runOnlyPendingTimers())
-  jest.useRealTimers()
+  act(() => vi.advanceTimersByTime(6000))
+  act(() => vi.runOnlyPendingTimers())
+  vi.useRealTimers()
 
   await waitFor(() => expect(queryByText(errorText)).not.toBeInTheDocument())
 })
@@ -160,10 +161,10 @@ it('should not auto dismiss notification if notification is eternal', async () =
   const eternalMessage = 'You will see this message forever and for always'
   await findByText(eternalMessage)
 
-  act(() => { jest.advanceTimersByTime(60000) })
+  act(() => { vi.advanceTimersByTime(60000) })
 
-  jest.runOnlyPendingTimers()
-  jest.useRealTimers()
+  vi.runOnlyPendingTimers()
+  vi.useRealTimers()
 
   await new Promise((resolve) => { setTimeout(resolve, 0) })
   await findByText(eternalMessage)
@@ -187,8 +188,8 @@ it('should allow removing notification by id if exists', async () => {
   fireEvent.click(errorRemovingButton)
   await waitFor(() => expect(notificationMessage).not.toBeInTheDocument())
 
-  act(() => { jest.runOnlyPendingTimers() })
-  jest.useRealTimers()
+  act(() => { vi.runOnlyPendingTimers() })
+  vi.useRealTimers()
 
   fireEvent.click(errorRemovingButton)
   await waitFor(() => expect(notificationMessage).not.toBeInTheDocument())

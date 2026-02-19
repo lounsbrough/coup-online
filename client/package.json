@@ -2,16 +2,15 @@
   "name": "coup-client",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.9",
     "@mui/icons-material": "^7.3.8",
     "@mui/material": "^7.3.8",
-    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25.0.6",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -23,7 +22,6 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router": "^7.13.0",
-    "react-scripts": "5.0.1",
     "socket.io-client": "^4.8.3",
     "swr": "^2.4.0",
     "typescript": "^5.9.3",
@@ -31,17 +29,13 @@
   },
   "scripts": {
     "build-shared": "pnpm --prefix ../shared build",
-    "start": "pnpm build-shared && DISABLE_ESLINT_PLUGIN=true react-scripts start",
-    "build": "pnpm build-shared && DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "start": "pnpm build-shared && vite",
+    "start:cypress": "VITE_DISABLE_TRANSITIONS=true pnpm start",
+    "build": "pnpm build-shared && vite build",
+    "preview": "vite preview",
     "lint": "eslint .",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "browserslist": {
     "production": [
@@ -56,14 +50,17 @@
     ]
   },
   "devDependencies": {
-    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
     "@eslint/js": "^9.39.2",
     "@shared": "../shared",
+    "@testing-library/jest-dom": "^6.9.1",
     "@types/chance": "^1.1.7",
+    "@vitejs/plugin-react": "^4.3.4",
     "chance": "^1.1.13",
     "cypress": "^15.10.0",
-    "esbuild": "^0.27.3",
     "globals": "^17.3.0",
-    "typescript-eslint": "^8.55.0"
+    "jsdom": "^28.1.0",
+    "typescript-eslint": "^8.55.0",
+    "vite": "^6.3.5",
+    "vitest": "^4.0.18"
   }
 }

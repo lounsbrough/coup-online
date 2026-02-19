@@ -41,9 +41,9 @@ describe('TranslationContextProvider', () => {
 
     expect(getByTestId(`${EventMessages.ActionProcessed}-${Actions.Coup}`))
       .toHaveTextContent('David Golpeou Bob')
-    expect(getByText('David')).toHaveStyle({ color: 'blue' })
+    expect(getByText('David')).toHaveStyle({ color: 'rgb(0, 0, 255)' })
     expect(getByText('Golpeou')).toHaveStyle({ color: grey['400'] })
-    expect(getByText('Bob')).toHaveStyle({ color: 'red' })
+    expect(getByText('Bob')).toHaveStyle({ color: 'rgb(255, 0, 0)' })
   })
 
   it('should translate plain text', async () => {
