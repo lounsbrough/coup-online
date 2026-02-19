@@ -1,4 +1,4 @@
-import { useMemo, createContext, useContext, ReactNode } from 'react';
+import { useMemo, createContext, useContext, ReactNode } from 'react'
 import {
   createTheme,
   useMediaQuery,
@@ -6,11 +6,11 @@ import {
   GlobalStyles,
   ThemeProvider,
   PaletteColor,
-} from '@mui/material';
-import { grey } from '@mui/material/colors';
-import { activeColorModeStorageKey } from '../helpers/localStorageKeys';
-import { Actions, Influences } from '@shared';
-import { usePersistedState } from '../hooks/usePersistedState';
+} from '@mui/material'
+import { grey } from '@mui/material/colors'
+import { activeColorModeStorageKey } from '../helpers/localStorageKeys'
+import { Actions, Influences } from '@shared'
+import { usePersistedState } from '../hooks/usePersistedState'
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -41,9 +41,9 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides extends CustomButtonOverrides {}
 }
 
-export const LIGHT_COLOR_MODE = 'light';
-export const DARK_COLOR_MODE = 'dark';
-export const SYSTEM_COLOR_MODE = 'system';
+export const LIGHT_COLOR_MODE = 'light'
+export const DARK_COLOR_MODE = 'dark'
+export const SYSTEM_COLOR_MODE = 'system'
 
 export type AppColorMode = PaletteMode | typeof SYSTEM_COLOR_MODE;
 
@@ -57,7 +57,7 @@ export const ColorModeContext = createContext<ColorModeContextType>({
   colorMode: DARK_COLOR_MODE,
   internalColorMode: SYSTEM_COLOR_MODE,
   setColorMode: () => {},
-});
+})
 
 export function MaterialThemeContextProvider({
   children,
@@ -65,14 +65,14 @@ export function MaterialThemeContextProvider({
   const [mode, setMode] = usePersistedState<AppColorMode>(
     activeColorModeStorageKey,
     SYSTEM_COLOR_MODE,
-  );
+  )
 
-  const isSmallScreen = useMediaQuery('screen and (max-width: 899px)');
-  const isLargeScreen = useMediaQuery('screen and (min-width: 1200px)');
+  const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
+  const isLargeScreen = useMediaQuery('screen and (min-width: 1200px)')
 
   // Always use DARK_COLOR_MODE for now
-  const activeColorMode: PaletteMode = DARK_COLOR_MODE;
-  const isLightMode = false;
+  const activeColorMode: PaletteMode = DARK_COLOR_MODE
+  const isLightMode = false
 
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
@@ -92,13 +92,13 @@ export function MaterialThemeContextProvider({
       setColorMode: (newMode: AppColorMode) => setMode(newMode),
     }),
     [mode, activeColorMode],
-  );
+  )
 
-  const defaultBackgroundColor = isLightMode ? '#ffffff' : '#212121';
+  const defaultBackgroundColor = isLightMode ? '#ffffff' : '#212121'
 
   const materialTheme = useMemo(() => {
-    const primaryColor = isLightMode ? grey['700'] : grey['400'];
-    const secondaryColor = isLightMode ? grey['500'] : grey['600'];
+    const primaryColor = isLightMode ? grey['700'] : grey['400']
+    const secondaryColor = isLightMode ? grey['500'] : grey['600']
 
     const influenceColors = {
       [Influences.Assassin]: isLightMode ? '#7A0000' : '#B23535',
@@ -106,7 +106,7 @@ export function MaterialThemeContextProvider({
       [Influences.Captain]: isLightMode ? '#00338A' : '#3868BA',
       [Influences.Ambassador]: isLightMode ? '#3D6600' : '#78A831',
       [Influences.Duke]: isLightMode ? '#73007B' : '#AA35B2',
-    };
+    }
 
     const actionColors = {
       [Actions.Assassinate]: influenceColors[Influences.Assassin],
@@ -117,7 +117,7 @@ export function MaterialThemeContextProvider({
       [Actions.Revive]: primaryColor,
       [Actions.Steal]: influenceColors[Influences.Captain],
       [Actions.Tax]: influenceColors[Influences.Duke],
-    };
+    }
 
     let theme = createTheme({
       ...(import.meta.env.VITE_DISABLE_TRANSITIONS
@@ -180,7 +180,7 @@ export function MaterialThemeContextProvider({
           },
         },
       },
-    });
+    })
 
     const customPaletteColors = Object.fromEntries([
       ...Object.values(Influences).map((influence) => [
@@ -201,14 +201,14 @@ export function MaterialThemeContextProvider({
           name: action,
         }),
       ]),
-    ]);
+    ])
 
     theme = createTheme(theme, {
       palette: customPaletteColors,
-    });
+    })
 
-    return theme;
-  }, [isLightMode, activeColorMode, isSmallScreen, isLargeScreen]);
+    return theme
+  }, [isLightMode, activeColorMode, isSmallScreen, isLargeScreen])
 
   return (
     <>
@@ -225,7 +225,7 @@ export function MaterialThemeContextProvider({
         <ThemeProvider theme={materialTheme}>{children}</ThemeProvider>
       </ColorModeContext.Provider>
     </>
-  );
+  )
 }
 
-export const useColorModeContext = () => useContext(ColorModeContext);
+export const useColorModeContext = () => useContext(ColorModeContext)

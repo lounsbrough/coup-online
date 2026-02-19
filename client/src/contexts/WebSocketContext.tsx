@@ -5,54 +5,54 @@ import {
   useMemo,
   useEffect,
   useState,
-} from 'react';
-import { io, Socket } from 'socket.io-client';
+} from 'react'
+import { io, Socket } from 'socket.io-client'
 
 const socketUrl =
-  import.meta.env.VITE_SOCKET_SERVER_URL ?? 'http://localhost:8008';
-const socketPath = import.meta.env.VITE_SOCKET_SERVER_PATH ?? '';
+  import.meta.env.VITE_SOCKET_SERVER_URL ?? 'http://localhost:8008'
+const socketPath = import.meta.env.VITE_SOCKET_SERVER_PATH ?? ''
 
 type WebSocketContextType = { socket?: Socket; isConnected: boolean };
 
 export const WebSocketContext = createContext<WebSocketContextType>({
   isConnected: false,
-});
+})
 
 export function WebSocketContextProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const socket = useMemo(() => io(socketUrl, { path: socketPath }), []);
+  const [isConnected, setIsConnected] = useState<boolean>(false)
+  const socket = useMemo(() => io(socketUrl, { path: socketPath }), [])
 
   useEffect(() => {
     socket.on('connect', () => {
-      setIsConnected(true);
-    });
+      setIsConnected(true)
+    })
     socket.on('disconnect', async () => {
-      setIsConnected(false);
+      setIsConnected(false)
       while (!socket.connected) {
-        console.log('trying to reconnect to socket');
-        socket.disconnect();
-        socket.connect();
+        console.log('trying to reconnect to socket')
+        socket.disconnect()
+        socket.connect()
         await new Promise((resolve) => {
-          setTimeout(resolve, 2000);
-        });
+          setTimeout(resolve, 2000)
+        })
       }
-      setIsConnected(true);
-    });
-  }, [socket]);
+      setIsConnected(true)
+    })
+  }, [socket])
 
   useEffect(() => {
-    console.log(`socket connected: ${isConnected}`);
-  }, [isConnected]);
+    console.log(`socket connected: ${isConnected}`)
+  }, [isConnected])
 
   return (
     <WebSocketContext.Provider value={{ socket, isConnected }}>
       {children}
     </WebSocketContext.Provider>
-  );
+  )
 }
 
-export const useWebSocketContext = () => useContext(WebSocketContext);
+export const useWebSocketContext = () => useContext(WebSocketContext)

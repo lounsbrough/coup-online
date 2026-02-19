@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { Button, ButtonProps, Grow } from '@mui/material';
+import { useState } from 'react'
+import { Button, ButtonProps, Grow } from '@mui/material'
 
 function GrowingButton({ ...props }: ButtonProps) {
-  const [transitionDone, setTransitionDone] = useState(false);
+  const [transitionDone, setTransitionDone] = useState(false)
 
   return (
     <Grow
       in
       timeout={1000}
       onTransitionEnd={() => {
-        setTransitionDone(true);
+        setTransitionDone(true)
       }}
     >
       <Button
@@ -22,7 +22,7 @@ function GrowingButton({ ...props }: ButtonProps) {
         {props.children}
       </Button>
     </Grow>
-  );
+  )
 }
 
-export default GrowingButton;
+export default GrowingButton
