@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /game
 
-Sitemap: https://www.coupgame.com/sitemap.xml
+Sitemap: https://coupgame.com/sitemap.xml

@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://coupgame.com/</loc>
-    <lastmod>2025-06-04</lastmod>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://coupgame.com/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://coupgame.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://coupgame.com/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://coupgame.com/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://coupgame.com/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://coupgame.com/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://coupgame.com/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://coupgame.com/" />
   </url>
   <url>
     <loc>https://coupgame.com/create-game</loc>
-    <lastmod>2025-06-04</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://coupgame.com/join-game</loc>
-    <lastmod>2025-06-04</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 </urlset>
