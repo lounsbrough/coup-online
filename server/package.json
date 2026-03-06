@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.check.json",
     "test": "vitest run --coverage",
     "build": "rm -rf dist && tsc",
-    "dev": "ts-node index.ts",
+    "dev": "node --env-file=.env.local -r ts-node/register index.ts",
     "start": "node dist/server/index.js"
   },
   "keywords": [],
@@ -23,6 +23,7 @@
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "firebase-admin": "^13.7.0",
     "joi": "^18.0.2",
     "redis": "^5.11.0",
     "socket.io": "^4.8.3"

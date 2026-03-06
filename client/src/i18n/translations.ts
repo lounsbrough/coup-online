@@ -177,6 +177,42 @@ export type Translations = ActionMessages &
     whatIsYourName: TranslationsForString
     writeNewMessage: TranslationsForString
     youAreSpectating: TranslationsForString
+    // Auth & Profile
+    signIn: TranslationsForString
+    signOut: TranslationsForString
+    signInWithGoogle: TranslationsForString
+    signInWithGitHub: TranslationsForString
+    profile: TranslationsForString
+    profileNotFound: TranslationsForString
+    leaderboard: TranslationsForString
+    viewLeaderboard: TranslationsForString
+    noLeaderboardData: TranslationsForString
+    gamesPlayed: TranslationsForString
+    winRate: TranslationsForString
+    wins: TranslationsForString
+    losses: TranslationsForString
+    currentStreak: TranslationsForString
+    longestWinStreak: TranslationsForString
+    bestStreak: TranslationsForString
+    record: TranslationsForString
+    playstyle: TranslationsForString
+    bluffSuccessRate: TranslationsForString
+    challengeAccuracy: TranslationsForString
+    assassinations: TranslationsForString
+    coups: TranslationsForString
+    steals: TranslationsForString
+    achievements: TranslationsForString
+    honestVictories: TranslationsForString
+    comebacks: TranslationsForString
+    fastestWin: TranslationsForString
+    turns: TranslationsForString
+    noAchievementsYet: TranslationsForString
+    headToHead: TranslationsForString
+    opponent: TranslationsForString
+    player: TranslationsForString
+    lastPlayed: TranslationsForString
+    noStatsYet: TranslationsForString
+    playGameToTrackStats: TranslationsForString
   }
 
 const translations: Translations = {
@@ -2022,6 +2058,321 @@ const translations: Translations = {
     'hi-IN': 'आप खेल का अवलोकन कर रहे हैं',
     'it-IT': 'Stai assistendo',
     'pt-BR': 'Você está assistindo',
+  },
+  signIn: {
+    'de-DE': 'Anmelden',
+    'en-US': 'Sign In',
+    'es-MX': 'Iniciar sesión',
+    'fr-FR': 'Se connecter',
+    'hi-IN': 'साइन इन',
+    'it-IT': 'Accedi',
+    'pt-BR': 'Entrar',
+  },
+  signOut: {
+    'de-DE': 'Abmelden',
+    'en-US': 'Sign Out',
+    'es-MX': 'Cerrar sesión',
+    'fr-FR': 'Se déconnecter',
+    'hi-IN': 'साइन आउट',
+    'it-IT': 'Esci',
+    'pt-BR': 'Sair',
+  },
+  signInWithGoogle: {
+    'de-DE': 'Mit Google anmelden',
+    'en-US': 'Sign in with Google',
+    'es-MX': 'Iniciar sesión con Google',
+    'fr-FR': 'Se connecter avec Google',
+    'hi-IN': 'Google से साइन इन करें',
+    'it-IT': 'Accedi con Google',
+    'pt-BR': 'Entrar com Google',
+  },
+  signInWithGitHub: {
+    'de-DE': 'Mit GitHub anmelden',
+    'en-US': 'Sign in with GitHub',
+    'es-MX': 'Iniciar sesión con GitHub',
+    'fr-FR': 'Se connecter avec GitHub',
+    'hi-IN': 'GitHub से साइन इन करें',
+    'it-IT': 'Accedi con GitHub',
+    'pt-BR': 'Entrar com GitHub',
+  },
+  profile: {
+    'de-DE': 'Profil',
+    'en-US': 'Profile',
+    'es-MX': 'Perfil',
+    'fr-FR': 'Profil',
+    'hi-IN': 'प्रोफ़ाइल',
+    'it-IT': 'Profilo',
+    'pt-BR': 'Perfil',
+  },
+  profileNotFound: {
+    'de-DE': 'Profil nicht gefunden',
+    'en-US': 'Profile not found',
+    'es-MX': 'Perfil no encontrado',
+    'fr-FR': 'Profil introuvable',
+    'hi-IN': 'प्रोफ़ाइल नहीं मिली',
+    'it-IT': 'Profilo non trovato',
+    'pt-BR': 'Perfil não encontrado',
+  },
+  leaderboard: {
+    'de-DE': 'Bestenliste',
+    'en-US': 'Leaderboard',
+    'es-MX': 'Tabla de clasificación',
+    'fr-FR': 'Classement',
+    'hi-IN': 'लीडरबोर्ड',
+    'it-IT': 'Classifica',
+    'pt-BR': 'Classificação',
+  },
+  viewLeaderboard: {
+    'de-DE': 'Bestenliste anzeigen',
+    'en-US': 'View Leaderboard',
+    'es-MX': 'Ver tabla de clasificación',
+    'fr-FR': 'Voir le classement',
+    'hi-IN': 'लीडरबोर्ड देखें',
+    'it-IT': 'Vedi classifica',
+    'pt-BR': 'Ver classificação',
+  },
+  noLeaderboardData: {
+    'de-DE': 'Noch keine Daten vorhanden',
+    'en-US': 'No leaderboard data yet',
+    'es-MX': 'Aún no hay datos',
+    'fr-FR': 'Pas encore de données',
+    'hi-IN': 'अभी तक कोई डेटा नहीं',
+    'it-IT': 'Nessun dato disponibile',
+    'pt-BR': 'Nenhum dado disponível ainda',
+  },
+  gamesPlayed: {
+    'de-DE': 'Gespielte Spiele',
+    'en-US': 'Games Played',
+    'es-MX': 'Partidas jugadas',
+    'fr-FR': 'Parties jouées',
+    'hi-IN': 'खेले गए खेल',
+    'it-IT': 'Partite giocate',
+    'pt-BR': 'Jogos disputados',
+  },
+  winRate: {
+    'de-DE': 'Siegquote',
+    'en-US': 'Win Rate',
+    'es-MX': 'Tasa de victorias',
+    'fr-FR': 'Taux de victoire',
+    'hi-IN': 'जीत दर',
+    'it-IT': 'Percentuale vittorie',
+    'pt-BR': 'Taxa de vitória',
+  },
+  wins: {
+    'de-DE': 'Siege',
+    'en-US': 'Wins',
+    'es-MX': 'Victorias',
+    'fr-FR': 'Victoires',
+    'hi-IN': 'जीत',
+    'it-IT': 'Vittorie',
+    'pt-BR': 'Vitórias',
+  },
+  losses: {
+    'de-DE': 'Niederlagen',
+    'en-US': 'Losses',
+    'es-MX': 'Derrotas',
+    'fr-FR': 'Défaites',
+    'hi-IN': 'हार',
+    'it-IT': 'Sconfitte',
+    'pt-BR': 'Derrotas',
+  },
+  currentStreak: {
+    'de-DE': 'Aktuelle Serie',
+    'en-US': 'Current Streak',
+    'es-MX': 'Racha actual',
+    'fr-FR': 'Série en cours',
+    'hi-IN': 'वर्तमान श्रृंखला',
+    'it-IT': 'Serie attuale',
+    'pt-BR': 'Sequência atual',
+  },
+  longestWinStreak: {
+    'de-DE': 'Längste Siegesserie',
+    'en-US': 'Longest Win Streak',
+    'es-MX': 'Racha más larga',
+    'fr-FR': 'Plus longue série de victoires',
+    'hi-IN': 'सबसे लंबी जीत की श्रृंखला',
+    'it-IT': 'Serie vittorie più lunga',
+    'pt-BR': 'Maior sequência de vitórias',
+  },
+  bestStreak: {
+    'de-DE': 'Beste Serie',
+    'en-US': 'Best Streak',
+    'es-MX': 'Mejor racha',
+    'fr-FR': 'Meilleure série',
+    'hi-IN': 'सर्वश्रेष्ठ श्रृंखला',
+    'it-IT': 'Miglior serie',
+    'pt-BR': 'Melhor sequência',
+  },
+  record: {
+    'de-DE': 'Bilanz',
+    'en-US': 'Record',
+    'es-MX': 'Récord',
+    'fr-FR': 'Bilan',
+    'hi-IN': 'रिकॉर्ड',
+    'it-IT': 'Record',
+    'pt-BR': 'Histórico',
+  },
+  playstyle: {
+    'de-DE': 'Spielstil',
+    'en-US': 'Playstyle',
+    'es-MX': 'Estilo de juego',
+    'fr-FR': 'Style de jeu',
+    'hi-IN': 'खेल शैली',
+    'it-IT': 'Stile di gioco',
+    'pt-BR': 'Estilo de jogo',
+  },
+  bluffSuccessRate: {
+    'de-DE': 'Bluff-Erfolgsrate',
+    'en-US': 'Bluff Success Rate',
+    'es-MX': 'Tasa de éxito de faroles',
+    'fr-FR': 'Taux de bluff réussi',
+    'hi-IN': 'ब्लफ सफलता दर',
+    'it-IT': 'Percentuale bluff riusciti',
+    'pt-BR': 'Taxa de sucesso de blefe',
+  },
+  challengeAccuracy: {
+    'de-DE': 'Herausforderungsgenauigkeit',
+    'en-US': 'Challenge Accuracy',
+    'es-MX': 'Precisión de desafíos',
+    'fr-FR': 'Précision des contestations',
+    'hi-IN': 'चुनौती सटीकता',
+    'it-IT': 'Precisione sfide',
+    'pt-BR': 'Precisão de desafios',
+  },
+  assassinations: {
+    'de-DE': 'Attentate',
+    'en-US': 'Assassinations',
+    'es-MX': 'Asesinatos',
+    'fr-FR': 'Assassinats',
+    'hi-IN': 'हत्याएँ',
+    'it-IT': 'Assassinii',
+    'pt-BR': 'Assassinatos',
+  },
+  coups: {
+    'de-DE': 'Putsche',
+    'en-US': 'Coups',
+    'es-MX': 'Golpes',
+    'fr-FR': "Coups d'État",
+    'hi-IN': 'तख्तापलट',
+    'it-IT': 'Colpi di stato',
+    'pt-BR': 'Golpes',
+  },
+  steals: {
+    'de-DE': 'Diebstähle',
+    'en-US': 'Steals',
+    'es-MX': 'Robos',
+    'fr-FR': 'Vols',
+    'hi-IN': 'चोरी',
+    'it-IT': 'Furti',
+    'pt-BR': 'Roubos',
+  },
+  achievements: {
+    'de-DE': 'Erfolge',
+    'en-US': 'Achievements',
+    'es-MX': 'Logros',
+    'fr-FR': 'Succès',
+    'hi-IN': 'उपलब्धियाँ',
+    'it-IT': 'Obiettivi',
+    'pt-BR': 'Conquistas',
+  },
+  honestVictories: {
+    'de-DE': 'Ehrliche Siege',
+    'en-US': 'Honest Victories',
+    'es-MX': 'Victorias honestas',
+    'fr-FR': 'Victoires honnêtes',
+    'hi-IN': 'ईमानदार जीत',
+    'it-IT': 'Vittorie oneste',
+    'pt-BR': 'Vitórias honestas',
+  },
+  comebacks: {
+    'de-DE': 'Comebacks',
+    'en-US': 'Comebacks',
+    'es-MX': 'Remontadas',
+    'fr-FR': 'Retours',
+    'hi-IN': 'वापसी',
+    'it-IT': 'Rimonte',
+    'pt-BR': 'Viradas',
+  },
+  fastestWin: {
+    'de-DE': 'Schnellster Sieg',
+    'en-US': 'Fastest Win',
+    'es-MX': 'Victoria más rápida',
+    'fr-FR': 'Victoire la plus rapide',
+    'hi-IN': 'सबसे तेज़ जीत',
+    'it-IT': 'Vittoria più rapida',
+    'pt-BR': 'Vitória mais rápida',
+  },
+  turns: {
+    'de-DE': 'Runden',
+    'en-US': 'turns',
+    'es-MX': 'turnos',
+    'fr-FR': 'tours',
+    'hi-IN': 'मोड़',
+    'it-IT': 'turni',
+    'pt-BR': 'turnos',
+  },
+  noAchievementsYet: {
+    'de-DE': 'Noch keine Erfolge',
+    'en-US': 'No achievements yet',
+    'es-MX': 'Aún no hay logros',
+    'fr-FR': 'Pas encore de succès',
+    'hi-IN': 'अभी तक कोई उपलब्धि नहीं',
+    'it-IT': 'Nessun obiettivo raggiunto',
+    'pt-BR': 'Nenhuma conquista ainda',
+  },
+  headToHead: {
+    'de-DE': 'Direktvergleich',
+    'en-US': 'Head-to-Head',
+    'es-MX': 'Cara a cara',
+    'fr-FR': 'Face à face',
+    'hi-IN': 'आमने-सामने',
+    'it-IT': 'Testa a testa',
+    'pt-BR': 'Confronto direto',
+  },
+  opponent: {
+    'de-DE': 'Gegner',
+    'en-US': 'Opponent',
+    'es-MX': 'Oponente',
+    'fr-FR': 'Adversaire',
+    'hi-IN': 'प्रतिद्वंद्वी',
+    'it-IT': 'Avversario',
+    'pt-BR': 'Adversário',
+  },
+  player: {
+    'de-DE': 'Spieler',
+    'en-US': 'Player',
+    'es-MX': 'Jugador',
+    'fr-FR': 'Joueur',
+    'hi-IN': 'खिलाड़ी',
+    'it-IT': 'Giocatore',
+    'pt-BR': 'Jogador',
+  },
+  lastPlayed: {
+    'de-DE': 'Zuletzt gespielt',
+    'en-US': 'Last played',
+    'es-MX': 'Última partida',
+    'fr-FR': 'Dernière partie',
+    'hi-IN': 'अंतिम बार खेला',
+    'it-IT': 'Ultima partita',
+    'pt-BR': 'Última partida',
+  },
+  noStatsYet: {
+    'de-DE': 'Noch keine Statistiken',
+    'en-US': 'No stats yet',
+    'es-MX': 'Aún no hay estadísticas',
+    'fr-FR': 'Pas encore de statistiques',
+    'hi-IN': 'अभी तक कोई आँकड़े नहीं',
+    'it-IT': 'Nessuna statistica ancora',
+    'pt-BR': 'Nenhuma estatística ainda',
+  },
+  playGameToTrackStats: {
+    'de-DE': 'Spiele ein Spiel mit mindestens 2 angemeldeten Spielern, um Statistiken zu sammeln.',
+    'en-US': 'Play a game with at least 2 logged-in players to start tracking stats.',
+    'es-MX': 'Juega una partida con al menos 2 jugadores conectados para empezar a registrar estadísticas.',
+    'fr-FR': 'Jouez une partie avec au moins 2 joueurs connectés pour commencer à suivre vos statistiques.',
+    'hi-IN': 'आँकड़े ट्रैक करने के लिए कम से कम 2 लॉग-इन खिलाड़ियों के साथ एक गेम खेलें।',
+    'it-IT': 'Gioca una partita con almeno 2 giocatori connessi per iniziare a tracciare le statistiche.',
+    'pt-BR': 'Jogue uma partida com pelo menos 2 jogadores conectados para começar a registrar estatísticas.',
   },
 }
 

@@ -1,0 +1,152 @@
+import { useEffect, useState } from 'react'
+import { Link as RouterLink } from 'react-router'
+import {
+  Avatar,
+  Box,
+  Breadcrumbs,
+  CircularProgress,
+  Link,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material'
+import { EmojiEvents, Person } from '@mui/icons-material'
+import { LeaderboardEntry } from '@shared'
+import { getBaseUrl } from '../../helpers/api'
+import { useTranslationContext } from '../../contexts/TranslationsContext'
+import CoupTypography from '../utilities/CoupTypography'
+
+function getMedalColor(rank: number): string | undefined {
+  if (rank === 1) return '#FFD700'
+  if (rank === 2) return '#C0C0C0'
+  if (rank === 3) return '#CD7F32'
+  return undefined
+}
+
+function Leaderboard() {
+  const { t } = useTranslationContext()
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setLoading(true)
+    setError(null)
+    fetch(`${getBaseUrl()}/api/leaderboard?minGames=3&limit=50`)
+      .then((res) => {
+        if (!res.ok) throw new Error(res.statusText)
+        return res.json()
+      })
+      .then((data) => setEntries(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
+
+  return (
+    <>
+      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
+        <Link component={RouterLink} to="/">{t('home')}</Link>
+        <Typography>{t('leaderboard')}</Typography>
+      </Breadcrumbs>
+
+      <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
+        <EmojiEvents sx={{ verticalAlign: 'middle', mr: 1, color: '#FFD700' }} />
+        {t('leaderboard')}
+      </CoupTypography>
+
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {error && (
+        <Typography color="error" sx={{ mt: 3, textAlign: 'center' }}>
+          {error}
+        </Typography>
+      )}
+
+      {!loading && !error && entries.length === 0 && (
+        <Typography sx={{ mt: 3, textAlign: 'center' }} color="text.secondary">
+          {t('noLeaderboardData')}
+        </Typography>
+      )}
+
+      {!loading && !error && entries.length > 0 && (
+        <Box sx={{ maxWidth: 700, mx: 'auto', px: 2, mb: 4 }}>
+          <TableContainer component={Paper} variant="outlined">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center" sx={{ width: 60 }}>#</TableCell>
+                  <TableCell>{t('player')}</TableCell>
+                  <TableCell align="center">{t('winRate')}</TableCell>
+                  <TableCell align="center">{t('gamesPlayed')}</TableCell>
+                  <TableCell align="center">{t('wins')}/{t('losses')}</TableCell>
+                  <TableCell align="center">{t('bestStreak')}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {entries.map((entry, index) => {
+                  const rank = index + 1
+                  const medalColor = getMedalColor(rank)
+                  return (
+                    <TableRow
+                      key={entry.uid}
+                      sx={medalColor ? {
+                        backgroundColor: `${medalColor}11`,
+                      } : {}}
+                    >
+                      <TableCell align="center">
+                        {medalColor ? (
+                          <EmojiEvents sx={{ color: medalColor, fontSize: 20 }} />
+                        ) : (
+                          <Typography variant="body2">{rank}</Typography>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Avatar
+                            {...(entry.photoURL ? { src: entry.photoURL } : {})}
+                            alt={entry.displayName}
+                            sx={{ width: 28, height: 28 }}
+                          >
+                            {entry.displayName?.[0]?.toUpperCase() || <Person />}
+                          </Avatar>
+                          <Link
+                            component={RouterLink}
+                            to={`/profile/${entry.uid}`}
+                            underline="hover"
+                          >
+                            {entry.displayName}
+                          </Link>
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography fontWeight="bold">
+                          {Math.round(entry.winRate * 100)}%
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">{entry.gamesPlayed}</TableCell>
+                      <TableCell align="center">
+                        {entry.gamesWon}/{entry.gamesLost}
+                      </TableCell>
+                      <TableCell align="center">{entry.longestWinStreak}</TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      )}
+    </>
+  )
+}
+
+export default Leaderboard

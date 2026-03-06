@@ -6,6 +6,7 @@ import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 import { getCurrentTimestamp } from './time'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
+import { GAME_STATE_TTL_SECONDS } from '../../../shared/helpers/constants'
 import { getCountOfEachInfluence } from './deck'
 
 export const getGameState = async (
@@ -41,6 +42,8 @@ export const getPublicGameState = ({ gameState, playerId }: {
       color: player.color,
       ai: player.ai,
       grudges: player.grudges,
+      ...(player.uid && { uid: player.uid }),
+      ...(player.photoURL && { photoURL: player.photoURL }),
       ...(!player.personalityHidden && player.personality && { personality: player.personality })
     })
     if (player.id === playerId) {
@@ -111,10 +114,9 @@ export const validateGameState = (state: DehydratedGameState) => {
 }
 
 const setGameState = async (roomId: string, newState: DehydratedGameState) => {
-  const oneMonth = 2678400
   validateGameState(newState)
   const compressed = compressString(JSON.stringify(newState))
-  await setValue(roomId.toUpperCase(), compressed, oneMonth)
+  await setValue(roomId.toUpperCase(), compressed, GAME_STATE_TTL_SECONDS)
 }
 
 export const createGameState = async (roomId: string, gameState: GameState) => {

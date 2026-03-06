@@ -12,6 +12,7 @@ import { getObjectEntries } from './src/utilities/object'
 import { dehydratePublicGameState } from '../shared/helpers/state'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
 import { translate } from './src/i18n/translations'
+import { recordGameStats, getUserStats, getLeaderboard } from './src/utilities/stats'
 
 export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
 
@@ -106,7 +107,9 @@ const eventHandlers: {
         const playerName: string = req.body.playerName
         const settings: GameSettings = req.body.settings
         const language: AvailableLanguageCode = req.body.language
-        return { playerId, playerName, settings, language }
+        const uid: string | undefined = req.body.uid
+        const photoURL: string | undefined = req.body.photoURL
+        return { playerId, playerName, settings, language, uid, photoURL }
       },
       validator: validateExpressBody
     },
@@ -119,7 +122,9 @@ const eventHandlers: {
         aiMoveDelayMs: Joi.number().integer().min(0).max(10000),
         speedRoundSeconds: Joi.number().integer().min(5).max(60)
       }).required(),
-      language: languageRule
+      language: languageRule,
+      uid: Joi.string().optional(),
+      photoURL: Joi.string().uri().optional()
     })
   },
   [PlayerActions.joinGame]: {
@@ -131,7 +136,9 @@ const eventHandlers: {
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName.trim()
         const language: AvailableLanguageCode = req.body.language
-        return { roomId, playerId, playerName, language }
+        const uid: string | undefined = req.body.uid
+        const photoURL: string | undefined = req.body.photoURL
+        return { roomId, playerId, playerName, language, uid, photoURL }
       },
       validator: validateExpressBody
     },
@@ -139,7 +146,9 @@ const eventHandlers: {
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
       playerName: playerNameRule,
-      language: languageRule
+      language: languageRule,
+      uid: Joi.string().optional(),
+      photoURL: Joi.string().uri().optional()
     })
   },
   [PlayerActions.addAiPlayer]: {
@@ -525,6 +534,17 @@ io.on('connection', (socket) => {
           }
 
           const fullGameState = await getGameState(roomId)
+
+          // Check if game just ended (exactly 1 player alive) and flush stats
+          if (fullGameState.isStarted && fullGameState.gameId) {
+            const alivePlayers = fullGameState.players.filter(({ influences }) => influences.length > 0)
+            if (alivePlayers.length === 1) {
+              recordGameStats(fullGameState).catch((error) => {
+                console.error('Failed to record game stats:', error)
+              })
+            }
+          }
+
           const emitGameStateChanged = async (pushToSocket: Socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId
             try {
@@ -601,6 +621,33 @@ getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }
   app[express.method](`/${event}`, express.validator(joiSchema), (req, res) => {
     return responseHandler(event, handler)(res, express.parseParams(req))
   })
+})
+
+// Stats API endpoints
+app.get('/api/users/:uid/stats', async (req, res) => {
+  try {
+    const stats = await getUserStats(req.params.uid)
+    if (!stats) {
+      res.status(404).json({ error: 'User not found' })
+      return
+    }
+    res.json(stats)
+  } catch (error) {
+    console.error('Error fetching user stats:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const minGames = parseInt(req.query.minGames as string) || 5
+    const limit = Math.min(parseInt(req.query.limit as string) || 50, 100)
+    const leaderboard = await getLeaderboard(minGames, limit)
+    res.json(leaderboard)
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
 })
 
 // Express error handling middleware

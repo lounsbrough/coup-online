@@ -10,6 +10,7 @@ import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlaye
 import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
+import { recordBluff, recordBluffCaught, recordChallengeMade, recordCoup, recordInfluenceKill, recordInfluenceClaim, recordSuccessfulBluff, recordSuccessfulChallenge } from './statsAccumulator'
 
 const getPlayerInRoom = ({ gameState, playerId }: {
   gameState: GameState
@@ -29,10 +30,12 @@ export const getGameStateHandler = async ({ roomId, playerId }: {
   return { roomId, playerId }
 }
 
-export const createGameHandler = async ({ playerId, playerName, settings }: {
+export const createGameHandler = async ({ playerId, playerName, settings, uid, photoURL }: {
   playerId: string
   playerName: string
   settings: GameSettings
+  uid?: string
+  photoURL?: string
 }) => {
   const roomId = generateRoomId()
 
@@ -40,15 +43,17 @@ export const createGameHandler = async ({ playerId, playerName, settings }: {
     throw new RoomIdAlreadyExistsError(roomId)
   }
 
-  await createNewGame(roomId, playerId, playerName, settings)
+  await createNewGame(roomId, playerId, playerName, settings, uid, photoURL)
 
   return { roomId, playerId }
 }
 
-export const joinGameHandler = async ({ roomId, playerId, playerName }: {
+export const joinGameHandler = async ({ roomId, playerId, playerName, uid, photoURL }: {
   roomId: string
   playerId: string
   playerName: string
+  uid?: string
+  photoURL?: string
 }) => {
   const gameState = await getGameState(roomId)
 
@@ -71,6 +76,16 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
         ]
       })
     }
+    // Update uid/photoURL if the player logs in after joining
+    if (uid && !player.uid) {
+      await mutateGameState(gameState, (state) => {
+        const existingPlayer = state.players.find((p) => p.id === playerId)
+        if (existingPlayer) {
+          existingPlayer.uid = uid
+          if (photoURL) existingPlayer.photoURL = photoURL
+        }
+      })
+    }
   } else {
     await mutateGameState(gameState, (state) => {
       if (state.players.length >= MAX_PLAYER_COUNT) {
@@ -87,7 +102,7 @@ export const joinGameHandler = async ({ roomId, playerId, playerName }: {
         throw new RoomAlreadyHasPlayerError(playerName)
       }
 
-      addPlayerToGame({ state, playerId, playerName })
+      addPlayerToGame({ state, playerId, playerName, ...(uid ? { uid } : {}), ...(photoURL ? { photoURL } : {}) })
     })
   }
 
@@ -447,6 +462,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
           secondaryPlayer: targetPlayer
         })
         holdGrudge({ state, offended: targetPlayer, offender: coupingPlayer.name, weight: grudgeSizes[Actions.Coup] })
+        recordCoup(state, coupingPlayer.name)
+        recordInfluenceKill(state, coupingPlayer.name, targetPlayer)
         promptPlayerToLoseInfluence(state, targetPlayer)
       })
     } else if (action === Actions.Revive) {
@@ -527,6 +544,17 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
         ...(targetPlayer && { targetPlayer }),
         claimConfirmed: false
       }
+
+      // Track influence claim and bluff stats
+      const requiredInfluence = ActionAttributes[action].influenceRequired
+      if (requiredInfluence) {
+        recordInfluenceClaim(state, player.name, requiredInfluence)
+        const actualPlayer = state.players.find(({ id }) => id === player.id)
+        if (actualPlayer && !actualPlayer.influences.includes(requiredInfluence)) {
+          recordBluff(state, player.name)
+        }
+      }
+
       logEvent(state, {
         event: EventMessages.ActionPending,
         action,
@@ -575,9 +603,13 @@ export const processPassActionResponse = (state: GameState, playerName: string) 
     return { updateLastEventTimestamp: false }
   }
 
+  // Everyone passed — if the action player was bluffing, the bluff succeeded
   const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
   if (claimedInfluence) {
     addClaimedInfluence(actionPlayer, claimedInfluence)
+    if (!actionPlayer.influences.includes(claimedInfluence)) {
+      recordSuccessfulBluff(state, actionPlayer.name)
+    }
   }
   processPendingAction(state)
 }
@@ -621,6 +653,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
+      recordChallengeMade(state, player.name)
       state.pendingActionChallenge = {
         sourcePlayer: player.name
       }
@@ -663,6 +696,14 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
           return agg
         }, new Set<string>()),
       }
+
+      // Track block influence claim and bluff
+      recordInfluenceClaim(state, player.name, claimedInfluence)
+      const blockingPlayer = state.players.find(({ id }) => id === player.id)
+      if (blockingPlayer && !blockingPlayer.influences.includes(claimedInfluence)) {
+        recordBluff(state, player.name)
+      }
+
       logEvent(state, {
         event: EventMessages.BlockPending,
         primaryPlayer: player.name,
@@ -719,6 +760,8 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
         primaryPlayer: challengePlayer.name,
         secondaryPlayer: state.turnPlayer
       })
+      // Challenge failed: the action player was telling the truth
+      recordInfluenceKill(state, state.turnPlayer, challengePlayer.name)
       promptPlayerToLoseInfluence(state, challengePlayer.name)
       delete state.pendingActionChallenge
       state.pendingAction.claimConfirmed = true
@@ -762,6 +805,10 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
         primaryPlayer: challengePlayer.name,
         secondaryPlayer: state.turnPlayer!
       })
+      // Challenge succeeded: the action player was bluffing
+      recordSuccessfulChallenge(state, challengePlayer.name)
+      recordBluffCaught(state, state.turnPlayer!)
+      recordInfluenceKill(state, challengePlayer.name, state.turnPlayer!)
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
       if (claimedInfluence) {
         removeClaimedInfluence(actionPlayer, claimedInfluence)
@@ -800,6 +847,12 @@ export const processPassBlockResponse = (state: GameState, playerName: string) =
     addClaimedInfluence(actionPlayer, claimedInfluence)
   }
   addClaimedInfluence(blockPlayer, state.pendingBlock?.claimedInfluence)
+
+  // Block succeeded unchallenged — if the blocker was bluffing, it succeeded
+  if (state.pendingBlock?.claimedInfluence && !blockPlayer.influences.includes(state.pendingBlock.claimedInfluence)) {
+    recordSuccessfulBluff(state, blockPlayer.name)
+  }
+
   logEvent(state, {
     event: EventMessages.BlockSuccessful,
     primaryPlayer: blockPlayer.name,
@@ -854,6 +907,7 @@ export const blockResponseHandler = async ({ roomId, playerId, response, isForce
         throw new UnableToFindPlayerError()
       }
 
+      recordChallengeMade(state, player.name)
       logEvent(state, {
         event: EventMessages.ChallengePending,
         primaryPlayer: player.name,
@@ -922,6 +976,8 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
         primaryPlayer: state.pendingBlock.sourcePlayer,
         secondaryPlayer: state.turnPlayer!
       })
+      // Block challenge failed — blocker was telling the truth
+      recordInfluenceKill(state, state.pendingBlock.sourcePlayer, challengePlayer.name)
       if (state.pendingAction.action === Actions.Assassinate) {
         const assassin = state.players.find(({ name }) => name === state.turnPlayer)
 
@@ -960,6 +1016,10 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
         primaryPlayer: blockPlayer.name,
         secondaryPlayer: state.turnPlayer!
       })
+      // Block challenge succeeded — blocker was bluffing
+      recordSuccessfulChallenge(state, challengePlayer.name)
+      recordBluffCaught(state, blockPlayer.name)
+      recordInfluenceKill(state, challengePlayer.name, blockPlayer.name)
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
       if (claimedInfluence) {
         addClaimedInfluence(actionPlayer, claimedInfluence)

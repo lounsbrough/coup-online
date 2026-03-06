@@ -23,6 +23,9 @@ import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
 import { useUserSettingsContext } from '../contexts/UserSettingsContext'
 import { getBackgroundImage } from '../helpers/easterEggs'
+import LoginButton from './LoginButton'
+import Profile from './pages/Profile'
+import Leaderboard from './pages/Leaderboard'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -106,6 +109,7 @@ function App() {
                     </Typography>
                   </Button>
                 </Link>
+                <LoginButton />
                 <UserSettings />
               </Box>
             </header>
@@ -117,6 +121,8 @@ function App() {
                 } />
                 <Route path="join-game" element={<JoinGame />} />
                 <Route path="create-game" element={<CreateGame />} />
+                <Route path="profile/:uid" element={<Profile />} />
+                <Route path="leaderboard" element={<Leaderboard />} />
                 <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link component={RouterLink} to={'/'}>{t('home')}</Link></Typography>} />
               </Route>
             </Routes>

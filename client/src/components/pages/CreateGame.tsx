@@ -21,6 +21,7 @@ import {
 } from '@shared'
 import useGameMutation from '../../hooks/useGameMutation'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
+import { useAuthContext } from '../../contexts/AuthContext'
 import {
   allowReviveStorageKey,
   eventLogRetentionTurnsStorageKey,
@@ -38,6 +39,7 @@ function CreateGame() {
   const [speedRoundSeconds, setSpeedRoundSeconds] = usePersistedState<number>(speedRoundSecondsStorageKey, 10)
   const navigate = useNavigate()
   const { t } = useTranslationContext()
+  const { user } = useAuthContext()
 
   const navigateToRoom = useCallback(
     (gameState: DehydratedPublicGameState) => {
@@ -50,6 +52,8 @@ function CreateGame() {
     playerId: string
     playerName: string
     settings: GameSettings
+    uid?: string
+    photoURL?: string
   }>({ action: PlayerActions.createGame, callback: navigateToRoom })
 
   return (
@@ -75,6 +79,8 @@ function CreateGame() {
               allowRevive,
               ...(speedRoundEnabled && { speedRoundSeconds }),
             },
+            ...(user && { uid: user.uid }),
+            ...(user?.photoURL && { photoURL: user.photoURL }),
           })
         }}
       >

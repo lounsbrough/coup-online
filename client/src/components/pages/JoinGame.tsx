@@ -7,6 +7,7 @@ import { PlayerActions } from '@shared'
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { useAuthContext } from '../../contexts/AuthContext'
 import CoupTypography from '../utilities/CoupTypography'
 
 function JoinGame() {
@@ -15,6 +16,7 @@ function JoinGame() {
   const [playerName, setPlayerName] = useState('')
   const navigate = useNavigate()
   const { t } = useTranslationContext()
+  const { user } = useAuthContext()
   const formRef = useRef<HTMLFormElement>(null)
   const playerNameInputRef = useRef<HTMLInputElement>(null)
 
@@ -23,7 +25,7 @@ function JoinGame() {
   }, [navigate, roomId])
 
   const { trigger: joinTrigger, isMutating: joinIsMutating } = useGameMutation<{
-    roomId: string, playerId: string, playerName: string
+    roomId: string, playerId: string, playerName: string, uid?: string, photoURL?: string
   }>({ action: PlayerActions.joinGame, callback: navigateToRoom })
 
   const { trigger: spectateTrigger, isMutating: spectateIsMutating } = useGameMutation<{
@@ -57,7 +59,9 @@ function JoinGame() {
             if (formRef.current!.checkValidity()) joinTrigger({
               roomId: roomId.trim(),
               playerId: getPlayerId(),
-              playerName: playerName.trim()
+              playerName: playerName.trim(),
+              ...(user && { uid: user.uid }),
+              ...(user?.photoURL && { photoURL: user.photoURL }),
             })
           } else if (buttonId === 'spectateGameButton') {
             playerNameInputRef.current!.removeAttribute('required')
