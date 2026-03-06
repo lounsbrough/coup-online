@@ -1,10 +1,11 @@
 import { firestore } from '../firebase'
-import { UserStats, LeaderboardEntry, GameActionStats, PlayerActionStats } from '../../../shared/types/user'
-import { GameState, Player } from '../../../shared/types/game'
+import { UserStats, LeaderboardEntry } from '../../../shared/types/user'
+import { GameState } from '../../../shared/types/game'
 import { GAME_STATE_TTL_MS } from '../../../shared/helpers/constants'
 
 const USERS_COLLECTION = 'users'
 const MIN_LOGGED_IN_PLAYERS = 2
+const MAX_OPPONENTS = 100
 
 const createEmptyUserStats = (uid: string, displayName: string, photoURL?: string): UserStats => ({
   uid,
@@ -43,6 +44,17 @@ const purgeOldProcessedGames = (processedGames: { [gameId: string]: string }): {
     }
   }
   return purged
+}
+
+const trimOpponents = (opponents: UserStats['opponents']): UserStats['opponents'] => {
+  const entries = Object.entries(opponents)
+  if (entries.length <= MAX_OPPONENTS) return opponents
+
+  return Object.fromEntries(
+    entries
+      .sort(([, a], [, b]) => b.gamesPlayedTogether - a.gamesPlayedTogether)
+      .slice(0, MAX_OPPONENTS)
+  )
 }
 
 const mergeInfluenceClaims = (
@@ -173,6 +185,9 @@ export const recordGameStats = async (gameState: GameState) => {
 
           existing.opponents[opponent.uid] = opponentStats
         }
+
+        // Trim opponents map to prevent unbounded growth
+        existing.opponents = trimOpponents(existing.opponents)
 
         // Update metadata
         existing.displayName = player.name
