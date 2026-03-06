@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Route, Routes, Link as RouterLink } from 'react-router'
-import { Box, Button, Link, Typography, useTheme } from '@mui/material'
+import { Box, Button, IconButton, Link, Tooltip, Typography, useTheme } from '@mui/material'
 import JoinGame from './pages/JoinGame'
 import CreateGame from './pages/CreateGame'
 import Home from './pages/Home'
@@ -16,7 +16,7 @@ import { WebSocketContextProvider } from '../contexts/WebSocketContext'
 import Logo from './icons/Logo'
 import { useTranslationContext } from '../contexts/TranslationsContext'
 import ChatBubble from './chat/ChatBubble'
-import { Chat, Gavel } from '@mui/icons-material'
+import { Chat, EmojiEvents, Gavel } from '@mui/icons-material'
 import DualSideDrawer from './utilities/DualSideDrawer'
 import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
@@ -109,6 +109,11 @@ function App() {
                     </Typography>
                   </Button>
                 </Link>
+                <Tooltip title={t('leaderboard')}>
+                  <IconButton component={RouterLink} to="/leaderboard" color="primary" size="small">
+                    <EmojiEvents />
+                  </IconButton>
+                </Tooltip>
                 <LoginButton />
                 <UserSettings />
               </Box>
