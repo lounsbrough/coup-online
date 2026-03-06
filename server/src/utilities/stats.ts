@@ -5,11 +5,12 @@ import { GAME_STATE_TTL_MS } from '../../../shared/helpers/constants'
 
 const USERS_COLLECTION = 'users'
 const MIN_LOGGED_IN_PLAYERS = 2
-const MAX_OPPONENTS = 100
+const MAX_OPPONENTS = 25
 
-const createEmptyUserStats = (uid: string, displayName: string, photoURL?: string): UserStats => ({
+const createEmptyUserStats = (uid: string, displayName: string, photoURL?: string): UserStats & { displayNameLower: string } => ({
   uid,
   displayName,
+  displayNameLower: displayName.toLowerCase(),
   ...(photoURL ? { photoURL } : {}),
   gamesPlayed: 0,
   gamesWon: 0,
@@ -191,6 +192,7 @@ export const recordGameStats = async (gameState: GameState) => {
 
         // Update metadata
         existing.displayName = player.name
+          ; (existing as UserStats & { displayNameLower: string }).displayNameLower = player.name.toLowerCase()
         if (player.photoURL) {
           existing.photoURL = player.photoURL
         }
@@ -212,7 +214,53 @@ export const getUserStats = async (uid: string): Promise<UserStats | null> => {
   const stats = doc.data() as UserStats
   // Don't expose processedGames to clients
   delete (stats as Partial<UserStats>).processedGames
+
+  // Resolve current display names for opponents via batch read
+  const opponentUids = Object.keys(stats.opponents || {})
+  if (opponentUids.length > 0) {
+    const refs = opponentUids.map(id => firestore.collection(USERS_COLLECTION).doc(id))
+    const docs = await firestore.getAll(...refs)
+    for (const opponentDoc of docs) {
+      if (opponentDoc.exists && stats.opponents[opponentDoc.id]) {
+        const opponentData = opponentDoc.data() as UserStats
+        stats.opponents[opponentDoc.id].displayName = opponentData.displayName
+      }
+    }
+  }
+
   return stats
+}
+
+export const getDisplayName = async (uid: string): Promise<string | null> => {
+  const doc = await firestore.collection(USERS_COLLECTION).doc(uid).get()
+  if (!doc.exists) return null
+  return (doc.data() as UserStats).displayName
+}
+
+export const setDisplayName = async (uid: string, displayName: string, photoURL?: string): Promise<{ error?: string }> => {
+  const displayNameLower = displayName.toLowerCase()
+
+  // Check if another user already has this name (case-insensitive)
+  const existing = await firestore.collection(USERS_COLLECTION)
+    .where('displayNameLower', '==', displayNameLower)
+    .limit(1)
+    .get()
+
+  if (!existing.empty && existing.docs[0].id !== uid) {
+    return { error: 'displayNameTaken' }
+  }
+
+  const userRef = firestore.collection(USERS_COLLECTION).doc(uid)
+  const doc = await userRef.get()
+
+  if (doc.exists) {
+    await userRef.update({ displayName, displayNameLower })
+  } else {
+    const newStats = createEmptyUserStats(uid, displayName, photoURL)
+    await userRef.set(newStats)
+  }
+
+  return {}
 }
 
 export const getLeaderboard = async (minGames: number = 5, limit: number = 50): Promise<LeaderboardEntry[]> => {

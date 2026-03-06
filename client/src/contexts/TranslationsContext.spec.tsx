@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { describe, it, expect } from 'vitest'
 import { grey } from "@mui/material/colors"
 import { Actions, EventMessages, PublicGameState, AvailableLanguageCode } from "@shared"
 import { TranslationContextProvider, useTranslationContext } from "./TranslationsContext"
@@ -12,22 +13,20 @@ const TestTranslationComponent = ({ language }: { language: AvailableLanguageCod
   }, [])
 
   return (
-    <>
-      <p data-testid={`${EventMessages.ActionProcessed}-${Actions.Coup}`}>
-        {t(EventMessages.ActionProcessed, {
-          action: Actions.Coup,
-          gameState: ({
-            players: [
-              { color: 'blue', name: 'David' },
-              { color: 'red', name: 'Bob' }
-            ]
-          }) as unknown as PublicGameState,
-          primaryPlayer: 'David',
-          secondaryPlayer: 'Bob'
-        })}
-        {t('close')}
-      </p>
-    </>
+    <p data-testid={`${EventMessages.ActionProcessed}-${Actions.Coup}`}>
+      {t(EventMessages.ActionProcessed, {
+        action: Actions.Coup,
+        gameState: ({
+          players: [
+            { color: 'blue', name: 'David' },
+            { color: 'red', name: 'Bob' }
+          ]
+        }) as unknown as PublicGameState,
+        primaryPlayer: 'David',
+        secondaryPlayer: 'Bob'
+      })}
+      {t('close')}
+    </p>
   )
 }
 

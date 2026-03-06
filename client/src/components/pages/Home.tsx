@@ -1,8 +1,8 @@
 import { Button, Grid } from "@mui/material"
-import { useNavigate } from "react-router"
+import { Link as RouterLink } from "react-router"
 import GitHubLinks from "../GitHubLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import { AddCircle, Gavel, GroupAdd } from "@mui/icons-material"
+import { AddCircle, EmojiEvents, Gavel, GroupAdd } from "@mui/icons-material"
 import CoupTypography from '../utilities/CoupTypography'
 
 interface HomeProps {
@@ -10,7 +10,6 @@ interface HomeProps {
 }
 
 function Home({ setRulesOpen }: Readonly<HomeProps>) {
-  const navigate = useNavigate()
   const { t } = useTranslationContext()
 
   return (
@@ -21,32 +20,30 @@ function Home({ setRulesOpen }: Readonly<HomeProps>) {
       <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('briefDescriptionOfCoup')}
       </CoupTypography>
-      <Grid>
+      <Grid container direction="column" alignItems="center" spacing={5} mt={10}>
         <Button
-          type="submit"
-          sx={{ mt: 5 }}
           variant='contained'
           onClick={() => setRulesOpen(true)}
           startIcon={<Gavel />}
         >{t('learnToPlay')}</Button>
-      </Grid>
-      <Grid>
         <Button
-          type="submit"
-          sx={{ mt: 5 }}
           variant="contained"
-          onClick={() => { navigate(`/create-game`) }}
+          component={RouterLink}
+          to="/create-game"
           startIcon={<AddCircle />}
         >{t('createNewGame')}</Button>
-      </Grid>
-      <Grid>
         <Button
-          type="submit"
-          sx={{ mt: 5 }}
           variant="contained"
-          onClick={() => { navigate(`/join-game`) }}
+          component={RouterLink}
+          to="/join-game"
           startIcon={<GroupAdd />}
         >{t('joinExistingGame')}</Button>
+        <Button
+          variant="contained"
+          component={RouterLink}
+          to="/leaderboard"
+          startIcon={<EmojiEvents />}
+        >{t('viewLeaderboard')}</Button>
       </Grid>
       <GitHubLinks />
     </>

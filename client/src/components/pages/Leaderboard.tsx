@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Breadcrumbs,
+  Button,
   CircularProgress,
   Link,
   Paper,
@@ -15,14 +16,17 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { EmojiEvents, Person } from '@mui/icons-material'
+import { EmojiEvents, Login, Person } from '@mui/icons-material'
 import { LeaderboardEntry } from '@shared'
 import { getBaseUrl } from '../../helpers/api'
+import { COUP_GOLD } from '../../helpers/styles'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
+import { useAuthContext } from '../../contexts/AuthContext'
 import CoupTypography from '../utilities/CoupTypography'
+import LoginButton from '../LoginButton'
 
 function getMedalColor(rank: number): string | undefined {
-  if (rank === 1) return '#FFD700'
+  if (rank === 1) return COUP_GOLD
   if (rank === 2) return '#C0C0C0'
   if (rank === 3) return '#CD7F32'
   return undefined
@@ -30,6 +34,7 @@ function getMedalColor(rank: number): string | undefined {
 
 function Leaderboard() {
   const { t } = useTranslationContext()
+  const { user } = useAuthContext()
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -54,8 +59,8 @@ function Leaderboard() {
         <Typography>{t('leaderboard')}</Typography>
       </Breadcrumbs>
 
-      <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
-        <EmojiEvents sx={{ verticalAlign: 'middle', mr: 1, color: '#FFD700' }} />
+      <CoupTypography variant="h4" sx={{ m: 5 }} addTextShadow>
+        <EmojiEvents fontSize="large" sx={{ verticalAlign: 'middle', mr: 1, color: COUP_GOLD }} />
         {t('leaderboard')}
       </CoupTypography>
 
@@ -72,9 +77,18 @@ function Leaderboard() {
       )}
 
       {!loading && !error && entries.length === 0 && (
-        <Typography sx={{ mt: 3, textAlign: 'center' }} color="text.secondary">
+        <CoupTypography addTextShadow variant='h5' sx={{ mt: 3, textAlign: 'center' }} color="text.secondary">
           {t('noLeaderboardData')}
-        </Typography>
+        </CoupTypography>
+      )}
+
+      {!user && (
+        <Box sx={{ mt: 3, mb: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
+          <CoupTypography addTextShadow color="text.secondary">
+            {t('signInToTrackStats')}
+          </CoupTypography>
+          <LoginButton buttonProps={{ variant: 'contained' }} />
+        </Box>
       )}
 
       {!loading && !error && entries.length > 0 && (

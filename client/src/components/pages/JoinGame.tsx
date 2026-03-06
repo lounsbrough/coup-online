@@ -9,11 +9,13 @@ import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { useAuthContext } from '../../contexts/AuthContext'
 import CoupTypography from '../utilities/CoupTypography'
+import { useDisplayName } from '../../hooks/useDisplayName'
 
 function JoinGame() {
   const [searchParams] = useSearchParams()
   const [roomId, setRoomId] = useState(searchParams.get('roomId') ?? '')
   const [playerName, setPlayerName] = useState('')
+  const { displayName: profileName, loading: profileNameLoading } = useDisplayName()
   const navigate = useNavigate()
   const { t } = useTranslationContext()
   const { user } = useAuthContext()
@@ -52,14 +54,14 @@ function JoinGame() {
         onSubmit={(event) => {
           event.preventDefault()
 
-          const buttonId = (event.nativeEvent as SubmitEvent).submitter?.id
+          const buttonId = event.nativeEvent.submitter?.id
 
           if (buttonId === 'joinGameButton') {
             playerNameInputRef.current!.setAttribute('required', '')
             if (formRef.current!.checkValidity()) joinTrigger({
               roomId: roomId.trim(),
               playerId: getPlayerId(),
-              playerName: playerName.trim(),
+              playerName: (profileName ?? playerName).trim(),
               ...(user && { uid: user.uid }),
               ...(user?.photoURL && { photoURL: user.photoURL }),
             })
@@ -101,13 +103,17 @@ function JoinGame() {
                   htmlInput: { ref: playerNameInputRef }
                 }}
                 data-testid='playerNameInput'
-                value={playerName}
+                value={profileName ?? playerName}
                 onChange={(event) => {
-                  setPlayerName(event.target.value.slice(0, 10))
+                  if (!profileName) {
+                    setPlayerName(event.target.value.slice(0, 10))
+                  }
                 }}
                 label={t('whatIsYourName')}
                 variant="standard"
                 required
+                disabled={!!profileName || profileNameLoading}
+                helperText={profileName ? t('nameFromProfile') : undefined}
               />
             </Box>
           </Grid>

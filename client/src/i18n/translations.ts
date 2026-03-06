@@ -187,6 +187,7 @@ export type Translations = ActionMessages &
     leaderboard: TranslationsForString
     viewLeaderboard: TranslationsForString
     noLeaderboardData: TranslationsForString
+    signInToTrackStats: TranslationsForString
     gamesPlayed: TranslationsForString
     winRate: TranslationsForString
     wins: TranslationsForString
@@ -213,6 +214,15 @@ export type Translations = ActionMessages &
     lastPlayed: TranslationsForString
     noStatsYet: TranslationsForString
     playGameToTrackStats: TranslationsForString
+    // Display name
+    displayName: TranslationsForString
+    nameFromProfile: TranslationsForString
+    setDisplayName: TranslationsForString
+    changeDisplayName: TranslationsForString
+    inappropriateDisplayName: TranslationsForString
+    displayNameTaken: TranslationsForString
+    somethingWentWrong: TranslationsForString
+    save: TranslationsForString
   }
 
 const translations: Translations = {
@@ -2140,6 +2150,15 @@ const translations: Translations = {
     'it-IT': 'Nessun dato disponibile',
     'pt-BR': 'Nenhum dado disponível ainda',
   },
+  signInToTrackStats: {
+    'de-DE': 'Melde dich an, um deine Statistiken zu verfolgen',
+    'en-US': 'Sign in to track your stats on the leaderboard',
+    'es-MX': 'Inicia sesión para seguir tus estadísticas',
+    'fr-FR': 'Connectez-vous pour suivre vos statistiques',
+    'hi-IN': 'अपने आँकड़े ट्रैक करने के लिए साइन इन करें',
+    'it-IT': 'Accedi per monitorare le tue statistiche',
+    'pt-BR': 'Entre para acompanhar suas estatísticas',
+  },
   gamesPlayed: {
     'de-DE': 'Gespielte Spiele',
     'en-US': 'Games Played',
@@ -2366,13 +2385,85 @@ const translations: Translations = {
     'pt-BR': 'Nenhuma estatística ainda',
   },
   playGameToTrackStats: {
-    'de-DE': 'Spiele ein Spiel mit mindestens 2 angemeldeten Spielern, um Statistiken zu sammeln.',
-    'en-US': 'Play a game with at least 2 logged-in players to start tracking stats.',
-    'es-MX': 'Juega una partida con al menos 2 jugadores conectados para empezar a registrar estadísticas.',
-    'fr-FR': 'Jouez une partie avec au moins 2 joueurs connectés pour commencer à suivre vos statistiques.',
-    'hi-IN': 'आँकड़े ट्रैक करने के लिए कम से कम 2 लॉग-इन खिलाड़ियों के साथ एक गेम खेलें।',
-    'it-IT': 'Gioca una partita con almeno 2 giocatori connessi per iniziare a tracciare le statistiche.',
-    'pt-BR': 'Jogue uma partida com pelo menos 2 jogadores conectados para começar a registrar estatísticas.',
+    'de-DE': 'Spiele ein Spiel mit mindestens 2 angemeldeten Spielern, um Statistiken zu verfolgen',
+    'en-US': 'Play a game with at least 2 logged-in players to track stats',
+    'es-MX': 'Juega un juego con al menos 2 jugadores registrados para rastrear estadísticas',
+    'fr-FR': 'Jouez une partie avec au moins 2 joueurs connectés pour suivre les statistiques',
+    'hi-IN': 'आँकड़े ट्रैक करने के लिए कम से कम 2 लॉग-इन खिलाड़ियों के साथ एक गेम खेलें',
+    'it-IT': 'Gioca una partita con almeno 2 giocatori connessi per tracciare le statistiche',
+    'pt-BR': 'Jogue uma partida com pelo menos 2 jogadores logados para rastrear estatísticas',
+  },
+  displayName: {
+    'de-DE': 'Anzeigename',
+    'en-US': 'Display Name',
+    'es-MX': 'Nombre para mostrar',
+    'fr-FR': 'Nom d\'affichage',
+    'hi-IN': 'प्रदर्शित नाम',
+    'it-IT': 'Nome visualizzato',
+    'pt-BR': 'Nome de exibição',
+  },
+  nameFromProfile: {
+    'de-DE': 'Aus deinem Profil',
+    'en-US': 'From your profile',
+    'es-MX': 'De tu perfil',
+    'fr-FR': 'De votre profil',
+    'hi-IN': 'आपकी प्रोफ़ाइल से',
+    'it-IT': 'Dal tuo profilo',
+    'pt-BR': 'Do seu perfil',
+  },
+  setDisplayName: {
+    'de-DE': 'Anzeigename festlegen',
+    'en-US': 'Set Display Name',
+    'es-MX': 'Establecer nombre',
+    'fr-FR': 'Définir le nom',
+    'hi-IN': 'प्रदर्शित नाम सेट करें',
+    'it-IT': 'Imposta nome',
+    'pt-BR': 'Definir nome',
+  },
+  changeDisplayName: {
+    'de-DE': 'Anzeigename ändern',
+    'en-US': 'Change Display Name',
+    'es-MX': 'Cambiar nombre',
+    'fr-FR': 'Changer le nom',
+    'hi-IN': 'प्रदर्शित नाम बदलें',
+    'it-IT': 'Cambia nome',
+    'pt-BR': 'Alterar nome',
+  },
+  inappropriateDisplayName: {
+    'de-DE': 'Dieser Name ist nicht erlaubt',
+    'en-US': 'This name is not allowed',
+    'es-MX': 'Este nombre no está permitido',
+    'fr-FR': 'Ce nom n\'est pas autorisé',
+    'hi-IN': 'यह नाम अनुमत नहीं है',
+    'it-IT': 'Questo nome non è consentito',
+    'pt-BR': 'Este nome não é permitido',
+  },
+  displayNameTaken: {
+    'de-DE': 'Dieser Name ist bereits vergeben',
+    'en-US': 'This name is already taken',
+    'es-MX': 'Este nombre ya está en uso',
+    'fr-FR': 'Ce nom est déjà pris',
+    'hi-IN': 'यह नाम पहले से लिया गया है',
+    'it-IT': 'Questo nome è già in uso',
+    'pt-BR': 'Este nome já está em uso',
+  },
+  save: {
+    'de-DE': 'Speichern',
+    'en-US': 'Save',
+    'es-MX': 'Guardar',
+    'fr-FR': 'Enregistrer',
+    'hi-IN': 'सहेजें',
+    'it-IT': 'Salva',
+    'pt-BR': 'Salvar',
+  },
+  somethingWentWrong: {
+    'de-DE': 'Etwas ist schiefgelaufen',
+    'en-US': 'Something went wrong',
+    'es-MX': 'Algo salió mal',
+    'fr-FR': 'Une erreur est survenue',
+    'hi-IN': 'कुछ गलत हो गया',
+    'it-IT': 'Qualcosa è andato storto',
+    'pt-BR': 'Algo deu errado',
   },
 }
 

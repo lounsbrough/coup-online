@@ -7,5 +7,6 @@ runs:
     - uses: ./.github/actions/setup-node
     - run: |
         cd client
+        pnpm typecheck
         pnpm test
       shell: bash

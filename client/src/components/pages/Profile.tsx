@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Breadcrumbs,
+  Button,
   Card,
   CardContent,
   Chip,
@@ -19,20 +20,29 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material'
 import {
+  AddCircle,
+  Edit,
   EmojiEvents,
+  GroupAdd,
+  Home,
   LocalFireDepartment,
   Person,
   Psychology,
+  Save,
   SportsKabaddi,
 } from '@mui/icons-material'
 import { UserStats } from '@shared'
 import { getBaseUrl } from '../../helpers/api'
+import { COUP_GOLD } from '../../helpers/styles'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import { useAuthContext } from '../../contexts/AuthContext'
 import CoupTypography from '../utilities/CoupTypography'
+import { useDisplayName } from '../../hooks/useDisplayName'
+import { Translations } from '../../i18n/translations'
 
 function StatCard({ label, value, icon }: Readonly<{
   label: ReactNode
@@ -63,10 +73,10 @@ function PercentBar({ label, value, total }: Readonly<{
   return (
     <Box sx={{ mb: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-        <Typography variant="body2">{label}</Typography>
-        <Typography variant="body2" fontWeight="bold">
+        <CoupTypography addTextShadow variant="body2">{label}</CoupTypography>
+        <CoupTypography addTextShadow variant="body2" fontWeight="bold">
           {pct}% ({value}/{total})
-        </Typography>
+        </CoupTypography>
       </Box>
       <LinearProgress
         variant="determinate"
@@ -74,6 +84,78 @@ function PercentBar({ label, value, total }: Readonly<{
         sx={{ height: 8, borderRadius: 4 }}
       />
     </Box>
+  )
+}
+
+function DisplayNameEditor({
+  profileName,
+  profileNameLoading,
+  isEditingName,
+  editNameValue,
+  editNameError,
+  editNameSaving,
+  t,
+  onStartEdit,
+  onChangeValue,
+  onSave,
+  onCancel,
+}: Readonly<{
+  profileName: string | null
+  profileNameLoading: boolean
+  isEditingName: boolean
+  editNameValue: string
+  editNameError: ReactNode
+  editNameSaving: boolean
+  t: (key: keyof Translations) => ReactNode
+  onStartEdit: () => void
+  onChangeValue: (val: string) => void
+  onSave: () => void
+  onCancel: () => void
+}>) {
+  if (profileNameLoading) return null
+
+  if (isEditingName) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mt: 1 }}>
+        <TextField
+          size="small"
+          value={editNameValue}
+          onChange={(e) => onChangeValue(e.target.value)}
+          label={t('displayName')}
+          variant="outlined"
+          error={!!editNameError}
+          helperText={editNameError}
+          slotProps={{ htmlInput: { maxLength: 10 } }}
+          autoFocus
+        />
+        <Button
+          variant="contained"
+          onClick={onSave}
+          loading={editNameSaving}
+          startIcon={<Save />}
+          disabled={editNameValue.trim().length === 0}
+        >
+          {t('save')}
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={onCancel}
+          disabled={editNameSaving}
+        >
+          {t('cancel')}
+        </Button>
+      </Box>
+    )
+  }
+
+  return (
+    <Button
+      startIcon={<Edit />}
+      onClick={onStartEdit}
+      variant='outlined'
+    >
+      {profileName ? t('changeDisplayName') : t('setDisplayName')}
+    </Button>
   )
 }
 
@@ -85,6 +167,12 @@ function Profile() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [notFound, setNotFound] = useState(false)
+  const isOwnProfile = user?.uid === uid
+  const { displayName: profileName, saveDisplayName, loading: profileNameLoading } = useDisplayName()
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [editNameValue, setEditNameValue] = useState('')
+  const [editNameError, setEditNameError] = useState<ReactNode>(null)
+  const [editNameSaving, setEditNameSaving] = useState(false)
 
   useEffect(() => {
     if (!uid) return
@@ -116,8 +204,14 @@ function Profile() {
   if (error) {
     return (
       <Box sx={{ mt: 5, textAlign: 'center' }}>
-        <Typography variant="h5">{t('profileNotFound')}</Typography>
-        <Link component={RouterLink} to="/">{t('home')}</Link>
+        <CoupTypography addTextShadow variant="h4">{t('profileNotFound')}</CoupTypography>
+        <Button
+          sx={{ mt: 3 }}
+          variant="contained"
+          component={RouterLink}
+          to="/"
+          startIcon={<Home />}
+        >{t('home')}</Button>
       </Box>
     )
   }
@@ -128,32 +222,81 @@ function Profile() {
       <>
         <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
           <Link component={RouterLink} to="/">{t('home')}</Link>
-          <Typography>{t('profile')}</Typography>
+          <CoupTypography addTextShadow>{t('profile')}</CoupTypography>
         </Breadcrumbs>
         <Box sx={{ mt: 5, textAlign: 'center' }}>
           {isOwnProfile && user && (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 3 }}>
-              <Avatar
-                {...(user.photoURL ? { src: user.photoURL } : {})}
-                alt={user.displayName ?? ''}
-                sx={{ width: 64, height: 64 }}
-              >
-                {user.displayName?.[0]?.toUpperCase() || <Person />}
-              </Avatar>
-              <CoupTypography variant="h4" addTextShadow>
-                {user.displayName}
-              </CoupTypography>
-            </Box>
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 3 }}>
+                <Avatar
+                  {...(user.photoURL ? { src: user.photoURL } : {})}
+                  alt={user.displayName ?? ''}
+                  sx={{ width: 64, height: 64 }}
+                >
+                  {user.displayName?.[0]?.toUpperCase() || <Person />}
+                </Avatar>
+                <CoupTypography variant="h4" addTextShadow>
+                  {profileName ?? user.displayName}
+                </CoupTypography>
+              </Box>
+              <DisplayNameEditor
+                profileName={profileName}
+                profileNameLoading={profileNameLoading}
+                isEditingName={isEditingName}
+                editNameValue={editNameValue}
+                editNameError={editNameError}
+                editNameSaving={editNameSaving}
+                t={t}
+                onStartEdit={() => {
+                  setEditNameValue(profileName ?? user.displayName?.slice(0, 10) ?? '')
+                  setEditNameError(null)
+                  setIsEditingName(true)
+                }}
+                onChangeValue={(val) => setEditNameValue(val.slice(0, 10))}
+                onSave={async () => {
+                  setEditNameSaving(true)
+                  setEditNameError(null)
+                  const result = await saveDisplayName(editNameValue)
+                  setEditNameSaving(false)
+                  if (result.success) {
+                    setIsEditingName(false)
+                  } else {
+                    const knownErrors = ['inappropriateDisplayName', 'displayNameTaken'] as const
+                    setEditNameError(knownErrors.includes(result.error as typeof knownErrors[number])
+                      ? t(result.error as typeof knownErrors[number])
+                      : t('somethingWentWrong'))
+                  }
+                }}
+                onCancel={() => setIsEditingName(false)}
+              />
+            </>
           )}
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
+          <CoupTypography addTextShadow variant="h6" color="text.secondary" sx={{ mb: 2 }}>
             {isOwnProfile ? t('noStatsYet') : t('profileNotFound')}
-          </Typography>
+          </CoupTypography>
           {isOwnProfile && (
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <CoupTypography addTextShadow variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               {t('playGameToTrackStats')}
-            </Typography>
+            </CoupTypography>
           )}
-          <Link component={RouterLink} to="/">{t('home')}</Link>
+          <Grid container direction="column" alignItems="center" spacing={5} sx={{ mt: 5 }}>
+            <Grid>
+              <Button
+                variant="contained"
+                component={RouterLink}
+                to="/create-game"
+                startIcon={<AddCircle />}
+              >{t('createNewGame')}</Button>
+            </Grid>
+            <Grid>
+              <Button
+                variant="contained"
+                component={RouterLink}
+                to="/join-game"
+                startIcon={<GroupAdd />}
+              >{t('joinExistingGame')}</Button>
+            </Grid>
+          </Grid>
         </Box>
       </>
     )
@@ -171,7 +314,7 @@ function Profile() {
     <>
       <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
         <Link component={RouterLink} to="/">{t('home')}</Link>
-        <Typography>{t('profile')}</Typography>
+        <CoupTypography addTextShadow>{t('profile')}</CoupTypography>
       </Breadcrumbs>
 
       {/* Player header */}
@@ -188,12 +331,48 @@ function Profile() {
             {stats.displayName}
           </CoupTypography>
           {stats.lastPlayedAt && (
-            <Typography variant="body2" color="text.secondary">
+            <CoupTypography addTextShadow variant="body2" color="text.secondary">
               {t('lastPlayed')}: {new Date(stats.lastPlayedAt).toLocaleDateString()}
-            </Typography>
+            </CoupTypography>
           )}
         </Box>
       </Box>
+
+      {isOwnProfile && user && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <DisplayNameEditor
+            profileName={profileName}
+            profileNameLoading={profileNameLoading}
+            isEditingName={isEditingName}
+            editNameValue={editNameValue}
+            editNameError={editNameError}
+            editNameSaving={editNameSaving}
+            t={t}
+            onStartEdit={() => {
+              setEditNameValue(profileName ?? stats.displayName ?? '')
+              setEditNameError(null)
+              setIsEditingName(true)
+            }}
+            onChangeValue={(val) => setEditNameValue(val.slice(0, 10))}
+            onSave={async () => {
+              setEditNameSaving(true)
+              setEditNameError(null)
+              const result = await saveDisplayName(editNameValue)
+              setEditNameSaving(false)
+              if (result.success) {
+                setIsEditingName(false)
+                setStats((prev) => prev ? { ...prev, displayName: editNameValue.trim().slice(0, 10) } : prev)
+              } else {
+                const knownErrors = ['inappropriateDisplayName', 'displayNameTaken'] as const
+                setEditNameError(knownErrors.includes(result.error as typeof knownErrors[number])
+                  ? t(result.error as typeof knownErrors[number])
+                  : t('somethingWentWrong'))
+              }
+            }}
+            onCancel={() => setIsEditingName(false)}
+          />
+        </Box>
+      )}
 
       <Box sx={{ maxWidth: 800, mx: 'auto', px: 2, mt: 4 }}>
         {/* Core Stats */}
@@ -209,7 +388,7 @@ function Profile() {
             <StatCard
               label={t('winRate')}
               value={`${winRate}%`}
-              icon={<EmojiEvents sx={{ color: '#FFD700' }} />}
+              icon={<EmojiEvents sx={{ color: COUP_GOLD }} />}
             />
           </Grid>
           <Grid size={{ xs: 6, sm: 3 }}>
@@ -227,7 +406,7 @@ function Profile() {
             <StatCard
               label={t('longestWinStreak')}
               value={stats.longestWinStreak}
-              icon={<LocalFireDepartment sx={{ color: '#FFD700' }} />}
+              icon={<LocalFireDepartment sx={{ color: COUP_GOLD }} />}
             />
           </Grid>
         </Grid>
@@ -299,7 +478,7 @@ function Profile() {
         <Card variant="outlined" sx={{ mb: 4 }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-              <EmojiEvents sx={{ color: '#FFD700' }} />
+              <EmojiEvents sx={{ color: COUP_GOLD }} />
               <Typography variant="h6">{t('achievements')}</Typography>
             </Box>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -370,9 +549,9 @@ function Profile() {
         )}
 
         <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Link component={RouterLink} to="/leaderboard">
+          <Button variant='contained' component={RouterLink} to="/leaderboard">
             {t('viewLeaderboard')}
-          </Link>
+          </Button>
         </Box>
       </Box>
     </>

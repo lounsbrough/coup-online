@@ -1,10 +1,10 @@
 
-import React from "react"
+import React, { useMemo } from "react"
 import { vi } from "vitest"
 import { screen, render as testingLibraryRender } from "@testing-library/react"
 import Chance from 'chance'
 import { GameStateContext } from "../../src/contexts/GameStateContext"
-import { MAX_PLAYER_COUNT, PublicGameState } from '@shared'
+import { MAX_PLAYER_COUNT, PublicGameState, PublicPlayer } from '@shared'
 import { MaterialThemeContextProvider, useColorModeContext } from "../../src/contexts/MaterialThemeContext"
 import { PaletteMode } from "@mui/material"
 
@@ -13,11 +13,16 @@ vi.mock("../../src/contexts/WebSocketContext", () => ({ useWebSocketContext: () 
 const chance = new Chance()
 
 export const getRandomGameState = (): PublicGameState => {
-  const players = chance.n(() => ({
+  const players: PublicPlayer[] = chance.n(() => ({
     name: chance.string(),
     coins: chance.natural({ min: 0, max: 12 }),
     influenceCount: chance.natural({ min: 0, max: 2 }),
-    color: chance.color()
+    color: chance.color(),
+    claimedInfluences: new Set(),
+    unclaimedInfluences: new Set(),
+    deadInfluences: [],
+    ai: false,
+    grudges: {},
   }), chance.natural({ min: 2, max: MAX_PLAYER_COUNT }))
 
   const selfPlayer = chance.pickone(players)
@@ -26,19 +31,25 @@ export const getRandomGameState = (): PublicGameState => {
     players: players,
     roomId: chance.string(),
     eventLogs: [],
+    chatMessages: [],
+    lastEventTimestamp: new Date(),
+    turn: 1,
+    settings: { eventLogRetentionTurns: 3, allowRevive: false },
     isStarted: true,
     pendingInfluenceLoss: {},
-    pendingAction: undefined,
-    pendingActionChallenge: undefined,
-    pendingBlock: undefined,
-    pendingBlockChallenge: undefined,
     turnPlayer: chance.string(),
+    deckCount: chance.natural({ min: 0, max: 15 }),
     selfPlayer: {
       coins: selfPlayer.coins,
       color: selfPlayer.color,
       id: chance.string(),
       influences: [],
-      name: selfPlayer.name
+      name: selfPlayer.name,
+      claimedInfluences: new Set(),
+      unclaimedInfluences: new Set(),
+      deadInfluences: [],
+      ai: false,
+      grudges: {}
     }
   }
 }
@@ -51,11 +62,19 @@ export const render = (jsx: React.JSX.Element, {
   const TestComponent = () => {
     const { colorMode } = useColorModeContext()
 
+    const resolvedGameState = useMemo(
+      () => gameState ?? getRandomGameState(),
+      [gameState]
+    )
+
+    const contextValue = useMemo(() => ({
+      gameState: resolvedGameState,
+      setDehydratedGameState: () => { },
+      hasInitialStateLoaded: true,
+    }), [resolvedGameState])
+
     return (
-      <GameStateContext.Provider value={{
-        gameState: gameState ?? getRandomGameState(),
-        setGameState: () => { },
-      }}>
+      <GameStateContext.Provider value={contextValue}>
         <>
           <span data-testid="current-color-mode">{colorMode}</span>
           {jsx}

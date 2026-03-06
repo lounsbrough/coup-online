@@ -1,3 +1,5 @@
+export const COUP_GOLD = 'rgb(255, 187, 10)'
+
 export const getDiscreteGradient = (colors: string[]) => {
   if (!colors.length) return undefined
   if (colors.length === 1) return colors[0]

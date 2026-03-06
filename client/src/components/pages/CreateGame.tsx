@@ -30,9 +30,11 @@ import {
 } from '../../helpers/localStorageKeys'
 import CoupTypography from '../utilities/CoupTypography'
 import { usePersistedState } from '../../hooks/usePersistedState'
+import { useDisplayName } from '../../hooks/useDisplayName'
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
+  const { displayName: profileName, loading: profileNameLoading } = useDisplayName()
   const [eventLogRetentionTurns, setEventLogRetentionTurns] = usePersistedState<number>(eventLogRetentionTurnsStorageKey, 3)
   const [allowRevive, setAllowRevive] = usePersistedState<boolean>(allowReviveStorageKey, false)
   const [speedRoundEnabled, setSpeedRoundEnabled] = usePersistedState<boolean>(speedRoundEnabledStorageKey, false)
@@ -73,7 +75,7 @@ function CreateGame() {
           event.preventDefault()
           trigger({
             playerId: getPlayerId(),
-            playerName: playerName.trim(),
+            playerName: (profileName ?? playerName).trim(),
             settings: {
               eventLogRetentionTurns,
               allowRevive,
@@ -92,13 +94,17 @@ function CreateGame() {
                 name="coup-game-player-name"
                 autoComplete="off"
                 data-testid="playerNameInput"
-                value={playerName}
+                value={profileName ?? playerName}
                 onChange={(event) => {
-                  setPlayerName(event.target.value.slice(0, 10))
+                  if (!profileName) {
+                    setPlayerName(event.target.value.slice(0, 10))
+                  }
                 }}
                 label={t('whatIsYourName')}
                 variant="standard"
                 required
+                disabled={!!profileName || profileNameLoading}
+                helperText={profileName ? t('nameFromProfile') : undefined}
               />
             </Box>
           </Grid>

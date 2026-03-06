@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   Avatar,
   Button,
+  ButtonProps,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -16,7 +17,7 @@ import { useAuthContext } from '../contexts/AuthContext'
 import { useTranslationContext } from '../contexts/TranslationsContext'
 import { Link as RouterLink } from 'react-router'
 
-function LoginButton() {
+function LoginButton({ buttonProps }: Readonly<{ buttonProps?: ButtonProps }>) {
   const { user, signInWithGoogle, signInWithGitHub, signOut } = useAuthContext()
   const { t } = useTranslationContext()
   const { isSmallScreen } = useTheme()
@@ -49,8 +50,8 @@ function LoginButton() {
           anchorEl={anchorEl}
           open={menuOpen}
           onClose={handleMenuClose}
-          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
         >
           <MenuItem disabled>
             <Typography variant="body2" noWrap sx={{ maxWidth: 200 }}>
@@ -80,14 +81,18 @@ function LoginButton() {
   return (
     <>
       {isSmallScreen ? (
-        <IconButton color="primary" size="large" onClick={handleMenuOpen}>
+        <IconButton
+          onClick={handleMenuOpen}
+          {...buttonProps}
+          color="primary"
+        >
           <Login sx={{ fontSize: '2rem' }} />
         </IconButton>
       ) : (
         <Button
-          size="large"
           startIcon={<Login />}
           onClick={handleMenuOpen}
+          {...buttonProps}
         >
           {t('signIn')}
         </Button>
@@ -96,8 +101,8 @@ function LoginButton() {
         anchorEl={anchorEl}
         open={menuOpen}
         onClose={handleMenuClose}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: 'center', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
       >
         <MenuItem onClick={async () => {
           try {

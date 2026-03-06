@@ -110,11 +110,11 @@ function App() {
                   </Button>
                 </Link>
                 <Tooltip title={t('leaderboard')}>
-                  <IconButton component={RouterLink} to="/leaderboard" color="primary" size="small">
-                    <EmojiEvents />
+                  <IconButton component={RouterLink} to="/leaderboard" color="primary" size="large">
+                    <EmojiEvents sx={{ fontSize: '2rem' }} />
                   </IconButton>
                 </Tooltip>
-                <LoginButton />
+                <LoginButton buttonProps={{ size: 'large' }} />
                 <UserSettings />
               </Box>
             </header>
