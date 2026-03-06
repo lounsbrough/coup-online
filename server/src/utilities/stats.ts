@@ -67,13 +67,13 @@ export const recordGameStats = async (gameState: GameState) => {
 
   const winner = alivePlayers[0]
 
-  // Only count stats if at least MIN_LOGGED_IN_PLAYERS logged-in humans
-  const loggedInHumans = players.filter((p) => p.uid && !p.ai)
-  if (loggedInHumans.length < MIN_LOGGED_IN_PLAYERS) return
+  // Only count stats if at least MIN_LOGGED_IN_PLAYERS logged-in players
+  const loggedInPlayers = players.filter((p) => p.uid)
+  if (loggedInPlayers.length < MIN_LOGGED_IN_PLAYERS) return
 
   const now = new Date().toISOString()
 
-  for (const player of loggedInHumans) {
+  for (const player of loggedInPlayers) {
     if (!player.uid) continue
 
     const isWinner = player.name === winner.name
@@ -137,7 +137,7 @@ export const recordGameStats = async (gameState: GameState) => {
         }
 
         // Head-to-head stats against other logged-in players
-        for (const opponent of loggedInHumans) {
+        for (const opponent of loggedInPlayers) {
           if (!opponent.uid || opponent.uid === player.uid) continue
 
           const opponentStats = existing.opponents[opponent.uid] ?? {
