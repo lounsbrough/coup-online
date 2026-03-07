@@ -12,7 +12,7 @@ import { getObjectEntries } from './src/utilities/object'
 import { dehydratePublicGameState } from '../shared/helpers/state'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
 import { translate } from './src/i18n/translations'
-import { recordGameStats, getUserStats, getLeaderboard, getDisplayName, setDisplayName, deleteUserStats } from './src/utilities/stats'
+import { getUserStats, getLeaderboard, getDisplayName, setDisplayName, deleteUserStats } from './src/utilities/stats'
 import { verifyIdToken } from './src/auth'
 import { adminAuth } from './src/firebase'
 import { containsProfanity } from './src/utilities/profanity'
@@ -542,16 +542,6 @@ io.on('connection', (socket) => {
           }
 
           const fullGameState = await getGameState(roomId)
-
-          // Check if game just ended (exactly 1 player alive) and flush stats
-          if (fullGameState.isStarted && fullGameState.gameId) {
-            const alivePlayers = fullGameState.players.filter(({ influences }) => influences.length > 0)
-            if (alivePlayers.length === 1) {
-              recordGameStats(fullGameState).catch((error) => {
-                console.error('Failed to record game stats:', error)
-              })
-            }
-          }
 
           const emitGameStateChanged = async (pushToSocket: Socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId

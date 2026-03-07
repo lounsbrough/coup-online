@@ -8,6 +8,7 @@ import { getCurrentTimestamp } from './time'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { GAME_STATE_TTL_SECONDS } from '../../../shared/helpers/constants'
 import { getCountOfEachInfluence } from './deck'
+import { recordGameStats } from './stats'
 
 export const getGameState = async (
   roomId: string
@@ -147,6 +148,15 @@ export const mutateGameState = async (
 
   if (updateLastEventTimestamp) {
     dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
+  }
+
+  // Check if game just ended (exactly 1 player alive) and record stats
+  if (gameState.isStarted && gameState.gameId) {
+    const previousAlivePlayers = validatedState.players.filter(({ influences }) => influences.length > 0)
+    const currentAlivePlayers = gameState.players.filter(({ influences }) => influences.length > 0)
+    if (currentAlivePlayers.length === 1 && previousAlivePlayers.length > 1) {
+      await recordGameStats(gameState)
+    }
   }
 
   await setGameState(validatedState.roomId, dehydratedGameState)
