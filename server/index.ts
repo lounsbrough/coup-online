@@ -12,6 +12,10 @@ import { getObjectEntries } from './src/utilities/object'
 import { dehydratePublicGameState } from '../shared/helpers/state'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
 import { translate } from './src/i18n/translations'
+import { getUserStats, getLeaderboard, getDisplayName, setDisplayName, deleteUserStats } from './src/utilities/stats'
+import { verifyIdToken } from './src/auth'
+import { adminAuth } from './src/firebase'
+import { containsProfanity } from './src/utilities/profanity'
 
 export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
 
@@ -50,7 +54,12 @@ const io = new ioServer<ClientToServerEvents, ServerToClientEvents, InterServerE
   cors: { origin: "*" }
 })
 
-const playerNameRule = Joi.string().min(1).max(10).required()
+const playerNameRule = Joi.string().min(1).max(10).required().custom((value: string) => {
+  if (containsProfanity(value)) {
+    throw new Error('inappropriateDisplayName')
+  }
+  return value
+})
 const languageRule = Joi.string().valid(...Object.values(AvailableLanguageCode)).required()
 
 const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
@@ -106,7 +115,9 @@ const eventHandlers: {
         const playerName: string = req.body.playerName
         const settings: GameSettings = req.body.settings
         const language: AvailableLanguageCode = req.body.language
-        return { playerId, playerName, settings, language }
+        const uid: string | undefined = req.body.uid
+        const photoURL: string | undefined = req.body.photoURL
+        return { playerId, playerName, settings, language, uid, photoURL }
       },
       validator: validateExpressBody
     },
@@ -119,7 +130,9 @@ const eventHandlers: {
         aiMoveDelayMs: Joi.number().integer().min(0).max(10000),
         speedRoundSeconds: Joi.number().integer().min(5).max(60)
       }).required(),
-      language: languageRule
+      language: languageRule,
+      uid: Joi.string().optional(),
+      photoURL: Joi.string().uri().optional()
     })
   },
   [PlayerActions.joinGame]: {
@@ -131,7 +144,9 @@ const eventHandlers: {
         const playerId: string = req.body.playerId
         const playerName: string = req.body.playerName.trim()
         const language: AvailableLanguageCode = req.body.language
-        return { roomId, playerId, playerName, language }
+        const uid: string | undefined = req.body.uid
+        const photoURL: string | undefined = req.body.photoURL
+        return { roomId, playerId, playerName, language, uid, photoURL }
       },
       validator: validateExpressBody
     },
@@ -139,7 +154,9 @@ const eventHandlers: {
       roomId: Joi.string().required(),
       playerId: Joi.string().required(),
       playerName: playerNameRule,
-      language: languageRule
+      language: languageRule,
+      uid: Joi.string().optional(),
+      photoURL: Joi.string().uri().optional()
     })
   },
   [PlayerActions.addAiPlayer]: {
@@ -525,6 +542,7 @@ io.on('connection', (socket) => {
           }
 
           const fullGameState = await getGameState(roomId)
+
           const emitGameStateChanged = async (pushToSocket: Socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId
             try {
@@ -601,6 +619,112 @@ getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }
   app[express.method](`/${event}`, express.validator(joiSchema), (req, res) => {
     return responseHandler(event, handler)(res, express.parseParams(req))
   })
+})
+
+// Stats API endpoints
+app.get('/api/users/:uid/stats', async (req, res) => {
+  try {
+    const stats = await getUserStats(req.params.uid)
+    if (!stats) {
+      res.status(404).json({ error: 'User not found' })
+      return
+    }
+    res.json(stats)
+  } catch (error) {
+    console.error('Error fetching user stats:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
+app.get('/api/users/:uid/displayName', async (req, res) => {
+  try {
+    const displayName = await getDisplayName(req.params.uid)
+    res.json({ displayName })
+  } catch (error) {
+    console.error('Error fetching display name:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
+app.put('/api/users/displayName', json(), async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization
+    if (!authHeader?.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const token = authHeader.split('Bearer ')[1]
+    const decoded = await verifyIdToken(token)
+    if (!decoded) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const { displayName, photoURL } = req.body
+    if (!displayName || typeof displayName !== 'string') {
+      res.status(400).json({ error: 'displayNameRequired' })
+      return
+    }
+
+    const trimmed = displayName.trim().slice(0, 10)
+    if (trimmed.length === 0) {
+      res.status(400).json({ error: 'displayNameRequired' })
+      return
+    }
+
+    if (containsProfanity(trimmed)) {
+      res.status(400).json({ error: 'inappropriateDisplayName' })
+      return
+    }
+
+    const result = await setDisplayName(decoded.uid, trimmed, photoURL)
+    if (result.error) {
+      res.status(409).json({ error: result.error })
+      return
+    }
+    res.json({ displayName: trimmed })
+  } catch (error) {
+    console.error('Error setting display name:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
+app.delete('/api/users/account', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization
+    if (!authHeader?.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const token = authHeader.split('Bearer ')[1]
+    const decoded = await verifyIdToken(token)
+    if (!decoded) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    await deleteUserStats(decoded.uid)
+    await adminAuth.deleteUser(decoded.uid)
+    res.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting user account:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const minGames = Number.parseInt(req.query.minGames as string) || 5
+    const limit = Math.min(Number.parseInt(req.query.limit as string) || 50, 100)
+    const uid = req.query.uid as string | undefined
+    const leaderboard = await getLeaderboard(minGames, limit, uid)
+    res.json(leaderboard)
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
 })
 
 // Express error handling middleware

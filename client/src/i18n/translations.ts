@@ -177,6 +177,61 @@ export type Translations = ActionMessages &
     whatIsYourName: TranslationsForString
     writeNewMessage: TranslationsForString
     youAreSpectating: TranslationsForString
+    // Auth & Profile
+    signIn: TranslationsForString
+    signOut: TranslationsForString
+    signInWithGoogle: TranslationsForString
+    signInWithGitHub: TranslationsForString
+    profile: TranslationsForString
+    profileNotFound: TranslationsForString
+    leaderboard: TranslationsForString
+    viewLeaderboard: TranslationsForString
+    noLeaderboardData: TranslationsForString
+    accountExistsSignInWithGoogle: TranslationsForString
+    accountExistsSignInWithGitHub: TranslationsForString
+    accountsLinkedSuccessfully: TranslationsForString
+    signInToTrackStats: TranslationsForString
+    gamesPlayed: TranslationsForString
+    winRate: TranslationsForString
+    wins: TranslationsForString
+    losses: TranslationsForString
+    currentStreak: TranslationsForString
+    longestWinStreak: TranslationsForString
+    bestStreak: TranslationsForString
+    record: TranslationsForString
+    playstyle: TranslationsForString
+    bluffSuccessRate: TranslationsForString
+    challengeAccuracy: TranslationsForString
+    assassinations: TranslationsForString
+    coups: TranslationsForString
+    steals: TranslationsForString
+    achievements: TranslationsForString
+    honestVictories: TranslationsForString
+    comebacks: TranslationsForString
+    fastestWin: TranslationsForString
+    turns: TranslationsForString
+    noAchievementsYet: TranslationsForString
+    headToHead: TranslationsForString
+    opponent: TranslationsForString
+    player: TranslationsForString
+    lastPlayed: TranslationsForString
+    noStatsYet: TranslationsForString
+    playGameToTrackStats: TranslationsForString
+    // Display name
+    displayName: TranslationsForString
+    nameFromProfile: TranslationsForString
+    setDisplayName: TranslationsForString
+    changeDisplayName: TranslationsForString
+    inappropriateDisplayName: TranslationsForString
+    displayNameTaken: TranslationsForString
+    somethingWentWrong: TranslationsForString
+    tryAgain: TranslationsForString
+    save: TranslationsForString
+    deleteAccount: TranslationsForString
+    deleteAccountConfirmTitle: TranslationsForString
+    deleteAccountConfirmMessage: TranslationsForString
+    yourRanking: TranslationsForString
+    notEnoughGames: TranslationsForString
   }
 
 const translations: Translations = {
@@ -2022,6 +2077,483 @@ const translations: Translations = {
     'hi-IN': 'आप खेल का अवलोकन कर रहे हैं',
     'it-IT': 'Stai assistendo',
     'pt-BR': 'Você está assistindo',
+  },
+  signIn: {
+    'de-DE': 'Anmelden',
+    'en-US': 'Sign In',
+    'es-MX': 'Iniciar sesión',
+    'fr-FR': 'Se connecter',
+    'hi-IN': 'साइन इन',
+    'it-IT': 'Accedi',
+    'pt-BR': 'Entrar',
+  },
+  signOut: {
+    'de-DE': 'Abmelden',
+    'en-US': 'Sign Out',
+    'es-MX': 'Cerrar sesión',
+    'fr-FR': 'Se déconnecter',
+    'hi-IN': 'साइन आउट',
+    'it-IT': 'Esci',
+    'pt-BR': 'Sair',
+  },
+  signInWithGoogle: {
+    'de-DE': 'Mit Google anmelden',
+    'en-US': 'Sign in with Google',
+    'es-MX': 'Iniciar sesión con Google',
+    'fr-FR': 'Se connecter avec Google',
+    'hi-IN': 'Google से साइन इन करें',
+    'it-IT': 'Accedi con Google',
+    'pt-BR': 'Entrar com Google',
+  },
+  signInWithGitHub: {
+    'de-DE': 'Mit GitHub anmelden',
+    'en-US': 'Sign in with GitHub',
+    'es-MX': 'Iniciar sesión con GitHub',
+    'fr-FR': 'Se connecter avec GitHub',
+    'hi-IN': 'GitHub से साइन इन करें',
+    'it-IT': 'Accedi con GitHub',
+    'pt-BR': 'Entrar com GitHub',
+  },
+  profile: {
+    'de-DE': 'Profil',
+    'en-US': 'Profile',
+    'es-MX': 'Perfil',
+    'fr-FR': 'Profil',
+    'hi-IN': 'प्रोफ़ाइल',
+    'it-IT': 'Profilo',
+    'pt-BR': 'Perfil',
+  },
+  profileNotFound: {
+    'de-DE': 'Profil nicht gefunden',
+    'en-US': 'Profile not found',
+    'es-MX': 'Perfil no encontrado',
+    'fr-FR': 'Profil introuvable',
+    'hi-IN': 'प्रोफ़ाइल नहीं मिली',
+    'it-IT': 'Profilo non trovato',
+    'pt-BR': 'Perfil não encontrado',
+  },
+  leaderboard: {
+    'de-DE': 'Bestenliste',
+    'en-US': 'Leaderboard',
+    'es-MX': 'Tabla de clasificación',
+    'fr-FR': 'Classement',
+    'hi-IN': 'लीडरबोर्ड',
+    'it-IT': 'Classifica',
+    'pt-BR': 'Classificação',
+  },
+  viewLeaderboard: {
+    'de-DE': 'Bestenliste anzeigen',
+    'en-US': 'View Leaderboard',
+    'es-MX': 'Ver tabla de clasificación',
+    'fr-FR': 'Voir le classement',
+    'hi-IN': 'लीडरबोर्ड देखें',
+    'it-IT': 'Vedi classifica',
+    'pt-BR': 'Ver classificação',
+  },
+  noLeaderboardData: {
+    'de-DE': 'Noch keine Daten vorhanden',
+    'en-US': 'No leaderboard data yet',
+    'es-MX': 'Aún no hay datos',
+    'fr-FR': 'Pas encore de données',
+    'hi-IN': 'अभी तक कोई डेटा नहीं',
+    'it-IT': 'Nessun dato disponibile',
+    'pt-BR': 'Nenhum dado disponível ainda',
+  },
+  accountExistsSignInWithGoogle: {
+    'de-DE': 'Ein Konto mit dieser E-Mail existiert bereits. Bitte melde dich mit Google an, um deine Konten zu verknüpfen.',
+    'en-US': 'An account with this email already exists. Please sign in with Google to link your accounts.',
+    'es-MX': 'Ya existe una cuenta con este correo. Inicia sesión con Google para vincular tus cuentas.',
+    'fr-FR': 'Un compte avec cet e-mail existe déjà. Veuillez vous connecter avec Google pour lier vos comptes.',
+    'hi-IN': 'इस ईमेल से पहले से एक खाता मौजूद है। अपने खातों को जोड़ने के लिए Google से साइन इन करें।',
+    'it-IT': 'Esiste già un account con questa email. Accedi con Google per collegare i tuoi account.',
+    'pt-BR': 'Já existe uma conta com este e-mail. Entre com Google para vincular suas contas.',
+  },
+  accountExistsSignInWithGitHub: {
+    'de-DE': 'Ein Konto mit dieser E-Mail existiert bereits. Bitte melde dich mit GitHub an, um deine Konten zu verknüpfen.',
+    'en-US': 'An account with this email already exists. Please sign in with GitHub to link your accounts.',
+    'es-MX': 'Ya existe una cuenta con este correo. Inicia sesión con GitHub para vincular tus cuentas.',
+    'fr-FR': 'Un compte avec cet e-mail existe déjà. Veuillez vous connecter avec GitHub pour lier vos comptes.',
+    'hi-IN': 'इस ईमेल से पहले से एक खाता मौजूद है। अपने खातों को जोड़ने के लिए GitHub से साइन इन करें।',
+    'it-IT': 'Esiste già un account con questa email. Accedi con GitHub per collegare i tuoi account.',
+    'pt-BR': 'Já existe uma conta com este e-mail. Entre com GitHub para vincular suas contas.',
+  },
+  accountsLinkedSuccessfully: {
+    'de-DE': 'Deine Konten wurden erfolgreich verknüpft!',
+    'en-US': 'Your accounts have been linked successfully!',
+    'es-MX': '¡Tus cuentas se han vinculado correctamente!',
+    'fr-FR': 'Vos comptes ont été liés avec succès !',
+    'hi-IN': 'आपके खाते सफलतापूर्वक जोड़ दिए गए हैं!',
+    'it-IT': 'I tuoi account sono stati collegati con successo!',
+    'pt-BR': 'Suas contas foram vinculadas com sucesso!',
+  },
+  signInToTrackStats: {
+    'de-DE': 'Melde dich an, um deine Statistiken zu verfolgen',
+    'en-US': 'Sign in to track your stats on the leaderboard',
+    'es-MX': 'Inicia sesión para seguir tus estadísticas',
+    'fr-FR': 'Connectez-vous pour suivre vos statistiques',
+    'hi-IN': 'अपने आँकड़े ट्रैक करने के लिए साइन इन करें',
+    'it-IT': 'Accedi per monitorare le tue statistiche',
+    'pt-BR': 'Entre para acompanhar suas estatísticas',
+  },
+  gamesPlayed: {
+    'de-DE': 'Gespielte Spiele',
+    'en-US': 'Games Played',
+    'es-MX': 'Partidas jugadas',
+    'fr-FR': 'Parties jouées',
+    'hi-IN': 'खेले गए खेल',
+    'it-IT': 'Partite giocate',
+    'pt-BR': 'Jogos disputados',
+  },
+  winRate: {
+    'de-DE': 'Siegquote',
+    'en-US': 'Win Rate',
+    'es-MX': 'Tasa de victorias',
+    'fr-FR': 'Taux de victoire',
+    'hi-IN': 'जीत दर',
+    'it-IT': 'Percentuale vittorie',
+    'pt-BR': 'Taxa de vitória',
+  },
+  wins: {
+    'de-DE': 'Siege',
+    'en-US': 'Wins',
+    'es-MX': 'Victorias',
+    'fr-FR': 'Victoires',
+    'hi-IN': 'जीत',
+    'it-IT': 'Vittorie',
+    'pt-BR': 'Vitórias',
+  },
+  losses: {
+    'de-DE': 'Niederlagen',
+    'en-US': 'Losses',
+    'es-MX': 'Derrotas',
+    'fr-FR': 'Défaites',
+    'hi-IN': 'हार',
+    'it-IT': 'Sconfitte',
+    'pt-BR': 'Derrotas',
+  },
+  currentStreak: {
+    'de-DE': 'Aktuelle Serie',
+    'en-US': 'Current Streak',
+    'es-MX': 'Racha actual',
+    'fr-FR': 'Série en cours',
+    'hi-IN': 'वर्तमान श्रृंखला',
+    'it-IT': 'Serie attuale',
+    'pt-BR': 'Sequência atual',
+  },
+  longestWinStreak: {
+    'de-DE': 'Längste Siegesserie',
+    'en-US': 'Longest Win Streak',
+    'es-MX': 'Racha más larga',
+    'fr-FR': 'Plus longue série de victoires',
+    'hi-IN': 'सबसे लंबी जीत की श्रृंखला',
+    'it-IT': 'Serie vittorie più lunga',
+    'pt-BR': 'Maior sequência de vitórias',
+  },
+  bestStreak: {
+    'de-DE': 'Beste Serie',
+    'en-US': 'Best Streak',
+    'es-MX': 'Mejor racha',
+    'fr-FR': 'Meilleure série',
+    'hi-IN': 'सर्वश्रेष्ठ श्रृंखला',
+    'it-IT': 'Miglior serie',
+    'pt-BR': 'Melhor sequência',
+  },
+  record: {
+    'de-DE': 'Bilanz',
+    'en-US': 'Record',
+    'es-MX': 'Récord',
+    'fr-FR': 'Bilan',
+    'hi-IN': 'रिकॉर्ड',
+    'it-IT': 'Record',
+    'pt-BR': 'Histórico',
+  },
+  playstyle: {
+    'de-DE': 'Spielstil',
+    'en-US': 'Playstyle',
+    'es-MX': 'Estilo de juego',
+    'fr-FR': 'Style de jeu',
+    'hi-IN': 'खेल शैली',
+    'it-IT': 'Stile di gioco',
+    'pt-BR': 'Estilo de jogo',
+  },
+  bluffSuccessRate: {
+    'de-DE': 'Bluff-Erfolgsrate',
+    'en-US': 'Bluff Success Rate',
+    'es-MX': 'Tasa de éxito de faroles',
+    'fr-FR': 'Taux de bluff réussi',
+    'hi-IN': 'ब्लफ सफलता दर',
+    'it-IT': 'Percentuale bluff riusciti',
+    'pt-BR': 'Taxa de sucesso de blefe',
+  },
+  challengeAccuracy: {
+    'de-DE': 'Herausforderungsgenauigkeit',
+    'en-US': 'Challenge Accuracy',
+    'es-MX': 'Precisión de desafíos',
+    'fr-FR': 'Précision des contestations',
+    'hi-IN': 'चुनौती सटीकता',
+    'it-IT': 'Precisione sfide',
+    'pt-BR': 'Precisão de desafios',
+  },
+  assassinations: {
+    'de-DE': 'Attentate',
+    'en-US': 'Assassinations',
+    'es-MX': 'Asesinatos',
+    'fr-FR': 'Assassinats',
+    'hi-IN': 'हत्याएँ',
+    'it-IT': 'Assassinii',
+    'pt-BR': 'Assassinatos',
+  },
+  coups: {
+    'de-DE': 'Putsche',
+    'en-US': 'Coups',
+    'es-MX': 'Golpes',
+    'fr-FR': "Coups d'État",
+    'hi-IN': 'तख्तापलट',
+    'it-IT': 'Colpi di stato',
+    'pt-BR': 'Golpes',
+  },
+  steals: {
+    'de-DE': 'Diebstähle',
+    'en-US': 'Steals',
+    'es-MX': 'Robos',
+    'fr-FR': 'Vols',
+    'hi-IN': 'चोरी',
+    'it-IT': 'Furti',
+    'pt-BR': 'Roubos',
+  },
+  achievements: {
+    'de-DE': 'Erfolge',
+    'en-US': 'Achievements',
+    'es-MX': 'Logros',
+    'fr-FR': 'Succès',
+    'hi-IN': 'उपलब्धियाँ',
+    'it-IT': 'Obiettivi',
+    'pt-BR': 'Conquistas',
+  },
+  honestVictories: {
+    'de-DE': 'Ehrliche Siege',
+    'en-US': 'Honest Victories',
+    'es-MX': 'Victorias honestas',
+    'fr-FR': 'Victoires honnêtes',
+    'hi-IN': 'ईमानदार जीत',
+    'it-IT': 'Vittorie oneste',
+    'pt-BR': 'Vitórias honestas',
+  },
+  comebacks: {
+    'de-DE': 'Comebacks',
+    'en-US': 'Comebacks',
+    'es-MX': 'Remontadas',
+    'fr-FR': 'Retours',
+    'hi-IN': 'वापसी',
+    'it-IT': 'Rimonte',
+    'pt-BR': 'Viradas',
+  },
+  fastestWin: {
+    'de-DE': 'Schnellster Sieg',
+    'en-US': 'Fastest Win',
+    'es-MX': 'Victoria más rápida',
+    'fr-FR': 'Victoire la plus rapide',
+    'hi-IN': 'सबसे तेज़ जीत',
+    'it-IT': 'Vittoria più rapida',
+    'pt-BR': 'Vitória mais rápida',
+  },
+  turns: {
+    'de-DE': 'Runden',
+    'en-US': 'turns',
+    'es-MX': 'turnos',
+    'fr-FR': 'tours',
+    'hi-IN': 'मोड़',
+    'it-IT': 'turni',
+    'pt-BR': 'turnos',
+  },
+  noAchievementsYet: {
+    'de-DE': 'Noch keine Erfolge',
+    'en-US': 'No achievements yet',
+    'es-MX': 'Aún no hay logros',
+    'fr-FR': 'Pas encore de succès',
+    'hi-IN': 'अभी तक कोई उपलब्धि नहीं',
+    'it-IT': 'Nessun obiettivo raggiunto',
+    'pt-BR': 'Nenhuma conquista ainda',
+  },
+  headToHead: {
+    'de-DE': 'Direktvergleich',
+    'en-US': 'Head-to-Head',
+    'es-MX': 'Cara a cara',
+    'fr-FR': 'Face à face',
+    'hi-IN': 'आमने-सामने',
+    'it-IT': 'Testa a testa',
+    'pt-BR': 'Confronto direto',
+  },
+  opponent: {
+    'de-DE': 'Gegner',
+    'en-US': 'Opponent',
+    'es-MX': 'Oponente',
+    'fr-FR': 'Adversaire',
+    'hi-IN': 'प्रतिद्वंद्वी',
+    'it-IT': 'Avversario',
+    'pt-BR': 'Adversário',
+  },
+  player: {
+    'de-DE': 'Spieler',
+    'en-US': 'Player',
+    'es-MX': 'Jugador',
+    'fr-FR': 'Joueur',
+    'hi-IN': 'खिलाड़ी',
+    'it-IT': 'Giocatore',
+    'pt-BR': 'Jogador',
+  },
+  lastPlayed: {
+    'de-DE': 'Zuletzt gespielt',
+    'en-US': 'Last played',
+    'es-MX': 'Última partida',
+    'fr-FR': 'Dernière partie',
+    'hi-IN': 'अंतिम बार खेला',
+    'it-IT': 'Ultima partita',
+    'pt-BR': 'Última partida',
+  },
+  noStatsYet: {
+    'de-DE': 'Noch keine Statistiken',
+    'en-US': 'No stats yet',
+    'es-MX': 'Aún no hay estadísticas',
+    'fr-FR': 'Pas encore de statistiques',
+    'hi-IN': 'अभी तक कोई आँकड़े नहीं',
+    'it-IT': 'Nessuna statistica ancora',
+    'pt-BR': 'Nenhuma estatística ainda',
+  },
+  playGameToTrackStats: {
+    'de-DE': 'Spiele ein Spiel mit mindestens 2 angemeldeten Spielern, um Statistiken zu verfolgen',
+    'en-US': 'Play a game with at least 2 logged-in players to track stats',
+    'es-MX': 'Juega un juego con al menos 2 jugadores registrados para rastrear estadísticas',
+    'fr-FR': 'Jouez une partie avec au moins 2 joueurs connectés pour suivre les statistiques',
+    'hi-IN': 'आँकड़े ट्रैक करने के लिए कम से कम 2 लॉग-इन खिलाड़ियों के साथ एक गेम खेलें',
+    'it-IT': 'Gioca una partita con almeno 2 giocatori connessi per tracciare le statistiche',
+    'pt-BR': 'Jogue uma partida com pelo menos 2 jogadores logados para rastrear estatísticas',
+  },
+  displayName: {
+    'de-DE': 'Anzeigename',
+    'en-US': 'Display Name',
+    'es-MX': 'Nombre para mostrar',
+    'fr-FR': 'Nom d\'affichage',
+    'hi-IN': 'प्रदर्शित नाम',
+    'it-IT': 'Nome visualizzato',
+    'pt-BR': 'Nome de exibição',
+  },
+  nameFromProfile: {
+    'de-DE': 'Aus deinem Profil',
+    'en-US': 'From your profile',
+    'es-MX': 'De tu perfil',
+    'fr-FR': 'De votre profil',
+    'hi-IN': 'आपकी प्रोफ़ाइल से',
+    'it-IT': 'Dal tuo profilo',
+    'pt-BR': 'Do seu perfil',
+  },
+  setDisplayName: {
+    'de-DE': 'Anzeigename festlegen',
+    'en-US': 'Set Display Name',
+    'es-MX': 'Establecer nombre',
+    'fr-FR': 'Définir le nom',
+    'hi-IN': 'प्रदर्शित नाम सेट करें',
+    'it-IT': 'Imposta nome',
+    'pt-BR': 'Definir nome',
+  },
+  changeDisplayName: {
+    'de-DE': 'Anzeigename ändern',
+    'en-US': 'Change Display Name',
+    'es-MX': 'Cambiar nombre',
+    'fr-FR': 'Changer le nom',
+    'hi-IN': 'प्रदर्शित नाम बदलें',
+    'it-IT': 'Cambia nome',
+    'pt-BR': 'Alterar nome',
+  },
+  inappropriateDisplayName: {
+    'de-DE': 'Dieser Name ist nicht erlaubt',
+    'en-US': 'This name is not allowed',
+    'es-MX': 'Este nombre no está permitido',
+    'fr-FR': 'Ce nom n\'est pas autorisé',
+    'hi-IN': 'यह नाम अनुमत नहीं है',
+    'it-IT': 'Questo nome non è consentito',
+    'pt-BR': 'Este nome não é permitido',
+  },
+  displayNameTaken: {
+    'de-DE': 'Dieser Name ist bereits vergeben',
+    'en-US': 'This name is already taken',
+    'es-MX': 'Este nombre ya está en uso',
+    'fr-FR': 'Ce nom est déjà pris',
+    'hi-IN': 'यह नाम पहले से लिया गया है',
+    'it-IT': 'Questo nome è già in uso',
+    'pt-BR': 'Este nome já está em uso',
+  },
+  save: {
+    'de-DE': 'Speichern',
+    'en-US': 'Save',
+    'es-MX': 'Guardar',
+    'fr-FR': 'Enregistrer',
+    'hi-IN': 'सहेजें',
+    'it-IT': 'Salva',
+    'pt-BR': 'Salvar',
+  },
+  somethingWentWrong: {
+    'de-DE': 'Etwas ist schiefgelaufen',
+    'en-US': 'Something went wrong',
+    'es-MX': 'Algo salió mal',
+    'fr-FR': 'Une erreur est survenue',
+    'hi-IN': 'कुछ गलत हो गया',
+    'it-IT': 'Qualcosa è andato storto',
+    'pt-BR': 'Algo deu errado',
+  },
+  tryAgain: {
+    'de-DE': 'Erneut versuchen',
+    'en-US': 'Try Again',
+    'es-MX': 'Intentar de nuevo',
+    'fr-FR': 'Réessayer',
+    'hi-IN': 'पुनः प्रयास करें',
+    'it-IT': 'Riprova',
+    'pt-BR': 'Tentar novamente',
+  },
+  deleteAccount: {
+    'de-DE': 'Konto löschen',
+    'en-US': 'Delete Account',
+    'es-MX': 'Eliminar cuenta',
+    'fr-FR': 'Supprimer le compte',
+    'hi-IN': 'खाता हटाएं',
+    'it-IT': 'Elimina account',
+    'pt-BR': 'Excluir conta',
+  },
+  deleteAccountConfirmTitle: {
+    'de-DE': 'Konto löschen?',
+    'en-US': 'Delete account?',
+    'es-MX': '¿Eliminar cuenta?',
+    'fr-FR': 'Supprimer le compte ?',
+    'hi-IN': 'खाता हटाएं?',
+    'it-IT': 'Eliminare l\'account?',
+    'pt-BR': 'Excluir conta?',
+  },
+  deleteAccountConfirmMessage: {
+    'de-DE': 'Diese Aktion kann nicht rückgängig gemacht werden. Dein Konto und alle Statistiken werden dauerhaft gelöscht.',
+    'en-US': 'This cannot be undone. Your account and all stats will be permanently deleted.',
+    'es-MX': 'Esta acción no se puede deshacer. Tu cuenta y todas las estadísticas se eliminarán permanentemente.',
+    'fr-FR': 'Cette action est irréversible. Votre compte et toutes vos statistiques seront définitivement supprimés.',
+    'hi-IN': 'यह पूर्ववत नहीं किया जा सकता। आपका खाता और सभी आँकड़े स्थायी रूप से हटा दिए जाएंगे।',
+    'it-IT': 'Questa azione non può essere annullata. Il tuo account e tutte le statistiche verranno eliminati definitivamente.',
+    'pt-BR': 'Esta ação não pode ser desfeita. Sua conta e todas as estatísticas serão excluídas permanentemente.',
+  },
+  yourRanking: {
+    'de-DE': 'Deine Platzierung',
+    'en-US': 'Your Ranking',
+    'es-MX': 'Tu clasificación',
+    'fr-FR': 'Votre classement',
+    'hi-IN': 'आपकी रैंकिंग',
+    'it-IT': 'La tua classifica',
+    'pt-BR': 'Sua classificação',
+  },
+  notEnoughGames: {
+    'de-DE': 'Spiele mehr Spiele, um in der Rangliste zu erscheinen',
+    'en-US': 'Play more games to appear on the leaderboard',
+    'es-MX': 'Juega más partidas para aparecer en la clasificación',
+    'fr-FR': 'Jouez plus de parties pour apparaître au classement',
+    'hi-IN': 'लीडरबोर्ड पर दिखने के लिए और खेल खेलें',
+    'it-IT': 'Gioca più partite per apparire nella classifica',
+    'pt-BR': 'Jogue mais partidas para aparecer na classificação',
   },
 }
 

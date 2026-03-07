@@ -65,6 +65,8 @@ export const dehydrateGameState = (hydrated: GameState): DehydratedGameState => 
     claimedInfluences: [...player.claimedInfluences],
     unclaimedInfluences: [...player.unclaimedInfluences]
   })),
+  ...(hydrated.gameId && { gameId: hydrated.gameId }),
+  ...(hydrated.gameActionStats && { gameActionStats: hydrated.gameActionStats }),
 })
 
 export const dehydratePublicGameState = (hydrated: PublicGameState): DehydratedPublicGameState => ({
@@ -140,6 +142,8 @@ export const rehydrateGameState = (dehydrated: DehydratedGameState): GameState =
       claimedInfluences: new Set(player.claimedInfluences),
       unclaimedInfluences: new Set(player.unclaimedInfluences),
     })),
+    ...(dehydrated.gameId && { gameId: dehydrated.gameId }),
+    ...(dehydrated.gameActionStats && { gameActionStats: dehydrated.gameActionStats }),
   });
 }
 

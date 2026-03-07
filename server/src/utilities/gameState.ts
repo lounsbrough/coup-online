@@ -6,7 +6,9 @@ import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 import { getCurrentTimestamp } from './time'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
+import { GAME_STATE_TTL_SECONDS } from '../../../shared/helpers/constants'
 import { getCountOfEachInfluence } from './deck'
+import { recordGameStats } from './stats'
 
 export const getGameState = async (
   roomId: string
@@ -41,6 +43,8 @@ export const getPublicGameState = ({ gameState, playerId }: {
       color: player.color,
       ai: player.ai,
       grudges: player.grudges,
+      ...(player.uid && { uid: player.uid }),
+      ...(player.photoURL && { photoURL: player.photoURL }),
       ...(!player.personalityHidden && player.personality && { personality: player.personality })
     })
     if (player.id === playerId) {
@@ -111,10 +115,9 @@ export const validateGameState = (state: DehydratedGameState) => {
 }
 
 const setGameState = async (roomId: string, newState: DehydratedGameState) => {
-  const oneMonth = 2678400
   validateGameState(newState)
   const compressed = compressString(JSON.stringify(newState))
-  await setValue(roomId.toUpperCase(), compressed, oneMonth)
+  await setValue(roomId.toUpperCase(), compressed, GAME_STATE_TTL_SECONDS)
 }
 
 export const createGameState = async (roomId: string, gameState: GameState) => {
@@ -145,6 +148,15 @@ export const mutateGameState = async (
 
   if (updateLastEventTimestamp) {
     dehydratedGameState.lastEventTimestamp = getCurrentTimestamp().toISOString()
+  }
+
+  // Check if game just ended (exactly 1 player alive) and record stats
+  if (gameState.isStarted && gameState.gameId) {
+    const previousAlivePlayers = validatedState.players.filter(({ influences }) => influences.length > 0)
+    const currentAlivePlayers = gameState.players.filter(({ influences }) => influences.length > 0)
+    if (currentAlivePlayers.length === 1 && previousAlivePlayers.length > 1) {
+      await recordGameStats(gameState)
+    }
   }
 
   await setGameState(validatedState.roomId, dehydratedGameState)

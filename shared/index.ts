@@ -1,5 +1,7 @@
 export * from './types/game'
+export * from './types/user'
 export * from './game/logic'
 export * from './helpers/state'
 export * from './helpers/playerCount'
+export * from './helpers/constants'
 export * from './i18n/availableLanguages'

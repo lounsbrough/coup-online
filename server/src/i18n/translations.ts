@@ -157,6 +157,15 @@ const translations = {
     'it-IT': 'Giocatore di turno non valido',
     'pt-BR': 'Jogador de turno inválido',
   },
+  inappropriateDisplayName: {
+    'de-DE': 'Dieser Name ist nicht erlaubt',
+    'en-US': 'This name is not allowed',
+    'es-MX': 'Este nombre no está permitido',
+    'fr-FR': 'Ce nom n\'est pas autorisé',
+    'hi-IN': 'यह नाम अनुमत नहीं है',
+    'it-IT': 'Questo nome non è consentito',
+    'pt-BR': 'Este nome não é permitido',
+  },
   invalidUserRequest: {
     'de-DE': 'Ungültige Benutzeranfrage',
     'en-US': 'Invalid user request',
