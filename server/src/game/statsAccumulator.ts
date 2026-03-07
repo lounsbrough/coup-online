@@ -31,8 +31,6 @@ export const recordSuccessfulBluff = (state: GameState, playerName: string) => {
   state.gameActionStats[playerName].successfulBluffsMade++
 }
 
-
-
 /** Record that a player made a challenge */
 export const recordChallengeMade = (state: GameState, playerName: string) => {
   if (!state.gameActionStats) return
