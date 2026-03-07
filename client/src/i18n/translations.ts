@@ -230,6 +230,8 @@ export type Translations = ActionMessages &
     deleteAccount: TranslationsForString
     deleteAccountConfirmTitle: TranslationsForString
     deleteAccountConfirmMessage: TranslationsForString
+    yourRanking: TranslationsForString
+    notEnoughGames: TranslationsForString
   }
 
 const translations: Translations = {
@@ -2534,6 +2536,24 @@ const translations: Translations = {
     'hi-IN': 'यह पूर्ववत नहीं किया जा सकता। आपका खाता और सभी आँकड़े स्थायी रूप से हटा दिए जाएंगे।',
     'it-IT': 'Questa azione non può essere annullata. Il tuo account e tutte le statistiche verranno eliminati definitivamente.',
     'pt-BR': 'Esta ação não pode ser desfeita. Sua conta e todas as estatísticas serão excluídas permanentemente.',
+  },
+  yourRanking: {
+    'de-DE': 'Deine Platzierung',
+    'en-US': 'Your Ranking',
+    'es-MX': 'Tu clasificación',
+    'fr-FR': 'Votre classement',
+    'hi-IN': 'आपकी रैंकिंग',
+    'it-IT': 'La tua classifica',
+    'pt-BR': 'Sua classificação',
+  },
+  notEnoughGames: {
+    'de-DE': 'Spiele mehr Spiele, um in der Rangliste zu erscheinen',
+    'en-US': 'Play more games to appear on the leaderboard',
+    'es-MX': 'Juega más partidas para aparecer en la clasificación',
+    'fr-FR': 'Jouez plus de parties pour apparaître au classement',
+    'hi-IN': 'लीडरबोर्ड पर दिखने के लिए और खेल खेलें',
+    'it-IT': 'Gioca più partite per apparire nella classifica',
+    'pt-BR': 'Jogue mais partidas para aparecer na classificação',
   },
 }
 

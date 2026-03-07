@@ -1,5 +1,5 @@
 import { firestore } from '../firebase'
-import { UserStats, LeaderboardEntry } from '../../../shared/types/user'
+import { UserStats, LeaderboardResponse, RankedLeaderboardEntry } from '../../../shared/types/user'
 import { GameState } from '../../../shared/types/game'
 import { GAME_STATE_TTL_MS } from '../../../shared/helpers/constants'
 import { TTLCache } from './cache'
@@ -10,7 +10,7 @@ const MAX_OPPONENTS = 25
 
 const userStatsCache = new TTLCache<UserStats | null>(30_000)
 const displayNameCache = new TTLCache<string | null>(60_000)
-const leaderboardCache = new TTLCache<LeaderboardEntry[]>(60_000)
+const rankedListCache = new TTLCache<RankedLeaderboardEntry[]>(60_000)
 
 const createEmptyUserStats = (uid: string, displayName: string, photoURL?: string): UserStats & { displayNameLower: string } => ({
   uid,
@@ -211,7 +211,7 @@ export const recordGameStats = async (gameState: GameState) => {
     }
   }
 
-  leaderboardCache.clear()
+  rankedListCache.clear()
 }
 
 export const getUserStats = async (uid: string): Promise<UserStats | null> => {
@@ -281,7 +281,7 @@ export const setDisplayName = async (uid: string, displayName: string, photoURL?
 
   userStatsCache.invalidate(uid)
   displayNameCache.invalidate(uid)
-  leaderboardCache.clear()
+  rankedListCache.clear()
 
   return {}
 }
@@ -290,40 +290,49 @@ export const deleteUserStats = async (uid: string): Promise<void> => {
   await firestore.collection(USERS_COLLECTION).doc(uid).delete()
   userStatsCache.invalidate(uid)
   displayNameCache.invalidate(uid)
-  leaderboardCache.clear()
+  rankedListCache.clear()
 }
 
-export const getLeaderboard = async (minGames: number = 5, limit: number = 50): Promise<LeaderboardEntry[]> => {
-  const cacheKey = `${minGames}:${limit}`
-  const cached = leaderboardCache.get(cacheKey)
+const getRankedList = async (minGames: number): Promise<RankedLeaderboardEntry[]> => {
+  const cacheKey = `ranked:${minGames}`
+  const cached = rankedListCache.get(cacheKey)
   if (cached) return cached
 
   const snapshot = await firestore
     .collection(USERS_COLLECTION)
     .where('gamesPlayed', '>=', minGames)
-    .orderBy('gamesWon', 'desc')
-    .limit(limit * 2) // Fetch extra to sort by win rate in-memory
     .get()
 
-  const entries: LeaderboardEntry[] = snapshot.docs.map((doc) => {
-    const data = doc.data() as UserStats
-    return {
-      uid: data.uid,
-      displayName: data.displayName,
-      ...(data.photoURL ? { photoURL: data.photoURL } : {}),
-      gamesPlayed: data.gamesPlayed,
-      gamesWon: data.gamesWon,
-      gamesLost: data.gamesLost,
-      longestWinStreak: data.longestWinStreak,
-      currentWinStreak: data.currentWinStreak,
-      winRate: data.gamesPlayed > 0 ? data.gamesWon / data.gamesPlayed : 0,
-    }
-  })
-
-  const result = entries
+  const entries: RankedLeaderboardEntry[] = snapshot.docs
+    .map((doc) => {
+      const data = doc.data() as UserStats
+      return {
+        uid: data.uid,
+        displayName: data.displayName,
+        ...(data.photoURL ? { photoURL: data.photoURL } : {}),
+        gamesPlayed: data.gamesPlayed,
+        gamesWon: data.gamesWon,
+        gamesLost: data.gamesLost,
+        longestWinStreak: data.longestWinStreak,
+        currentWinStreak: data.currentWinStreak,
+        winRate: data.gamesPlayed > 0 ? data.gamesWon / data.gamesPlayed : 0,
+      }
+    })
     .sort((a, b) => b.winRate - a.winRate || b.gamesWon - a.gamesWon)
-    .slice(0, limit)
+    .map((entry, index) => ({ ...entry, rank: index + 1 }))
 
-  leaderboardCache.set(cacheKey, result)
-  return result
+  rankedListCache.set(cacheKey, entries)
+  return entries
+}
+
+export const getLeaderboard = async (minGames: number = 5, limit: number = 50, uid?: string): Promise<LeaderboardResponse> => {
+  const rankedList = await getRankedList(minGames)
+  const entries = rankedList.slice(0, limit)
+
+  let userEntry: RankedLeaderboardEntry | undefined
+  if (uid && !entries.some((e) => e.uid === uid)) {
+    userEntry = rankedList.find((e) => e.uid === uid)
+  }
+
+  return { entries, ...(userEntry ? { userEntry } : {}) }
 }

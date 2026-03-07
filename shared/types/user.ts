@@ -89,3 +89,12 @@ export type LeaderboardEntry = Pick<
 > & {
   winRate: number;
 };
+
+export type RankedLeaderboardEntry = LeaderboardEntry & {
+  rank: number;
+};
+
+export type LeaderboardResponse = {
+  entries: LeaderboardEntry[];
+  userEntry?: RankedLeaderboardEntry;
+};
