@@ -1,9 +1,8 @@
 export type PlayerActionStats = {
-  bluffs: number;
-  successfulBluffs: number;
+  totalBluffsMade: number;
+  successfulBluffsMade: number;
   challengesMade: number;
   successfulChallenges: number;
-  timesBluffCaught: number;
   influenceKills: { [targetPlayer: string]: number };
   steals: { [targetPlayer: string]: number };
   assassinations: number;
@@ -17,11 +16,10 @@ export type GameActionStats = {
 };
 
 export const emptyPlayerActionStats = (): PlayerActionStats => ({
-  bluffs: 0,
-  successfulBluffs: 0,
+  totalBluffsMade: 0,
+  successfulBluffsMade: 0,
   challengesMade: 0,
   successfulChallenges: 0,
-  timesBluffCaught: 0,
   influenceKills: {},
   steals: {},
   assassinations: 0,
@@ -56,11 +54,10 @@ export type UserStats = {
   longestLossStreak: number;
 
   // Playstyle
-  totalBluffs: number;
-  successfulBluffs: number;
+  totalBluffsMade: number;
+  successfulBluffsMade: number;
   totalChallengesMade: number;
   successfulChallengesMade: number;
-  timesBluffCaught: number;
   totalAssassinations: number;
   totalCoups: number;
   totalSteals: number;

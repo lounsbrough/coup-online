@@ -10,7 +10,7 @@ import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlaye
 import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
-import { recordBluff, recordBluffCaught, recordChallengeMade, recordCoup, recordInfluenceKill, recordInfluenceClaim, recordSuccessfulBluff, recordSuccessfulChallenge } from './statsAccumulator'
+import { recordBluff, recordChallengeMade, recordCoup, recordInfluenceKill, recordInfluenceClaim, recordSuccessfulBluff, recordSuccessfulChallenge } from './statsAccumulator'
 
 const getPlayerInRoom = ({ gameState, playerId }: {
   gameState: GameState
@@ -807,7 +807,6 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       })
       // Challenge succeeded: the action player was bluffing
       recordSuccessfulChallenge(state, challengePlayer.name)
-      recordBluffCaught(state, state.turnPlayer!)
       recordInfluenceKill(state, challengePlayer.name, state.turnPlayer!)
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
       if (claimedInfluence) {
@@ -1018,7 +1017,6 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
       })
       // Block challenge succeeded — blocker was bluffing
       recordSuccessfulChallenge(state, challengePlayer.name)
-      recordBluffCaught(state, blockPlayer.name)
       recordInfluenceKill(state, challengePlayer.name, blockPlayer.name)
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
       if (claimedInfluence) {

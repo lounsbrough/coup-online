@@ -500,8 +500,8 @@ function Profile() {
             </Box>
             <PercentBar
               label={t('bluffSuccessRate')}
-              value={stats.successfulBluffs}
-              total={stats.totalBluffs}
+              value={stats.successfulBluffsMade}
+              total={stats.totalBluffsMade}
             />
             <PercentBar
               label={t('challengeAccuracy')}

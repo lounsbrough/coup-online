@@ -19,11 +19,10 @@ const createEmptyUserStats = (uid: string, displayName: string, photoURL?: strin
   currentLossStreak: 0,
   longestWinStreak: 0,
   longestLossStreak: 0,
-  totalBluffs: 0,
-  successfulBluffs: 0,
+  totalBluffsMade: 0,
+  successfulBluffsMade: 0,
   totalChallengesMade: 0,
   successfulChallengesMade: 0,
-  timesBluffCaught: 0,
   totalAssassinations: 0,
   totalCoups: 0,
   totalSteals: 0,
@@ -121,11 +120,10 @@ export const recordGameStats = async (gameState: GameState) => {
         }
 
         // Playstyle stats
-        existing.totalBluffs += playerStats.bluffs
-        existing.successfulBluffs += playerStats.successfulBluffs
+        existing.totalBluffsMade += playerStats.totalBluffsMade
+        existing.successfulBluffsMade += playerStats.successfulBluffsMade
         existing.totalChallengesMade += playerStats.challengesMade
         existing.successfulChallengesMade += playerStats.successfulChallenges
-        existing.timesBluffCaught += playerStats.timesBluffCaught
         existing.totalAssassinations += playerStats.assassinations
         existing.totalCoups += playerStats.coups
         existing.totalSteals += Object.values(playerStats.steals).reduce((a, b) => a + b, 0)
@@ -136,7 +134,7 @@ export const recordGameStats = async (gameState: GameState) => {
         )
 
         // Achievements
-        if (isWinner && playerStats.bluffs === 0) {
+        if (isWinner && playerStats.totalBluffsMade === 0) {
           existing.gamesWonWithoutBluffing++
         }
         if (isWinner && player.deadInfluences.length > 0) {

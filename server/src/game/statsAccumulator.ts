@@ -21,22 +21,17 @@ export const recordInfluenceClaim = (state: GameState, playerName: string, influ
 export const recordBluff = (state: GameState, playerName: string) => {
   if (!state.gameActionStats) return
   ensureStats(state, playerName)
-  state.gameActionStats[playerName].bluffs++
+  state.gameActionStats[playerName].totalBluffsMade++
 }
 
 /** Record that a bluff succeeded (wasn't challenged, or challenger was wrong about it) */
 export const recordSuccessfulBluff = (state: GameState, playerName: string) => {
   if (!state.gameActionStats) return
   ensureStats(state, playerName)
-  state.gameActionStats[playerName].successfulBluffs++
+  state.gameActionStats[playerName].successfulBluffsMade++
 }
 
-/** Record that a player was caught bluffing */
-export const recordBluffCaught = (state: GameState, playerName: string) => {
-  if (!state.gameActionStats) return
-  ensureStats(state, playerName)
-  state.gameActionStats[playerName].timesBluffCaught++
-}
+
 
 /** Record that a player made a challenge */
 export const recordChallengeMade = (state: GameState, playerName: string) => {
