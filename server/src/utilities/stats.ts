@@ -2,10 +2,15 @@ import { firestore } from '../firebase'
 import { UserStats, LeaderboardEntry } from '../../../shared/types/user'
 import { GameState } from '../../../shared/types/game'
 import { GAME_STATE_TTL_MS } from '../../../shared/helpers/constants'
+import { TTLCache } from './cache'
 
 const USERS_COLLECTION = 'users'
 const MIN_LOGGED_IN_PLAYERS = 2
 const MAX_OPPONENTS = 25
+
+const userStatsCache = new TTLCache<UserStats | null>(30_000)
+const displayNameCache = new TTLCache<string | null>(60_000)
+const leaderboardCache = new TTLCache<LeaderboardEntry[]>(60_000)
 
 const createEmptyUserStats = (uid: string, displayName: string, photoURL?: string): UserStats & { displayNameLower: string } => ({
   uid,
@@ -197,13 +202,22 @@ export const recordGameStats = async (gameState: GameState) => {
 
         transaction.set(userRef, existing)
       })
+
+      // Invalidate caches for this player
+      userStatsCache.invalidate(player.uid)
+      displayNameCache.invalidate(player.uid)
     } catch (error) {
       console.error(`Failed to record stats for user ${player.uid}:`, error)
     }
   }
+
+  leaderboardCache.clear()
 }
 
 export const getUserStats = async (uid: string): Promise<UserStats | null> => {
+  const cached = userStatsCache.get(uid)
+  if (cached !== undefined) return cached
+
   const doc = await firestore.collection(USERS_COLLECTION).doc(uid).get()
   if (!doc.exists) return null
 
@@ -224,13 +238,22 @@ export const getUserStats = async (uid: string): Promise<UserStats | null> => {
     }
   }
 
+  userStatsCache.set(uid, stats)
   return stats
 }
 
 export const getDisplayName = async (uid: string): Promise<string | null> => {
+  const cached = displayNameCache.get(uid)
+  if (cached !== undefined) return cached
+
   const doc = await firestore.collection(USERS_COLLECTION).doc(uid).get()
-  if (!doc.exists) return null
-  return (doc.data() as UserStats).displayName
+  if (!doc.exists) {
+    displayNameCache.set(uid, null)
+    return null
+  }
+  const name = (doc.data() as UserStats).displayName
+  displayNameCache.set(uid, name)
+  return name
 }
 
 export const setDisplayName = async (uid: string, displayName: string, photoURL?: string): Promise<{ error?: string }> => {
@@ -256,14 +279,25 @@ export const setDisplayName = async (uid: string, displayName: string, photoURL?
     await userRef.set(newStats)
   }
 
+  userStatsCache.invalidate(uid)
+  displayNameCache.invalidate(uid)
+  leaderboardCache.clear()
+
   return {}
 }
 
 export const deleteUserStats = async (uid: string): Promise<void> => {
   await firestore.collection(USERS_COLLECTION).doc(uid).delete()
+  userStatsCache.invalidate(uid)
+  displayNameCache.invalidate(uid)
+  leaderboardCache.clear()
 }
 
 export const getLeaderboard = async (minGames: number = 5, limit: number = 50): Promise<LeaderboardEntry[]> => {
+  const cacheKey = `${minGames}:${limit}`
+  const cached = leaderboardCache.get(cacheKey)
+  if (cached) return cached
+
   const snapshot = await firestore
     .collection(USERS_COLLECTION)
     .where('gamesPlayed', '>=', minGames)
@@ -286,7 +320,10 @@ export const getLeaderboard = async (minGames: number = 5, limit: number = 50): 
     }
   })
 
-  return entries
+  const result = entries
     .sort((a, b) => b.winRate - a.winRate || b.gamesWon - a.gamesWon)
     .slice(0, limit)
+
+  leaderboardCache.set(cacheKey, result)
+  return result
 }
