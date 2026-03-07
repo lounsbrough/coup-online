@@ -1,4 +1,4 @@
-import { GameState, Actions, Influences } from '../../../shared/types/game'
+import { GameState, Influences } from '../../../shared/types/game'
 import { emptyPlayerActionStats } from '../../../shared/types/user'
 
 /** Ensure stats exist for a player */

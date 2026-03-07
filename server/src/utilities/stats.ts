@@ -152,7 +152,6 @@ export const recordGameStats = async (gameState: GameState) => {
           if (!opponent.uid || opponent.uid === player.uid) continue
 
           const opponentStats = existing.opponents[opponent.uid] ?? {
-            displayName: opponent.name,
             gamesPlayedTogether: 0,
             winsAgainst: 0,
             lossesAgainst: 0,
@@ -162,7 +161,6 @@ export const recordGameStats = async (gameState: GameState) => {
             challengesMade: 0,
           }
 
-          opponentStats.displayName = opponent.name
           opponentStats.gamesPlayedTogether++
           if (isWinner) opponentStats.winsAgainst++
           if (opponent.name === winner.name) opponentStats.lossesAgainst++
