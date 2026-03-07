@@ -142,6 +142,8 @@ export const rehydrateGameState = (dehydrated: DehydratedGameState): GameState =
       claimedInfluences: new Set(player.claimedInfluences),
       unclaimedInfluences: new Set(player.unclaimedInfluences),
     })),
+    ...(dehydrated.gameId && { gameId: dehydrated.gameId }),
+    ...(dehydrated.gameActionStats && { gameActionStats: dehydrated.gameActionStats }),
   });
 }
 
