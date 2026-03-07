@@ -3,6 +3,7 @@ import {
   Avatar,
   Button,
   ButtonProps,
+  CircularProgress,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -19,7 +20,7 @@ import { useTranslationContext } from '../contexts/TranslationsContext'
 import { Link as RouterLink } from 'react-router'
 
 function LoginButton({ buttonProps }: Readonly<{ buttonProps?: ButtonProps }>) {
-  const { user, signInWithGoogle, signInWithGitHub, signOut } = useAuthContext()
+  const { user, loading, signInWithGoogle, signInWithGitHub, signOut } = useAuthContext()
   const { showNotification } = useNotificationsContext()
   const { t } = useTranslationContext()
   const { isSmallScreen } = useTheme()
@@ -34,6 +35,14 @@ function LoginButton({ buttonProps }: Readonly<{ buttonProps?: ButtonProps }>) {
     setAnchorEl(null)
   }
 
+  if (loading) {
+    return (
+      <IconButton disabled size="large">
+        <CircularProgress size="1em" />
+      </IconButton>
+    )
+  }
+
   if (user) {
     return (
       <>
@@ -42,7 +51,7 @@ function LoginButton({ buttonProps }: Readonly<{ buttonProps?: ButtonProps }>) {
             <Avatar
               {...(user.photoURL ? { src: user.photoURL } : {})}
               alt={user.displayName ?? ''}
-              sx={{ width: 32, height: 32 }}
+              sx={{ width: '1.6em', height: '1.6em' }}
             >
               {user.displayName?.[0]?.toUpperCase() || <Person />}
             </Avatar>
