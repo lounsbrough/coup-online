@@ -3,8 +3,6 @@ import { Link as RouterLink } from 'react-router'
 import {
   Avatar,
   Box,
-  Breadcrumbs,
-  Button,
   CircularProgress,
   Link,
   Paper,
@@ -16,7 +14,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { EmojiEvents, Login, Person } from '@mui/icons-material'
+import { EmojiEvents, Person } from '@mui/icons-material'
 import { LeaderboardEntry } from '@shared'
 import { getBaseUrl } from '../../helpers/api'
 import { COUP_GOLD } from '../../helpers/styles'
@@ -54,11 +52,6 @@ function Leaderboard() {
 
   return (
     <>
-      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link component={RouterLink} to="/">{t('home')}</Link>
-        <Typography>{t('leaderboard')}</Typography>
-      </Breadcrumbs>
-
       <CoupTypography variant="h4" sx={{ m: 5 }} addTextShadow>
         <EmojiEvents fontSize="large" sx={{ verticalAlign: 'middle', mr: 1, color: COUP_GOLD }} />
         {t('leaderboard')}

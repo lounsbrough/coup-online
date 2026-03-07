@@ -1,17 +1,14 @@
 import { useCallback, useState } from 'react'
 import {
   Box,
-  Breadcrumbs,
   Button,
   Grid,
-  Link,
   Slider,
   Switch,
   TextField,
-  Typography,
 } from '@mui/material'
 import { AddCircle, Person } from '@mui/icons-material'
-import { Link as RouterLink, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { getPlayerId } from '../../helpers/players'
 import { Analytics } from '@vercel/analytics/react'
 import {
@@ -61,12 +58,6 @@ function CreateGame() {
   return (
     <>
       <Analytics />
-      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link component={RouterLink} to="/">
-          {t('home')}
-        </Link>
-        <Typography>{t('createNewGame')}</Typography>
-      </Breadcrumbs>
       <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('createNewGame')}
       </CoupTypography>

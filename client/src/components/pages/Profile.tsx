@@ -3,7 +3,6 @@ import { useParams, Link as RouterLink, useNavigate } from 'react-router'
 import {
   Avatar,
   Box,
-  Breadcrumbs,
   Button,
   Card,
   CardContent,
@@ -17,7 +16,6 @@ import {
   Divider,
   Grid,
   LinearProgress,
-  Link,
   Paper,
   Table,
   TableBody,
@@ -259,10 +257,6 @@ function Profile() {
     const isOwnProfile = user?.uid === uid
     return (
       <>
-        <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-          <Link component={RouterLink} to="/">{t('home')}</Link>
-          <CoupTypography addTextShadow>{t('profile')}</CoupTypography>
-        </Breadcrumbs>
         <Box sx={{ mt: 5, textAlign: 'center' }}>
           {isOwnProfile && user && (
             <>
@@ -381,11 +375,6 @@ function Profile() {
 
   return (
     <>
-      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link component={RouterLink} to="/">{t('home')}</Link>
-        <CoupTypography addTextShadow>{t('profile')}</CoupTypography>
-      </Breadcrumbs>
-
       {/* Player header */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 3 }}>
         <Avatar

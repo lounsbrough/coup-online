@@ -26,6 +26,7 @@ import { getBackgroundImage } from '../helpers/easterEggs'
 import LoginButton from './LoginButton'
 import Profile from './pages/Profile'
 import Leaderboard from './pages/Leaderboard'
+import AppBreadcrumbs from './AppBreadcrumbs'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -118,6 +119,7 @@ function App() {
                 <UserSettings />
               </Box>
             </header>
+            <AppBreadcrumbs />
             <Routes>
               <Route path="/">
                 <Route index element={<Home setRulesOpen={setLeftDrawerOpen} />} />
