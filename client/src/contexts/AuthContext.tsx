@@ -17,9 +17,11 @@ import {
   signOut as firebaseSignOut,
   linkWithCredential,
   OAuthProvider,
+  deleteUser,
 } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
 import { auth, googleProvider, githubProvider } from '../firebase'
+import { getBaseUrl } from '../helpers/api'
 
 type SignInResult = { linked: boolean }
 
@@ -29,6 +31,7 @@ type AuthContextType = {
   signInWithGoogle: () => Promise<SignInResult>
   signInWithGitHub: () => Promise<SignInResult>
   signOut: () => Promise<void>
+  deleteAccount: () => Promise<void>
   getIdToken: () => Promise<string | null>
 }
 
@@ -38,6 +41,7 @@ const AuthContext = createContext<AuthContextType>({
   signInWithGoogle: async () => ({ linked: false }),
   signInWithGitHub: async () => ({ linked: false }),
   signOut: async () => { },
+  deleteAccount: async () => { },
   getIdToken: async () => null,
 })
 
@@ -87,6 +91,29 @@ export function AuthContextProvider({ children }: Readonly<{ children: ReactNode
     await firebaseSignOut(auth)
   }, [])
 
+  const deleteAccount = useCallback(async () => {
+    const currentUser = auth.currentUser
+    if (!currentUser) return
+
+    const token = await currentUser.getIdToken()
+    const response = await fetch(`${getBaseUrl()}/api/users/account`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to delete account')
+    }
+
+    try {
+      await deleteUser(currentUser)
+    } catch {
+      // Server already deleted the Firebase auth user, so this may fail — that's fine
+    }
+
+    setUser(null)
+  }, [])
+
   const getIdToken = useCallback(async () => {
     if (!auth.currentUser) return null
     return auth.currentUser.getIdToken()
@@ -98,8 +125,9 @@ export function AuthContextProvider({ children }: Readonly<{ children: ReactNode
     signInWithGoogle,
     signInWithGitHub,
     signOut,
+    deleteAccount,
     getIdToken,
-  }), [user, loading, signInWithGoogle, signInWithGitHub, signOut, getIdToken])
+  }), [user, loading, signInWithGoogle, signInWithGitHub, signOut, deleteAccount, getIdToken])
 
   return (
     <AuthContext.Provider value={value}>

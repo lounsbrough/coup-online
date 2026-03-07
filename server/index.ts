@@ -12,8 +12,9 @@ import { getObjectEntries } from './src/utilities/object'
 import { dehydratePublicGameState } from '../shared/helpers/state'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
 import { translate } from './src/i18n/translations'
-import { recordGameStats, getUserStats, getLeaderboard, getDisplayName, setDisplayName } from './src/utilities/stats'
+import { recordGameStats, getUserStats, getLeaderboard, getDisplayName, setDisplayName, deleteUserStats } from './src/utilities/stats'
 import { verifyIdToken } from './src/auth'
+import { adminAuth } from './src/firebase'
 import { containsProfanity } from './src/utilities/profanity'
 
 export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
@@ -695,6 +696,30 @@ app.put('/api/users/displayName', json(), async (req, res) => {
     res.json({ displayName: trimmed })
   } catch (error) {
     console.error('Error setting display name:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
+app.delete('/api/users/account', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization
+    if (!authHeader?.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const token = authHeader.split('Bearer ')[1]
+    const decoded = await verifyIdToken(token)
+    if (!decoded) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    await deleteUserStats(decoded.uid)
+    await adminAuth.deleteUser(decoded.uid)
+    res.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting user account:', error)
     res.status(500).json({ error: genericErrorMessage })
   }
 })

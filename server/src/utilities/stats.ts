@@ -263,6 +263,10 @@ export const setDisplayName = async (uid: string, displayName: string, photoURL?
   return {}
 }
 
+export const deleteUserStats = async (uid: string): Promise<void> => {
+  await firestore.collection(USERS_COLLECTION).doc(uid).delete()
+}
+
 export const getLeaderboard = async (minGames: number = 5, limit: number = 50): Promise<LeaderboardEntry[]> => {
   const snapshot = await firestore
     .collection(USERS_COLLECTION)

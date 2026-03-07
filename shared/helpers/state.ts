@@ -65,6 +65,8 @@ export const dehydrateGameState = (hydrated: GameState): DehydratedGameState => 
     claimedInfluences: [...player.claimedInfluences],
     unclaimedInfluences: [...player.unclaimedInfluences]
   })),
+  ...(hydrated.gameId && { gameId: hydrated.gameId }),
+  ...(hydrated.gameActionStats && { gameActionStats: hydrated.gameActionStats }),
 })
 
 export const dehydratePublicGameState = (hydrated: PublicGameState): DehydratedPublicGameState => ({

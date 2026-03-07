@@ -226,6 +226,9 @@ export type Translations = ActionMessages &
     displayNameTaken: TranslationsForString
     somethingWentWrong: TranslationsForString
     save: TranslationsForString
+    deleteAccount: TranslationsForString
+    deleteAccountConfirmTitle: TranslationsForString
+    deleteAccountConfirmMessage: TranslationsForString
   }
 
 const translations: Translations = {
@@ -2494,6 +2497,33 @@ const translations: Translations = {
     'hi-IN': 'कुछ गलत हो गया',
     'it-IT': 'Qualcosa è andato storto',
     'pt-BR': 'Algo deu errado',
+  },
+  deleteAccount: {
+    'de-DE': 'Konto löschen',
+    'en-US': 'Delete Account',
+    'es-MX': 'Eliminar cuenta',
+    'fr-FR': 'Supprimer le compte',
+    'hi-IN': 'खाता हटाएं',
+    'it-IT': 'Elimina account',
+    'pt-BR': 'Excluir conta',
+  },
+  deleteAccountConfirmTitle: {
+    'de-DE': 'Konto löschen?',
+    'en-US': 'Delete account?',
+    'es-MX': '¿Eliminar cuenta?',
+    'fr-FR': 'Supprimer le compte ?',
+    'hi-IN': 'खाता हटाएं?',
+    'it-IT': 'Eliminare l\'account?',
+    'pt-BR': 'Excluir conta?',
+  },
+  deleteAccountConfirmMessage: {
+    'de-DE': 'Diese Aktion kann nicht rückgängig gemacht werden. Dein Konto und alle Statistiken werden dauerhaft gelöscht.',
+    'en-US': 'This cannot be undone. Your account and all stats will be permanently deleted.',
+    'es-MX': 'Esta acción no se puede deshacer. Tu cuenta y todas las estadísticas se eliminarán permanentemente.',
+    'fr-FR': 'Cette action est irréversible. Votre compte et toutes vos statistiques seront définitivement supprimés.',
+    'hi-IN': 'यह पूर्ववत नहीं किया जा सकता। आपका खाता और सभी आँकड़े स्थायी रूप से हटा दिए जाएंगे।',
+    'it-IT': 'Questa azione non può essere annullata. Il tuo account e tutte le statistiche verranno eliminati definitivamente.',
+    'pt-BR': 'Esta ação não pode ser desfeita. Sua conta e todas as estatísticas serão excluídas permanentemente.',
   },
 }
 

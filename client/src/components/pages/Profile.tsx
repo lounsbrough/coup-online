@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react'
-import { useParams, Link as RouterLink } from 'react-router'
+import { useParams, Link as RouterLink, useNavigate } from 'react-router'
 import {
   Avatar,
   Box,
@@ -9,6 +9,11 @@ import {
   CardContent,
   Chip,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Grid,
   LinearProgress,
@@ -25,6 +30,7 @@ import {
 } from '@mui/material'
 import {
   AddCircle,
+  DeleteForever,
   Edit,
   EmojiEvents,
   GroupAdd,
@@ -40,6 +46,7 @@ import { getBaseUrl } from '../../helpers/api'
 import { COUP_GOLD } from '../../helpers/styles'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import { useAuthContext } from '../../contexts/AuthContext'
+import { useNotificationsContext } from '../../contexts/NotificationsContext'
 import CoupTypography from '../utilities/CoupTypography'
 import { useDisplayName } from '../../hooks/useDisplayName'
 import { Translations } from '../../i18n/translations'
@@ -159,10 +166,41 @@ function DisplayNameEditor({
   )
 }
 
+function DeleteAccountDialog({ open, deleting, t, onClose, onConfirm }: Readonly<{
+  open: boolean
+  deleting: boolean
+  t: (key: keyof Translations) => ReactNode
+  onClose: () => void
+  onConfirm: () => void
+}>) {
+  return (
+    <Dialog open={open} onClose={deleting ? undefined : onClose}>
+      <DialogTitle>{t('deleteAccountConfirmTitle')}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>{t('deleteAccountConfirmMessage')}</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} disabled={deleting}>{t('cancel')}</Button>
+        <Button
+          onClick={onConfirm}
+          color="error"
+          variant="contained"
+          loading={deleting}
+          startIcon={<DeleteForever />}
+        >
+          {t('deleteAccount')}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
 function Profile() {
   const { uid } = useParams<{ uid: string }>()
   const { t } = useTranslationContext()
-  const { user, loading: authLoading } = useAuthContext()
+  const { user, loading: authLoading, deleteAccount } = useAuthContext()
+  const { showNotification } = useNotificationsContext()
+  const navigate = useNavigate()
   const [stats, setStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -173,6 +211,8 @@ function Profile() {
   const [editNameValue, setEditNameValue] = useState('')
   const [editNameError, setEditNameError] = useState<ReactNode>(null)
   const [editNameSaving, setEditNameSaving] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (!uid) return
@@ -297,7 +337,37 @@ function Profile() {
               >{t('joinExistingGame')}</Button>
             </Grid>
           </Grid>
+          {isOwnProfile && (
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteForever />}
+              onClick={() => setDeleteDialogOpen(true)}
+              sx={{ mt: 6 }}
+            >
+              {t('deleteAccount')}
+            </Button>
+          )}
         </Box>
+        <DeleteAccountDialog
+          open={deleteDialogOpen}
+          deleting={deleting}
+          t={t}
+          onClose={() => setDeleteDialogOpen(false)}
+          onConfirm={async () => {
+            setDeleting(true)
+            try {
+              await deleteAccount()
+              setDeleteDialogOpen(false)
+              navigate('/')
+            } catch (error) {
+              console.error('Failed to delete account:', error)
+              showNotification({ message: t('somethingWentWrong'), severity: 'error' })
+            } finally {
+              setDeleting(false)
+            }
+          }}
+        />
       </>
     )
   }
@@ -553,7 +623,39 @@ function Profile() {
             {t('viewLeaderboard')}
           </Button>
         </Box>
+
+        {isOwnProfile && (
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteForever />}
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              {t('deleteAccount')}
+            </Button>
+          </Box>
+        )}
       </Box>
+      <DeleteAccountDialog
+        open={deleteDialogOpen}
+        deleting={deleting}
+        t={t}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={async () => {
+          setDeleting(true)
+          try {
+            await deleteAccount()
+            setDeleteDialogOpen(false)
+            navigate('/')
+          } catch (error) {
+            console.error('Failed to delete account:', error)
+            showNotification({ message: t('somethingWentWrong'), severity: 'error' })
+          } finally {
+            setDeleting(false)
+          }
+        }}
+      />
     </>
   )
 }
