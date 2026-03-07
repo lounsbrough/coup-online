@@ -109,9 +109,9 @@ function JoinGame() {
                     setPlayerName(event.target.value.slice(0, 10))
                   }
                 }}
-                label={t('whatIsYourName')}
+                label={!profileName && t('whatIsYourName')}
                 variant="standard"
-                required
+                required={!profileName}
                 disabled={!!profileName || profileNameLoading}
                 helperText={profileName ? t('nameFromProfile') : undefined}
               />

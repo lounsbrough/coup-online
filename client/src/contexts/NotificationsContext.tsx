@@ -1,6 +1,7 @@
 import { createContext, useState, useMemo, useRef, useContext, useCallback, ReactNode, useEffect } from 'react'
 import { Alert, AlertColor, Fade } from '@mui/material'
 import { useTranslationContext } from './TranslationsContext'
+import { generateUUID } from '../helpers/uuid'
 
 interface Notification {
   id: string;
@@ -142,7 +143,7 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
   }, [])
 
   const showNotification = useCallback((notification: Omit<Notification, 'id' | 'dismissed' | 'dismissTimeout'> & { id?: string }) => {
-    const newId = notification.id || crypto.randomUUID()
+    const newId = notification.id || generateUUID()
 
     const newNotification: Notification = {
       ...notification,

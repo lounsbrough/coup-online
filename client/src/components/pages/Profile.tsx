@@ -162,7 +162,7 @@ function DisplayNameEditor({
 function Profile() {
   const { uid } = useParams<{ uid: string }>()
   const { t } = useTranslationContext()
-  const { user } = useAuthContext()
+  const { user, loading: authLoading } = useAuthContext()
   const [stats, setStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -193,7 +193,7 @@ function Profile() {
       .finally(() => setLoading(false))
   }, [uid])
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
         <CircularProgress />
@@ -271,7 +271,7 @@ function Profile() {
               />
             </>
           )}
-          <CoupTypography addTextShadow variant="h6" color="text.secondary" sx={{ mb: 2 }}>
+          <CoupTypography addTextShadow variant="h6" color="text.secondary" sx={{ mb: 2, mt: 4 }}>
             {isOwnProfile ? t('noStatsYet') : t('profileNotFound')}
           </CoupTypography>
           {isOwnProfile && (
