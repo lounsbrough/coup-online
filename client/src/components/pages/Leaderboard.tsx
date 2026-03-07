@@ -85,9 +85,9 @@ function Leaderboard() {
       )}
 
       {!loading && !error && entries.length > 0 && (
-        <Box sx={{ maxWidth: 700, mx: 'auto', px: 2, mb: 4 }}>
+        <Box sx={{ maxWidth: 800, width: '100%', mx: 'auto', px: 2, mb: 4 }}>
           <TableContainer component={Paper} variant="outlined">
-            <Table>
+            <Table sx={{ whiteSpace: 'nowrap' }}>
               <TableHead>
                 <TableRow>
                   <TableCell align="center" sx={{ width: 60 }}>#</TableCell>
