@@ -32,7 +32,7 @@ function getMedalColor(rank: number): string | undefined {
 
 function Leaderboard() {
   const { t } = useTranslationContext()
-  const { user } = useAuthContext()
+  const { user, loading: authLoading } = useAuthContext()
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -75,7 +75,7 @@ function Leaderboard() {
         </CoupTypography>
       )}
 
-      {!user && (
+      {!authLoading && !user && (
         <Box sx={{ mt: 3, mb: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
           <CoupTypography addTextShadow color="text.secondary">
             {t('signInToTrackStats')}
