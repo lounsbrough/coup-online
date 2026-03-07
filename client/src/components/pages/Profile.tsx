@@ -34,10 +34,10 @@ import {
   Edit,
   EmojiEvents,
   GroupAdd,
-  Home,
   LocalFireDepartment,
   Person,
   Psychology,
+  Refresh,
   Save,
   SportsKabaddi,
 } from '@mui/icons-material'
@@ -244,14 +244,13 @@ function Profile() {
   if (error) {
     return (
       <Box sx={{ mt: 5, textAlign: 'center' }}>
-        <CoupTypography addTextShadow variant="h4">{t('profileNotFound')}</CoupTypography>
+        <CoupTypography addTextShadow variant="h4">{t('somethingWentWrong')}</CoupTypography>
         <Button
           sx={{ mt: 3 }}
           variant="contained"
-          component={RouterLink}
-          to="/"
-          startIcon={<Home />}
-        >{t('home')}</Button>
+          onClick={() => globalThis.location.reload()}
+          startIcon={<Refresh />}
+        >{t('tryAgain')}</Button>
       </Box>
     )
   }

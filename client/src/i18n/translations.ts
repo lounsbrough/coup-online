@@ -225,6 +225,7 @@ export type Translations = ActionMessages &
     inappropriateDisplayName: TranslationsForString
     displayNameTaken: TranslationsForString
     somethingWentWrong: TranslationsForString
+    tryAgain: TranslationsForString
     save: TranslationsForString
     deleteAccount: TranslationsForString
     deleteAccountConfirmTitle: TranslationsForString
@@ -2497,6 +2498,15 @@ const translations: Translations = {
     'hi-IN': 'कुछ गलत हो गया',
     'it-IT': 'Qualcosa è andato storto',
     'pt-BR': 'Algo deu errado',
+  },
+  tryAgain: {
+    'de-DE': 'Erneut versuchen',
+    'en-US': 'Try Again',
+    'es-MX': 'Intentar de nuevo',
+    'fr-FR': 'Réessayer',
+    'hi-IN': 'पुनः प्रयास करें',
+    'it-IT': 'Riprova',
+    'pt-BR': 'Tentar novamente',
   },
   deleteAccount: {
     'de-DE': 'Konto löschen',
