@@ -726,8 +726,8 @@ app.delete('/api/users/account', async (req, res) => {
 
 app.get('/api/leaderboard', async (req, res) => {
   try {
-    const minGames = parseInt(req.query.minGames as string) || 5
-    const limit = Math.min(parseInt(req.query.limit as string) || 50, 100)
+    const minGames = Number.parseInt(req.query.minGames as string) || 5
+    const limit = Math.min(Number.parseInt(req.query.limit as string) || 50, 100)
     const leaderboard = await getLeaderboard(minGames, limit)
     res.json(leaderboard)
   } catch (error) {
