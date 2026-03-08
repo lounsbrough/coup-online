@@ -22,7 +22,7 @@ const MAX_OPPONENTS = 25
  *
  * Returns a value 0–100 (percentage scale).
  */
-const wilsonScoreRating = (winRate: number, gamesPlayed: number): number => {
+export const wilsonScoreRating = (winRate: number, gamesPlayed: number): number => {
   if (gamesPlayed === 0) return 0
   const z = 1.96 // 95% confidence
   const n = gamesPlayed
