@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { Chance } from 'chance'
-import { wilsonScoreRating, recordGameStats, getLeaderboard } from './stats'
+import { wilsonScoreRating, recordGameStats } from './stats'
 import { GameState, Influences } from '../../../shared/types/game'
 import { emptyPlayerActionStats, UserStats } from '../../../shared/types/user'
 
@@ -20,7 +20,7 @@ const mockDoc = vi.fn()
 vi.mock('../firebase', () => ({
   firestore: {
     collection: (...args: unknown[]) => mockCollection(...args),
-    runTransaction: (...args: unknown[]) => mockRunTransaction(...args),
+    runTransaction: (fn: (t: typeof mockTransaction) => Promise<void>) => mockRunTransaction(fn),
   },
 }))
 
@@ -147,7 +147,7 @@ describe('stats', () => {
   describe('recordGameStats', () => {
     it('should skip recording if gameId is missing', async () => {
       const gameState = createTestGameState()
-      gameState.gameId = undefined
+      delete gameState.gameId
 
       await recordGameStats(gameState)
 
@@ -156,7 +156,7 @@ describe('stats', () => {
 
     it('should skip recording if gameActionStats is missing', async () => {
       const gameState = createTestGameState()
-      gameState.gameActionStats = undefined
+      delete gameState.gameActionStats
 
       await recordGameStats(gameState)
 
