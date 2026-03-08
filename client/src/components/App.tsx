@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Route, Routes, Link as RouterLink } from 'react-router'
-import { Box, Button, Link, Typography, useTheme } from '@mui/material'
+import { Box, Button, IconButton, Link, Tooltip, Typography, useTheme } from '@mui/material'
 import JoinGame from './pages/JoinGame'
 import CreateGame from './pages/CreateGame'
 import Home from './pages/Home'
@@ -16,13 +16,17 @@ import { WebSocketContextProvider } from '../contexts/WebSocketContext'
 import Logo from './icons/Logo'
 import { useTranslationContext } from '../contexts/TranslationsContext'
 import ChatBubble from './chat/ChatBubble'
-import { Chat, Gavel } from '@mui/icons-material'
+import { Chat, EmojiEvents, Gavel } from '@mui/icons-material'
 import DualSideDrawer from './utilities/DualSideDrawer'
 import ChatDrawerContent from './chat/ChatDrawerContent'
 import RulesBubble from './rules/RulesBubble'
 import RulesDrawerContent from './rules/RulesDrawerContent'
 import { useUserSettingsContext } from '../contexts/UserSettingsContext'
 import { getBackgroundImage } from '../helpers/easterEggs'
+import LoginButton from './LoginButton'
+import Profile from './pages/Profile'
+import Leaderboard from './pages/Leaderboard'
+import AppBreadcrumbs from './AppBreadcrumbs'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -106,9 +110,16 @@ function App() {
                     </Typography>
                   </Button>
                 </Link>
+                <Tooltip title={t('leaderboard')}>
+                  <IconButton component={RouterLink} to="/leaderboard" color="primary" size="large">
+                    <EmojiEvents sx={{ fontSize: '2rem' }} />
+                  </IconButton>
+                </Tooltip>
+                <LoginButton buttonProps={{ size: 'large' }} />
                 <UserSettings />
               </Box>
             </header>
+            <AppBreadcrumbs />
             <Routes>
               <Route path="/">
                 <Route index element={<Home setRulesOpen={setLeftDrawerOpen} />} />
@@ -117,6 +128,8 @@ function App() {
                 } />
                 <Route path="join-game" element={<JoinGame />} />
                 <Route path="create-game" element={<CreateGame />} />
+                <Route path="profile/:uid" element={<Profile />} />
+                <Route path="leaderboard" element={<Leaderboard />} />
                 <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link component={RouterLink} to={'/'}>{t('home')}</Link></Typography>} />
               </Route>
             </Routes>

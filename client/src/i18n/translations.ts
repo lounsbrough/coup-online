@@ -177,9 +177,102 @@ export type Translations = ActionMessages &
     whatIsYourName: TranslationsForString
     writeNewMessage: TranslationsForString
     youAreSpectating: TranslationsForString
+    // Auth & Profile
+    signIn: TranslationsForString
+    signOut: TranslationsForString
+    signInWithGoogle: TranslationsForString
+    signInWithGitHub: TranslationsForString
+    profile: TranslationsForString
+    profileNotFound: TranslationsForString
+    leaderboard: TranslationsForString
+    viewLeaderboard: TranslationsForString
+    noLeaderboardData: TranslationsForString
+    accountExistsSignInWithGoogle: TranslationsForString
+    accountExistsSignInWithGitHub: TranslationsForString
+    accountsLinkedSuccessfully: TranslationsForString
+    signInToTrackStats: TranslationsForString
+    gamesPlayed: TranslationsForString
+    winRate: TranslationsForString
+    rating: TranslationsForString
+    ratingExplanation: TranslationsForString
+    wins: TranslationsForString
+    losses: TranslationsForString
+    currentStreak: TranslationsForString
+    longestWinStreak: TranslationsForString
+    bestStreak: TranslationsForString
+    record: TranslationsForString
+    playstyle: TranslationsForString
+    bluffSuccessRate: TranslationsForString
+    challengeAccuracy: TranslationsForString
+    assassinations: TranslationsForString
+    coups: TranslationsForString
+    steals: TranslationsForString
+    achievements: TranslationsForString
+    honestVictories: TranslationsForString
+    comebacks: TranslationsForString
+    fastestWin: TranslationsForString
+    turns: TranslationsForString
+    noAchievementsYet: TranslationsForString
+    headToHead: TranslationsForString
+    opponent: TranslationsForString
+    player: TranslationsForString
+    lastPlayed: TranslationsForString
+    noStatsYet: TranslationsForString
+    playGameToTrackStats: TranslationsForString
+    // Display name
+    displayName: TranslationsForString
+    nameFromProfile: TranslationsForString
+    setDisplayName: TranslationsForString
+    changeDisplayName: TranslationsForString
+    inappropriateDisplayName: TranslationsForString
+    displayNameTaken: TranslationsForString
+    somethingWentWrong: TranslationsForString
+    tryAgain: TranslationsForString
+    save: TranslationsForString
+    deleteAccount: TranslationsForString
+    deleteAccountConfirmTitle: TranslationsForString
+    deleteAccountConfirmMessage: TranslationsForString
+    yourRanking: TranslationsForString
+    notEnoughGames: TranslationsForString
   }
 
 const translations: Translations = {
+  accountExistsSignInWithGitHub: {
+    'de-DE': 'Ein Konto mit dieser E-Mail existiert bereits. Bitte melde dich mit GitHub an, um deine Konten zu verknüpfen.',
+    'en-US': 'An account with this email already exists. Please sign in with GitHub to link your accounts.',
+    'es-MX': 'Ya existe una cuenta con este correo. Inicia sesión con GitHub para vincular tus cuentas.',
+    'fr-FR': 'Un compte avec cet e-mail existe déjà. Veuillez vous connecter avec GitHub pour lier vos comptes.',
+    'hi-IN': 'इस ईमेल से पहले से एक खाता मौजूद है। अपने खातों को जोड़ने के लिए GitHub से साइन इन करें।',
+    'it-IT': 'Esiste già un account con questa email. Accedi con GitHub per collegare i tuoi account.',
+    'pt-BR': 'Já existe uma conta com este e-mail. Entre com GitHub para vincular suas contas.',
+  },
+  accountExistsSignInWithGoogle: {
+    'de-DE': 'Ein Konto mit dieser E-Mail existiert bereits. Bitte melde dich mit Google an, um deine Konten zu verknüpfen.',
+    'en-US': 'An account with this email already exists. Please sign in with Google to link your accounts.',
+    'es-MX': 'Ya existe una cuenta con este correo. Inicia sesión con Google para vincular tus cuentas.',
+    'fr-FR': 'Un compte avec cet e-mail existe déjà. Veuillez vous connecter avec Google pour lier vos comptes.',
+    'hi-IN': 'इस ईमेल से पहले से एक खाता मौजूद है। अपने खातों को जोड़ने के लिए Google से साइन इन करें।',
+    'it-IT': 'Esiste già un account con questa email. Accedi con Google per collegare i tuoi account.',
+    'pt-BR': 'Já existe uma conta com este e-mail. Entre com Google para vincular suas contas.',
+  },
+  accountsLinkedSuccessfully: {
+    'de-DE': 'Deine Konten wurden erfolgreich verknüpft!',
+    'en-US': 'Your accounts have been linked successfully!',
+    'es-MX': '¡Tus cuentas se han vinculado correctamente!',
+    'fr-FR': 'Vos comptes ont été liés avec succès !',
+    'hi-IN': 'आपके खाते सफलतापूर्वक जोड़ दिए गए हैं!',
+    'it-IT': 'I tuoi account sono stati collegati con successo!',
+    'pt-BR': 'Suas contas foram vinculadas com sucesso!',
+  },
+  achievements: {
+    'de-DE': 'Erfolge',
+    'en-US': 'Achievements',
+    'es-MX': 'Logros',
+    'fr-FR': 'Succès',
+    'hi-IN': 'उपलब्धियाँ',
+    'it-IT': 'Obiettivi',
+    'pt-BR': 'Conquistas',
+  },
   action: {
     'de-DE': 'Aktion',
     'en-US': 'Action',
@@ -316,6 +409,24 @@ const translations: Translations = {
     'it-IT': 'Chiunque',
     'pt-BR': 'Qualquer um',
   },
+  assassinations: {
+    'de-DE': 'Attentate',
+    'en-US': 'Assassinations',
+    'es-MX': 'Asesinatos',
+    'fr-FR': 'Assassinats',
+    'hi-IN': 'हत्याएँ',
+    'it-IT': 'Assassinii',
+    'pt-BR': 'Assassinatos',
+  },
+  bestStreak: {
+    'de-DE': 'Beste Serie',
+    'en-US': 'Best Streak',
+    'es-MX': 'Mejor racha',
+    'fr-FR': 'Meilleure série',
+    'hi-IN': 'सर्वश्रेष्ठ श्रृंखला',
+    'it-IT': 'Miglior serie',
+    'pt-BR': 'Melhor sequência',
+  },
   block: {
     'de-DE': 'Blocken',
     'en-US': 'Block',
@@ -333,6 +444,15 @@ const translations: Translations = {
     'hi-IN': 'ब्लॉक करें {{primaryInfluence}}',
     'it-IT': 'Blocca come {{primaryInfluence}}',
     'pt-BR': 'Bloquear como {{primaryInfluence}}',
+  },
+  bluffSuccessRate: {
+    'de-DE': 'Bluff-Erfolgsrate',
+    'en-US': 'Bluff Success Rate',
+    'es-MX': 'Tasa de éxito de faroles',
+    'fr-FR': 'Taux de bluff réussi',
+    'hi-IN': 'ब्लफ सफलता दर',
+    'it-IT': 'Percentuale bluff riusciti',
+    'pt-BR': 'Taxa de sucesso de blefe',
   },
   briefDescriptionOfCoup: {
     'de-DE': 'Das Spiel der Täuschung, Deduktion und des Glücks.',
@@ -369,6 +489,24 @@ const translations: Translations = {
     'hi-IN': 'चुनौती देना',
     'it-IT': 'Sfida',
     'pt-BR': 'Desafiar',
+  },
+  challengeAccuracy: {
+    'de-DE': 'Herausforderungsgenauigkeit',
+    'en-US': 'Challenge Accuracy',
+    'es-MX': 'Precisión de desafíos',
+    'fr-FR': 'Précision des contestations',
+    'hi-IN': 'चुनौती सटीकता',
+    'it-IT': 'Precisione sfide',
+    'pt-BR': 'Precisão de desafios',
+  },
+  changeDisplayName: {
+    'de-DE': 'Anzeigename ändern',
+    'en-US': 'Change Display Name',
+    'es-MX': 'Cambiar nombre',
+    'fr-FR': 'Changer le nom',
+    'hi-IN': 'प्रदर्शित नाम बदलें',
+    'it-IT': 'Cambia nome',
+    'pt-BR': 'Alterar nome',
   },
   chat: {
     'de-DE': 'Chat',
@@ -479,6 +617,15 @@ const translations: Translations = {
     'it-IT': 'Modalità Colore',
     'pt-BR': 'Modo de Cor',
   },
+  comebacks: {
+    'de-DE': 'Comebacks',
+    'en-US': 'Comebacks',
+    'es-MX': 'Remontadas',
+    'fr-FR': 'Retours',
+    'hi-IN': 'वापसी',
+    'it-IT': 'Rimonte',
+    'pt-BR': 'Viradas',
+  },
   confirm: {
     'de-DE': 'Bestätigen',
     'en-US': 'Confirm',
@@ -515,6 +662,15 @@ const translations: Translations = {
     'it-IT': 'Copia Link di Invito',
     'pt-BR': 'Copiar Link de Convite',
   },
+  coups: {
+    'de-DE': 'Putsche',
+    'en-US': 'Coups',
+    'es-MX': 'Golpes',
+    'fr-FR': "Coups d'État",
+    'hi-IN': 'तख्तापलट',
+    'it-IT': 'Colpi di stato',
+    'pt-BR': 'Golpes',
+  },
   createGame: {
     'de-DE': 'Spiel erstellen',
     'en-US': 'Create Game',
@@ -533,6 +689,15 @@ const translations: Translations = {
     'it-IT': 'Crea Nuovo Gioco',
     'pt-BR': 'Criar Novo Jogo',
   },
+  currentStreak: {
+    'de-DE': 'Aktuelle Serie',
+    'en-US': 'Current Streak',
+    'es-MX': 'Racha actual',
+    'fr-FR': 'Série en cours',
+    'hi-IN': 'वर्तमान श्रृंखला',
+    'it-IT': 'Serie attuale',
+    'pt-BR': 'Sequência atual',
+  },
   dark: {
     'de-DE': 'Dunkel',
     'en-US': 'Dark',
@@ -541,6 +706,51 @@ const translations: Translations = {
     'hi-IN': 'गहरा',
     'it-IT': 'Scuro',
     'pt-BR': 'Escuro',
+  },
+  deleteAccount: {
+    'de-DE': 'Konto löschen',
+    'en-US': 'Delete Account',
+    'es-MX': 'Eliminar cuenta',
+    'fr-FR': 'Supprimer le compte',
+    'hi-IN': 'खाता हटाएं',
+    'it-IT': 'Elimina account',
+    'pt-BR': 'Excluir conta',
+  },
+  deleteAccountConfirmMessage: {
+    'de-DE': 'Diese Aktion kann nicht rückgängig gemacht werden. Dein Konto und alle Statistiken werden dauerhaft gelöscht.',
+    'en-US': 'This cannot be undone. Your account and all stats will be permanently deleted.',
+    'es-MX': 'Esta acción no se puede deshacer. Tu cuenta y todas las estadísticas se eliminarán permanentemente.',
+    'fr-FR': 'Cette action est irréversible. Votre compte et toutes vos statistiques seront définitivement supprimés.',
+    'hi-IN': 'यह पूर्ववत नहीं किया जा सकता। आपका खाता और सभी आँकड़े स्थायी रूप से हटा दिए जाएंगे।',
+    'it-IT': 'Questa azione non può essere annullata. Il tuo account e tutte le statistiche verranno eliminati definitivamente.',
+    'pt-BR': 'Esta ação não pode ser desfeita. Sua conta e todas as estatísticas serão excluídas permanentemente.',
+  },
+  deleteAccountConfirmTitle: {
+    'de-DE': 'Konto löschen?',
+    'en-US': 'Delete account?',
+    'es-MX': '¿Eliminar cuenta?',
+    'fr-FR': 'Supprimer le compte ?',
+    'hi-IN': 'खाता हटाएं?',
+    'it-IT': 'Eliminare l\'account?',
+    'pt-BR': 'Excluir conta?',
+  },
+  displayName: {
+    'de-DE': 'Anzeigename',
+    'en-US': 'Display Name',
+    'es-MX': 'Nombre para mostrar',
+    'fr-FR': 'Nom d\'affichage',
+    'hi-IN': 'प्रदर्शित नाम',
+    'it-IT': 'Nome visualizzato',
+    'pt-BR': 'Nome de exibição',
+  },
+  displayNameTaken: {
+    'de-DE': 'Dieser Name ist bereits vergeben',
+    'en-US': 'This name is already taken',
+    'es-MX': 'Este nombre ya está en uso',
+    'fr-FR': 'Ce nom est déjà pris',
+    'hi-IN': 'यह नाम पहले से लिया गया है',
+    'it-IT': 'Questo nome è già in uso',
+    'pt-BR': 'Este nome já está em uso',
   },
   draw2InfluencesAndDiscard2: {
     'de-DE': 'Ziehe 2 Einflusskarten & lege 2 ab',
@@ -736,22 +946,6 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} está tentando coletar {{action[[Imposto]]}}',
     },
   },
-  [EventMessages.ForcedMoveProcessed]: {
-    'de-DE':
-      '⏱️ {{primaryPlayer}} hat zu lange gebraucht!',
-    'en-US':
-      '⏱️ {{primaryPlayer}} took too long!',
-    'es-MX':
-      '⏱️ ¡{{primaryPlayer}} tardó demasiado!',
-    'fr-FR':
-      '⏱️ {{primaryPlayer}} a pris trop de temps!',
-    'hi-IN':
-      '⏱️ {{primaryPlayer}} ने बहुत समय लिया!',
-    'it-IT':
-      '⏱️ {{primaryPlayer}} ha impiegato troppo tempo!',
-    'pt-BR':
-      '⏱️ {{primaryPlayer}} demorou muito tempo!',
-  },
   [EventMessages.ActionProcessed]: {
     [Actions.Assassinate]: {
       'de-DE':
@@ -905,6 +1099,22 @@ const translations: Translations = {
     'it-IT': '{{primaryPlayer}} ha sfidato con successo {{secondaryPlayer}}',
     'pt-BR': '{{primaryPlayer}} desafiou com sucesso {{secondaryPlayer}}',
   },
+  [EventMessages.ForcedMoveProcessed]: {
+    'de-DE':
+      '⏱️ {{primaryPlayer}} hat zu lange gebraucht!',
+    'en-US':
+      '⏱️ {{primaryPlayer}} took too long!',
+    'es-MX':
+      '⏱️ ¡{{primaryPlayer}} tardó demasiado!',
+    'fr-FR':
+      '⏱️ {{primaryPlayer}} a pris trop de temps!',
+    'hi-IN':
+      '⏱️ {{primaryPlayer}} ने बहुत समय लिया!',
+    'it-IT':
+      '⏱️ {{primaryPlayer}} ha impiegato troppo tempo!',
+    'pt-BR':
+      '⏱️ {{primaryPlayer}} demorou muito tempo!',
+  },
   [EventMessages.GameStarted]: {
     'de-DE': 'Das Spiel hat begonnen!',
     'en-US': 'The game has started!',
@@ -963,6 +1173,15 @@ const translations: Translations = {
       '{{primaryPlayer}} को एक एआई खिलाड़ी द्वारा प्रतिस्थापित किया गया है',
     'it-IT': '{{primaryPlayer}} è stato sostituito da un giocatore IA',
     'pt-BR': '{{primaryPlayer}} foi substituído por um jogador de IA',
+  },
+  fastestWin: {
+    'de-DE': 'Schnellster Sieg',
+    'en-US': 'Fastest Win',
+    'es-MX': 'Victoria más rápida',
+    'fr-FR': 'Victoire la plus rapide',
+    'hi-IN': 'सबसे तेज़ जीत',
+    'it-IT': 'Vittoria più rapida',
+    'pt-BR': 'Vitória mais rápida',
   },
   forfeit: {
     'de-DE': 'Aufgeben',
@@ -1043,6 +1262,15 @@ const translations: Translations = {
     'it-IT': 'Gioco non trovato',
     'pt-BR': 'Jogo não encontrado',
   },
+  gamesPlayed: {
+    'de-DE': 'Gespielte Spiele',
+    'en-US': 'Games Played',
+    'es-MX': 'Partidas jugadas',
+    'fr-FR': 'Parties jouées',
+    'hi-IN': 'खेले गए खेल',
+    'it-IT': 'Partite giocate',
+    'pt-BR': 'Jogos disputados',
+  },
   goal: {
     'de-DE': 'Ziel',
     'en-US': 'Goal',
@@ -1051,6 +1279,15 @@ const translations: Translations = {
     'hi-IN': 'लक्ष्य',
     'it-IT': 'Obiettivo',
     'pt-BR': 'Objetivo',
+  },
+  headToHead: {
+    'de-DE': 'Direktvergleich',
+    'en-US': 'Head-to-Head',
+    'es-MX': 'Cara a cara',
+    'fr-FR': 'Face à face',
+    'hi-IN': 'आमने-सामने',
+    'it-IT': 'Testa a testa',
+    'pt-BR': 'Confronto direto',
   },
   home: {
     'de-DE': 'Startseite',
@@ -1061,6 +1298,15 @@ const translations: Translations = {
     'it-IT': 'Home',
     'pt-BR': 'Início',
   },
+  honestVictories: {
+    'de-DE': 'Ehrliche Siege',
+    'en-US': 'Honest Victories',
+    'es-MX': 'Victorias honestas',
+    'fr-FR': 'Victoires honnêtes',
+    'hi-IN': 'ईमानदार जीत',
+    'it-IT': 'Vittorie oneste',
+    'pt-BR': 'Vitórias honestas',
+  },
   honesty: {
     'de-DE': 'Ehrlichkeit',
     'en-US': 'Honesty',
@@ -1069,6 +1315,15 @@ const translations: Translations = {
     'hi-IN': 'ईमानदारी',
     'it-IT': 'Onestà',
     'pt-BR': 'Honestidade',
+  },
+  inappropriateDisplayName: {
+    'de-DE': 'Dieser Name ist nicht erlaubt',
+    'en-US': 'This name is not allowed',
+    'es-MX': 'Este nombre no está permitido',
+    'fr-FR': 'Ce nom n\'est pas autorisé',
+    'hi-IN': 'यह नाम अनुमत नहीं है',
+    'it-IT': 'Questo nome non è consentito',
+    'pt-BR': 'Este nome não é permitido',
   },
   influence: {
     'de-DE': 'Einfluss',
@@ -1212,6 +1467,24 @@ const translations: Translations = {
     'it-IT': 'Lingua',
     'pt-BR': 'Idioma',
   },
+  lastPlayed: {
+    'de-DE': 'Zuletzt gespielt',
+    'en-US': 'Last played',
+    'es-MX': 'Última partida',
+    'fr-FR': 'Dernière partie',
+    'hi-IN': 'अंतिम बार खेला',
+    'it-IT': 'Ultima partita',
+    'pt-BR': 'Última partida',
+  },
+  leaderboard: {
+    'de-DE': 'Bestenliste',
+    'en-US': 'Leaderboard',
+    'es-MX': 'Tabla de clasificación',
+    'fr-FR': 'Classement',
+    'hi-IN': 'लीडरबोर्ड',
+    'it-IT': 'Classifica',
+    'pt-BR': 'Classificação',
+  },
   learnToPlay: {
     'de-DE': 'Lerne zu spielen',
     'en-US': 'Learn to Play',
@@ -1229,6 +1502,15 @@ const translations: Translations = {
     'hi-IN': 'हल्का',
     'it-IT': 'Chiaro',
     'pt-BR': 'Claro',
+  },
+  longestWinStreak: {
+    'de-DE': 'Längste Siegesserie',
+    'en-US': 'Longest Win Streak',
+    'es-MX': 'Racha más larga',
+    'fr-FR': 'Plus longue série de victoires',
+    'hi-IN': 'सबसे लंबी जीत की श्रृंखला',
+    'it-IT': 'Serie vittorie più lunga',
+    'pt-BR': 'Maior sequência de vitórias',
   },
   loseInfluence: {
     'de-DE': 'Verliere {{primaryInfluence}}',
@@ -1257,6 +1539,15 @@ const translations: Translations = {
     'it-IT': 'Perdere Influenza',
     'pt-BR': 'Perder Influência',
   },
+  losses: {
+    'de-DE': 'Niederlagen',
+    'en-US': 'Losses',
+    'es-MX': 'Derrotas',
+    'fr-FR': 'Défaites',
+    'hi-IN': 'हार',
+    'it-IT': 'Sconfitte',
+    'pt-BR': 'Derrotas',
+  },
   messageWasDeleted: {
     'de-DE': 'Nachricht wurde gelöscht',
     'en-US': 'Message was deleted',
@@ -1265,6 +1556,24 @@ const translations: Translations = {
     'hi-IN': 'संदेश हटा दिया गया था',
     'it-IT': 'Il messaggio è stato eliminato',
     'pt-BR': 'Mensagem foi excluída',
+  },
+  nameFromProfile: {
+    'de-DE': 'Aus deinem Profil',
+    'en-US': 'From your profile',
+    'es-MX': 'De tu perfil',
+    'fr-FR': 'De votre profil',
+    'hi-IN': 'आपकी प्रोफ़ाइल से',
+    'it-IT': 'Dal tuo profilo',
+    'pt-BR': 'Do seu perfil',
+  },
+  noAchievementsYet: {
+    'de-DE': 'Noch keine Erfolge',
+    'en-US': 'No achievements yet',
+    'es-MX': 'Aún no hay logros',
+    'fr-FR': 'Pas encore de succès',
+    'hi-IN': 'अभी तक कोई उपलब्धि नहीं',
+    'it-IT': 'Nessun obiettivo raggiunto',
+    'pt-BR': 'Nenhuma conquista ainda',
   },
   noChatMessages: {
     'de-DE': 'Keine Chat-Nachrichten',
@@ -1284,6 +1593,24 @@ const translations: Translations = {
     'it-IT': 'Nessuna influenza morta',
     'pt-BR': 'Sem influências mortas',
   },
+  noLeaderboardData: {
+    'de-DE': 'Noch keine Daten vorhanden',
+    'en-US': 'No leaderboard data yet',
+    'es-MX': 'Aún no hay datos',
+    'fr-FR': 'Pas encore de données',
+    'hi-IN': 'अभी तक कोई डेटा नहीं',
+    'it-IT': 'Nessun dato disponibile',
+    'pt-BR': 'Nenhum dado disponível ainda',
+  },
+  noStatsYet: {
+    'de-DE': 'Noch keine Statistiken',
+    'en-US': 'No stats yet',
+    'es-MX': 'Aún no hay estadísticas',
+    'fr-FR': 'Pas encore de statistiques',
+    'hi-IN': 'अभी तक कोई आँकड़े नहीं',
+    'it-IT': 'Nessuna statistica ancora',
+    'pt-BR': 'Nenhuma estatística ainda',
+  },
   notEnoughCoins: {
     'de-DE': 'Nicht genug Münzen ({{count}})',
     'en-US': 'Not enough coins ({{count}})',
@@ -1293,6 +1620,15 @@ const translations: Translations = {
     'it-IT': 'Non ci sono abbastanza monete ({{count}})',
     'pt-BR': 'Moedas insuficientes ({{count}})',
   },
+  notEnoughGames: {
+    'de-DE': 'Spiele mehr Spiele, um in der Rangliste zu erscheinen',
+    'en-US': 'Play more games to appear on the leaderboard',
+    'es-MX': 'Juega más partidas para aparecer en la clasificación',
+    'fr-FR': 'Jouez plus de parties pour apparaître au classement',
+    'hi-IN': 'लीडरबोर्ड पर दिखने के लिए और खेल खेलें',
+    'it-IT': 'Gioca più partite per apparire nella classifica',
+    'pt-BR': 'Jogue mais partidas para aparecer na classificação',
+  },
   numberOfPlayers: {
     'de-DE': 'Anzahl der Spieler',
     'en-US': 'Number of Players',
@@ -1301,6 +1637,15 @@ const translations: Translations = {
     'hi-IN': 'खिलाड़ियों की संख्या',
     'it-IT': 'Numero di Giocatori',
     'pt-BR': 'Número de Jogadores',
+  },
+  opponent: {
+    'de-DE': 'Gegner',
+    'en-US': 'Opponent',
+    'es-MX': 'Oponente',
+    'fr-FR': 'Adversaire',
+    'hi-IN': 'प्रतिद्वंद्वी',
+    'it-IT': 'Avversario',
+    'pt-BR': 'Adversário',
   },
   pageNotFound: {
     'de-DE': 'Seite nicht gefunden',
@@ -1338,6 +1683,24 @@ const translations: Translations = {
     'it-IT': 'Gioca di Nuovo',
     'pt-BR': 'Jogar Novamente',
   },
+  playGameToTrackStats: {
+    'de-DE': 'Spiele ein Spiel mit mindestens 2 angemeldeten Spielern, um Statistiken zu verfolgen',
+    'en-US': 'Play a game with at least 2 logged-in players to track stats',
+    'es-MX': 'Juega un juego con al menos 2 jugadores registrados para rastrear estadísticas',
+    'fr-FR': 'Jouez une partie avec au moins 2 joueurs connectés pour suivre les statistiques',
+    'hi-IN': 'आँकड़े ट्रैक करने के लिए कम से कम 2 लॉग-इन खिलाड़ियों के साथ एक गेम खेलें',
+    'it-IT': 'Gioca una partita con almeno 2 giocatori connessi per tracciare le statistiche',
+    'pt-BR': 'Jogue uma partida com pelo menos 2 jogadores logados para rastrear estatísticas',
+  },
+  player: {
+    'de-DE': 'Spieler',
+    'en-US': 'Player',
+    'es-MX': 'Jugador',
+    'fr-FR': 'Joueur',
+    'hi-IN': 'खिलाड़ी',
+    'it-IT': 'Giocatore',
+    'pt-BR': 'Jogador',
+  },
   playerTurn: {
     'de-DE': "{{primaryPlayer}}'s Zug",
     'en-US': "{{primaryPlayer}}'s Turn",
@@ -1365,6 +1728,33 @@ const translations: Translations = {
     'it-IT': '{{primaryPlayer}} Vince!',
     'pt-BR': '{{primaryPlayer}} Vence!',
   },
+  playstyle: {
+    'de-DE': 'Spielstil',
+    'en-US': 'Playstyle',
+    'es-MX': 'Estilo de juego',
+    'fr-FR': 'Style de jeu',
+    'hi-IN': 'खेल शैली',
+    'it-IT': 'Stile di gioco',
+    'pt-BR': 'Estilo de jogo',
+  },
+  profile: {
+    'de-DE': 'Profil',
+    'en-US': 'Profile',
+    'es-MX': 'Perfil',
+    'fr-FR': 'Profil',
+    'hi-IN': 'प्रोफ़ाइल',
+    'it-IT': 'Profilo',
+    'pt-BR': 'Perfil',
+  },
+  profileNotFound: {
+    'de-DE': 'Profil nicht gefunden',
+    'en-US': 'Profile not found',
+    'es-MX': 'Perfil no encontrado',
+    'fr-FR': 'Profil introuvable',
+    'hi-IN': 'प्रोफ़ाइल नहीं मिली',
+    'it-IT': 'Profilo non trovato',
+    'pt-BR': 'Perfil não encontrado',
+  },
   random: {
     'de-DE': 'Zufällig',
     'en-US': 'Random',
@@ -1373,6 +1763,33 @@ const translations: Translations = {
     'hi-IN': 'यादृच्छिक',
     'it-IT': 'Casuale',
     'pt-BR': 'Aleatório',
+  },
+  rating: {
+    'de-DE': 'Bewertung',
+    'en-US': 'Rating',
+    'es-MX': 'Puntuación',
+    'fr-FR': 'Score',
+    'hi-IN': 'रेटिंग',
+    'it-IT': 'Punteggio',
+    'pt-BR': 'Pontuação',
+  },
+  ratingExplanation: {
+    'de-DE': 'Die Bewertung basiert auf dem Wilson-Score: der unteren Grenze eines 95%-Konfidenzintervalls deiner Siegquote. Mehr Spiele ergeben eine zuverlässigere und höhere Bewertung.',
+    'en-US': 'Rating is based on the Wilson score: the lower bound of a 95% confidence interval of your win rate. Playing more games yields a more reliable and higher rating.',
+    'es-MX': 'La puntuación se basa en el puntaje de Wilson: el límite inferior de un intervalo de confianza del 95% de tu tasa de victorias. Jugar más partidas produce una puntuación más confiable y alta.',
+    'fr-FR': 'Le score est basé sur le score de Wilson : la borne inférieure d\'un intervalle de confiance à 95% de votre taux de victoire. Jouer plus de parties donne un score plus fiable et plus élevé.',
+    'hi-IN': 'रेटिंग विल्सन स्कोर पर आधारित है: आपकी जीत दर के 95% विश्वास अंतराल की निचली सीमा। अधिक खेल खेलने से अधिक विश्वसनीय और उच्च रेटिंग मिलती है।',
+    'it-IT': 'Il punteggio si basa sul Wilson score: il limite inferiore di un intervallo di confidenza al 95% della percentuale di vittorie. Giocare più partite produce un punteggio più affidabile e alto.',
+    'pt-BR': 'A pontuação é baseada no score de Wilson: o limite inferior de um intervalo de confiança de 95% da sua taxa de vitória. Jogar mais partidas resulta em uma pontuação mais confiável e alta.',
+  },
+  record: {
+    'de-DE': 'Bilanz',
+    'en-US': 'Record',
+    'es-MX': 'Récord',
+    'fr-FR': 'Bilan',
+    'hi-IN': 'रिकॉर्ड',
+    'it-IT': 'Record',
+    'pt-BR': 'Histórico',
   },
   reportBug: {
     'de-DE': 'Fehler melden',
@@ -1788,6 +2205,15 @@ const translations: Translations = {
     'pt-BR':
       'Pegue três moedas do banco. Pode ser desafiado. Não pode ser bloqueado.',
   },
+  save: {
+    'de-DE': 'Speichern',
+    'en-US': 'Save',
+    'es-MX': 'Guardar',
+    'fr-FR': 'Enregistrer',
+    'hi-IN': 'सहेजें',
+    'it-IT': 'Salva',
+    'pt-BR': 'Salvar',
+  },
   send: {
     'de-DE': 'Senden',
     'en-US': 'Send',
@@ -1796,6 +2222,15 @@ const translations: Translations = {
     'hi-IN': 'भेजें',
     'it-IT': 'Invia',
     'pt-BR': 'Enviar',
+  },
+  setDisplayName: {
+    'de-DE': 'Anzeigename festlegen',
+    'en-US': 'Set Display Name',
+    'es-MX': 'Establecer nombre',
+    'fr-FR': 'Définir le nom',
+    'hi-IN': 'प्रदर्शित नाम सेट करें',
+    'it-IT': 'Imposta nome',
+    'pt-BR': 'Definir nome',
   },
   settings: {
     'de-DE': 'Einstellungen',
@@ -1851,6 +2286,51 @@ const translations: Translations = {
     'it-IT': 'Mostra Tacchini',
     'pt-BR': 'Mostrar Perus',
   },
+  signIn: {
+    'de-DE': 'Anmelden',
+    'en-US': 'Sign In',
+    'es-MX': 'Iniciar sesión',
+    'fr-FR': 'Se connecter',
+    'hi-IN': 'साइन इन',
+    'it-IT': 'Accedi',
+    'pt-BR': 'Entrar',
+  },
+  signInToTrackStats: {
+    'de-DE': 'Melde dich an, um deine Statistiken zu verfolgen',
+    'en-US': 'Sign in to track your stats on the leaderboard',
+    'es-MX': 'Inicia sesión para seguir tus estadísticas',
+    'fr-FR': 'Connectez-vous pour suivre vos statistiques',
+    'hi-IN': 'अपने आँकड़े ट्रैक करने के लिए साइन इन करें',
+    'it-IT': 'Accedi per monitorare le tue statistiche',
+    'pt-BR': 'Entre para acompanhar suas estatísticas',
+  },
+  signInWithGitHub: {
+    'de-DE': 'Mit GitHub anmelden',
+    'en-US': 'Sign in with GitHub',
+    'es-MX': 'Iniciar sesión con GitHub',
+    'fr-FR': 'Se connecter avec GitHub',
+    'hi-IN': 'GitHub से साइन इन करें',
+    'it-IT': 'Accedi con GitHub',
+    'pt-BR': 'Entrar com GitHub',
+  },
+  signInWithGoogle: {
+    'de-DE': 'Mit Google anmelden',
+    'en-US': 'Sign in with Google',
+    'es-MX': 'Iniciar sesión con Google',
+    'fr-FR': 'Se connecter avec Google',
+    'hi-IN': 'Google से साइन इन करें',
+    'it-IT': 'Accedi con Google',
+    'pt-BR': 'Entrar com Google',
+  },
+  signOut: {
+    'de-DE': 'Abmelden',
+    'en-US': 'Sign Out',
+    'es-MX': 'Cerrar sesión',
+    'fr-FR': 'Se déconnecter',
+    'hi-IN': 'साइन आउट',
+    'it-IT': 'Esci',
+    'pt-BR': 'Sair',
+  },
   skepticism: {
     'de-DE': 'Skepsis',
     'en-US': 'Skepticism',
@@ -1859,6 +2339,15 @@ const translations: Translations = {
     'hi-IN': 'संदेहवाद',
     'it-IT': 'Scetticismo',
     'pt-BR': 'Ceticismo',
+  },
+  somethingWentWrong: {
+    'de-DE': 'Etwas ist schiefgelaufen',
+    'en-US': 'Something went wrong',
+    'es-MX': 'Algo salió mal',
+    'fr-FR': 'Une erreur est survenue',
+    'hi-IN': 'कुछ गलत हो गया',
+    'it-IT': 'Qualcosa è andato storto',
+    'pt-BR': 'Algo deu errado',
   },
   spectateGame: {
     'de-DE': 'Spiel beobachten',
@@ -1915,6 +2404,15 @@ const translations: Translations = {
     'it-IT': 'Ruba 2 monete a qualcuno',
     'pt-BR': 'Roubar 2 moedas de alguém',
   },
+  steals: {
+    'de-DE': 'Diebstähle',
+    'en-US': 'Steals',
+    'es-MX': 'Robos',
+    'fr-FR': 'Vols',
+    'hi-IN': 'चोरी',
+    'it-IT': 'Furti',
+    'pt-BR': 'Roubos',
+  },
   success: {
     'de-DE': 'Erfolg',
     'en-US': 'Success',
@@ -1942,6 +2440,24 @@ const translations: Translations = {
     'it-IT': 'Coup',
     'pt-BR': 'Coup',
   },
+  tryAgain: {
+    'de-DE': 'Erneut versuchen',
+    'en-US': 'Try Again',
+    'es-MX': 'Intentar de nuevo',
+    'fr-FR': 'Réessayer',
+    'hi-IN': 'पुनः प्रयास करें',
+    'it-IT': 'Riprova',
+    'pt-BR': 'Tentar novamente',
+  },
+  turns: {
+    'de-DE': 'Runden',
+    'en-US': 'turns',
+    'es-MX': 'turnos',
+    'fr-FR': 'tours',
+    'hi-IN': 'मोड़',
+    'it-IT': 'turni',
+    'pt-BR': 'turnos',
+  },
   vengefulness: {
     'de-DE': 'Rachsucht',
     'en-US': 'Vengefulness',
@@ -1950,6 +2466,15 @@ const translations: Translations = {
     'hi-IN': 'प्रतिशोध',
     'it-IT': 'Vendetta',
     'pt-BR': 'Vingança',
+  },
+  viewLeaderboard: {
+    'de-DE': 'Bestenliste anzeigen',
+    'en-US': 'View Leaderboard',
+    'es-MX': 'Ver tabla de clasificación',
+    'fr-FR': 'Voir le classement',
+    'hi-IN': 'लीडरबोर्ड देखें',
+    'it-IT': 'Vedi classifica',
+    'pt-BR': 'Ver classificação',
   },
   waitingOnOtherPlayers: {
     'de-DE': 'Warte auf andere Spieler',
@@ -2005,6 +2530,24 @@ const translations: Translations = {
     'it-IT': 'Qual è il tuo nome?',
     'pt-BR': 'Qual é o seu nome?',
   },
+  winRate: {
+    'de-DE': 'Siegquote',
+    'en-US': 'Win Rate',
+    'es-MX': 'Tasa de victorias',
+    'fr-FR': 'Taux de victoire',
+    'hi-IN': 'जीत दर',
+    'it-IT': 'Percentuale vittorie',
+    'pt-BR': 'Taxa de vitória',
+  },
+  wins: {
+    'de-DE': 'Siege',
+    'en-US': 'Wins',
+    'es-MX': 'Victorias',
+    'fr-FR': 'Victoires',
+    'hi-IN': 'जीत',
+    'it-IT': 'Vittorie',
+    'pt-BR': 'Vitórias',
+  },
   writeNewMessage: {
     'de-DE': 'Neue Nachricht schreiben',
     'en-US': 'Write New Message',
@@ -2022,6 +2565,15 @@ const translations: Translations = {
     'hi-IN': 'आप खेल का अवलोकन कर रहे हैं',
     'it-IT': 'Stai assistendo',
     'pt-BR': 'Você está assistindo',
+  },
+  yourRanking: {
+    'de-DE': 'Deine Platzierung',
+    'en-US': 'Your Ranking',
+    'es-MX': 'Tu clasificación',
+    'fr-FR': 'Votre classement',
+    'hi-IN': 'आपकी रैंकिंग',
+    'it-IT': 'La tua classifica',
+    'pt-BR': 'Sua classificação',
   },
 }
 

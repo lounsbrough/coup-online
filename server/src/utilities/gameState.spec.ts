@@ -20,6 +20,7 @@ import {
 import { getValue, setValue } from './storage'
 import { compressString, decompressString } from './compression'
 import { getCurrentTimestamp } from './time'
+import { recordGameStats } from './stats'
 import { dehydrateGameState } from '../../../shared/helpers/state'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import {
@@ -32,11 +33,13 @@ import {
 vi.mock('./storage')
 vi.mock('./compression')
 vi.mock('./time')
+vi.mock('./stats')
 const getValueMock = vi.mocked(getValue)
 const setValueMock = vi.mocked(setValue)
 const compressStringMock = vi.mocked(compressString)
 const decompressStringMock = vi.mocked(decompressString)
 const getCurrentTimestampMock = vi.mocked(getCurrentTimestamp)
+const recordGameStatsMock = vi.mocked(recordGameStats)
 
 const chance = new Chance()
 
@@ -227,6 +230,73 @@ describe('gameState', () => {
 
       expect(compressStringMock).not.toHaveBeenCalled()
       expect(setValueMock).not.toHaveBeenCalled()
+    })
+
+    it('should fire-and-forget recordGameStats when game ends', async () => {
+      const gameState = getRandomGameState({ playersCount: 2 })
+      gameState.isStarted = true
+      gameState.gameId = 'test-game-id'
+      gameState.turnPlayer = gameState.players[0].name
+
+      const compressedStateString = 'compressed'
+      getValueMock.mockResolvedValue(
+        JSON.stringify(dehydrateGameState(gameState)),
+      )
+      compressStringMock.mockReturnValue(compressedStateString)
+      getCurrentTimestampMock.mockReturnValue(new Date())
+      recordGameStatsMock.mockResolvedValue(undefined)
+
+      await mutateGameState(gameState, (state) => {
+        // Kill player 1 — move their influences to dead
+        const killed = state.players[1].influences.splice(0)
+        state.players[1].deadInfluences.push(...killed)
+      })
+
+      expect(recordGameStatsMock).toHaveBeenCalledTimes(1)
+      expect(setValueMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('should still save game state when recordGameStats rejects', async () => {
+      const gameState = getRandomGameState({ playersCount: 2 })
+      gameState.isStarted = true
+      gameState.gameId = 'test-game-id'
+      gameState.turnPlayer = gameState.players[0].name
+
+      const compressedStateString = 'compressed'
+      getValueMock.mockResolvedValue(
+        JSON.stringify(dehydrateGameState(gameState)),
+      )
+      compressStringMock.mockReturnValue(compressedStateString)
+      getCurrentTimestampMock.mockReturnValue(new Date())
+      recordGameStatsMock.mockRejectedValue(new Error('Firestore down'))
+
+      // Should not throw despite recordGameStats failing
+      await mutateGameState(gameState, (state) => {
+        const killed = state.players[1].influences.splice(0)
+        state.players[1].deadInfluences.push(...killed)
+      })
+
+      expect(recordGameStatsMock).toHaveBeenCalledTimes(1)
+      expect(setValueMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('should not call recordGameStats when game is not ending', async () => {
+      const gameState = getRandomGameState({ playersCount: 2 })
+      gameState.isStarted = true
+      gameState.gameId = 'test-game-id'
+      gameState.turnPlayer = gameState.players[0].name
+
+      getValueMock.mockResolvedValue(
+        JSON.stringify(dehydrateGameState(gameState)),
+      )
+      compressStringMock.mockReturnValue('compressed')
+      getCurrentTimestampMock.mockReturnValue(new Date())
+
+      await mutateGameState(gameState, (state) => {
+        state.players[0].coins -= 1
+      })
+
+      expect(recordGameStatsMock).not.toHaveBeenCalled()
     })
   })
 

@@ -8,6 +8,7 @@ import { MaterialThemeContextProvider } from './contexts/MaterialThemeContext'
 import { TranslationContextProvider } from './contexts/TranslationsContext'
 import { UserSettingsContextProvider } from './contexts/UserSettingsContext'
 import { NotificationsContextProvider } from './contexts/NotificationsContext'
+import { AuthContextProvider } from './contexts/AuthContext'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,13 +17,15 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <MaterialThemeContextProvider>
-        <TranslationContextProvider>
-          <NotificationsContextProvider>
-            <UserSettingsContextProvider>
-              <App />
-            </UserSettingsContextProvider>
-          </NotificationsContextProvider>
-        </TranslationContextProvider>
+        <AuthContextProvider>
+          <TranslationContextProvider>
+            <NotificationsContextProvider>
+              <UserSettingsContextProvider>
+                <App />
+              </UserSettingsContextProvider>
+            </NotificationsContextProvider>
+          </TranslationContextProvider>
+        </AuthContextProvider>
       </MaterialThemeContextProvider>
     </BrowserRouter>
   </React.StrictMode>

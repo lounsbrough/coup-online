@@ -1,20 +1,24 @@
 import { useCallback, useState, useRef } from "react"
 import { Analytics } from '@vercel/analytics/react'
-import { Box, Breadcrumbs, Button, Grid, Link, TextField, Typography } from "@mui/material"
+import { Box, Button, Grid, TextField } from "@mui/material"
 import { Person, Group, GroupAdd, Visibility } from "@mui/icons-material"
-import { Link as RouterLink, useNavigate, useSearchParams } from "react-router"
+import { useNavigate, useSearchParams } from "react-router"
 import { PlayerActions } from '@shared'
 import { getPlayerId } from "../../helpers/players"
 import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { useAuthContext } from '../../contexts/AuthContext'
 import CoupTypography from '../utilities/CoupTypography'
+import { useDisplayName } from '../../hooks/useDisplayName'
 
 function JoinGame() {
   const [searchParams] = useSearchParams()
   const [roomId, setRoomId] = useState(searchParams.get('roomId') ?? '')
   const [playerName, setPlayerName] = useState('')
+  const { displayName: profileName, loading: profileNameLoading } = useDisplayName()
   const navigate = useNavigate()
   const { t } = useTranslationContext()
+  const { user } = useAuthContext()
   const formRef = useRef<HTMLFormElement>(null)
   const playerNameInputRef = useRef<HTMLInputElement>(null)
 
@@ -23,7 +27,7 @@ function JoinGame() {
   }, [navigate, roomId])
 
   const { trigger: joinTrigger, isMutating: joinIsMutating } = useGameMutation<{
-    roomId: string, playerId: string, playerName: string
+    roomId: string, playerId: string, playerName: string, uid?: string, photoURL?: string
   }>({ action: PlayerActions.joinGame, callback: navigateToRoom })
 
   const { trigger: spectateTrigger, isMutating: spectateIsMutating } = useGameMutation<{
@@ -33,14 +37,6 @@ function JoinGame() {
   return (
     <>
       <Analytics />
-      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link component={RouterLink} to='/'>
-          {t('home')}
-        </Link>
-        <Typography>
-          {t('joinExistingGame')}
-        </Typography>
-      </Breadcrumbs>
       <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('joinExistingGame')}
       </CoupTypography>
@@ -50,14 +46,16 @@ function JoinGame() {
         onSubmit={(event) => {
           event.preventDefault()
 
-          const buttonId = (event.nativeEvent as SubmitEvent).submitter?.id
+          const buttonId = event.nativeEvent.submitter?.id
 
           if (buttonId === 'joinGameButton') {
             playerNameInputRef.current!.setAttribute('required', '')
             if (formRef.current!.checkValidity()) joinTrigger({
               roomId: roomId.trim(),
               playerId: getPlayerId(),
-              playerName: playerName.trim()
+              playerName: (profileName ?? playerName).trim(),
+              ...(user && { uid: user.uid }),
+              ...(user?.photoURL && { photoURL: user.photoURL }),
             })
           } else if (buttonId === 'spectateGameButton') {
             playerNameInputRef.current!.removeAttribute('required')
@@ -97,13 +95,17 @@ function JoinGame() {
                   htmlInput: { ref: playerNameInputRef }
                 }}
                 data-testid='playerNameInput'
-                value={playerName}
+                value={profileName ?? playerName}
                 onChange={(event) => {
-                  setPlayerName(event.target.value.slice(0, 10))
+                  if (!profileName) {
+                    setPlayerName(event.target.value.slice(0, 10))
+                  }
                 }}
-                label={t('whatIsYourName')}
+                label={!profileName && t('whatIsYourName')}
                 variant="standard"
-                required
+                required={!profileName}
+                disabled={!!profileName || profileNameLoading}
+                helperText={profileName ? t('nameFromProfile') : undefined}
               />
             </Box>
           </Grid>

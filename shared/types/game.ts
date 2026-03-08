@@ -184,6 +184,8 @@ export type Player = {
   grudges: {
     [playerName: string]: number;
   };
+  uid?: string;
+  photoURL?: string;
 };
 
 export type DehydratedPlayer = Omit<
@@ -286,6 +288,8 @@ export type GameState = {
     player: string;
   };
   settings: GameSettings;
+  gameId?: string;
+  gameActionStats?: import('./user').GameActionStats;
 };
 
 export type DehydratedGameState = Omit<

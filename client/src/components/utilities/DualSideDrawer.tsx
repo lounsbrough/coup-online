@@ -27,6 +27,7 @@ const MainContent = ({ openLeft, openRight, children }: MainContentProps) => {
       component="main"
       sx={{
         flexGrow: 1,
+        minWidth: 0,
         ...(theme.isLargeScreen && {
           ml: openLeft ? `${leftDesktopDrawerWidth}` : 0,
           mr: openRight ? `${rightDesktopDrawerWidth}` : 0,
@@ -45,7 +46,7 @@ const MainContent = ({ openLeft, openRight, children }: MainContentProps) => {
           }),
       }}
     >
-      <Box sx={{ width: "100%" }}>
+      <Box sx={{ width: "100%", overflowX: "auto" }}>
         {children}
       </Box>
     </Box >

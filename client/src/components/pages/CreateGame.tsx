@@ -1,17 +1,14 @@
 import { useCallback, useState } from 'react'
 import {
   Box,
-  Breadcrumbs,
   Button,
   Grid,
-  Link,
   Slider,
   Switch,
   TextField,
-  Typography,
 } from '@mui/material'
 import { AddCircle, Person } from '@mui/icons-material'
-import { Link as RouterLink, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { getPlayerId } from '../../helpers/players'
 import { Analytics } from '@vercel/analytics/react'
 import {
@@ -21,6 +18,7 @@ import {
 } from '@shared'
 import useGameMutation from '../../hooks/useGameMutation'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
+import { useAuthContext } from '../../contexts/AuthContext'
 import {
   allowReviveStorageKey,
   eventLogRetentionTurnsStorageKey,
@@ -29,15 +27,18 @@ import {
 } from '../../helpers/localStorageKeys'
 import CoupTypography from '../utilities/CoupTypography'
 import { usePersistedState } from '../../hooks/usePersistedState'
+import { useDisplayName } from '../../hooks/useDisplayName'
 
 function CreateGame() {
   const [playerName, setPlayerName] = useState('')
+  const { displayName: profileName, loading: profileNameLoading } = useDisplayName()
   const [eventLogRetentionTurns, setEventLogRetentionTurns] = usePersistedState<number>(eventLogRetentionTurnsStorageKey, 3)
   const [allowRevive, setAllowRevive] = usePersistedState<boolean>(allowReviveStorageKey, false)
   const [speedRoundEnabled, setSpeedRoundEnabled] = usePersistedState<boolean>(speedRoundEnabledStorageKey, false)
   const [speedRoundSeconds, setSpeedRoundSeconds] = usePersistedState<number>(speedRoundSecondsStorageKey, 10)
   const navigate = useNavigate()
   const { t } = useTranslationContext()
+  const { user } = useAuthContext()
 
   const navigateToRoom = useCallback(
     (gameState: DehydratedPublicGameState) => {
@@ -50,17 +51,13 @@ function CreateGame() {
     playerId: string
     playerName: string
     settings: GameSettings
+    uid?: string
+    photoURL?: string
   }>({ action: PlayerActions.createGame, callback: navigateToRoom })
 
   return (
     <>
       <Analytics />
-      <Breadcrumbs sx={{ m: 2 }} aria-label="breadcrumb">
-        <Link component={RouterLink} to="/">
-          {t('home')}
-        </Link>
-        <Typography>{t('createNewGame')}</Typography>
-      </Breadcrumbs>
       <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('createNewGame')}
       </CoupTypography>
@@ -69,12 +66,14 @@ function CreateGame() {
           event.preventDefault()
           trigger({
             playerId: getPlayerId(),
-            playerName: playerName.trim(),
+            playerName: (profileName ?? playerName).trim(),
             settings: {
               eventLogRetentionTurns,
               allowRevive,
               ...(speedRoundEnabled && { speedRoundSeconds }),
             },
+            ...(user && { uid: user.uid }),
+            ...(user?.photoURL && { photoURL: user.photoURL }),
           })
         }}
       >
@@ -86,13 +85,17 @@ function CreateGame() {
                 name="coup-game-player-name"
                 autoComplete="off"
                 data-testid="playerNameInput"
-                value={playerName}
+                value={profileName ?? playerName}
                 onChange={(event) => {
-                  setPlayerName(event.target.value.slice(0, 10))
+                  if (!profileName) {
+                    setPlayerName(event.target.value.slice(0, 10))
+                  }
                 }}
-                label={t('whatIsYourName')}
+                label={!profileName && t('whatIsYourName')}
                 variant="standard"
-                required
+                required={!profileName}
+                disabled={!!profileName || profileNameLoading}
+                helperText={profileName ? t('nameFromProfile') : undefined}
               />
             </Box>
           </Grid>

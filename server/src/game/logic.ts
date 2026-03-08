@@ -1,9 +1,12 @@
+import crypto from 'node:crypto'
 import { shuffle } from "../utilities/array"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, Influences, Player, Responses } from "../../../shared/types/game"
+import { emptyPlayerActionStats } from "../../../shared/types/user"
 import { createGameState, drawCardFromDeck, getGameState, logEvent, shuffleDeck } from "../utilities/gameState"
 import { createDeckForPlayerCount } from "../utilities/deck"
 import { ActionNotCurrentlyAllowedError, UnableToDetermineNextPlayerTurnError, UnableToFindPlayerError } from "../utilities/errors"
 import { MAX_PLAYER_COUNT } from "../../../shared/helpers/playerCount"
+import { recordTurnSurvived, recordAssassination, recordInfluenceKill, recordSteal } from './statsAccumulator'
 
 export const killPlayerInfluence = (state: GameState, playerName: string, influence: Influences) => {
   const player = state.players.find(({ name }) => name === playerName)
@@ -91,6 +94,8 @@ export const processPendingAction = (state: GameState) => {
 
     actionPlayer.coins -= ActionAttributes.Assassinate.coinsRequired!
     holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Assassinate] })
+    recordAssassination(state, actionPlayer.name)
+    recordInfluenceKill(state, actionPlayer.name, targetPlayer.name)
     promptPlayerToLoseInfluence(state, targetPlayer.name)
   } else if (state.pendingAction.action === Actions.Exchange) {
     removeClaimedInfluence(actionPlayer)
@@ -107,6 +112,7 @@ export const processPendingAction = (state: GameState) => {
     }
 
     holdGrudge({ state, offended: targetPlayer.name, offender: actionPlayer.name, weight: grudgeSizes[Actions.Steal] })
+    recordSteal(state, actionPlayer.name, targetPlayer.name)
     const coinsAvailable = Math.min(2, targetPlayer.coins)
     actionPlayer.coins += coinsAvailable
     targetPlayer.coins -= coinsAvailable
@@ -168,12 +174,16 @@ export const addPlayerToGame = ({
   playerName,
   ai = false,
   personality,
+  uid,
+  photoURL,
 }: {
   state: GameState
   playerId: string
   playerName: string
   ai?: boolean
   personality?: AiPersonality
+  uid?: string
+  photoURL?: string
 }) => {
   const randomPersonality = () => Math.floor(Math.random() * 101)
 
@@ -189,6 +199,8 @@ export const addPlayerToGame = ({
     ai,
     grudges: {},
     personalityHidden: ai && !personality,
+    ...(uid && { uid }),
+    ...(photoURL && { photoURL }),
     ...(ai && {
       personality: personality ?? {
         honesty: randomPersonality(),
@@ -209,14 +221,18 @@ export const removePlayerFromGame = (state: GameState, playerName: string) => {
   state.deck = createDeckForPlayerCount(state.players.length)
 }
 
-export const createNewGame = async (roomId: string, playerId: string, playerName: string, gameSettings: GameSettings) => {
+export const createNewGame = async (roomId: string, playerId: string, playerName: string, gameSettings: GameSettings, uid?: string, photoURL?: string) => {
   const newGameState = getNewGameState(roomId, gameSettings)
-  addPlayerToGame({ state: newGameState, playerId, playerName })
+  addPlayerToGame({ state: newGameState, playerId, playerName, ...(uid ? { uid } : {}), ...(photoURL ? { photoURL } : {}) })
   await createGameState(roomId, newGameState)
 }
 
 export const startGame = (gameState: GameState) => {
   gameState.isStarted = true
+  gameState.gameId = crypto.randomUUID()
+  gameState.gameActionStats = Object.fromEntries(
+    gameState.players.map((player) => [player.name, emptyPlayerActionStats()])
+  )
   gameState.players = shuffle(gameState.players)
   gameState.players.forEach((player) => {
     player.influences.push(...Array.from({ length: 2 }, () => drawCardFromDeck(gameState)))
@@ -276,6 +292,8 @@ export const revealAndReplaceInfluence = (state: GameState, playerName: string, 
 }
 
 export const moveTurnToNextPlayer = (state: GameState) => {
+  recordTurnSurvived(state)
+
   const currentIndex = state.players.findIndex((player) => player.name === state.turnPlayer)
 
   let nextIndex = currentIndex + 1

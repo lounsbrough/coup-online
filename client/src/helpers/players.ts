@@ -1,4 +1,5 @@
 import { playerIdStorageKey } from './localStorageKeys'
+import { generateUUID } from './uuid'
 import { PublicGameState, PublicPlayer } from '@shared'
 
 export const getPlayerId = () => {
@@ -7,7 +8,7 @@ export const getPlayerId = () => {
     return existingPlayerId
   }
 
-  const playerId = globalThis.crypto.randomUUID()
+  const playerId = generateUUID()
   localStorage.setItem(playerIdStorageKey, playerId)
   return playerId
 }
