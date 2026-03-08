@@ -13,9 +13,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from '@mui/material'
-import { EmojiEvents, Person } from '@mui/icons-material'
+import { EmojiEvents, Info, Person } from '@mui/icons-material'
 import { LeaderboardEntry, LeaderboardResponse, RankedLeaderboardEntry } from '@shared'
 import { getBaseUrl } from '../../helpers/api'
 import { COUP_GOLD } from '../../helpers/styles'
@@ -99,6 +100,19 @@ function Leaderboard() {
                 <TableRow>
                   <TableCell align="center" sx={{ width: 60 }}>#</TableCell>
                   <TableCell>{t('player')}</TableCell>
+                  <TableCell align="center">
+                    <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
+                      {t('rating')}
+                      <Tooltip
+                        title={t('ratingExplanation')}
+                        arrow
+                        enterTouchDelay={0}
+                        leaveTouchDelay={5000}
+                      >
+                        <Info sx={{ fontSize: 16, opacity: 0.6, cursor: 'help' }} />
+                      </Tooltip>
+                    </Box>
+                  </TableCell>
                   <TableCell align="center">{t('winRate')}</TableCell>
                   <TableCell align="center">{t('gamesPlayed')}</TableCell>
                   <TableCell align="center">{t('wins')}/{t('losses')}</TableCell>
@@ -146,8 +160,11 @@ function Leaderboard() {
                       </TableCell>
                       <TableCell align="center">
                         <Typography fontWeight="bold">
-                          {Math.round(entry.winRate * 100)}%
+                          {entry.rating}
                         </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        {Math.round(entry.winRate * 100)}%
                       </TableCell>
                       <TableCell align="center">{entry.gamesPlayed}</TableCell>
                       <TableCell align="center">
@@ -160,7 +177,7 @@ function Leaderboard() {
                 {userEntry && (
                   <>
                     <TableRow>
-                      <TableCell colSpan={6} sx={{ p: 0 }}>
+                      <TableCell colSpan={7} sx={{ p: 0 }}>
                         <Divider>
                           <Typography variant="caption" color="text.secondary">
                             {t('yourRanking')}
@@ -193,8 +210,11 @@ function Leaderboard() {
                       </TableCell>
                       <TableCell align="center">
                         <Typography fontWeight="bold">
-                          {Math.round(userEntry.winRate * 100)}%
+                          {userEntry.rating}
                         </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        {Math.round(userEntry.winRate * 100)}%
                       </TableCell>
                       <TableCell align="center">{userEntry.gamesPlayed}</TableCell>
                       <TableCell align="center">

@@ -8,6 +8,33 @@ const USERS_COLLECTION = 'users'
 const MIN_LOGGED_IN_PLAYERS = 2
 const MAX_OPPONENTS = 25
 
+/**
+ * Wilson score interval lower bound for ranking.
+ * https://grokipedia.com/page/Binomial_proportion_confidence_interval
+ *
+ * Computes the lower bound of a 95% confidence interval for win rate,
+ * which naturally accounts for sample size. Players with few games get
+ * a conservative (lower) rating, while players with many games converge
+ * toward their actual win rate.
+ *
+ * Formula: (p̂ + z²/2n − z√(p̂(1−p̂)/n + z²/4n²)) / (1 + z²/n)
+ * where p̂ = observed win rate, n = games played, z = 1.96 (95% confidence)
+ *
+ * Returns a value 0–100 (percentage scale).
+ */
+const wilsonScoreRating = (winRate: number, gamesPlayed: number): number => {
+  if (gamesPlayed === 0) return 0
+  const z = 1.96 // 95% confidence
+  const n = gamesPlayed
+  const p = winRate
+  const z2 = z * z
+  const denominator = 1 + z2 / n
+  const centre = p + z2 / (2 * n)
+  const margin = z * Math.sqrt((p * (1 - p)) / n + z2 / (4 * n * n))
+  const lowerBound = (centre - margin) / denominator
+  return Math.round(Math.max(0, lowerBound) * 1000) / 10
+}
+
 const userStatsCache = new TTLCache<UserStats | null>(30_000)
 const displayNameCache = new TTLCache<string | null>(60_000)
 const rankedListCache = new TTLCache<RankedLeaderboardEntry[]>(60_000)
@@ -306,6 +333,7 @@ const getRankedList = async (minGames: number): Promise<RankedLeaderboardEntry[]
   const entries: RankedLeaderboardEntry[] = snapshot.docs
     .map((doc) => {
       const data = doc.data() as UserStats
+      const winRate = data.gamesPlayed > 0 ? data.gamesWon / data.gamesPlayed : 0
       return {
         uid: data.uid,
         displayName: data.displayName,
@@ -315,10 +343,11 @@ const getRankedList = async (minGames: number): Promise<RankedLeaderboardEntry[]
         gamesLost: data.gamesLost,
         longestWinStreak: data.longestWinStreak,
         currentWinStreak: data.currentWinStreak,
-        winRate: data.gamesPlayed > 0 ? data.gamesWon / data.gamesPlayed : 0,
+        winRate,
+        rating: wilsonScoreRating(winRate, data.gamesPlayed),
       }
     })
-    .sort((a, b) => b.winRate - a.winRate || b.gamesWon - a.gamesWon)
+    .sort((a, b) => b.rating - a.rating || b.gamesWon - a.gamesWon)
     .map((entry, index) => ({ ...entry, rank: index + 1 }))
 
   rankedListCache.set(cacheKey, entries)

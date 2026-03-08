@@ -88,6 +88,7 @@ export type LeaderboardEntry = Pick<
   'uid' | 'displayName' | 'photoURL' | 'gamesPlayed' | 'gamesWon' | 'gamesLost' | 'longestWinStreak' | 'currentWinStreak'
 > & {
   winRate: number;
+  rating: number;
 };
 
 export type RankedLeaderboardEntry = LeaderboardEntry & {
