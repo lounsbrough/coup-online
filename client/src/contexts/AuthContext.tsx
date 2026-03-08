@@ -50,6 +50,10 @@ export function AuthContextProvider({ children }: Readonly<{ children: ReactNode
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false)
+      return
+    }
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser)
       setLoading(false)
@@ -60,6 +64,7 @@ export function AuthContextProvider({ children }: Readonly<{ children: ReactNode
   const pendingCredential = useRef<OAuthCredential | null>(null)
 
   const signInAndLink = useCallback(async (provider: AuthProvider): Promise<SignInResult> => {
+    if (!auth) throw new Error('Firebase auth is not configured')
     try {
       const result = await signInWithPopup(auth, provider)
       if (pendingCredential.current) {
@@ -88,11 +93,12 @@ export function AuthContextProvider({ children }: Readonly<{ children: ReactNode
   const signInWithGitHub = useCallback(() => signInAndLink(githubProvider), [signInAndLink])
 
   const signOut = useCallback(async () => {
+    if (!auth) return
     await firebaseSignOut(auth)
   }, [])
 
   const deleteAccount = useCallback(async () => {
-    const currentUser = auth.currentUser
+    const currentUser = auth?.currentUser
     if (!currentUser) return
 
     const token = await currentUser.getIdToken()
@@ -115,7 +121,7 @@ export function AuthContextProvider({ children }: Readonly<{ children: ReactNode
   }, [])
 
   const getIdToken = useCallback(async () => {
-    if (!auth.currentUser) return null
+    if (!auth?.currentUser) return null
     return auth.currentUser.getIdToken()
   }, [])
 
