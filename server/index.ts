@@ -17,10 +17,10 @@ import { verifyIdToken } from './src/auth'
 import { adminAuth } from './src/firebase'
 import { containsProfanity } from './src/utilities/profanity'
 
-export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, error?: never } | { error: string, gameState?: never }
+export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, serverTime: string, error?: never } | { error: string, gameState?: never, serverTime?: never }
 
 type ServerToClientEvents = {
-  [ServerEvents.gameStateChanged]: (gameState: DehydratedPublicGameState) => void
+  [ServerEvents.gameStateChanged]: (payload: { gameState: DehydratedPublicGameState, serverTime: string }) => void
   [ServerEvents.error]: (error: string) => void
 }
 
@@ -547,8 +547,9 @@ io.on('connection', (socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId
             try {
               const publicGameState = dehydratePublicGameState(getPublicGameState({ gameState: fullGameState, playerId: pushToSocket.data.playerId }))
-              pushToSocket.emit(ServerEvents.gameStateChanged, publicGameState)
-              if (isCallerSocket) callback?.({ gameState: publicGameState })
+              const serverTime = new Date().toISOString()
+              pushToSocket.emit(ServerEvents.gameStateChanged, { gameState: publicGameState, serverTime })
+              if (isCallerSocket) callback?.({ gameState: publicGameState, serverTime })
             } catch (error) {
               console.error(error, { event, params })
               if (event === PlayerActions.checkAutoMove) return
@@ -601,7 +602,8 @@ const responseHandler = <T>(
       gameState: await getGameState(roomId),
       playerId
     }))
-    res.status(200).json({ gameState: publicGameState })
+    const serverTime = new Date().toISOString()
+    res.status(200).json({ gameState: publicGameState, serverTime })
   } catch (error) {
     console.error(error, { event, props })
     if (event === PlayerActions.checkAutoMove) return

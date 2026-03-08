@@ -5,7 +5,7 @@ import { useGameStateContext } from '../../contexts/GameStateContext'
 const size = 60
 
 const SpeedRoundTimer: React.FC = () => {
-  const { gameState } = useGameStateContext()
+  const { gameState, serverTimeOffset } = useGameStateContext()
 
   const lastEventTimestamp = gameState?.lastEventTimestamp
   const speedRoundMs = (gameState?.settings?.speedRoundSeconds ?? 0) * 1000
@@ -21,7 +21,8 @@ const SpeedRoundTimer: React.FC = () => {
           ? lastEventTimestamp
           : lastEventTimestamp.getTime()
 
-      const elapsed = Date.now() - startTime
+      const adjustedNow = Date.now() + serverTimeOffset
+      const elapsed = adjustedNow - startTime
       const remaining = Math.max(0, speedRoundMs - elapsed)
 
       setMsRemaining(remaining)
@@ -31,7 +32,7 @@ const SpeedRoundTimer: React.FC = () => {
     const timer = setInterval(updateTimer, 100)
 
     return () => clearInterval(timer)
-  }, [lastEventTimestamp, speedRoundMs])
+  }, [lastEventTimestamp, speedRoundMs, serverTimeOffset])
 
   if (!gameState || !speedRoundMs || msRemaining === undefined) {
     return null

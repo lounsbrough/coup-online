@@ -1114,7 +1114,7 @@ describe('index', () => {
             .removeAllListeners(ServerEvents.gameStateChanged)
             .on(
               ServerEvents.gameStateChanged,
-              (gameState: DehydratedPublicGameState) => {
+              ({ gameState }: { gameState: DehydratedPublicGameState, serverTime: string }) => {
                 resolve(gameState)
               },
             )
