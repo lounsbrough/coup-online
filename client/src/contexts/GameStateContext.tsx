@@ -11,16 +11,19 @@ type GameStateContextType = {
   gameState?: PublicGameState | undefined,
   setDehydratedGameState: (newGameState: DehydratedPublicGameState) => void
   hasInitialStateLoaded: boolean
+  serverTimeOffset: number
 }
 
 export const GameStateContext = createContext<GameStateContextType>({
   setDehydratedGameState: () => { },
-  hasInitialStateLoaded: false
+  hasInitialStateLoaded: false,
+  serverTimeOffset: 0
 })
 
 export function GameStateContextProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [hasInitialStateLoaded, setHasInitialStateLoaded] = useState(false)
   const [dehydratedGameState, setDehydratedGameState] = useState<DehydratedPublicGameState>()
+  const [serverTimeOffset, setServerTimeOffset] = useState(0)
   const [searchParams] = useSearchParams()
   const { socket, isConnected } = useWebSocketContext()
   const { language } = useTranslationContext()
@@ -32,14 +35,23 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
     [dehydratedGameState]
   )
 
-  const setDehydratedGameStateIfChanged = useCallback((newState: DehydratedPublicGameState) => {
+  const updateServerTimeOffset = useCallback((serverTime?: string) => {
+    if (serverTime) {
+      const serverNow = new Date(serverTime).getTime()
+      const clientNow = Date.now()
+      setServerTimeOffset(serverNow - clientNow)
+    }
+  }, [])
+
+  const setDehydratedGameStateIfChanged = useCallback((newState: DehydratedPublicGameState, serverTime?: string) => {
+    updateServerTimeOffset(serverTime)
     setDehydratedGameState((prevState) => prevState && isSameState(prevState, newState) ? prevState : newState)
-  }, [setDehydratedGameState])
+  }, [setDehydratedGameState, updateServerTimeOffset])
 
   const handleGameStateResponse = useCallback(async (response: Response) => {
     if (response.ok) {
-      const { gameState: newState } = await response.json()
-      setDehydratedGameStateIfChanged(newState)
+      const { gameState: newState, serverTime } = await response.json()
+      setDehydratedGameStateIfChanged(newState, serverTime)
     }
     setHasInitialStateLoaded(true)
   }, [setDehydratedGameStateIfChanged, setHasInitialStateLoaded])
@@ -65,8 +77,8 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
       return
     }
 
-    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, (dehydratedGameState) => {
-      setDehydratedGameStateIfChanged(dehydratedGameState)
+    socket.removeAllListeners(ServerEvents.gameStateChanged).on(ServerEvents.gameStateChanged, ({ gameState: dehydratedGameState, serverTime }: { gameState: DehydratedPublicGameState, serverTime: string }) => {
+      setDehydratedGameStateIfChanged(dehydratedGameState, serverTime)
       setHasInitialStateLoaded(true)
     })
     socket.removeAllListeners(ServerEvents.error).on(ServerEvents.error, (error) => {
@@ -95,9 +107,9 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
 
     const interval = setInterval(() => {
       if (socket && isConnected) {
-        socket.emit(PlayerActions.checkAutoMove, { roomId, playerId: getPlayerId(), language }, ({ gameState: newGameState }: { gameState?: DehydratedPublicGameState }) => {
+        socket.emit(PlayerActions.checkAutoMove, { roomId, playerId: getPlayerId(), language }, ({ gameState: newGameState, serverTime }: { gameState?: DehydratedPublicGameState, serverTime?: string }) => {
           if (newGameState) {
-            setDehydratedGameStateIfChanged(newGameState)
+            setDehydratedGameStateIfChanged(newGameState, serverTime)
           }
         })
       } else {
@@ -117,8 +129,9 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
   const contextValue = useMemo(() => ({
     gameState,
     setDehydratedGameState,
-    hasInitialStateLoaded
-  }), [gameState, setDehydratedGameState, hasInitialStateLoaded])
+    hasInitialStateLoaded,
+    serverTimeOffset
+  }), [gameState, setDehydratedGameState, hasInitialStateLoaded, serverTimeOffset])
 
   return (
     <GameStateContext.Provider value={contextValue}>

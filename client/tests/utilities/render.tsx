@@ -71,6 +71,7 @@ export const render = (jsx: React.JSX.Element, {
       gameState: resolvedGameState,
       setDehydratedGameState: () => { },
       hasInitialStateLoaded: true,
+      serverTimeOffset: 0,
     }), [resolvedGameState])
 
     return (
