@@ -126,12 +126,13 @@ export const recordGameStats = async (gameState: GameState) => {
 
     const userRef = firestore.collection(USERS_COLLECTION).doc(player.uid)
 
-    try {
-      await firestore.runTransaction(async (transaction) => {
-        const doc = await transaction.get(userRef)
-        const existing: UserStats = doc.exists
-          ? (doc.data() as UserStats)
-          : createEmptyUserStats(player.uid!, player.name, player.photoURL)
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        await firestore.runTransaction(async (transaction) => {
+          const doc = await transaction.get(userRef)
+          const existing: UserStats = doc.exists
+            ? (doc.data() as UserStats)
+            : createEmptyUserStats(player.uid!, player.name, player.photoURL)
 
         // Purge and check dedup
         const processedGames = purgeOldProcessedGames(existing.processedGames ?? {})
@@ -230,11 +231,17 @@ export const recordGameStats = async (gameState: GameState) => {
         transaction.set(userRef, existing)
       })
 
-      // Invalidate caches for this player
-      userStatsCache.invalidate(player.uid)
-      displayNameCache.invalidate(player.uid)
-    } catch (error) {
-      console.error(`Failed to record stats for user ${player.uid}:`, error)
+        // Invalidate caches for this player
+        userStatsCache.invalidate(player.uid)
+        displayNameCache.invalidate(player.uid)
+        break
+      } catch (error) {
+        if (attempt === 3) {
+          console.error(`Failed to record stats for user ${player.uid} after 3 attempts:`, error)
+        } else {
+          await new Promise((resolve) => setTimeout(resolve, 500 * attempt))
+        }
+      }
     }
   }
 

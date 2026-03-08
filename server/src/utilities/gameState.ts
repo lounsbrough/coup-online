@@ -155,7 +155,7 @@ export const mutateGameState = async (
     const previousAlivePlayers = validatedState.players.filter(({ influences }) => influences.length > 0)
     const currentAlivePlayers = gameState.players.filter(({ influences }) => influences.length > 0)
     if (currentAlivePlayers.length === 1 && previousAlivePlayers.length > 1) {
-      await recordGameStats(gameState)
+      recordGameStats(gameState).catch(() => {})
     }
   }
 
