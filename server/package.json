@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.check.json",
     "test": "vitest run --coverage",
     "build": "rm -rf dist && tsc",
-    "dev": "node --env-file=.env.local -r ts-node/register index.ts",
+    "dev": "node --env-file-if-exists=.env.local -r ts-node/register index.ts",
     "start": "node dist/server/index.js"
   },
   "keywords": [],
