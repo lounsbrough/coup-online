@@ -2,10 +2,6 @@ import { within, waitFor, act, render, fireEvent } from '@testing-library/react'
 import { vi, beforeEach, afterEach, expect, it } from 'vitest'
 import { NotificationsContextProvider, useNotificationsContext } from './NotificationsContext'
 
-vi.mock('./TranslationsContext', () => ({
-  useTranslationContext: () => ({ t: (key: string) => `[${key}](translated)` })
-}))
-
 function MockComponentThatWantsToShowNotification() {
   const { showNotification, removeNotification } = useNotificationsContext()
 
@@ -86,13 +82,9 @@ it('should show test error notification and should be dismissable', async () => 
   ] = await findAllByText(/that button is the worst!/i)
 
   const firstNotification = firstNotificationMessage.parentElement!
-  const firstNotificationSeveritySpan = firstNotification.querySelector('span')
   const secondNotification = secondNotificationMessage.parentElement!
 
-  expect(firstNotification).toHaveTextContent(/\[error\]\(translated\): that button is the worst!/i)
-  expect(firstNotificationSeveritySpan).toHaveStyle({
-    textTransform: 'capitalize', fontWeight: 'bold'
-  })
+  expect(firstNotification).toHaveTextContent(/that button is the worst!/i)
   const errorIcon = await within(firstNotification).findByTestId('ErrorOutlineIcon')
   expect(errorIcon).toBeInTheDocument()
 

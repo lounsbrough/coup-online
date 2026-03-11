@@ -1,6 +1,6 @@
 import { createContext, useState, useMemo, useRef, useContext, useCallback, ReactNode, useEffect } from 'react'
-import { Alert, AlertColor, Fade } from '@mui/material'
-import { useTranslationContext } from './TranslationsContext'
+import { Alert, AlertColor, Box, Button, Fade, IconButton } from '@mui/material'
+import { Close } from '@mui/icons-material'
 import { generateUUID } from '../helpers/uuid'
 
 interface Notification {
@@ -8,6 +8,8 @@ interface Notification {
   message: string | ReactNode;
   severity: AlertColor;
   eternal?: boolean;
+  action?: { label: ReactNode; icon?: ReactNode; onClick: () => void };
+  onDismiss?: () => void;
   dismissTimeout?: ReturnType<typeof setTimeout>;
   dismissed?: boolean;
 }
@@ -97,18 +99,28 @@ function playChime(): void {
 export function NotificationsContextProvider({ children }: NotificationsContextProviderProps) {
   const notificationsContainerRef = useRef<HTMLDivElement>(null)
   const [notifications, setNotifications] = useState<Notification[]>([])
-  const { t } = useTranslationContext()
+
+  const notificationsRef = useRef<Notification[]>(notifications)
+  useEffect(() => {
+    notificationsRef.current = notifications
+  }, [notifications])
 
   const dismissNotification = useCallback((id: string) => {
+    const notification = notificationsRef.current.find((n) => n.id === id)
+
+    if (!notification) return
+
+    if (notification.dismissTimeout) {
+      clearTimeout(notification.dismissTimeout)
+    }
+
+    notification.onDismiss?.()
+
     setNotifications((existing) => {
-      const index = existing.findIndex((notification) => notification.id === id)
+      const index = existing.findIndex((n) => n.id === id)
 
       if (index === -1) {
         return existing
-      }
-
-      if (existing[index].dismissTimeout) {
-        clearTimeout(existing[index].dismissTimeout)
       }
 
       const modified = [...existing]
@@ -174,11 +186,6 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
     })
   }, [dismissNotification])
 
-  const notificationsRef = useRef<Notification[]>(notifications)
-  useEffect(() => {
-    notificationsRef.current = notifications
-  }, [notifications])
-
   const unmountHandler = () => {
     notificationsRef.current.forEach(({ dismissTimeout }) => clearTimeout(dismissTimeout))
   }
@@ -200,13 +207,15 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
             top: '3.5rem',
             left: '50%',
             transform: 'translateX(-50%)',
-            zIndex: '1301',
+            zIndex: '1299',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
+            width: '100vw',
+            maxWidth: '600px',
           }}
         >
-          {notifications.map(({ id, severity, message, dismissed }) => (
+          {notifications.map(({ id, severity, message, dismissed, action }) => (
             <Fade
               key={id}
               in={!dismissed}
@@ -214,13 +223,36 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
               timeout={{ enter: 300, exit: 500 }}
             >
               <Alert
-                onClose={() => dismissNotification(id)}
                 severity={severity}
-                sx={{ marginTop: 1, minWidth: '300px' }}
+                sx={{ marginTop: 1, minWidth: '300px', alignItems: 'center' }}
+                action={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    {action && (
+                      <Button
+                        variant="contained"
+                        color="inherit"
+                        size="small"
+                        startIcon={action.icon}
+                        sx={{ whiteSpace: 'nowrap' }}
+                        onClick={() => {
+                          action.onClick()
+                          dismissNotification(id)
+                        }}
+                      >
+                        {action.label}
+                      </Button>
+                    )}
+                    <IconButton
+                      size="small"
+                      color="inherit"
+                      aria-label="close"
+                      onClick={() => dismissNotification(id)}
+                    >
+                      <Close fontSize="small" />
+                    </IconButton>
+                  </Box>
+                }
               >
-                <span style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
-                  {`${t(severity)}: `}
-                </span>
                 {message}
               </Alert>
             </Fade>

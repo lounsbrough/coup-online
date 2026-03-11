@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router'
 import {
   Avatar,
   Box,
+  Button,
   CircularProgress,
   Divider,
   Link,
@@ -16,14 +17,13 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
-import { EmojiEvents, Info, Person } from '@mui/icons-material'
+import { EmojiEvents, Google, Info, Person } from '@mui/icons-material'
 import { LeaderboardEntry, LeaderboardResponse, RankedLeaderboardEntry } from '@shared'
 import { getBaseUrl } from '../../helpers/api'
 import { COUP_GOLD } from '../../helpers/styles'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import { useAuthContext } from '../../contexts/AuthContext'
 import CoupTypography from '../utilities/CoupTypography'
-import LoginButton from '../LoginButton'
 
 function getMedalColor(rank: number): string | undefined {
   if (rank === 1) return COUP_GOLD
@@ -34,7 +34,7 @@ function getMedalColor(rank: number): string | undefined {
 
 function Leaderboard() {
   const { t } = useTranslationContext()
-  const { user, loading: authLoading } = useAuthContext()
+  const { user, loading: authLoading, signInWithGoogle } = useAuthContext()
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [userEntry, setUserEntry] = useState<RankedLeaderboardEntry | undefined>()
   const [loading, setLoading] = useState(true)
@@ -84,11 +84,18 @@ function Leaderboard() {
       )}
 
       {!authLoading && !user && (
-        <Box sx={{ mt: 3, mb: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ mt: 2, mb: 7, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
           <CoupTypography addTextShadow color="text.secondary">
             {t('signInToTrackStats')}
           </CoupTypography>
-          <LoginButton buttonProps={{ variant: 'contained' }} />
+          <Button
+            variant="contained"
+            startIcon={<Google />}
+            sx={{ whiteSpace: 'nowrap' }}
+            onClick={() => { signInWithGoogle().catch(console.error) }}
+          >
+            {t('signIn')}
+          </Button>
         </Box>
       )}
 

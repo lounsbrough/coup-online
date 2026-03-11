@@ -13,15 +13,13 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { GitHub, Google, Login, Logout, Person } from '@mui/icons-material'
+import { Google, Login, Logout, Person } from '@mui/icons-material'
 import { useAuthContext } from '../contexts/AuthContext'
-import { useNotificationsContext } from '../contexts/NotificationsContext'
 import { useTranslationContext } from '../contexts/TranslationsContext'
 import { Link as RouterLink } from 'react-router'
 
 function LoginButton({ buttonProps }: Readonly<{ buttonProps?: ButtonProps }>) {
-  const { user, loading, signInWithGoogle, signInWithGitHub, signOut } = useAuthContext()
-  const { showNotification } = useNotificationsContext()
+  const { user, loading, signInWithGoogle, signOut } = useAuthContext()
   const { t } = useTranslationContext()
   const { isSmallScreen } = useTheme()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -117,37 +115,14 @@ function LoginButton({ buttonProps }: Readonly<{ buttonProps?: ButtonProps }>) {
       >
         <MenuItem onClick={async () => {
           try {
-            const { linked } = await signInWithGoogle()
-            if (linked) {
-              showNotification({ message: t('accountsLinkedSuccessfully'), severity: 'success' })
-            }
+            await signInWithGoogle()
           } catch (error) {
             console.error('Google sign-in error:', error)
-            if ((error as { code?: string }).code === 'auth/account-exists-with-different-credential') {
-              showNotification({ message: t('accountExistsSignInWithGitHub'), severity: 'warning' })
-            }
           }
           handleMenuClose()
         }}>
           <ListItemIcon><Google fontSize="small" /></ListItemIcon>
-          <ListItemText>{t('signInWithGoogle')}</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={async () => {
-          try {
-            const { linked } = await signInWithGitHub()
-            if (linked) {
-              showNotification({ message: t('accountsLinkedSuccessfully'), severity: 'success' })
-            }
-          } catch (error) {
-            console.error('GitHub sign-in error:', error)
-            if ((error as { code?: string }).code === 'auth/account-exists-with-different-credential') {
-              showNotification({ message: t('accountExistsSignInWithGoogle'), severity: 'warning' })
-            }
-          }
-          handleMenuClose()
-        }}>
-          <ListItemIcon><GitHub fontSize="small" /></ListItemIcon>
-          <ListItemText>{t('signInWithGitHub')}</ListItemText>
+          <ListItemText>{t('signIn')}</ListItemText>
         </MenuItem>
       </Menu>
     </>
