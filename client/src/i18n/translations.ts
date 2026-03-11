@@ -180,16 +180,11 @@ export type Translations = ActionMessages &
     // Auth & Profile
     signIn: TranslationsForString
     signOut: TranslationsForString
-    signInWithGoogle: TranslationsForString
-    signInWithGitHub: TranslationsForString
     profile: TranslationsForString
     profileNotFound: TranslationsForString
     leaderboard: TranslationsForString
     viewLeaderboard: TranslationsForString
     noLeaderboardData: TranslationsForString
-    accountExistsSignInWithGoogle: TranslationsForString
-    accountExistsSignInWithGitHub: TranslationsForString
-    accountsLinkedSuccessfully: TranslationsForString
     signInToTrackStats: TranslationsForString
     gamesPlayed: TranslationsForString
     winRate: TranslationsForString
@@ -237,33 +232,6 @@ export type Translations = ActionMessages &
   }
 
 const translations: Translations = {
-  accountExistsSignInWithGitHub: {
-    'de-DE': 'Ein Konto mit dieser E-Mail existiert bereits. Bitte melde dich mit GitHub an, um deine Konten zu verknüpfen.',
-    'en-US': 'An account with this email already exists. Please sign in with GitHub to link your accounts.',
-    'es-MX': 'Ya existe una cuenta con este correo. Inicia sesión con GitHub para vincular tus cuentas.',
-    'fr-FR': 'Un compte avec cet e-mail existe déjà. Veuillez vous connecter avec GitHub pour lier vos comptes.',
-    'hi-IN': 'इस ईमेल से पहले से एक खाता मौजूद है। अपने खातों को जोड़ने के लिए GitHub से साइन इन करें।',
-    'it-IT': 'Esiste già un account con questa email. Accedi con GitHub per collegare i tuoi account.',
-    'pt-BR': 'Já existe uma conta com este e-mail. Entre com GitHub para vincular suas contas.',
-  },
-  accountExistsSignInWithGoogle: {
-    'de-DE': 'Ein Konto mit dieser E-Mail existiert bereits. Bitte melde dich mit Google an, um deine Konten zu verknüpfen.',
-    'en-US': 'An account with this email already exists. Please sign in with Google to link your accounts.',
-    'es-MX': 'Ya existe una cuenta con este correo. Inicia sesión con Google para vincular tus cuentas.',
-    'fr-FR': 'Un compte avec cet e-mail existe déjà. Veuillez vous connecter avec Google pour lier vos comptes.',
-    'hi-IN': 'इस ईमेल से पहले से एक खाता मौजूद है। अपने खातों को जोड़ने के लिए Google से साइन इन करें।',
-    'it-IT': 'Esiste già un account con questa email. Accedi con Google per collegare i tuoi account.',
-    'pt-BR': 'Já existe uma conta com este e-mail. Entre com Google para vincular suas contas.',
-  },
-  accountsLinkedSuccessfully: {
-    'de-DE': 'Deine Konten wurden erfolgreich verknüpft!',
-    'en-US': 'Your accounts have been linked successfully!',
-    'es-MX': '¡Tus cuentas se han vinculado correctamente!',
-    'fr-FR': 'Vos comptes ont été liés avec succès !',
-    'hi-IN': 'आपके खाते सफलतापूर्वक जोड़ दिए गए हैं!',
-    'it-IT': 'I tuoi account sono stati collegati con successo!',
-    'pt-BR': 'Suas contas foram vinculadas com sucesso!',
-  },
   achievements: {
     'de-DE': 'Erfolge',
     'en-US': 'Achievements',
@@ -2297,30 +2265,12 @@ const translations: Translations = {
   },
   signInToTrackStats: {
     'de-DE': 'Melde dich an, um deine Statistiken zu verfolgen',
-    'en-US': 'Sign in to track your stats on the leaderboard',
+    'en-US': 'Sign in to track your stats',
     'es-MX': 'Inicia sesión para seguir tus estadísticas',
     'fr-FR': 'Connectez-vous pour suivre vos statistiques',
     'hi-IN': 'अपने आँकड़े ट्रैक करने के लिए साइन इन करें',
     'it-IT': 'Accedi per monitorare le tue statistiche',
     'pt-BR': 'Entre para acompanhar suas estatísticas',
-  },
-  signInWithGitHub: {
-    'de-DE': 'Mit GitHub anmelden',
-    'en-US': 'Sign in with GitHub',
-    'es-MX': 'Iniciar sesión con GitHub',
-    'fr-FR': 'Se connecter avec GitHub',
-    'hi-IN': 'GitHub से साइन इन करें',
-    'it-IT': 'Accedi con GitHub',
-    'pt-BR': 'Entrar com GitHub',
-  },
-  signInWithGoogle: {
-    'de-DE': 'Mit Google anmelden',
-    'en-US': 'Sign in with Google',
-    'es-MX': 'Iniciar sesión con Google',
-    'fr-FR': 'Se connecter avec Google',
-    'hi-IN': 'Google से साइन इन करें',
-    'it-IT': 'Accedi con Google',
-    'pt-BR': 'Entrar com Google',
   },
   signOut: {
     'de-DE': 'Abmelden',

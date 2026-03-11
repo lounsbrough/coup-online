@@ -6,30 +6,21 @@ import {
   useEffect,
   useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import {
   User,
-  AuthProvider,
-  OAuthCredential,
   onAuthStateChanged,
   signInWithPopup,
   signOut as firebaseSignOut,
-  linkWithCredential,
-  OAuthProvider,
   deleteUser,
 } from 'firebase/auth'
-import { FirebaseError } from 'firebase/app'
-import { auth, googleProvider, githubProvider } from '../firebase'
+import { auth, googleProvider } from '../firebase'
 import { getBaseUrl } from '../helpers/api'
-
-type SignInResult = { linked: boolean }
 
 type AuthContextType = {
   user: User | null
   loading: boolean
-  signInWithGoogle: () => Promise<SignInResult>
-  signInWithGitHub: () => Promise<SignInResult>
+  signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
   deleteAccount: () => Promise<void>
   getIdToken: () => Promise<string | null>
@@ -38,8 +29,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  signInWithGoogle: async () => ({ linked: false }),
-  signInWithGitHub: async () => ({ linked: false }),
+  signInWithGoogle: async () => { },
   signOut: async () => { },
   deleteAccount: async () => { },
   getIdToken: async () => null,
@@ -61,36 +51,10 @@ export function AuthContextProvider({ children }: Readonly<{ children: ReactNode
     return unsubscribe
   }, [])
 
-  const pendingCredential = useRef<OAuthCredential | null>(null)
-
-  const signInAndLink = useCallback(async (provider: AuthProvider): Promise<SignInResult> => {
+  const signInWithGoogle = useCallback(async () => {
     if (!auth) throw new Error('Firebase auth is not configured')
-    try {
-      const result = await signInWithPopup(auth, provider)
-      if (pendingCredential.current) {
-        try {
-          await linkWithCredential(result.user, pendingCredential.current)
-          pendingCredential.current = null
-          return { linked: true }
-        } catch (linkError) {
-          console.error('Failed to link credential:', linkError)
-          pendingCredential.current = null
-        }
-      }
-      return { linked: false }
-    } catch (error) {
-      if (error instanceof FirebaseError && error.code === 'auth/account-exists-with-different-credential') {
-        const credential = OAuthProvider.credentialFromError(error)
-        if (credential) {
-          pendingCredential.current = credential
-        }
-      }
-      throw error
-    }
+    await signInWithPopup(auth, googleProvider)
   }, [])
-
-  const signInWithGoogle = useCallback(() => signInAndLink(googleProvider), [signInAndLink])
-  const signInWithGitHub = useCallback(() => signInAndLink(githubProvider), [signInAndLink])
 
   const signOut = useCallback(async () => {
     if (!auth) return
@@ -129,11 +93,10 @@ export function AuthContextProvider({ children }: Readonly<{ children: ReactNode
     user,
     loading,
     signInWithGoogle,
-    signInWithGitHub,
     signOut,
     deleteAccount,
     getIdToken,
-  }), [user, loading, signInWithGoogle, signInWithGitHub, signOut, deleteAccount, getIdToken])
+  }), [user, loading, signInWithGoogle, signOut, deleteAccount, getIdToken])
 
   return (
     <AuthContext.Provider value={value}>
