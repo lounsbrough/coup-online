@@ -34,7 +34,7 @@ function Victory({ player }: { player: PublicPlayer }) {
       eternal: true,
       onDismiss: setLoginNudgeShown,
       action: {
-        label: t('signIn') as string,
+        label: t('signIn'),
         icon: <Google fontSize="small" />,
         onClick: () => { signInWithGoogle().catch(console.error) }
       }

@@ -8,7 +8,7 @@ interface Notification {
   message: string | ReactNode;
   severity: AlertColor;
   eternal?: boolean;
-  action?: { label: string; icon?: ReactNode; onClick: () => void };
+  action?: { label: ReactNode; icon?: ReactNode; onClick: () => void };
   onDismiss?: () => void;
   dismissTimeout?: ReturnType<typeof setTimeout>;
   dismissed?: boolean;
@@ -100,19 +100,28 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
   const notificationsContainerRef = useRef<HTMLDivElement>(null)
   const [notifications, setNotifications] = useState<Notification[]>([])
 
+  const notificationsRef = useRef<Notification[]>(notifications)
+  useEffect(() => {
+    notificationsRef.current = notifications
+  }, [notifications])
+
   const dismissNotification = useCallback((id: string) => {
+    const notification = notificationsRef.current.find((n) => n.id === id)
+
+    if (!notification) return
+
+    if (notification.dismissTimeout) {
+      clearTimeout(notification.dismissTimeout)
+    }
+
+    notification.onDismiss?.()
+
     setNotifications((existing) => {
-      const index = existing.findIndex((notification) => notification.id === id)
+      const index = existing.findIndex((n) => n.id === id)
 
       if (index === -1) {
         return existing
       }
-
-      if (existing[index].dismissTimeout) {
-        clearTimeout(existing[index].dismissTimeout)
-      }
-
-      existing[index].onDismiss?.()
 
       const modified = [...existing]
       modified[index] = {
@@ -177,11 +186,6 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
     })
   }, [dismissNotification])
 
-  const notificationsRef = useRef<Notification[]>(notifications)
-  useEffect(() => {
-    notificationsRef.current = notifications
-  }, [notifications])
-
   const unmountHandler = () => {
     notificationsRef.current.forEach(({ dismissTimeout }) => clearTimeout(dismissTimeout))
   }
@@ -241,6 +245,7 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
                     <IconButton
                       size="small"
                       color="inherit"
+                      aria-label="close"
                       onClick={() => dismissNotification(id)}
                     >
                       <Close fontSize="small" />
