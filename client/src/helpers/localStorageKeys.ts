@@ -10,3 +10,4 @@ export const speedRoundSecondsStorageKey = 'coupSpeedRoundSeconds'
 export const chooseAiPersonalityStorageKey = 'coupChooseAiPersonality'
 export const getLatestReadMessageIdStorageKey = (roomId: string) =>
   `coupLatestReadMessageId-${roomId}`
+export const loginNudgeLastShownStorageKey = 'coupLoginNudgeLastShown'
