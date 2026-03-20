@@ -27,7 +27,8 @@ export const getGameStateHandler = async ({ roomId, playerId }: {
   roomId: string
   playerId: string
 }) => {
-  return { roomId, playerId }
+  const gameState = await getGameState(roomId)
+  return { roomId, playerId, gameState }
 }
 
 export const createGameHandler = async ({ playerId, playerName, settings, uid, photoURL }: {
@@ -43,9 +44,9 @@ export const createGameHandler = async ({ playerId, playerName, settings, uid, p
     throw new RoomIdAlreadyExistsError(roomId)
   }
 
-  await createNewGame(roomId, playerId, playerName, settings, uid, photoURL)
+  const gameState = await createNewGame(roomId, playerId, playerName, settings, uid, photoURL)
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState }
 }
 
 export const joinGameHandler = async ({ roomId, playerId, playerName, uid, photoURL }: {
@@ -58,10 +59,11 @@ export const joinGameHandler = async ({ roomId, playerId, playerName, uid, photo
   const gameState = await getGameState(roomId)
 
   const player = gameState.players.find((player) => player.id === playerId)
+  let latestState: GameState = gameState
 
   if (player) {
     if (player.name.toUpperCase() !== playerName.toUpperCase()) {
-      await mutateGameState(gameState, (state) => {
+      latestState = await mutateGameState(latestState, (state) => {
         if (state.isStarted) {
           throw new DifferentPlayerNameError(player.name)
         }
@@ -78,7 +80,7 @@ export const joinGameHandler = async ({ roomId, playerId, playerName, uid, photo
     }
     // Update uid/photoURL if the player logs in after joining
     if (uid && !player.uid) {
-      await mutateGameState(gameState, (state) => {
+      latestState = await mutateGameState(latestState, (state) => {
         const existingPlayer = state.players.find((p) => p.id === playerId)
         if (existingPlayer) {
           existingPlayer.uid = uid
@@ -87,7 +89,7 @@ export const joinGameHandler = async ({ roomId, playerId, playerName, uid, photo
       })
     }
   } else {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (state.players.length >= MAX_PLAYER_COUNT) {
         throw new RoomIsFullError(roomId)
       }
@@ -106,7 +108,7 @@ export const joinGameHandler = async ({ roomId, playerId, playerName, uid, photo
     })
   }
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: latestState }
 }
 
 export const addAiPlayerHandler = async ({ roomId, playerId, playerName, personality }: {
@@ -119,7 +121,7 @@ export const addAiPlayerHandler = async ({ roomId, playerId, playerName, persona
 
   getPlayerInRoom({ gameState, playerId })
 
-  await mutateGameState(gameState, (state) => {
+  const updatedState = await mutateGameState(gameState, (state) => {
     if (state.players.length >= MAX_PLAYER_COUNT) {
       throw new RoomIsFullError(roomId)
     }
@@ -143,7 +145,7 @@ export const addAiPlayerHandler = async ({ roomId, playerId, playerName, persona
     })
   })
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const removeFromGameHandler = async ({ roomId, playerId, playerName }: {
@@ -165,11 +167,11 @@ export const removeFromGameHandler = async ({ roomId, playerId, playerName }: {
     throw new PlayerNotInGameError()
   }
 
-  await mutateGameState(gameState, (state) => {
+  const updatedState = await mutateGameState(gameState, (state) => {
     removePlayerFromGame(state, playerName)
   })
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const resetGameRequestHandler = async ({ roomId, playerId }: {
@@ -182,17 +184,18 @@ export const resetGameRequestHandler = async ({ roomId, playerId }: {
 
   const gameIsOver = gameState.players.filter(({ influences }) => influences.length).length === 1
 
+  let latestState: GameState
   if (gameIsOver || !humanOpponentsRemain(gameState, player)) {
-    await resetGame(roomId)
+    latestState = await resetGame(roomId)
   } else {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (state.isStarted && !state.resetGameRequest) {
         state.resetGameRequest = { player: player.name }
       }
     })
   }
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: latestState }
 }
 
 export const resetGameRequestCancelHandler = async ({ roomId, playerId }: {
@@ -203,11 +206,11 @@ export const resetGameRequestCancelHandler = async ({ roomId, playerId }: {
 
   getPlayerInRoom({ gameState, playerId })
 
-  await mutateGameState(gameState, (state) => {
+  const updatedState = await mutateGameState(gameState, (state) => {
     delete state.resetGameRequest
   })
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const resetGameHandler = async ({ roomId, playerId }: {
@@ -232,9 +235,9 @@ export const resetGameHandler = async ({ roomId, playerId }: {
     }
   }
 
-  await resetGame(roomId)
+  const updatedState = await resetGame(roomId)
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
@@ -258,7 +261,7 @@ export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
     throw new YouAreDeadError()
   }
 
-  await mutateGameState(gameState, (state) => {
+  const updatedState = await mutateGameState(gameState, (state) => {
     const playerToForfeit = state.players.find(({ id }) => id === playerId)
     if (!playerToForfeit) {
       throw new UnableToFindPlayerError()
@@ -300,7 +303,7 @@ export const forfeitGameHandler = async ({ roomId, playerId, replaceWithAi }: {
     }
   })
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const startGameHandler = async ({ roomId, playerId }: {
@@ -319,9 +322,9 @@ export const startGameHandler = async ({ roomId, playerId }: {
     throw new GameInProgressError()
   }
 
-  await mutateGameState(gameState, startGame)
+  const updatedState = await mutateGameState(gameState, startGame)
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const checkAutoMoveHandler = async ({ roomId, playerId }: {
@@ -330,8 +333,8 @@ export const checkAutoMoveHandler = async ({ roomId, playerId }: {
 }) => {
   const gameState = await getGameState(roomId)
 
-  const unchangedResponse = { roomId, playerId, stateUnchanged: true }
-  const changedResponse = { roomId, playerId }
+  const unchangedResponse = { roomId, playerId, stateUnchanged: true, gameState }
+  const changedResponse = (state: GameState) => ({ roomId, playerId, gameState: state })
 
   const remainingPlayers = gameState.players.filter(({ influences }) => influences.length)
   const playersForAutoMove = []
@@ -353,23 +356,24 @@ export const checkAutoMoveHandler = async ({ roomId, playerId }: {
     if (!suggestedMove) continue
     const [move, params] = suggestedMove
 
+    let result: { gameState: GameState }
     if (move === PlayerActions.loseInfluences) {
-      await loseInfluencesHandler({ ...(params as Parameters<typeof loseInfluencesHandler>[0]), isForcedMove })
+      result = await loseInfluencesHandler({ ...(params as Parameters<typeof loseInfluencesHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.action) {
-      await actionHandler({ ...(params as Parameters<typeof actionHandler>[0]), isForcedMove })
+      result = await actionHandler({ ...(params as Parameters<typeof actionHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.actionResponse) {
-      await actionResponseHandler({ ...(params as Parameters<typeof actionResponseHandler>[0]), isForcedMove })
+      result = await actionResponseHandler({ ...(params as Parameters<typeof actionResponseHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.actionChallengeResponse) {
-      await actionChallengeResponseHandler({ ...(params as Parameters<typeof actionChallengeResponseHandler>[0]), isForcedMove })
+      result = await actionChallengeResponseHandler({ ...(params as Parameters<typeof actionChallengeResponseHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.blockResponse) {
-      await blockResponseHandler({ ...(params as Parameters<typeof blockResponseHandler>[0]), isForcedMove })
+      result = await blockResponseHandler({ ...(params as Parameters<typeof blockResponseHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.blockChallengeResponse) {
-      await blockChallengeResponseHandler({ ...(params as Parameters<typeof blockChallengeResponseHandler>[0]), isForcedMove })
+      result = await blockChallengeResponseHandler({ ...(params as Parameters<typeof blockChallengeResponseHandler>[0]), isForcedMove })
     } else {
       throw new ActionNotCurrentlyAllowedError()
     }
 
-    return changedResponse
+    return changedResponse(result.gameState)
   }
 
   return unchangedResponse
@@ -431,9 +435,10 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
     throw new TargetPlayerIsSelfError()
   }
 
+  let latestState: GameState = gameState
   if (!ActionAttributes[action].blockable && !ActionAttributes[action].challengeable) {
     if (action === Actions.Coup) {
-      await mutateGameState(gameState, (state) => {
+      latestState = await mutateGameState(gameState, (state) => {
         if (isForcedMove) logForcedMove(state, player)
 
         if (!targetPlayer) {
@@ -467,7 +472,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
         promptPlayerToLoseInfluence(state, targetPlayer)
       })
     } else if (action === Actions.Revive) {
-      await mutateGameState(gameState, (state) => {
+      latestState = await mutateGameState(gameState, (state) => {
         if (isForcedMove) logForcedMove(state, player)
 
         const revivePlayer = state.players.find(({ id }) => id === playerId)
@@ -499,7 +504,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
         })
       })
     } else if (action === Actions.Income) {
-      await mutateGameState(gameState, (state) => {
+      latestState = await mutateGameState(gameState, (state) => {
         if (isForcedMove) logForcedMove(state, player)
 
         const incomePlayer = state.players.find(({ id }) => id === playerId)
@@ -526,7 +531,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
       })
     }
   } else {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: player.id }))) {
@@ -564,7 +569,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
     })
   }
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: latestState }
 }
 
 export const processPassActionResponse = (state: GameState, playerName: string) => {
@@ -635,8 +640,9 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     throw new ActionNotCurrentlyAllowedError()
   }
 
+  let latestState: GameState
   if (response === Responses.Pass) {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       return processPassActionResponse(state, player.name)
@@ -650,7 +656,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       throw new ActionNotChallengeableError()
     }
 
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       recordChallengeMade(state, player.name)
@@ -678,7 +684,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       throw new ActionNotCurrentlyAllowedError()
     }
 
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       if (!state.pendingAction) {
@@ -713,7 +719,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
     })
   }
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: latestState! }
 }
 
 export const actionChallengeResponseHandler = async ({ roomId, playerId, influence, isForcedMove }: {
@@ -740,8 +746,9 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     throw new MissingInfluenceError()
   }
 
+  let latestState: GameState
   if (InfluenceAttributes[influence].legalAction === gameState.pendingAction!.action) {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       if (!state.pendingAction || !state.pendingActionChallenge) {
@@ -790,7 +797,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       }
     })
   } else {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
@@ -821,7 +828,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
     })
   }
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: latestState }
 }
 
 export const processPassBlockResponse = (state: GameState, playerName: string) => {
@@ -896,8 +903,9 @@ export const blockResponseHandler = async ({ roomId, playerId, response, isForce
     throw new BlockMayNotBeBlockedError()
   }
 
+  let latestState: GameState
   if (response === Responses.Challenge) {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       const blockPlayer = state.players.find(({ name }) => name === state.pendingBlock?.sourcePlayer)
@@ -915,14 +923,14 @@ export const blockResponseHandler = async ({ roomId, playerId, response, isForce
       state.pendingBlockChallenge = { sourcePlayer: player.name }
     })
   } else if (response === Responses.Pass) {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       return processPassBlockResponse(state, player.name)
     })
   }
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: latestState! }
 }
 
 export const blockChallengeResponseHandler = async ({ roomId, playerId, influence, isForcedMove }: {
@@ -949,8 +957,9 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     throw new MissingInfluenceError()
   }
 
+  let latestState: GameState
   if (influence === gameState.pendingBlock!.claimedInfluence) {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       if (!state.pendingAction || !state.pendingBlock) {
@@ -994,7 +1003,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
       promptPlayerToLoseInfluence(state, challengePlayer.name)
     })
   } else {
-    await mutateGameState(gameState, (state) => {
+    latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
       const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
@@ -1034,7 +1043,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
     })
   }
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: latestState }
 }
 
 export const loseInfluencesHandler = async ({ roomId, playerId, influences, isForcedMove }: {
@@ -1067,7 +1076,7 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences, isFo
     throw new MissingInfluenceError()
   }
 
-  await mutateGameState(gameState, (state) => {
+  const updatedState = await mutateGameState(gameState, (state) => {
     if (isForcedMove) logForcedMove(state, player)
 
     const losingPlayer = state.players.find(({ id }) => id === playerId)
@@ -1101,7 +1110,7 @@ export const loseInfluencesHandler = async ({ roomId, playerId, influences, isFo
     })
   })
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const sendChatMessageHandler = async ({ roomId, playerId, messageId, messageText }: {
@@ -1114,7 +1123,7 @@ export const sendChatMessageHandler = async ({ roomId, playerId, messageId, mess
 
   const player = getPlayerInRoom({ gameState, playerId })
 
-  await mutateGameState(gameState, (state) => {
+  const updatedState = await mutateGameState(gameState, (state) => {
     const existingMessage = state.chatMessages.find(({ id }) => id === messageId)
 
     if (existingMessage && existingMessage?.from !== player.name) {
@@ -1140,7 +1149,7 @@ export const sendChatMessageHandler = async ({ roomId, playerId, messageId, mess
     }
   })
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const setChatMessageDeletedHandler = async ({ roomId, playerId, messageId, deleted }: {
@@ -1153,7 +1162,7 @@ export const setChatMessageDeletedHandler = async ({ roomId, playerId, messageId
 
   const player = getPlayerInRoom({ gameState, playerId })
 
-  await mutateGameState(gameState, (state) => {
+  const updatedState = await mutateGameState(gameState, (state) => {
     const existingMessage = state.chatMessages.find(({ id }) => id === messageId)
 
     if (!existingMessage) {
@@ -1167,7 +1176,7 @@ export const setChatMessageDeletedHandler = async ({ roomId, playerId, messageId
     existingMessage.deleted = deleted
   })
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
 
 export const setEmojiOnChatMessageHandler = async ({
@@ -1188,7 +1197,7 @@ export const setEmojiOnChatMessageHandler = async ({
 
   const player = getPlayerInRoom({ gameState, playerId })
 
-  await mutateGameState(gameState, (state) => {
+  const updatedState = await mutateGameState(gameState, (state) => {
     const existingMessage = state.chatMessages.find(
       ({ id }) => id === messageId
     )
@@ -1211,5 +1220,5 @@ export const setEmojiOnChatMessageHandler = async ({
     }
   })
 
-  return { roomId, playerId }
+  return { roomId, playerId, gameState: updatedState }
 }
