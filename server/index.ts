@@ -3,11 +3,11 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
-import { Actions, Influences, Responses, DehydratedPublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings } from '../shared/types/game'
+import { Actions, Influences, Responses, DehydratedPublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings, GameState } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAutoMoveHandler, createGameHandler, setChatMessageDeletedHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler, setEmojiOnChatMessageHandler, forfeitGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError, WrongPlayerIdOnSocketError } from './src/utilities/errors'
 import { Server as ioServer, Socket } from 'socket.io'
-import { getGameState, getPublicGameState } from './src/utilities/gameState'
+import { getPublicGameState } from './src/utilities/gameState'
 import { getObjectEntries } from './src/utilities/object'
 import { dehydratePublicGameState } from '../shared/helpers/state'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
@@ -79,7 +79,7 @@ const validateExpressQuery = (schema: ObjectSchema) => validateExpressRequest(sc
 
 const eventHandlers: {
   [event in PlayerActions]: {
-    handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean }>
+    handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean, gameState: GameState }>
     express: {
       method: 'post' | 'get'
       parseParams: (req: Request) => { language: AvailableLanguageCode } & Record<string, unknown>
@@ -522,7 +522,7 @@ io.on('connection', (socket) => {
         callback?.({ error })
       } else {
         try {
-          const { roomId, playerId, stateUnchanged } = await handler(params)
+          const { roomId, playerId, stateUnchanged, gameState } = await handler(params)
           if (!socket.data.playerId && playerId) {
             socket.data.playerId = playerId
           }
@@ -541,7 +541,7 @@ io.on('connection', (socket) => {
             return
           }
 
-          const fullGameState = await getGameState(roomId)
+          const fullGameState = gameState
 
           const emitGameStateChanged = async (pushToSocket: Socket) => {
             const isCallerSocket = pushToSocket.data.playerId === playerId
@@ -594,12 +594,12 @@ io.on('connection', (socket) => {
 
 const responseHandler = <T>(
   event: PlayerActions,
-  handler: (props: T) => Promise<{ roomId: string, playerId: string }>
+  handler: (props: T) => Promise<{ roomId: string, playerId: string, gameState: GameState }>
 ) => async (res: Response<DehydratedPublicGameStateOrError>, props: { language: AvailableLanguageCode } & T) => {
   try {
-    const { roomId, playerId } = await handler(props)
+    const { playerId, gameState } = await handler(props)
     const publicGameState = dehydratePublicGameState(getPublicGameState({
-      gameState: await getGameState(roomId),
+      gameState,
       playerId
     }))
     const serverTime = new Date().toISOString()

@@ -129,7 +129,7 @@ export type PostMutationOptions = { updateLastEventTimestamp?: boolean }
 export const mutateGameState = async (
   validatedState: GameState,
   mutation: (state: GameState) => PostMutationOptions | void
-) => {
+): Promise<GameState> => {
   const gameState = await getGameState(validatedState.roomId)
 
   const dehydratedValidatedGameState = dehydrateGameState(validatedState)
@@ -143,7 +143,7 @@ export const mutateGameState = async (
   const dehydratedGameState = dehydrateGameState(gameState)
 
   if (isSameState(dehydratedGameState, dehydratedValidatedGameState)) {
-    return
+    return gameState
   }
 
   if (updateLastEventTimestamp) {
@@ -155,11 +155,13 @@ export const mutateGameState = async (
     const previousAlivePlayers = validatedState.players.filter(({ influences }) => influences.length > 0)
     const currentAlivePlayers = gameState.players.filter(({ influences }) => influences.length > 0)
     if (currentAlivePlayers.length === 1 && previousAlivePlayers.length > 1) {
-      recordGameStats(gameState).catch(() => {})
+      recordGameStats(gameState).catch(() => { })
     }
   }
 
   await setGameState(validatedState.roomId, dehydratedGameState)
+
+  return rehydrateGameState(dehydratedGameState)
 }
 
 export const shuffleDeck = (state: GameState) => {

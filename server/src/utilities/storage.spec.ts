@@ -3,19 +3,20 @@ import * as redis from 'redis'
 import Chance from 'chance'
 import { getValue, setValue } from './storage'
 
-const expectedRedisStorage: { [key: string]: string } = {}
+const expectedRedisStorage: { [key: string]: Buffer } = {}
 
 vi.mock('redis', () => {
   const mockRedisClient = {
     on: vi.fn().mockReturnThis(),
     connect: vi.fn(),
-    get: vi.fn((key: string) => Promise.resolve(expectedRedisStorage[key])),
-    set: vi.fn((key: string, value: string, options?: redis.SetOptions) => {
+    withTypeMapping: vi.fn().mockReturnThis(),
+    get: vi.fn((key: string) => Promise.resolve(expectedRedisStorage[key] ?? null)),
+    set: vi.fn((key: string, value: Buffer, options?: redis.SetOptions) => {
       expectedRedisStorage[key] = value
       if (options?.EX) {
         setTimeout(() => {
           delete expectedRedisStorage[key]
-        }, options.EX * 1000)
+        }, (options.EX as number) * 1000)
       }
       return Promise.resolve('OK')
     }),
@@ -24,6 +25,7 @@ vi.mock('redis', () => {
 
   return {
     createClient: vi.fn(() => mockRedisClient),
+    RESP_TYPES: { BLOB_STRING: 36 },
   }
 })
 
@@ -39,7 +41,7 @@ describe('storage', () => {
   describe('getValue', () => {
     it('should return value from redis for given key', async () => {
       const key = chance.string()
-      const expectedValue = chance.string()
+      const expectedValue = Buffer.from(chance.string())
       expectedRedisStorage[key] = expectedValue
 
       expect(await getValue(key)).toBe(expectedValue)
@@ -49,7 +51,7 @@ describe('storage', () => {
   describe('setValue', () => {
     it('should set value in redis for given key and expire after expiration time', async () => {
       const key = chance.string()
-      const value = chance.string()
+      const value = Buffer.from(chance.string())
 
       expect(await setValue(key, value, 0.1)).toBeUndefined()
       expect(expectedRedisStorage[key]).toBe(value)

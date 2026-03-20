@@ -221,10 +221,11 @@ export const removePlayerFromGame = (state: GameState, playerName: string) => {
   state.deck = createDeckForPlayerCount(state.players.length)
 }
 
-export const createNewGame = async (roomId: string, playerId: string, playerName: string, gameSettings: GameSettings, uid?: string, photoURL?: string) => {
+export const createNewGame = async (roomId: string, playerId: string, playerName: string, gameSettings: GameSettings, uid?: string, photoURL?: string): Promise<GameState> => {
   const newGameState = getNewGameState(roomId, gameSettings)
   addPlayerToGame({ state: newGameState, playerId, playerName, ...(uid ? { uid } : {}), ...(photoURL ? { photoURL } : {}) })
   await createGameState(roomId, newGameState)
+  return newGameState
 }
 
 export const startGame = (gameState: GameState) => {
@@ -250,7 +251,7 @@ export const startGame = (gameState: GameState) => {
 export const humanOpponentsRemain = (gameState: GameState, player: Player) =>
   gameState.players.some(({ ai, name, influences }) => !ai && name !== player.name && influences.length)
 
-export const resetGame = async (roomId: string) => {
+export const resetGame = async (roomId: string): Promise<GameState> => {
   const oldGameState = await getGameState(roomId)
   const newGameState = getNewGameState(roomId, oldGameState.settings)
   newGameState.players = oldGameState.players.map((player) => ({
@@ -266,6 +267,7 @@ export const resetGame = async (roomId: string) => {
   newGameState.availablePlayerColors = oldGameState.availablePlayerColors
   newGameState.chatMessages = oldGameState.chatMessages
   await createGameState(roomId, newGameState)
+  return newGameState
 }
 
 export const revealAndReplaceInfluence = (state: GameState, playerName: string, influence: Influences, log: boolean = true) => {
