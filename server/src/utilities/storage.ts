@@ -1,4 +1,4 @@
-import { createClient, RedisClientType } from "redis"
+import { createClient, RESP_TYPES } from "redis"
 
 const createRedisClient = () =>
   createClient(
@@ -8,18 +8,21 @@ const createRedisClient = () =>
   )
     .on('error', (error: Error) => console.log('Redis Client Error', error))
     .connect()
+    .then((client) => client.withTypeMapping({
+      [RESP_TYPES.BLOB_STRING]: Buffer
+    }))
 
-let redisClientPromise: Promise<RedisClientType> | undefined
+let redisClientPromise: ReturnType<typeof createRedisClient> | undefined
 const getRedisClientPromise = () => {
-  redisClientPromise ??= createRedisClient() as Promise<RedisClientType>
+  redisClientPromise ??= createRedisClient()
   return redisClientPromise
 }
 
-export const getValue = async (key: string) => {
+export const getValue = async (key: string): Promise<Buffer | null> => {
   return (await getRedisClientPromise()).get(key)
 }
 
-export const setValue = async (key: string, value: string, lifeInSeconds: number) => {
+export const setValue = async (key: string, value: Buffer, lifeInSeconds: number) => {
   await (await getRedisClientPromise()).set(key, value, {
     EX: lifeInSeconds
   })

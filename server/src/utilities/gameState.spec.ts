@@ -89,23 +89,23 @@ const getRandomGameState = ({
 describe('gameState', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    compressStringMock.mockImplementation((string) => string)
-    decompressStringMock.mockImplementation((string) => string)
+    compressStringMock.mockImplementation((string) => Buffer.from(string))
+    decompressStringMock.mockImplementation((buffer) => Buffer.isBuffer(buffer) ? buffer.toString() : String(buffer))
   })
 
   describe('getGameState', () => {
     it('should get game state object from storage by room id key', async () => {
       const roomId = 'some room'
       const gameState = getRandomGameState()
-      const compressedStateString = 'some compressed base64'
-      getValueMock.mockResolvedValue(compressedStateString)
+      const compressedBuffer = Buffer.from('some compressed data')
+      getValueMock.mockResolvedValue(compressedBuffer)
       decompressStringMock.mockReturnValue(
         JSON.stringify(dehydrateGameState(gameState)),
       )
 
       expect(await getGameState(roomId)).toEqual(gameState)
       expect(decompressStringMock).toHaveBeenCalledTimes(1)
-      expect(decompressStringMock).toHaveBeenCalledWith(compressedStateString)
+      expect(decompressStringMock).toHaveBeenCalledWith(compressedBuffer)
       expect(getValueMock).toHaveBeenCalledTimes(1)
       expect(getValueMock).toHaveBeenCalledWith(roomId.toUpperCase())
     })
@@ -173,7 +173,7 @@ describe('gameState', () => {
   describe('mutateGameState', () => {
     it('should validate state before updating storage', async () => {
       const gameState = getRandomGameState()
-      getValueMock.mockResolvedValue(JSON.stringify(gameState))
+      getValueMock.mockResolvedValue(Buffer.from(JSON.stringify(gameState)))
 
       await expect(
         mutateGameState(gameState, (state) => {
@@ -187,11 +187,11 @@ describe('gameState', () => {
 
     it('should update storage with new state', async () => {
       const gameState = getRandomGameState()
-      const compressedStateString = 'some compressed base64'
+      const compressedBuffer = Buffer.from('some compressed data')
       getValueMock.mockResolvedValue(
-        JSON.stringify(dehydrateGameState(gameState)),
+        Buffer.from(JSON.stringify(dehydrateGameState(gameState))),
       )
-      compressStringMock.mockReturnValue(compressedStateString)
+      compressStringMock.mockReturnValue(compressedBuffer)
 
       getCurrentTimestampMock.mockReturnValue(new Date(1, 22, 2020))
 
@@ -211,18 +211,16 @@ describe('gameState', () => {
       const oneMonth = 2678400
       expect(setValueMock).toHaveBeenCalledWith(
         gameState.roomId.toUpperCase(),
-        compressedStateString,
+        compressedBuffer,
         oneMonth,
       )
     })
 
     it('should not update storage if state unchanged', async () => {
       const gameState = getRandomGameState()
-      const compressedStateString = 'some compressed base64'
       getValueMock.mockResolvedValue(
-        JSON.stringify(dehydrateGameState(gameState)),
+        Buffer.from(JSON.stringify(dehydrateGameState(gameState))),
       )
-      compressStringMock.mockReturnValue(compressedStateString)
 
       await mutateGameState(gameState, (state) => {
         state.players[0] = { ...state.players[0] }
@@ -238,11 +236,10 @@ describe('gameState', () => {
       gameState.gameId = 'test-game-id'
       gameState.turnPlayer = gameState.players[0].name
 
-      const compressedStateString = 'compressed'
       getValueMock.mockResolvedValue(
-        JSON.stringify(dehydrateGameState(gameState)),
+        Buffer.from(JSON.stringify(dehydrateGameState(gameState))),
       )
-      compressStringMock.mockReturnValue(compressedStateString)
+      compressStringMock.mockReturnValue(Buffer.from('compressed'))
       getCurrentTimestampMock.mockReturnValue(new Date())
       recordGameStatsMock.mockResolvedValue(undefined)
 
@@ -262,11 +259,10 @@ describe('gameState', () => {
       gameState.gameId = 'test-game-id'
       gameState.turnPlayer = gameState.players[0].name
 
-      const compressedStateString = 'compressed'
       getValueMock.mockResolvedValue(
-        JSON.stringify(dehydrateGameState(gameState)),
+        Buffer.from(JSON.stringify(dehydrateGameState(gameState))),
       )
-      compressStringMock.mockReturnValue(compressedStateString)
+      compressStringMock.mockReturnValue(Buffer.from('compressed'))
       getCurrentTimestampMock.mockReturnValue(new Date())
       recordGameStatsMock.mockRejectedValue(new Error('Firestore down'))
 
@@ -287,9 +283,9 @@ describe('gameState', () => {
       gameState.turnPlayer = gameState.players[0].name
 
       getValueMock.mockResolvedValue(
-        JSON.stringify(dehydrateGameState(gameState)),
+        Buffer.from(JSON.stringify(dehydrateGameState(gameState))),
       )
-      compressStringMock.mockReturnValue('compressed')
+      compressStringMock.mockReturnValue(Buffer.from('compressed'))
       getCurrentTimestampMock.mockReturnValue(new Date())
 
       await mutateGameState(gameState, (state) => {

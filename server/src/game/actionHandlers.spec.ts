@@ -43,17 +43,17 @@ const getValueMock = vi.mocked(getValue)
 const setValueMock = vi.mocked(setValue)
 
 const inMemoryStorage: {
-  [key: string]: string;
+  [key: string]: Buffer;
 } = {}
 
 getValueMock.mockImplementation(async (key: string) => {
   await new Promise((resolve) => {
     setTimeout(resolve, Math.floor(Math.random() * 10))
   })
-  return inMemoryStorage[key]
+  return inMemoryStorage[key] ?? null
 })
 
-setValueMock.mockImplementation(async (key: string, value: string) => {
+setValueMock.mockImplementation(async (key: string, value: Buffer) => {
   await new Promise((resolve) => {
     setTimeout(resolve, Math.floor(Math.random() * 10))
   })
