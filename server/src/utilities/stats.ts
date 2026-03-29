@@ -368,12 +368,6 @@ export const getLeaderboard = async (minGames: number = 5, limit: number = 50, u
   let userEntry: RankedLeaderboardEntry | undefined
   if (uid && !entries.some((e) => e.uid === uid)) {
     userEntry = rankedList.find((e) => e.uid === uid)
-
-    if (!userEntry) {
-      // User not in ranked list (below minGames threshold); find them in the full list
-      const fullList = await getRankedList(1)
-      userEntry = fullList.find((e) => e.uid === uid)
-    }
   }
 
   return { entries, ...(userEntry ? { userEntry } : {}) }

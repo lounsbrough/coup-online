@@ -331,29 +331,24 @@ describe('stats', () => {
         currentWinStreak: 1,
       }
 
-      // First call: getRankedList(100) — minGames-filtered list (no new user)
-      // Second call: getRankedList(1) — full list (includes new user)
-      mockGet
-        .mockResolvedValueOnce({ docs: [{ data: () => veteranData }] })
-        .mockResolvedValueOnce({ docs: [{ data: () => veteranData }, { data: () => newUserData }] })
+      // minGames=1 includes the new user in the main ranked list — no fallback query
+      mockGet.mockResolvedValueOnce({
+        docs: [{ data: () => veteranData }, { data: () => newUserData }],
+      })
 
-      const result = await getLeaderboard(100, 50, 'new-uid')
+      const result = await getLeaderboard(1, 50, 'new-uid')
 
-      expect(result.entries).toHaveLength(1)
-      expect(result.userEntry).toBeDefined()
-      expect(result.userEntry?.uid).toBe('new-uid')
-      expect(result.userEntry?.gamesPlayed).toBe(1)
-      expect(result.userEntry?.rank).toBeGreaterThan(0)
+      expect(result.entries).toHaveLength(2)
+      // new-uid is inside the top 50 so no separate userEntry needed
+      expect(result.entries.some((e) => e.uid === 'new-uid')).toBe(true)
+      expect(result.userEntry).toBeUndefined()
     })
 
     it('should not return userEntry for a user with zero games played', async () => {
-      // getRankedList(200) — empty list
-      // getRankedList(1) — also empty (user has 0 games, filtered out by >= 1)
-      mockGet
-        .mockResolvedValueOnce({ docs: [] })
-        .mockResolvedValueOnce({ docs: [] })
+      // getRankedList(2) — empty (user has 0 games, filtered out by >= 2)
+      mockGet.mockResolvedValueOnce({ docs: [] })
 
-      const result = await getLeaderboard(200, 50, 'no-games-uid')
+      const result = await getLeaderboard(2, 50, 'no-games-uid')
 
       expect(result.entries).toHaveLength(0)
       expect(result.userEntry).toBeUndefined()
