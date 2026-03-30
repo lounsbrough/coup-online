@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router'
 import {
   Avatar,
@@ -38,7 +38,7 @@ function Leaderboard() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [userEntry, setUserEntry] = useState<RankedLeaderboardEntry | undefined>()
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<ReactNode>(null)
 
   useEffect(() => {
     setLoading(true)
@@ -54,14 +54,14 @@ function Leaderboard() {
         setEntries(data.entries)
         setUserEntry(data.userEntry)
       })
-      .catch((err) => setError(err.message))
+      .catch(() => setError(t('somethingWentWrong')))
       .finally(() => setLoading(false))
-  }, [user?.uid])
+  }, [user?.uid, t])
 
   return (
     <>
-      <CoupTypography variant="h4" sx={{ m: 5 }} addTextShadow>
-        <EmojiEvents fontSize="large" sx={{ verticalAlign: 'middle', mr: 1, color: COUP_GOLD }} />
+      <CoupTypography variant="h4" sx={{ m: 5, display: 'flex', alignItems: 'center', justifyContent: 'center' }} addTextShadow>
+        <EmojiEvents fontSize="large" sx={{ mr: 1, color: COUP_GOLD }} />
         {t('leaderboard')}
       </CoupTypography>
 
@@ -100,7 +100,7 @@ function Leaderboard() {
       )}
 
       {!loading && !error && entries.length > 0 && (
-        <Box sx={{ maxWidth: 800, width: '100%', mx: 'auto', px: 2, mb: 4 }}>
+        <Box sx={{ maxWidth: { xs: 800, md: 1400 }, width: '100%', mx: 'auto', px: 2, mb: 4 }}>
           <TableContainer component={Paper} variant="outlined">
             <Table size="small" sx={{ whiteSpace: 'nowrap' }}>
               <TableHead>
