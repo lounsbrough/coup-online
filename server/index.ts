@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import { json } from 'body-parser'
 import cors from 'cors'
 import Joi, { ObjectSchema } from 'joi'
+import rateLimit from 'express-rate-limit'
 import { Actions, Influences, Responses, DehydratedPublicGameState, PlayerActions, ServerEvents, AiPersonality, GameSettings, GameState } from '../shared/types/game'
 import { actionChallengeResponseHandler, actionHandler, actionResponseHandler, addAiPlayerHandler, blockChallengeResponseHandler, blockResponseHandler, checkAutoMoveHandler, createGameHandler, setChatMessageDeletedHandler, getGameStateHandler, joinGameHandler, loseInfluencesHandler, removeFromGameHandler, resetGameHandler, resetGameRequestCancelHandler, resetGameRequestHandler, sendChatMessageHandler, startGameHandler, setEmojiOnChatMessageHandler, forfeitGameHandler } from './src/game/actionHandlers'
 import { GameMutationInputError, WrongPlayerIdOnSocketError } from './src/utilities/errors'
@@ -79,7 +80,8 @@ const validateExpressQuery = (schema: ObjectSchema) => validateExpressRequest(sc
 
 const eventHandlers: {
   [event in PlayerActions]: {
-    handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean, gameState: GameState }>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    handler: (args: any) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean, gameState: GameState }>
     express: {
       method: 'post' | 'get'
       parseParams: (req: Request) => { language: AvailableLanguageCode } & Record<string, unknown>
@@ -570,7 +572,7 @@ io.on('connection', (socket) => {
           } else {
             const roomSocketIds = io.of('/').adapter.rooms.get(socketRoom)
             if (roomSocketIds) {
-              const roomSockets = [...roomSocketIds].map((socketId) => io.sockets.sockets.get(socketId))
+              const roomSockets = [...roomSocketIds].map((socketId) => io.sockets.sockets.get(socketId)).filter((s) => s !== undefined)
               await Promise.all(roomSockets.map(emitGameStateChanged))
             }
           }
@@ -623,10 +625,17 @@ getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }
   })
 })
 
+const apiLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 60,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+})
+
 // Stats API endpoints
-app.get('/api/users/:uid/stats', async (req, res) => {
+app.get('/api/users/:uid/stats', apiLimiter, async (req, res) => {
   try {
-    const stats = await getUserStats(req.params.uid)
+    const stats = await getUserStats(req.params.uid as string)
     if (!stats) {
       res.status(404).json({ error: 'User not found' })
       return
@@ -638,9 +647,9 @@ app.get('/api/users/:uid/stats', async (req, res) => {
   }
 })
 
-app.get('/api/users/:uid/displayName', async (req, res) => {
+app.get('/api/users/:uid/displayName', apiLimiter, async (req, res) => {
   try {
-    const displayName = await getDisplayName(req.params.uid)
+    const displayName = await getDisplayName(req.params.uid as string)
     res.json({ displayName })
   } catch (error) {
     console.error('Error fetching display name:', error)
@@ -648,7 +657,7 @@ app.get('/api/users/:uid/displayName', async (req, res) => {
   }
 })
 
-app.put('/api/users/displayName', json(), async (req, res) => {
+app.put('/api/users/displayName', apiLimiter, json(), async (req, res) => {
   try {
     const authHeader = req.headers.authorization
     if (!authHeader?.startsWith('Bearer ')) {
@@ -692,7 +701,7 @@ app.put('/api/users/displayName', json(), async (req, res) => {
   }
 })
 
-app.delete('/api/users/account', async (req, res) => {
+app.delete('/api/users/account', apiLimiter, async (req, res) => {
   try {
     const authHeader = req.headers.authorization
     if (!authHeader?.startsWith('Bearer ')) {
@@ -716,7 +725,7 @@ app.delete('/api/users/account', async (req, res) => {
   }
 })
 
-app.get('/api/leaderboard', async (req, res) => {
+app.get('/api/leaderboard', apiLimiter, async (req, res) => {
   try {
     const minGames = Number.parseInt(req.query.minGames as string) || 5
     const limit = Math.min(Number.parseInt(req.query.limit as string) || 50, 100)

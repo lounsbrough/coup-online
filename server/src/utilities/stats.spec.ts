@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { Chance } from 'chance'
-import { wilsonScoreRating, recordGameStats } from './stats'
+import { wilsonScoreRating, recordGameStats, getLeaderboard } from './stats'
 import { GameState, Influences } from '../../../shared/types/game'
 import { emptyPlayerActionStats, UserStats } from '../../../shared/types/user'
 
@@ -223,7 +223,7 @@ describe('stats', () => {
 
       // First player is the winner (has influences)
       const winnerSetCall = mockTransaction.set.mock.calls.find(
-        ([, stats]: [unknown, UserStats]) => stats.gamesWon === 1
+        ([, stats]) => (stats as UserStats).gamesWon === 1
       )
       expect(winnerSetCall).toBeDefined()
     })
@@ -239,7 +239,7 @@ describe('stats', () => {
       await recordGameStats(gameState)
 
       const loserSetCall = mockTransaction.set.mock.calls.find(
-        ([, stats]: [unknown, UserStats]) => stats.gamesLost === 1
+        ([, stats]) => (stats as UserStats).gamesLost === 1
       )
       expect(loserSetCall).toBeDefined()
     })
@@ -250,7 +250,7 @@ describe('stats', () => {
 
       mockRunTransaction.mockRejectedValue(new Error('Firestore unavailable'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
       const promise = recordGameStats(gameState)
 
@@ -297,6 +297,83 @@ describe('stats', () => {
       expect(mockTransaction.set).toHaveBeenCalledTimes(2)
 
       vi.useRealTimers()
+    })
+  })
+
+  describe('getLeaderboard', () => {
+    const mockGet = vi.fn()
+    const mockWhere = vi.fn()
+
+    beforeEach(() => {
+      mockGet.mockReset()
+      mockWhere.mockReset()
+      mockWhere.mockReturnValue({ get: mockGet })
+      mockCollection.mockReturnValue({ doc: mockDoc, where: mockWhere })
+    })
+
+    it('should return userEntry for a user below the minGames threshold', async () => {
+      const veteranData: Partial<UserStats> = {
+        uid: 'veteran-uid',
+        displayName: 'Veteran',
+        gamesPlayed: 10,
+        gamesWon: 8,
+        gamesLost: 2,
+        longestWinStreak: 5,
+        currentWinStreak: 3,
+      }
+      const newUserData: Partial<UserStats> = {
+        uid: 'new-uid',
+        displayName: 'NewUser',
+        gamesPlayed: 1,
+        gamesWon: 1,
+        gamesLost: 0,
+        longestWinStreak: 1,
+        currentWinStreak: 1,
+      }
+
+      // minGames=1 includes the new user in the main ranked list — no fallback query
+      mockGet.mockResolvedValueOnce({
+        docs: [{ data: () => veteranData }, { data: () => newUserData }],
+      })
+
+      const result = await getLeaderboard(1, 50, 'new-uid')
+
+      expect(result.entries).toHaveLength(2)
+      // new-uid is inside the top 50 so no separate userEntry needed
+      expect(result.entries.some((e) => e.uid === 'new-uid')).toBe(true)
+      expect(result.userEntry).toBeUndefined()
+    })
+
+    it('should not return userEntry for a user with zero games played', async () => {
+      // getRankedList(2) — empty (user has 0 games, filtered out by >= 2)
+      mockGet.mockResolvedValueOnce({ docs: [] })
+
+      const result = await getLeaderboard(2, 50, 'no-games-uid')
+
+      expect(result.entries).toHaveLength(0)
+      expect(result.userEntry).toBeUndefined()
+    })
+
+    it('should return userEntry for a user in rankedList but outside top limit', async () => {
+      const users = Array.from({ length: 5 }, (_, i) => ({
+        uid: `uid-${i}`,
+        displayName: `Player ${i}`,
+        gamesPlayed: 10,
+        gamesWon: 10 - i,
+        gamesLost: i,
+        longestWinStreak: 5,
+        currentWinStreak: 0,
+      }))
+
+      // getRankedList(300) returns all 5 users
+      mockGet.mockResolvedValueOnce({ docs: users.map((u) => ({ data: () => u })) })
+
+      // limit=2, user uid-4 is outside top 2
+      const result = await getLeaderboard(300, 2, 'uid-4')
+
+      expect(result.entries).toHaveLength(2)
+      expect(result.userEntry).toBeDefined()
+      expect(result.userEntry?.uid).toBe('uid-4')
     })
   })
 })
