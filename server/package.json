@@ -25,7 +25,7 @@
     "express": "^5.2.1",
     "firebase-admin": "^13.7.0",
     "glin-profanity": "^3.3.0",
-    "joi": "^18.0.2",
+    "joi": "^18.1.1",
     "redis": "^5.11.0",
     "socket.io": "^4.8.3"
   },
@@ -37,7 +37,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.3.0",
     "@types/ws": "^8.18.1",
-    "@vitest/coverage-v8": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.2",
     "chance": "^1.1.13",
     "eslint": "^10.1.0",
     "globals": "^17.4.0",
@@ -45,7 +45,7 @@
     "socket.io-client": "^4.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1",
-    "vitest": "^4.1.0"
+    "typescript-eslint": "^8.57.2",
+    "vitest": "^4.1.2"
   }
 }
