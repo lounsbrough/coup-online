@@ -3,7 +3,6 @@ import Chance from 'chance'
 import { io, Socket } from 'socket.io-client'
 import {
   Actions,
-  DehydratedPlayer,
   DehydratedPublicGameState,
   DehydratedPublicPlayer,
   PlayerActions,

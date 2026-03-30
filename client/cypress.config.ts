@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress'
+import vitePreprocessor from 'cypress-vite'
 import { DehydratedGameState, GameState } from '../shared/types/game'
 import {
   createGameState,
@@ -12,7 +13,7 @@ const setGameStateTask = async (state: GameState) => {
   if (!(await getValue(state.roomId))) {
     await createGameState(state.roomId, state)
   }
-  await mutateGameState(await getGameState(state.roomId), () => {})
+  await mutateGameState(await getGameState(state.roomId), () => { })
   return null
 }
 
@@ -21,6 +22,7 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
+      on('file:preprocessor', vitePreprocessor())
       on('task', {
         setGameState({ state }: { state: DehydratedGameState }) {
           return setGameStateTask(rehydrateGameState(state))
