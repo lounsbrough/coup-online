@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router'
 import {
-  Alert,
   Avatar,
   Box,
   Button,
@@ -65,10 +64,6 @@ function Leaderboard() {
         <EmojiEvents fontSize="large" sx={{ verticalAlign: 'middle', mr: 1, color: COUP_GOLD }} />
         {t('leaderboard')}
       </CoupTypography>
-
-      <Alert severity="info" sx={{ maxWidth: 600, mx: 'auto', mb: 3, mt: -3 }}>
-        {t('playGameToTrackStats')}
-      </Alert>
 
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
