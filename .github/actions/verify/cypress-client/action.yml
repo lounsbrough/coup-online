@@ -5,7 +5,7 @@ runs:
   steps:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
     - uses: ./.github/actions/setup-node
-    - run: sudo apt-get install -y redis-tools redis-server
+    - run: sudo apt-get update && sudo apt-get install -y redis-tools redis-server
       shell: bash
     - run: redis-cli ping
       shell: bash
