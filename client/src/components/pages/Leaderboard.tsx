@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router'
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -65,6 +66,10 @@ function Leaderboard() {
         {t('leaderboard')}
       </CoupTypography>
 
+      <Alert severity="info" sx={{ maxWidth: 600, mx: 'auto', mb: 3, mt: -3 }}>
+        {t('playGameToTrackStats')}
+      </Alert>
+
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
           <CircularProgress />
@@ -102,7 +107,7 @@ function Leaderboard() {
       {!loading && !error && entries.length > 0 && (
         <Box sx={{ maxWidth: 800, width: '100%', mx: 'auto', px: 2, mb: 4 }}>
           <TableContainer component={Paper} variant="outlined">
-            <Table size="small" sx={{ whiteSpace: 'nowrap' }}>
+            <Table size="small">
               <TableHead>
                 <TableRow>
                   <TableCell align="center" sx={{ width: 60 }}>#</TableCell>
