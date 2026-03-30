@@ -22,7 +22,7 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
-      on('file:preprocessor', vitePreprocessor({ configFile: false }))
+      on('file:preprocessor', vitePreprocessor())
       on('task', {
         setGameState({ state }: { state: DehydratedGameState }) {
           return setGameStateTask(rehydrateGameState(state))
