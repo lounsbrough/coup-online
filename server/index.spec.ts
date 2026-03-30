@@ -17,6 +17,10 @@ const chance = new Chance()
 
 const baseUrl = 'http://localhost:8008'
 
+const alphaPool = 'abcdefghijklmnopqrstuvwxyz'
+const randomName = () => chance.string({ length: 10, pool: alphaPool })
+const randomId = () => chance.string({ length: 10, pool: alphaPool })
+
 const validatePublicState = (gameState: DehydratedPublicGameState) => {
   expect(Object.keys(gameState)).toEqual(
     expect.arrayContaining([
@@ -84,8 +88,8 @@ describe('index', () => {
       it.each([
         {
           getQueryParams: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const {
               json: { gameState },
@@ -139,8 +143,8 @@ describe('index', () => {
       it.each([
         {
           body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 10 }),
+            playerId: randomId(),
+            playerName: randomName(),
             settings: { eventLogRetentionTurns: 100, allowRevive: true },
           },
           error: '',
@@ -153,8 +157,8 @@ describe('index', () => {
         },
         {
           body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 10 }),
+            playerId: randomId(),
+            playerName: randomName(),
             settings: {},
           },
           error: 'Invalid user request',
@@ -162,8 +166,8 @@ describe('index', () => {
         },
         {
           body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 10 }),
+            playerId: randomId(),
+            playerName: randomName(),
             settings: { allowRevive: true },
           },
           error: 'Invalid user request',
@@ -171,8 +175,8 @@ describe('index', () => {
         },
         {
           body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 10 }),
+            playerId: randomId(),
+            playerName: randomName(),
             settings: { eventLogRetentionTurns: 100 },
           },
           error: 'Invalid user request',
@@ -180,8 +184,8 @@ describe('index', () => {
         },
         {
           body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 11 }),
+            playerId: randomId(),
+            playerName: chance.string({ length: 11, pool: alphaPool }),
             settings: { eventLogRetentionTurns: 100, allowRevive: true },
           },
           error: 'Invalid user request',
@@ -189,8 +193,8 @@ describe('index', () => {
         },
         {
           body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 10 }),
+            playerId: randomId(),
+            playerName: randomName(),
             settings: { eventLogRetentionTurns: 0 },
           },
           error: 'Invalid user request',
@@ -198,8 +202,8 @@ describe('index', () => {
         },
         {
           body: {
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 10 }),
+            playerId: randomId(),
+            playerName: randomName(),
             settings: { eventLogRetentionTurns: 101 },
           },
           error: 'Invalid user request',
@@ -226,8 +230,8 @@ describe('index', () => {
       it.each([
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -242,8 +246,8 @@ describe('index', () => {
 
             return {
               roomId,
-              playerId: chance.string({ length: 10 }),
-              playerName: chance.string({ length: 10 }),
+              playerId: randomId(),
+              playerName: randomName(),
             }
           },
           error: '',
@@ -256,26 +260,26 @@ describe('index', () => {
         },
         {
           getBody: () => ({
-            roomId: chance.string({ length: 10 }),
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 11 }),
+            roomId: randomId(),
+            playerId: randomId(),
+            playerName: chance.string({ length: 11, pool: alphaPool }),
           }),
           error: 'Invalid user request',
           status: 400,
         },
         {
           getBody: () => ({
-            roomId: chance.string({ length: 10 }),
-            playerId: chance.string({ length: 10 }),
-            playerName: chance.string({ length: 10 }),
+            roomId: randomId(),
+            playerId: randomId(),
+            playerName: randomName(),
           }),
           error: 'Room not found',
           status: 404,
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -291,7 +295,7 @@ describe('index', () => {
             return {
               roomId,
               playerId,
-              playerName: chance.string({ length: 10 }),
+              playerName: randomName(),
             }
           },
           error: '',
@@ -299,8 +303,8 @@ describe('index', () => {
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -316,15 +320,15 @@ describe('index', () => {
             for (let i = 0; i < MAX_PLAYER_COUNT - 1; i++) {
               await postApi(PlayerActions.joinGame, {
                 roomId,
-                playerId: chance.string({ length: 10 }),
-                playerName: chance.string({ length: 10 }),
+                playerId: randomId(),
+                playerName: randomName(),
               })
             }
 
             return {
               roomId,
-              playerId: chance.string({ length: 10 }),
-              playerName: chance.string({ length: 10 }),
+              playerId: randomId(),
+              playerName: randomName(),
             }
           },
           error: /Room .+ is full/,
@@ -332,8 +336,8 @@ describe('index', () => {
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -348,15 +352,15 @@ describe('index', () => {
 
             await postApi(PlayerActions.joinGame, {
               roomId,
-              playerId: chance.string({ length: 10 }),
-              playerName: chance.string({ length: 10 }),
+              playerId: randomId(),
+              playerName: randomName(),
             })
             await postApi(PlayerActions.startGame, { roomId, playerId })
 
             return {
               roomId,
-              playerId: chance.string({ length: 10 }),
-              playerName: chance.string({ length: 10 }),
+              playerId: randomId(),
+              playerName: randomName(),
             }
           },
           error: 'Game is in progress',
@@ -364,8 +368,8 @@ describe('index', () => {
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -380,7 +384,7 @@ describe('index', () => {
 
             return {
               roomId,
-              playerId: chance.string({ length: 10 }),
+              playerId: randomId(),
               playerName,
             }
           },
@@ -422,12 +426,12 @@ describe('index', () => {
         {
           testSetup: async () => {
             const removingPlayer = {
-              id: chance.string({ length: 10 }),
-              name: chance.string({ length: 10 }),
+              id: randomId(),
+              name: randomName(),
             }
             const removedPlayer = {
-              id: chance.string({ length: 10 }),
-              name: chance.string({ length: 10 }),
+              id: randomId(),
+              name: randomName(),
             }
 
             const response = await postApi(PlayerActions.createGame, {
@@ -507,12 +511,12 @@ describe('index', () => {
           getBody: async () => {
             const players = [
               {
-                id: chance.string({ length: 10 }),
-                name: chance.string({ length: 10 }),
+                id: randomId(),
+                name: randomName(),
               },
               {
-                id: chance.string({ length: 10 }),
-                name: chance.string({ length: 10 }),
+                id: randomId(),
+                name: randomName(),
               },
             ]
 
@@ -550,16 +554,16 @@ describe('index', () => {
         },
         {
           getBody: () => ({
-            roomId: chance.string({ length: 10 }),
-            playerId: chance.string({ length: 10 }),
+            roomId: randomId(),
+            playerId: randomId(),
           }),
           error: 'Room not found',
           status: 404,
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -572,7 +576,7 @@ describe('index', () => {
             } = response
             const roomId = gameState?.roomId
 
-            return { roomId, playerId: chance.string({ length: 10 }) }
+            return { roomId, playerId: randomId() }
           },
           error: 'Player is not in the game',
           status: 400,
@@ -610,12 +614,12 @@ describe('index', () => {
           getBody: async () => {
             const players = [
               {
-                id: chance.string({ length: 10 }),
-                name: chance.string({ length: 10 }),
+                id: randomId(),
+                name: randomName(),
               },
               {
-                id: chance.string({ length: 10 }),
-                name: chance.string({ length: 10 }),
+                id: randomId(),
+                name: randomName(),
               },
             ]
 
@@ -657,16 +661,16 @@ describe('index', () => {
         },
         {
           getBody: () => ({
-            roomId: chance.string({ length: 10 }),
-            playerId: chance.string({ length: 10 }),
+            roomId: randomId(),
+            playerId: randomId(),
           }),
           error: 'Room not found',
           status: 404,
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -679,7 +683,7 @@ describe('index', () => {
             } = response
             const roomId = gameState?.roomId
 
-            return { roomId, playerId: chance.string({ length: 10 }) }
+            return { roomId, playerId: randomId() }
           },
           error: 'Player is not in the game',
           status: 400,
@@ -717,12 +721,12 @@ describe('index', () => {
           getBody: async () => {
             const players = [
               {
-                id: chance.string({ length: 10 }),
-                name: chance.string({ length: 10 }),
+                id: randomId(),
+                name: randomName(),
               },
               {
-                id: chance.string({ length: 10 }),
-                name: chance.string({ length: 10 }),
+                id: randomId(),
+                name: randomName(),
               },
             ]
 
@@ -861,16 +865,16 @@ describe('index', () => {
         },
         {
           getBody: () => ({
-            roomId: chance.string({ length: 10 }),
-            playerId: chance.string({ length: 10 }),
+            roomId: randomId(),
+            playerId: randomId(),
           }),
           error: 'Room not found',
           status: 404,
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -883,15 +887,15 @@ describe('index', () => {
             } = response
             const roomId = gameState?.roomId
 
-            return { roomId, playerId: chance.string({ length: 10 }) }
+            return { roomId, playerId: randomId() }
           },
           error: 'Player is not in the game',
           status: 400,
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -906,8 +910,8 @@ describe('index', () => {
 
             await postApi(PlayerActions.joinGame, {
               roomId,
-              playerId: chance.string({ length: 10 }),
-              playerName: chance.string({ length: 10 }),
+              playerId: randomId(),
+              playerName: randomName(),
             })
             await postApi(PlayerActions.startGame, { roomId, playerId })
 
@@ -953,12 +957,12 @@ describe('index', () => {
           getBody: async () => {
             const players = [
               {
-                id: chance.string({ length: 10 }),
-                name: chance.string({ length: 10 }),
+                id: randomId(),
+                name: randomName(),
               },
               {
-                id: chance.string({ length: 10 }),
-                name: chance.string({ length: 10 }),
+                id: randomId(),
+                name: randomName(),
               },
             ]
 
@@ -991,16 +995,16 @@ describe('index', () => {
         },
         {
           getBody: () => ({
-            roomId: chance.string({ length: 10 }),
-            playerId: chance.string({ length: 10 }),
+            roomId: randomId(),
+            playerId: randomId(),
           }),
           error: 'Room not found',
           status: 404,
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -1013,15 +1017,15 @@ describe('index', () => {
             } = response
             const roomId = gameState?.roomId
 
-            return { roomId, playerId: chance.string({ length: 10 }) }
+            return { roomId, playerId: randomId() }
           },
           error: 'Player is not in the game',
           status: 400,
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -1041,8 +1045,8 @@ describe('index', () => {
         },
         {
           getBody: async () => {
-            const playerId = chance.string({ length: 10 })
-            const playerName = chance.string({ length: 10 })
+            const playerId = randomId()
+            const playerName = randomName()
 
             const response = await postApi(PlayerActions.createGame, {
               playerId,
@@ -1057,8 +1061,8 @@ describe('index', () => {
 
             await postApi(PlayerActions.joinGame, {
               roomId,
-              playerId: chance.string({ length: 10 }),
-              playerName: chance.string({ length: 10 }),
+              playerId: randomId(),
+              playerName: randomName(),
             })
 
             await postApi(PlayerActions.startGame, { roomId, playerId })
@@ -1141,12 +1145,12 @@ describe('index', () => {
       const socket2 = await getConnectedSocket()
       try {
         const player1 = {
-          playerId: chance.string({ length: 10 }),
-          playerName: chance.string({ length: 10 }),
+          playerId: randomId(),
+          playerName: randomName(),
         }
         const player2 = {
-          playerId: chance.string({ length: 10 }),
-          playerName: chance.string({ length: 10 }),
+          playerId: randomId(),
+          playerName: randomName(),
         }
 
         let gameStatePromises = getGameStatePromises([socket1])
@@ -1191,9 +1195,9 @@ describe('index', () => {
 
         gameStatePromises = getGameStatePromises([socket2])
         socket2.emit(PlayerActions.joinGame, {
-          roomId: chance.string({ length: 10 }),
-          playerId: chance.string({ length: 10 }),
-          playerName: chance.string({ length: 10 }),
+          roomId: randomId(),
+          playerId: randomId(),
+          playerName: randomName(),
           language: AvailableLanguageCode['en-US'],
         })
         await expect(gameStatePromises[0]).rejects.toThrow('Room not found')
@@ -1247,12 +1251,12 @@ describe('index', () => {
       const socket2 = await getConnectedSocket()
       try {
         const player1 = {
-          playerId: chance.string({ length: 10 }),
-          playerName: chance.string({ length: 10 }),
+          playerId: randomId(),
+          playerName: randomName(),
         }
         const player2 = {
-          playerId: chance.string({ length: 10 }),
-          playerName: chance.string({ length: 10 }),
+          playerId: randomId(),
+          playerName: randomName(),
         }
         const robotPlayerName = 'bob'
 
