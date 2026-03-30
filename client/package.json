@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -29,6 +30,7 @@
     "web-vitals": "^5.1.0"
   },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build-shared": "pnpm --prefix ../shared build",
     "start": "pnpm build-shared && vite",
     "start:cypress": "VITE_DISABLE_TRANSITIONS=true pnpm start",

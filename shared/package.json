@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "packageManager": "pnpm@10.33.0",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build": "rm -rf dist && tsc"
   },
   "keywords": [],

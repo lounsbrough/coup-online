@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "packageManager": "pnpm@10.33.0",
   "pre-commit": [
     "ts.check",
     "build",
     "add-build"
   ],
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p tsconfig.check.json",
     "test": "vitest run --coverage",
@@ -23,6 +25,7 @@
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
     "firebase-admin": "^13.7.0",
     "glin-profanity": "^3.3.0",
     "joi": "^18.0.2",

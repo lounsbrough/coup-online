@@ -43,7 +43,7 @@ function Leaderboard() {
   useEffect(() => {
     setLoading(true)
     setError(null)
-    const params = new URLSearchParams({ minGames: '3', limit: '50' })
+    const params = new URLSearchParams({ minGames: '1', limit: '50' })
     if (user?.uid) params.set('uid', user.uid)
     fetch(`${getBaseUrl()}/api/leaderboard?${params}`)
       .then((res) => {
