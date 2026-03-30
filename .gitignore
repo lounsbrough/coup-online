@@ -2,4 +2,5 @@ node_modules/
 .vercel
 .DS_Store
 server/coverage
-server/package-lock.json
+package-lock.json
+yarn.lock
