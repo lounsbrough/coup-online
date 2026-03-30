@@ -35,9 +35,9 @@ const validatePublicState = (gameState: DehydratedPublicGameState) => {
 
   expect(gameState.selfPlayer).toBeTruthy()
   gameState.players.forEach(
-    (player: DehydratedPlayer & DehydratedPublicPlayer) => {
-      expect(player.id).toBeUndefined()
-      expect(player.influences).toBeUndefined()
+    (player) => {
+      expect((player as Record<string, unknown>).id).toBeUndefined()
+      expect((player as Record<string, unknown>).influences).toBeUndefined()
       expect(player.influenceCount).toBeDefined()
       expect(player.name).toBeTruthy()
       expect(player.coins).toBeTruthy()

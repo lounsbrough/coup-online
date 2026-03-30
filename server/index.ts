@@ -80,7 +80,8 @@ const validateExpressQuery = (schema: ObjectSchema) => validateExpressRequest(sc
 
 const eventHandlers: {
   [event in PlayerActions]: {
-    handler: (args: unknown) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean, gameState: GameState }>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    handler: (args: any) => Promise<{ roomId: string, playerId: string, stateUnchanged?: boolean, gameState: GameState }>
     express: {
       method: 'post' | 'get'
       parseParams: (req: Request) => { language: AvailableLanguageCode } & Record<string, unknown>
@@ -571,7 +572,7 @@ io.on('connection', (socket) => {
           } else {
             const roomSocketIds = io.of('/').adapter.rooms.get(socketRoom)
             if (roomSocketIds) {
-              const roomSockets = [...roomSocketIds].map((socketId) => io.sockets.sockets.get(socketId))
+              const roomSockets = [...roomSocketIds].map((socketId) => io.sockets.sockets.get(socketId)).filter((s) => s !== undefined)
               await Promise.all(roomSockets.map(emitGameStateChanged))
             }
           }

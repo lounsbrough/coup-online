@@ -223,7 +223,7 @@ describe('stats', () => {
 
       // First player is the winner (has influences)
       const winnerSetCall = mockTransaction.set.mock.calls.find(
-        ([, stats]: [unknown, UserStats]) => stats.gamesWon === 1
+        ([, stats]) => (stats as UserStats).gamesWon === 1
       )
       expect(winnerSetCall).toBeDefined()
     })
@@ -239,7 +239,7 @@ describe('stats', () => {
       await recordGameStats(gameState)
 
       const loserSetCall = mockTransaction.set.mock.calls.find(
-        ([, stats]: [unknown, UserStats]) => stats.gamesLost === 1
+        ([, stats]) => (stats as UserStats).gamesLost === 1
       )
       expect(loserSetCall).toBeDefined()
     })
@@ -250,7 +250,7 @@ describe('stats', () => {
 
       mockRunTransaction.mockRejectedValue(new Error('Firestore unavailable'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
       const promise = recordGameStats(gameState)
 

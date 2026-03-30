@@ -13,10 +13,16 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router'],
-          'vendor-mui': ['@mui/material', '@mui/icons-material'],
-          'vendor-emoji': ['emoji-picker-react'],
+        manualChunks(id) {
+          if (id.includes('react-dom') || id.includes('react-router') || id.includes('/react/')) {
+            return 'vendor-react'
+          }
+          if (id.includes('@mui/material') || id.includes('@mui/icons-material')) {
+            return 'vendor-mui'
+          }
+          if (id.includes('emoji-picker-react')) {
+            return 'vendor-emoji'
+          }
         },
       },
     },

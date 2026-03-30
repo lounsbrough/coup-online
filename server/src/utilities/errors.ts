@@ -2,7 +2,7 @@ import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
 import { translate } from '../i18n/translations'
 
 export class GameMutationInputError extends Error {
-  getMessage: (language: AvailableLanguageCode) => string
+  getMessage: (language: AvailableLanguageCode) => string = () => ''
   httpCode?: number
 }
 
