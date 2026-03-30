@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "nodenext",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2022",
     "noImplicitAny": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "sourceMap": true,
     "outDir": "dist",
-    "baseUrl": ".",
+    "rootDir": "..",
     "strictNullChecks": true,
     "exactOptionalPropertyTypes": true,
-    "skipLibCheck": true,
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    }
+    "skipLibCheck": true
   },
   "include": ["./**/*", "../shared/types/game.ts"],
   "exclude": ["**/*.spec.ts", "node_modules"]

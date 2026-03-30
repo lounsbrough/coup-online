@@ -11,7 +11,7 @@ function useGameMutation<ParamsType>({ action, callback }: {
   action: PlayerActions,
   callback?: (gameState: DehydratedPublicGameState) => void
 }) {
-  const noSocketCallbackTimeout = useRef<NodeJS.Timeout>(undefined)
+  const noSocketCallbackTimeout = useRef<ReturnType<typeof setTimeout>>(undefined)
   const [mutationError, setMutationError] = useState('')
   const [isMutatingSocket, setIsMutatingSocket] = useState(false)
   const { socket, isConnected } = useWebSocketContext()
