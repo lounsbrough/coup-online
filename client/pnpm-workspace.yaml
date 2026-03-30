@@ -1,2 +1,0 @@
-patchedDependencies:
-  cypress-vite@1.8.0: patches/cypress-vite@1.8.0.patch
