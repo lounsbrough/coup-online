@@ -5,7 +5,6 @@ import {
   Grid,
   Slider,
   Switch,
-  TextField,
 } from '@mui/material'
 import { AddCircle, Person } from '@mui/icons-material'
 import { useNavigate } from 'react-router'
@@ -26,6 +25,7 @@ import {
   speedRoundSecondsStorageKey,
 } from '../../helpers/localStorageKeys'
 import CoupTypography from '../utilities/CoupTypography'
+import LoadingTextField from '../utilities/LoadingTextField'
 import { usePersistedState } from '../../hooks/usePersistedState'
 import { useDisplayName } from '../../hooks/useDisplayName'
 
@@ -81,7 +81,7 @@ function CreateGame() {
           <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <Person sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-              <TextField
+              <LoadingTextField
                 name="coup-game-player-name"
                 autoComplete="off"
                 data-testid="playerNameInput"
@@ -94,7 +94,8 @@ function CreateGame() {
                 label={!profileName && t('whatIsYourName')}
                 variant="standard"
                 required={!profileName}
-                disabled={!!profileName || profileNameLoading}
+                loading={profileNameLoading}
+                disabled={!!profileName}
                 helperText={profileName ? t('nameFromProfile') : undefined}
               />
             </Box>

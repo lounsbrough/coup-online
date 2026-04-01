@@ -9,6 +9,7 @@ import useGameMutation from "../../hooks/useGameMutation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { useAuthContext } from '../../contexts/AuthContext'
 import CoupTypography from '../utilities/CoupTypography'
+import LoadingTextField from '../utilities/LoadingTextField'
 import { useDisplayName } from '../../hooks/useDisplayName'
 
 function JoinGame() {
@@ -88,7 +89,7 @@ function JoinGame() {
           <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <Person sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-              <TextField
+              <LoadingTextField
                 name="coup-game-player-name"
                 autoComplete="off"
                 slotProps={{
@@ -104,7 +105,8 @@ function JoinGame() {
                 label={!profileName && t('whatIsYourName')}
                 variant="standard"
                 required={!profileName}
-                disabled={!!profileName || profileNameLoading}
+                loading={profileNameLoading}
+                disabled={!!profileName}
                 helperText={profileName ? t('nameFromProfile') : undefined}
               />
             </Box>

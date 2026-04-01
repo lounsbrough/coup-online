@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router'
 import {
   Avatar,
@@ -38,11 +38,12 @@ function Leaderboard() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [userEntry, setUserEntry] = useState<RankedLeaderboardEntry | undefined>()
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<ReactNode>(null)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
+    if (authLoading) return
     setLoading(true)
-    setError(null)
+    setError(false)
     const params = new URLSearchParams({ minGames: '1', limit: '50' })
     if (user?.uid) params.set('uid', user.uid)
     fetch(`${getBaseUrl()}/api/leaderboard?${params}`)
@@ -54,9 +55,9 @@ function Leaderboard() {
         setEntries(data.entries)
         setUserEntry(data.userEntry)
       })
-      .catch(() => setError(t('somethingWentWrong')))
+      .catch(() => setError(true))
       .finally(() => setLoading(false))
-  }, [user?.uid, t])
+  }, [authLoading, user?.uid])
 
   return (
     <>
@@ -67,13 +68,13 @@ function Leaderboard() {
 
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
-          <CircularProgress />
+          <CircularProgress size={50} sx={{ mb: 2 }} />
         </Box>
       )}
 
       {error && (
         <Typography color="error" sx={{ mt: 3, textAlign: 'center' }}>
-          {error}
+          {t('somethingWentWrong')}
         </Typography>
       )}
 
