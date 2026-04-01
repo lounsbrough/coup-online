@@ -1,7 +1,7 @@
-import React from 'react';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import LinearProgress from '@mui/material/LinearProgress';
+import React from 'react'
+import TextField, { TextFieldProps } from '@mui/material/TextField'
+import Box from '@mui/material/Box'
+import LinearProgress from '@mui/material/LinearProgress'
 
 type LoadingTextFieldProps = TextFieldProps & {
   loading?: boolean;
@@ -28,5 +28,5 @@ export default function LoadingTextField({ loading, ...props }: Readonly<Loading
         />
       )}
     </Box>
-  );
+  )
 }
