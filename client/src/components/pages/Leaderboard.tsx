@@ -68,7 +68,7 @@ function Leaderboard() {
 
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
-          <CircularProgress size={50} sx={{ mb: 2 }} />
+          <CircularProgress size={50} sx={{ m: 2 }} />
         </Box>
       )}
 

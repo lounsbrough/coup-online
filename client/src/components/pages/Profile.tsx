@@ -234,7 +234,7 @@ function Profile() {
   if (loading || authLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-        <CircularProgress />
+        <CircularProgress size={50} sx={{ m: 2 }} />
       </Box>
     )
   }
