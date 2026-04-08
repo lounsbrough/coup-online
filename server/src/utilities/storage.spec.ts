@@ -12,10 +12,18 @@ vi.mock('iovalkey', () => {
     set: vi.fn((key: string, value: Buffer, mode?: string, count?: number) => {
       expectedValkeyStorage[key] = value
       if (mode?.toUpperCase() === 'EX' && count !== undefined) {
+        // EX requires an integer second value (like real Redis/Valkey)
+        if (!Number.isInteger(count)) {
+          throw new TypeError(`ERR value is not an integer or out of range`)
+        }
         setTimeout(() => {
           delete expectedValkeyStorage[key]
         }, count * 1000)
       } else if (mode?.toUpperCase() === 'PX' && count !== undefined) {
+        // PX uses milliseconds; should always be an integer
+        if (!Number.isInteger(count)) {
+          throw new TypeError(`ERR value is not an integer or out of range`)
+        }
         setTimeout(() => {
           delete expectedValkeyStorage[key]
         }, count)
