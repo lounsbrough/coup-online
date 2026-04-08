@@ -1,29 +1,28 @@
-import { createClient, RESP_TYPES } from "redis"
+import { GlideClient, Decoder, TimeUnit } from '@valkey/valkey-glide'
+import { createValkeyClient } from './valkey'
 
-const createRedisClient = () =>
-  createClient(
-    process.env.REDIS_CONNECTION_STRING
-      ? { url: process.env.REDIS_CONNECTION_STRING }
-      : undefined
-  )
-    .on('error', (error: Error) => console.log('Redis Client Error', error))
-    .connect()
-    .then((client) => client.withTypeMapping({
-      [RESP_TYPES.BLOB_STRING]: Buffer
-    }))
-
-let redisClientPromise: ReturnType<typeof createRedisClient> | undefined
-const getRedisClientPromise = () => {
-  redisClientPromise ??= createRedisClient()
-  return redisClientPromise
+let clientPromise: Promise<GlideClient> | undefined
+const getClientPromise = (): Promise<GlideClient> => {
+  clientPromise ??= createValkeyClient(process.env.VALKEY_CONNECTION_STRING)
+  return clientPromise
 }
 
 export const getValue = async (key: string): Promise<Buffer | null> => {
-  return (await getRedisClientPromise()).get(key)
+  const result = await (
+    await getClientPromise()
+  ).get(key, { decoder: Decoder.Bytes })
+  if (!result) return null
+  return Buffer.isBuffer(result) ? result : Buffer.from(result as Uint8Array)
 }
 
-export const setValue = async (key: string, value: Buffer, lifeInSeconds: number) => {
-  await (await getRedisClientPromise()).set(key, value, {
-    EX: lifeInSeconds
+export const setValue = async (
+  key: string,
+  value: Buffer,
+  lifeInSeconds: number,
+) => {
+  await (
+    await getClientPromise()
+  ).set(key, value, {
+    expiry: { type: TimeUnit.Seconds, count: lifeInSeconds },
   })
 }

@@ -1,0 +1,9 @@
+name: Setup Valkey
+
+runs:
+  using: composite
+  steps:
+    - run: sudo apt-get update && sudo apt-get install -y valkey-tools valkey
+      shell: bash
+    - run: valkey-cli ping
+      shell: bash
