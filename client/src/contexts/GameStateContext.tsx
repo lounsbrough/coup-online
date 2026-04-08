@@ -113,7 +113,7 @@ export function GameStateContextProvider({ children }: Readonly<{ children: Reac
           }
         })
       } else {
-        fetch(`${getBaseUrl()}/${PlayerActions.checkAutoMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}`)
+        fetch(`${getBaseUrl()}/${PlayerActions.checkAutoMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}&language=${encodeURIComponent(language)}`)
           .then(handleGameStateResponse)
           .catch((error) => {
             console.error(error)
