@@ -4,7 +4,7 @@
 
 ## Overview
 
-A real-time multiplayer implementation of the card game [Coup](https://grokipedia.com/page/coup_board_game). The frontend is a `React` web application built with `Material UI` and `Vite`. The app communicates with the backend `Express` server via the `WebSocket` protocol (using `Socket.IO`), falling back to the `HTTPS` protocol if the socket connection fails. Game state is stored in a `Redis` database. Authentication is handled via `Firebase` (Google sign-in).
+A real-time multiplayer implementation of the card game [Coup](https://grokipedia.com/page/coup_board_game). The frontend is a `React` web application built with `Material UI` and `Vite`. The app communicates with the backend `Express` server via the `WebSocket` protocol (using `Socket.IO`), falling back to the `HTTPS` protocol if the socket connection fails. Game state is stored in a `Valkey` database. Authentication is handled via `Firebase` (Google sign-in).
 
 ### Features
 
@@ -42,7 +42,7 @@ Deployments are automated. To deploy a new version of the game, simply create a 
 | Variable                       | Description                         | Default |
 | ------------------------------ | ----------------------------------- | ------- |
 | `EXPRESS_PORT`                 | Port the server listens on          | `8008`  |
-| `REDIS_CONNECTION_STRING`      | Redis connection URL                | —       |
+| `VALKEY_CONNECTION_STRING`     | Valkey connection string            | —       |
 | `FIREBASE_SERVICE_ACCOUNT_KEY` | Firebase Admin service account JSON | —       |
 | `FIREBASE_PROJECT_ID`          | Firebase project ID                 | —       |
 

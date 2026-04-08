@@ -1,29 +1,53 @@
-import { createClient, RESP_TYPES } from "redis"
+import { GlideClient, Decoder, TimeUnit } from '@valkey/valkey-glide';
 
-const createRedisClient = () =>
-  createClient(
-    process.env.REDIS_CONNECTION_STRING
-      ? { url: process.env.REDIS_CONNECTION_STRING }
-      : undefined
-  )
-    .on('error', (error: Error) => console.log('Redis Client Error', error))
-    .connect()
-    .then((client) => client.withTypeMapping({
-      [RESP_TYPES.BLOB_STRING]: Buffer
-    }))
+const createValkeyClient = (): Promise<GlideClient> => {
+  const connectionString = process.env.VALKEY_CONNECTION_STRING;
+  let host = '127.0.0.1';
+  let port = 6379;
+  let useTLS = false;
 
-let redisClientPromise: ReturnType<typeof createRedisClient> | undefined
-const getRedisClientPromise = () => {
-  redisClientPromise ??= createRedisClient()
-  return redisClientPromise
-}
+  let username: string | undefined;
+  let password: string | undefined;
+  if (connectionString) {
+    const url = new URL(connectionString);
+    host = url.hostname;
+    port = Number.parseInt(url.port) || 6379;
+    useTLS = url.protocol === 'valkeys:' || url.protocol === 'rediss:';
+    username = url.username || undefined;
+    password = url.password || undefined;
+  }
+
+  return GlideClient.createClient({
+    addresses: [{ host, port }],
+    useTLS,
+    ...(password
+      ? { credentials: { username: username ?? 'default', password } }
+      : undefined),
+  });
+};
+
+let clientPromise: Promise<GlideClient> | undefined;
+const getClientPromise = (): Promise<GlideClient> => {
+  clientPromise ??= createValkeyClient();
+  return clientPromise;
+};
 
 export const getValue = async (key: string): Promise<Buffer | null> => {
-  return (await getRedisClientPromise()).get(key)
-}
+  const result = await (
+    await getClientPromise()
+  ).get(key, { decoder: Decoder.Bytes });
+  if (!result) return null;
+  return Buffer.isBuffer(result) ? result : Buffer.from(result as Uint8Array);
+};
 
-export const setValue = async (key: string, value: Buffer, lifeInSeconds: number) => {
-  await (await getRedisClientPromise()).set(key, value, {
-    EX: lifeInSeconds
-  })
-}
+export const setValue = async (
+  key: string,
+  value: Buffer,
+  lifeInSeconds: number,
+) => {
+  await (
+    await getClientPromise()
+  ).set(key, value, {
+    expiry: { type: TimeUnit.Seconds, count: lifeInSeconds },
+  });
+};
