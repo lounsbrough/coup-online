@@ -1,53 +1,11 @@
 import { GlideClient, Decoder, TimeUnit } from '@valkey/valkey-glide'
+import { createValkeyClient } from '../src/utilities/valkey'
 
 const processRef = (
   globalThis as unknown as {
     process: { env: Record<string, string | undefined>; exitCode: number };
   }
 ).process
-
-type ValkeyConnectionConfig = {
-  host: string;
-  port: number;
-  useTLS: boolean;
-  username?: string;
-  password?: string;
-};
-
-const parseConnectionString = (
-  connectionString: string,
-): ValkeyConnectionConfig => {
-  const url = new URL(connectionString)
-  const username = url.username || undefined
-  const password = url.password || undefined
-
-  return {
-    host: url.hostname,
-    port: Number.parseInt(url.port) || 6379,
-    useTLS: url.protocol === 'valkeys:' || url.protocol === 'rediss:',
-    ...(username ? { username } : undefined),
-    ...(password ? { password } : undefined),
-  }
-}
-
-const createClientFromConnectionString = async (
-  connectionString: string,
-): Promise<GlideClient> => {
-  const config = parseConnectionString(connectionString)
-
-  return GlideClient.createClient({
-    addresses: [{ host: config.host, port: config.port }],
-    useTLS: config.useTLS,
-    ...(config.password
-      ? {
-          credentials: {
-            username: config.username ?? 'default',
-            password: config.password,
-          },
-        }
-      : undefined),
-  })
-}
 
 const migrateStringKey = async ({
   key,
@@ -99,10 +57,8 @@ const migrate = async () => {
     )
   }
 
-  const source = await createClientFromConnectionString(sourceConnectionString)
-  const destination = await createClientFromConnectionString(
-    destinationConnectionString,
-  )
+  const source = await createValkeyClient(sourceConnectionString)
+  const destination = await createValkeyClient(destinationConnectionString)
 
   let cursor = '0'
   let migratedKeys = 0

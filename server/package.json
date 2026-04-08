@@ -17,7 +17,7 @@
     "build": "rm -rf dist && tsc",
     "dev": "node --env-file-if-exists=.env.local -r ts-node/register index.ts",
     "start": "node dist/server/index.js",
-    "migrate:valkey": "node -r ts-node/register src/utilities/migrateValkey.ts"
+    "migrate:valkey": "node -r ts-node/register scripts/migrateValkey.ts"
   },
   "keywords": [],
   "author": "",
