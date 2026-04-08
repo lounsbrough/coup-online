@@ -4,34 +4,31 @@ import { getValue, setValue } from './storage'
 
 const expectedValkeyStorage: { [key: string]: Buffer } = {}
 
-vi.mock('@valkey/valkey-glide', () => {
+vi.mock('iovalkey', () => {
   const mockClient = {
-    get: vi.fn((key: string) =>
+    getBuffer: vi.fn((key: string) =>
       Promise.resolve(expectedValkeyStorage[key] ?? null),
     ),
-    set: vi.fn(
-      (
-        key: string,
-        value: Buffer,
-        options?: { expiry?: { type: string; count: number } },
-      ) => {
-        expectedValkeyStorage[key] = value
-        if (options?.expiry?.count) {
-          setTimeout(() => {
-            delete expectedValkeyStorage[key]
-          }, options.expiry.count * 1000)
-        }
-        return Promise.resolve('OK')
-      },
-    ),
+    set: vi.fn((key: string, value: Buffer, mode?: string, count?: number) => {
+      expectedValkeyStorage[key] = value
+      if (mode?.toUpperCase() === 'EX' && count !== undefined) {
+        setTimeout(() => {
+          delete expectedValkeyStorage[key]
+        }, count * 1000)
+      } else if (mode?.toUpperCase() === 'PX' && count !== undefined) {
+        setTimeout(() => {
+          delete expectedValkeyStorage[key]
+        }, count)
+      }
+      return Promise.resolve('OK')
+    }),
   }
 
   return {
-    GlideClient: {
-      createClient: vi.fn(() => Promise.resolve(mockClient)),
-    },
-    Decoder: { Bytes: 'Bytes', String: 'String' },
-    TimeUnit: { Seconds: 'Seconds', Milliseconds: 'Milliseconds' },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    default: vi.fn(function (this: any) {
+      return mockClient
+    }),
   }
 })
 

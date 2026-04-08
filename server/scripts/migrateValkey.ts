@@ -1,4 +1,4 @@
-import { GlideClient, Decoder, TimeUnit } from '@valkey/valkey-glide'
+import Valkey from 'iovalkey'
 import { createValkeyClient } from '../src/utilities/valkey'
 
 const processRef = (
@@ -14,24 +14,20 @@ const migrateStringKey = async ({
   ttlMs,
 }: {
   key: string;
-  source: GlideClient;
-  destination: GlideClient;
+  source: Valkey;
+  destination: Valkey;
   ttlMs: number;
 }): Promise<boolean> => {
-  const value = await source.get(key, { decoder: Decoder.Bytes })
+  const value = await source.getBuffer(key)
   if (!value) {
     return false
   }
 
   if (ttlMs > 0) {
-    await destination.set(key, value, {
-      expiry: { type: TimeUnit.Milliseconds, count: ttlMs },
-    })
+    await destination.set(key, value, 'PX', ttlMs)
   } else if (ttlMs === 0) {
     // PTTL can transiently return 0 right before expiration.
-    await destination.set(key, value, {
-      expiry: { type: TimeUnit.Milliseconds, count: 1 },
-    })
+    await destination.set(key, value, 'PX', 1)
   } else {
     console.warn(`Key ${key} has no TTL, migrating without expiry`)
     await destination.set(key, value)
@@ -57,9 +53,8 @@ const migrate = async () => {
     )
   }
 
-  const source = await createValkeyClient(sourceConnectionString)
-  const destination = await createValkeyClient(destinationConnectionString)
-
+  const source = createValkeyClient(sourceConnectionString)
+  const destination = createValkeyClient(destinationConnectionString)
   let cursor = '0'
   let migratedKeys = 0
   let skippedKeys = 0
@@ -100,8 +95,8 @@ const migrate = async () => {
       )
     } while (cursor !== '0')
   } finally {
-    source.close()
-    destination.close()
+    source.disconnect()
+    destination.disconnect()
   }
 
   console.log(
