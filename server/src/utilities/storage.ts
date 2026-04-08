@@ -16,5 +16,5 @@ export const setValue = async (
   value: Buffer,
   lifeInSeconds: number,
 ) => {
-  await getClient().set(key, value, 'EX', lifeInSeconds)
+  await getClient().set(key, value, 'PX', Math.round(lifeInSeconds * 1000))
 }
