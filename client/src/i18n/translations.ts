@@ -114,12 +114,12 @@ export type Translations = ActionMessages &
     pageNotFound: TranslationsForString
     payCoins: TranslationsForString
     personalityIsHidden: TranslationsForString
-    privacyPolicy: TranslationsForString
-    privacyPolicyContent: TranslationsForString
     playAgain: TranslationsForString
     playerTurn: TranslationsForString
     playerWantToReset: TranslationsForString
     playerWins: TranslationsForString
+    privacyPolicy: TranslationsForString
+    privacyPolicyContent: TranslationsForString
     random: TranslationsForString
     reportBug: TranslationsForString
     reportIncorrectTranslation: TranslationsForString
@@ -1709,24 +1709,6 @@ const translations: Translations = {
     'it-IT': 'Stile di gioco',
     'pt-BR': 'Estilo de jogo',
   },
-  profile: {
-    'de-DE': 'Profil',
-    'en-US': 'Profile',
-    'es-MX': 'Perfil',
-    'fr-FR': 'Profil',
-    'hi-IN': 'प्रोफ़ाइल',
-    'it-IT': 'Profilo',
-    'pt-BR': 'Perfil',
-  },
-  profileNotFound: {
-    'de-DE': 'Profil nicht gefunden',
-    'en-US': 'Profile not found',
-    'es-MX': 'Perfil no encontrado',
-    'fr-FR': 'Profil introuvable',
-    'hi-IN': 'प्रोफ़ाइल नहीं मिली',
-    'it-IT': 'Profilo non trovato',
-    'pt-BR': 'Perfil não encontrado',
-  },
   privacyPolicy: {
     'de-DE': 'Datenschutzerklaerung',
     'en-US': 'Privacy Policy',
@@ -1744,6 +1726,24 @@ const translations: Translations = {
     'hi-IN': 'Google साइन-इन वैकल्पिक है।\n\nयदि आप साइन-इन करते हैं, तो हम प्रोफाइल, आंकड़े और लीडरबोर्ड दिखाने के लिए नाम, ईमेल, अवतार और यूजर आईडी जैसे खाता डेटा को प्रोसेस करते हैं।\n\nप्रतिस्पर्धी सुविधाओं में अन्य खिलाड़ी कुछ जानकारी देख सकते हैं, जैसे प्रदर्शित नाम, अवतार, रैंक और जीत/हार के आंकड़े।\n\nहम डेटा का उपयोग केवल गेम चलाने, दुरुपयोग रोकने और विश्वसनीयता सुधारने के लिए करते हैं।\n\nगोपनीयता संपर्क: {{contactEmail}}',
     'it-IT': 'L\'accesso con Google e facoltativo.\n\nSe accedi, trattiamo dati dell\'account come nome visualizzato, email, avatar e ID utente per fornire profilo, statistiche e classifica.\n\nNelle funzioni competitive, altri giocatori possono vedere alcuni dati come nome visualizzato, avatar, rango e statistiche vittorie/sconfitte.\n\nUsiamo i dati solo per gestire il gioco, prevenire abusi e migliorare l\'affidabilita.\n\nContatto privacy: {{contactEmail}}',
     'pt-BR': 'O login com Google e opcional.\n\nSe voce entrar, processamos dados da conta como nome de exibicao, email, avatar e ID de usuario para fornecer perfil, estatisticas e ranking.\n\nNos recursos competitivos, outros jogadores podem ver alguns dados como nome de exibicao, avatar, posicao e estatisticas de vitorias/derrotas.\n\nUsamos os dados apenas para operar o jogo, prevenir abusos e melhorar a confiabilidade.\n\nContato de privacidade: {{contactEmail}}',
+  },
+  profile: {
+    'de-DE': 'Profil',
+    'en-US': 'Profile',
+    'es-MX': 'Perfil',
+    'fr-FR': 'Profil',
+    'hi-IN': 'प्रोफ़ाइल',
+    'it-IT': 'Profilo',
+    'pt-BR': 'Perfil',
+  },
+  profileNotFound: {
+    'de-DE': 'Profil nicht gefunden',
+    'en-US': 'Profile not found',
+    'es-MX': 'Perfil no encontrado',
+    'fr-FR': 'Profil introuvable',
+    'hi-IN': 'प्रोफ़ाइल नहीं मिली',
+    'it-IT': 'Profilo non trovato',
+    'pt-BR': 'Perfil não encontrado',
   },
   random: {
     'de-DE': 'Zufällig',
