@@ -76,6 +76,7 @@ jobs:
 
       - run: |
           cd client
+          export VITE_APP_VERSION="${{ github.event.release.tag_name || github.ref_name }}"
           vercel link --yes --project coup-client --token=${{ secrets.VERCEL_TOKEN }}
           vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
           if [ "${{ inputs.environment }}" = "production" ]; then

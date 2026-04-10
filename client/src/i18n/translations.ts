@@ -118,6 +118,8 @@ export type Translations = ActionMessages &
     playerTurn: TranslationsForString
     playerWantToReset: TranslationsForString
     playerWins: TranslationsForString
+    privacyPolicy: TranslationsForString
+    privacyPolicyContent: TranslationsForString
     random: TranslationsForString
     reportBug: TranslationsForString
     reportIncorrectTranslation: TranslationsForString
@@ -168,6 +170,8 @@ export type Translations = ActionMessages &
     startingPlayerBeginsWith1Coin: TranslationsForString
     steal2CoinsFromSomeone: TranslationsForString
     system: TranslationsForString
+    termsOfService: TranslationsForString
+    termsOfServiceContent: TranslationsForString
     title: TranslationsForString
     vengefulness: TranslationsForString
     waitingOnOtherPlayers: TranslationsForString
@@ -1705,6 +1709,24 @@ const translations: Translations = {
     'it-IT': 'Stile di gioco',
     'pt-BR': 'Estilo de jogo',
   },
+  privacyPolicy: {
+    'de-DE': 'Datenschutzerklaerung',
+    'en-US': 'Privacy Policy',
+    'es-MX': 'Politica de Privacidad',
+    'fr-FR': 'Politique de Confidentialite',
+    'hi-IN': 'गोपनीयता नीति',
+    'it-IT': 'Informativa sulla Privacy',
+    'pt-BR': 'Politica de Privacidade',
+  },
+  privacyPolicyContent: {
+    'de-DE': 'Anmeldung mit Google ist optional.\n\nWenn Sie sich anmelden, verarbeiten wir Kontodaten wie Name, E-Mail, Avatar und Benutzer-ID, um Ihr Profil, Statistiken und die Bestenliste bereitzustellen.\n\nBei wettbewerbsorientierten Funktionen koennen andere Spieler einige Daten sehen, zum Beispiel Anzeigename, Avatar, Rang sowie Sieg/Niederlage-Werte.\n\nWir verwenden Daten nur fuer den Betrieb des Spiels, die Missbrauchspraevention und die Verbesserung der Zuverlaessigkeit.\n\nKontakt fuer Datenschutzanfragen: {{contactEmail}}',
+    'en-US': 'Google sign-in is optional.\n\nIf you sign in, we process account data like display name, email, avatar, and user ID to provide your profile, stats, and leaderboard.\n\nFor competitive features, other players may see some data such as display name, avatar, rank, and win/loss stats.\n\nWe use data only to run the game, prevent abuse, and improve reliability.\n\nPrivacy contact: {{contactEmail}}',
+    'es-MX': 'Iniciar sesion con Google es opcional.\n\nSi inicias sesion, procesamos datos de cuenta como nombre visible, correo, avatar e identificador para mostrar tu perfil, estadisticas y clasificacion.\n\nEn funciones competitivas, otros jugadores pueden ver algunos datos como nombre visible, avatar, rango y estadisticas de victorias/derrotas.\n\nUsamos los datos solo para operar el juego, prevenir abusos y mejorar la confiabilidad.\n\nContacto de privacidad: {{contactEmail}}',
+    'fr-FR': 'La connexion Google est facultative.\n\nSi vous vous connectez, nous traitons des donnees de compte comme le nom affiche, l\'email, l\'avatar et l\'identifiant afin de fournir votre profil, vos statistiques et le classement.\n\nPour les fonctions competitives, d\'autres joueurs peuvent voir certaines donnees comme le nom affiche, l\'avatar, le rang et les stats victoires/defaites.\n\nNous utilisons ces donnees uniquement pour faire fonctionner le jeu, prevenir les abus et ameliorer la fiabilite.\n\nContact vie privee : {{contactEmail}}',
+    'hi-IN': 'Google साइन-इन वैकल्पिक है।\n\nयदि आप साइन-इन करते हैं, तो हम प्रोफाइल, आंकड़े और लीडरबोर्ड दिखाने के लिए नाम, ईमेल, अवतार और यूजर आईडी जैसे खाता डेटा को प्रोसेस करते हैं।\n\nप्रतिस्पर्धी सुविधाओं में अन्य खिलाड़ी कुछ जानकारी देख सकते हैं, जैसे प्रदर्शित नाम, अवतार, रैंक और जीत/हार के आंकड़े।\n\nहम डेटा का उपयोग केवल गेम चलाने, दुरुपयोग रोकने और विश्वसनीयता सुधारने के लिए करते हैं।\n\nगोपनीयता संपर्क: {{contactEmail}}',
+    'it-IT': 'L\'accesso con Google e facoltativo.\n\nSe accedi, trattiamo dati dell\'account come nome visualizzato, email, avatar e ID utente per fornire profilo, statistiche e classifica.\n\nNelle funzioni competitive, altri giocatori possono vedere alcuni dati come nome visualizzato, avatar, rango e statistiche vittorie/sconfitte.\n\nUsiamo i dati solo per gestire il gioco, prevenire abusi e migliorare l\'affidabilita.\n\nContatto privacy: {{contactEmail}}',
+    'pt-BR': 'O login com Google e opcional.\n\nSe voce entrar, processamos dados da conta como nome de exibicao, email, avatar e ID de usuario para fornecer perfil, estatisticas e ranking.\n\nNos recursos competitivos, outros jogadores podem ver alguns dados como nome de exibicao, avatar, posicao e estatisticas de vitorias/derrotas.\n\nUsamos os dados apenas para operar o jogo, prevenir abusos e melhorar a confiabilidade.\n\nContato de privacidade: {{contactEmail}}',
+  },
   profile: {
     'de-DE': 'Profil',
     'en-US': 'Profile',
@@ -2380,6 +2402,24 @@ const translations: Translations = {
     'hi-IN': 'सिस्टम',
     'it-IT': 'Sistema',
     'pt-BR': 'Sistema',
+  },
+  termsOfService: {
+    'de-DE': 'Nutzungsbedingungen',
+    'en-US': 'Terms of Service',
+    'es-MX': 'Terminos de Servicio',
+    'fr-FR': 'Conditions d\'utilisation',
+    'hi-IN': 'सेवा की शर्तें',
+    'it-IT': 'Termini di Servizio',
+    'pt-BR': 'Termos de Servico',
+  },
+  termsOfServiceContent: {
+    'de-DE': 'Durch die Nutzung von Coup Online stimmen Sie diesen Bedingungen zu.\n\nDie Anmeldung ist optional, aber fuer persistente Statistiken und Bestenlisten koennen Kontofunktionen erforderlich sein.\n\nCheating, Missbrauch, Belaestigung und unbefugter Zugriff sind verboten und koennen zu Sperrung fuehren.\n\nDer Dienst wird ohne Gewaehr bereitgestellt und kann jederzeit geaendert werden.\n\nKontakt fuer rechtliche Anfragen: {{contactEmail}}',
+    'en-US': 'By using Coup Online, you agree to these terms.\n\nSign-in is optional, but account features may be required for persistent stats and leaderboard identity.\n\nCheating, abuse, harassment, and unauthorized access are prohibited and may result in suspension.\n\nThe service is provided as-is and may change at any time.\n\nLegal contact: {{contactEmail}}',
+    'es-MX': 'Al usar Coup Online, aceptas estos terminos.\n\nEl inicio de sesion es opcional, pero algunas funciones de cuenta pueden ser necesarias para estadisticas persistentes e identidad en la clasificacion.\n\nHacer trampa, abusar, acosar o intentar acceso no autorizado esta prohibido y puede causar suspension.\n\nEl servicio se ofrece tal cual y puede cambiar en cualquier momento.\n\nContacto legal: {{contactEmail}}',
+    'fr-FR': 'En utilisant Coup Online, vous acceptez ces conditions.\n\nLa connexion est facultative, mais certaines fonctions de compte peuvent etre necessaires pour les statistiques persistantes et l\'identite du classement.\n\nLa triche, les abus, le harcelement et l\'acces non autorise sont interdits et peuvent entrainer une suspension.\n\nLe service est fourni en l\'etat et peut changer a tout moment.\n\nContact juridique : {{contactEmail}}',
+    'hi-IN': 'Coup Online का उपयोग करके, आप इन शर्तों से सहमत होते हैं।\n\nसाइन-इन वैकल्पिक है, लेकिन स्थायी आँकड़ों और लीडरबोर्ड पहचान के लिए खाता सुविधाएं आवश्यक हो सकती हैं।\n\nचीटिंग, दुरुपयोग, उत्पीड़न और अनधिकृत पहुंच निषिद्ध है और निलंबन का कारण बन सकती है।\n\nसेवा जैसी है वैसी प्रदान की जाती है और कभी भी बदल सकती है।\n\nकानूनी संपर्क: {{contactEmail}}',
+    'it-IT': 'Usando Coup Online, accetti questi termini.\n\nL\'accesso e facoltativo, ma alcune funzioni account possono essere necessarie per statistiche persistenti e identita in classifica.\n\nCheat, abusi, molestie e accessi non autorizzati sono vietati e possono causare sospensione.\n\nIl servizio e fornito cosi com\'e e puo cambiare in qualsiasi momento.\n\nContatto legale: {{contactEmail}}',
+    'pt-BR': 'Ao usar o Coup Online, voce concorda com estes termos.\n\nO login e opcional, mas recursos de conta podem ser necessarios para estatisticas persistentes e identidade no ranking.\n\nTrapaca, abuso, assedio e acesso nao autorizado sao proibidos e podem resultar em suspensao.\n\nO servico e fornecido no estado em que se encontra e pode mudar a qualquer momento.\n\nContato legal: {{contactEmail}}',
   },
   title: {
     'de-DE': 'Coup',

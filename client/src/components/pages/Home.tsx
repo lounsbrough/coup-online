@@ -1,6 +1,7 @@
 import { Button, Grid } from "@mui/material"
 import { Link as RouterLink } from "react-router"
 import GitHubLinks from "../GitHubLinks"
+import LegalLinks from "../LegalLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { AddCircle, EmojiEvents, Gavel, GroupAdd } from "@mui/icons-material"
 import CoupTypography from '../utilities/CoupTypography'
@@ -45,6 +46,7 @@ function Home({ setRulesOpen }: Readonly<HomeProps>) {
           startIcon={<EmojiEvents />}
         >{t('viewLeaderboard')}</Button>
       </Grid>
+      <LegalLinks />
       <GitHubLinks />
     </>
   )
