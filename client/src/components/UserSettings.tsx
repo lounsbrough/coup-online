@@ -18,6 +18,7 @@ function UserSettings() {
 
   const roomId = searchParams.get('roomId')
   const rowHeight = 36
+  const appVersion = __APP_VERSION__
 
   return (
     <>
@@ -123,6 +124,9 @@ function UserSettings() {
           </Grid>
         </DialogContent>
         <DialogActions>
+          <Typography variant="caption" color="text.secondary" sx={{ mr: 'auto', ml: 2 }}>
+            v{appVersion}
+          </Typography>
           <Button variant='contained' onClick={() => { setModalOpen(false) }}>
             {t('close')}
           </Button>
