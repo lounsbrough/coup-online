@@ -3,6 +3,11 @@ import { Description, Gavel } from "@mui/icons-material"
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material"
 import { useTranslationContext } from "../contexts/TranslationsContext"
 
+const CONTACT_EMAIL = 'david.lounsbrough@gmail.com'
+
+const substitute = (content: string) =>
+  content.replaceAll('{{contactEmail}}', CONTACT_EMAIL)
+
 type ModalType = 'privacy' | 'terms' | null
 
 function LegalLinks() {
@@ -21,10 +26,10 @@ function LegalLinks() {
 
   const modalBody = useMemo(() => {
     if (modalType === 'privacy') {
-      return t('privacyPolicyContent')
+      return substitute(t('privacyPolicyContent') as string)
     }
     if (modalType === 'terms') {
-      return t('termsOfServiceContent')
+      return substitute(t('termsOfServiceContent') as string)
     }
     return ''
   }, [modalType, t])
