@@ -23,7 +23,7 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-router": "^7.14.0",
+    "react-router": "^7.14.1",
     "socket.io-client": "^4.8.3",
     "swr": "^2.4.1",
     "typescript": "^6.0.2",
@@ -60,10 +60,10 @@
     "@types/chance": "^1.1.7",
     "@vitejs/plugin-react": "^6.0.1",
     "chance": "^1.1.13",
-    "cypress": "^15.13.1",
+    "cypress": "^15.14.0",
     "globals": "^17.5.0",
     "jsdom": "^29.0.2",
-    "typescript-eslint": "^8.58.1",
+    "typescript-eslint": "^8.58.2",
     "vite": "^8.0.8",
     "vitest": "^4.1.4"
   }

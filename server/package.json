@@ -48,8 +48,8 @@
     "pre-commit": "^1.2.2",
     "socket.io-client": "^4.8.3",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.58.2",
     "vitest": "^4.1.4"
   }
 }
