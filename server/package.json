@@ -43,7 +43,7 @@
     "@types/ws": "^8.18.1",
     "@vitest/coverage-v8": "^4.1.4",
     "chance": "^1.1.13",
-    "eslint": "^10.2.0",
+    "eslint": "^10.2.1",
     "globals": "^17.5.0",
     "pre-commit": "^1.2.2",
     "socket.io-client": "^4.8.3",
