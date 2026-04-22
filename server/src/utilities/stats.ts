@@ -166,6 +166,20 @@ export const recordGameStats = async (gameState: GameState) => {
           playerStats.influenceClaims
         )
 
+        // Defensive integrity clamp: successes should never exceed attempts.
+        if (existing.successfulBluffsMade > existing.totalBluffsMade) {
+          console.warn(
+            `Clamping bluff stats for user ${player.uid} in game ${gameId}: ${existing.successfulBluffsMade}/${existing.totalBluffsMade}`
+          )
+          existing.successfulBluffsMade = existing.totalBluffsMade
+        }
+        if (existing.successfulChallengesMade > existing.totalChallengesMade) {
+          console.warn(
+            `Clamping challenge stats for user ${player.uid} in game ${gameId}: ${existing.successfulChallengesMade}/${existing.totalChallengesMade}`
+          )
+          existing.successfulChallengesMade = existing.totalChallengesMade
+        }
+
         // Achievements
         if (isWinner && playerStats.totalBluffsMade === 0) {
           existing.gamesWonWithoutBluffing++
