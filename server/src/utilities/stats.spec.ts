@@ -244,6 +244,42 @@ describe('stats', () => {
       expect(loserSetCall).toBeDefined()
     })
 
+    it('should clamp successful bluff/challenge stats to totals', async () => {
+      const gameState = createTestGameState()
+      const [winner, loser] = gameState.players
+
+      if (!gameState.gameActionStats) throw new Error('gameActionStats should be defined for this test')
+
+      gameState.gameActionStats[winner.name].totalBluffsMade = 1
+      gameState.gameActionStats[winner.name].successfulBluffsMade = 3
+      gameState.gameActionStats[winner.name].challengesMade = 2
+      gameState.gameActionStats[winner.name].successfulChallenges = 5
+
+      gameState.gameActionStats[loser.name].totalBluffsMade = 0
+      gameState.gameActionStats[loser.name].successfulBluffsMade = 2
+      gameState.gameActionStats[loser.name].challengesMade = 1
+      gameState.gameActionStats[loser.name].successfulChallenges = 4
+
+      mockTransaction.get.mockResolvedValue({
+        exists: true,
+        data: () => createEmptyStats(),
+      })
+
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { })
+
+      await recordGameStats(gameState)
+
+      const allWrittenStats = mockTransaction.set.mock.calls.map(([, stats]) => stats as UserStats)
+      expect(allWrittenStats).toHaveLength(2)
+      allWrittenStats.forEach((stats) => {
+        expect(stats.successfulBluffsMade).toBeLessThanOrEqual(stats.totalBluffsMade)
+        expect(stats.successfulChallengesMade).toBeLessThanOrEqual(stats.totalChallengesMade)
+      })
+
+      expect(warnSpy).toHaveBeenCalled()
+      warnSpy.mockRestore()
+    })
+
     it('should retry up to 3 times on transaction failure then give up', async () => {
       vi.useFakeTimers()
       const gameState = createTestGameState()

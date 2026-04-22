@@ -612,7 +612,7 @@ export const processPassActionResponse = (state: GameState, playerName: string) 
   const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
   if (claimedInfluence) {
     addClaimedInfluence(actionPlayer, claimedInfluence)
-    if (!actionPlayer.influences.includes(claimedInfluence)) {
+    if (!state.pendingAction.claimConfirmed && !actionPlayer.influences.includes(claimedInfluence)) {
       recordSuccessfulBluff(state, actionPlayer.name)
     }
   }
