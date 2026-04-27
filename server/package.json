@@ -26,7 +26,7 @@
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.3.2",
+    "express-rate-limit": "^8.4.1",
     "firebase-admin": "^13.8.0",
     "glin-profanity": "^3.3.0",
     "joi": "^18.1.2",
