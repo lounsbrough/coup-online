@@ -207,7 +207,7 @@ export function NotificationsContextProvider({ children }: NotificationsContextP
             top: '3.5rem',
             left: '50%',
             transform: 'translateX(-50%)',
-            zIndex: '1299',
+            zIndex: '1400',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

@@ -27,7 +27,7 @@ type TranslationContextType = {
   setLanguage: (key: AvailableLanguageCode) => void
 }
 
-export const TranslationContext = createContext<TranslationContextType>({ t: () => null, language: AvailableLanguageCode['en-US'], setLanguage: () => { } })
+const TranslationContext = createContext<TranslationContextType>({ t: () => null, language: AvailableLanguageCode['en-US'], setLanguage: () => { } })
 
 const availableCodes = new Set<string>(Object.values(AvailableLanguageCode))
 const defaultLanguage = navigator.languages.find((preferred) => availableCodes.has(preferred)) as AvailableLanguageCode

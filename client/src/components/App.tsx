@@ -27,6 +27,7 @@ import LoginButton from './LoginButton'
 import Profile from './pages/Profile'
 import Leaderboard from './pages/Leaderboard'
 import AppBreadcrumbs from './AppBreadcrumbs'
+import AdSenseManager from './monetization/AdSenseManager'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -55,6 +56,7 @@ function App() {
         }
       })
     }}>
+      <AdSenseManager />
       <WebSocketContextProvider>
         <GameStateContextProvider>
           <RulesBubble rulesOpen={leftDrawerOpen} setRulesOpen={setLeftDrawerOpen} />

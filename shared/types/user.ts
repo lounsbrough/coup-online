@@ -79,6 +79,13 @@ export type UserStats = {
     [gameId: string]: string; // ISO timestamp
   };
 
+  // Monetization
+  premiumStatus?: {
+    isActive: boolean;
+    tier: 'premium_monthly' | 'premium_annual' | 'supporter';
+    expiresAt?: string;
+  };
+
   lastPlayedAt?: string;
   createdAt: string;
 };

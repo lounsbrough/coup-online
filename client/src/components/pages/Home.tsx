@@ -1,10 +1,11 @@
-import { Button, Grid } from "@mui/material"
+import { Box, Button, Grid } from "@mui/material"
 import { Link as RouterLink } from "react-router"
 import GitHubLinks from "../GitHubLinks"
 import LegalLinks from "../LegalLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { AddCircle, EmojiEvents, Gavel, GroupAdd } from "@mui/icons-material"
 import CoupTypography from '../utilities/CoupTypography'
+import SupportMonetizationButton from '../monetization/SupportMonetizationButton'
 
 interface HomeProps {
   setRulesOpen: (open: boolean) => void
@@ -21,7 +22,7 @@ function Home({ setRulesOpen }: Readonly<HomeProps>) {
       <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('briefDescriptionOfCoup')}
       </CoupTypography>
-      <Grid container direction="column" alignItems="center" spacing={5} mt={10}>
+      <Grid container direction="column" alignItems="center" spacing={3} mt={10}>
         <Button
           variant='contained'
           onClick={() => setRulesOpen(true)}
@@ -45,6 +46,10 @@ function Home({ setRulesOpen }: Readonly<HomeProps>) {
           to="/leaderboard"
           startIcon={<EmojiEvents />}
         >{t('viewLeaderboard')}</Button>
+
+        <Box>
+          <SupportMonetizationButton size="medium" />
+        </Box>
       </Grid>
       <LegalLinks />
       <GitHubLinks />

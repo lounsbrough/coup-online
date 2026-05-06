@@ -29,7 +29,7 @@ root.render(
         </AuthContextProvider>
       </MaterialThemeContextProvider>
     </BrowserRouter>
-    <SpeedInsights />
+    <SpeedInsights sampleRate={0.2} />
   </React.StrictMode>
 )
 

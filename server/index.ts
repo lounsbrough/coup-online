@@ -17,6 +17,8 @@ import { getUserStats, getLeaderboard, getDisplayName, setDisplayName, deleteUse
 import { verifyIdToken } from './src/auth'
 import { adminAuth } from './src/firebase'
 import { containsProfanity } from './src/utilities/profanity'
+import { constructWebhookEvent, createCheckoutSession, handleCheckoutSessionCompleted } from './src/utilities/stripe'
+import { getUserMonetizationHistory, getUserPremiumStatus, grantPremiumAccess, recordMonetizationHistory } from './src/utilities/monetization'
 
 export type DehydratedPublicGameStateOrError = { gameState: DehydratedPublicGameState, serverTime: string, error?: never } | { error: string, gameState?: never, serverTime?: never }
 
@@ -35,6 +37,7 @@ type ClientToServerEvents = {
 type InterServerEvents = object
 
 type SocketData = { playerId: string }
+type RequestWithRawBody = Request & { rawBody?: Buffer }
 
 const genericErrorMessage = 'Unexpected error processing request'
 
@@ -49,7 +52,13 @@ process.on('unhandledRejection', (reason, promise) => {
 
 const app = express()
 app.use(cors())
-app.use(json())
+app.use(json({
+  verify: (req, _res, buf) => {
+    if (req.url === '/api/payments/webhook') {
+      (req as RequestWithRawBody).rawBody = Buffer.from(buf)
+    }
+  },
+}))
 const server = http.createServer(app)
 const io = new ioServer<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, {
   cors: { origin: "*" }
@@ -738,8 +747,149 @@ app.get('/api/leaderboard', apiLimiter, async (req, res) => {
   }
 })
 
+// Monetization endpoints
+app.post('/api/payments/checkout', apiLimiter, async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization
+    if (!authHeader?.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const token = authHeader.split('Bearer ')[1]
+    const decoded = await verifyIdToken(token)
+    if (!decoded) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const { productType, productId, donationAmountCents, successUrl, cancelUrl } = req.body
+
+    if (!productType || !productId || !successUrl || !cancelUrl) {
+      res.status(400).json({ error: 'Missing required parameters' })
+      return
+    }
+
+    if (productType === 'donation' && productId === 'donation_custom') {
+      const amount = Number(donationAmountCents)
+      if (!Number.isInteger(amount) || amount < 100 || amount > 50000) {
+        res.status(400).json({ error: 'Invalid custom donation amount' })
+        return
+      }
+    }
+
+    const user = await adminAuth.getUser(decoded.uid)
+    const session = await createCheckoutSession({
+      userId: decoded.uid,
+      userEmail: user.email || '',
+      productType,
+      productId,
+      donationAmountCents,
+      successUrl,
+      cancelUrl,
+    })
+
+    res.json({ sessionId: session.id, url: session.url })
+  } catch (error) {
+    console.error('Error creating checkout session:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
+app.post('/api/payments/webhook', async (req, res) => {
+  try {
+    const rawBody = (req as RequestWithRawBody).rawBody
+    const signatureHeader = req.headers['stripe-signature']
+    const signature = Array.isArray(signatureHeader) ? signatureHeader[0] : signatureHeader
+    if (!signature) {
+      res.status(400).json({ error: 'Missing signature' })
+      return
+    }
+    if (!rawBody) {
+      res.status(400).json({ error: 'Missing raw webhook body' })
+      return
+    }
+
+    const event = constructWebhookEvent(rawBody, signature)
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object
+      await handleCheckoutSessionCompleted(session)
+
+      const { userId, productId, donationAmountCents } = session.metadata || {}
+      if (userId && productId) {
+        const premiumStatus = await grantPremiumAccess(
+          userId,
+          productId,
+          donationAmountCents ? Number.parseInt(donationAmountCents, 10) : undefined,
+        )
+        await recordMonetizationHistory(
+          userId,
+          productId,
+          session.amount_total ?? (donationAmountCents ? Number.parseInt(donationAmountCents, 10) : 0),
+          session.currency || 'usd',
+          premiumStatus.expiresAt,
+          donationAmountCents ? Number.parseInt(donationAmountCents, 10) : undefined,
+        )
+      }
+    }
+
+    res.json({ received: true })
+  } catch (error) {
+    console.error('Error processing webhook:', error)
+    res.status(400).json({ error: 'webhook error' })
+  }
+})
+
+app.get('/api/user/premium', apiLimiter, async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization
+    if (!authHeader?.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const token = authHeader.split('Bearer ')[1]
+    const decoded = await verifyIdToken(token)
+    if (!decoded) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const premiumStatus = await getUserPremiumStatus(decoded.uid)
+    res.json(premiumStatus)
+  } catch (error) {
+    console.error('Error fetching premium status:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
+app.get('/api/user/monetization-history', apiLimiter, async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization
+    if (!authHeader?.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const token = authHeader.split('Bearer ')[1]
+    const decoded = await verifyIdToken(token)
+    if (!decoded) {
+      res.status(401).json({ error: 'unauthorized' })
+      return
+    }
+
+    const history = await getUserMonetizationHistory(decoded.uid)
+    res.json(history)
+  } catch (error) {
+    console.error('Error fetching monetization history:', error)
+    res.status(500).json({ error: genericErrorMessage })
+  }
+})
+
 // Express error handling middleware
-app.use((error: unknown, req: Request, res: Response) => {
+app.use((error: unknown, req: Request, res: Response, _next: NextFunction) => {
+  void _next
   console.error('Unhandled Express error:', error)
 
   if (error instanceof GameMutationInputError) {

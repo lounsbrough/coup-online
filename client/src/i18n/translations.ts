@@ -158,6 +158,27 @@ export type Translations = ActionMessages &
     send: TranslationsForString
     settings: TranslationsForString
     setup: TranslationsForString
+    supportCheckoutError: TranslationsForString
+    supportCustomAmountLabel: TranslationsForString
+    supportCustomAmountValidation: TranslationsForString
+    supportCustomDonateCta: TranslationsForString
+    supportDurationDay: TranslationsForString
+    supportAdFree: TranslationsForString
+    supportGoAdFreeButton: TranslationsForString
+    supportLoginRequired: TranslationsForString
+    supportMonetizationDescription: TranslationsForString
+    supportMonetizationTitle: TranslationsForString
+    supportMonetizationTooltip: TranslationsForString
+    supportHistoryActiveUntil: TranslationsForString
+    supportHistoryEmpty: TranslationsForString
+    supportHistoryLoading: TranslationsForString
+    supportHistoryTitle: TranslationsForString
+    supportTabSupport: TranslationsForString
+    supportTabHistory: TranslationsForString
+    supportPaymentReturnPending: TranslationsForString
+    supportPaymentReturnSuccess: TranslationsForString
+    supportPremiumMonthlyCta: TranslationsForString
+    supportStartingCheckout: TranslationsForString
     showChickens: TranslationsForString
     showFireworks: TranslationsForString
     showSnowmen: TranslationsForString
@@ -2393,6 +2414,195 @@ const translations: Translations = {
     'hi-IN': 'सफलता',
     'it-IT': 'Successo',
     'pt-BR': 'Sucesso',
+  },
+  supportAdFree: {
+    'de-DE': 'werbefrei',
+    'en-US': 'ad-free',
+    'es-MX': 'sin anuncios',
+    'fr-FR': 'sans pub',
+    'hi-IN': 'बिना विज्ञापन',
+    'it-IT': 'senza pubblicita',
+    'pt-BR': 'sem anuncios',
+  },
+  supportCheckoutError: {
+    'de-DE': 'Checkout kann gerade nicht gestartet werden.',
+    'en-US': 'Unable to start checkout right now.',
+    'es-MX': 'No se puede iniciar el pago en este momento.',
+    'fr-FR': 'Impossible de lancer le paiement pour le moment.',
+    'hi-IN': 'अभी चेकआउट शुरू नहीं किया जा सकता।',
+    'it-IT': 'Impossibile avviare il checkout in questo momento.',
+    'pt-BR': 'Nao foi possivel iniciar o checkout agora.',
+  },
+  supportCustomAmountLabel: {
+    'de-DE': 'Benutzerdefinierter Betrag (USD)',
+    'en-US': 'Custom amount (USD)',
+    'es-MX': 'Monto personalizado (USD)',
+    'fr-FR': 'Montant personnalise (USD)',
+    'hi-IN': 'कस्टम राशि (USD)',
+    'it-IT': 'Importo personalizzato (USD)',
+    'pt-BR': 'Valor personalizado (USD)',
+  },
+  supportCustomAmountValidation: {
+    'de-DE': 'Gib einen gueltigen Betrag zwischen $1 und $500 ein',
+    'en-US': 'Enter a valid amount between $1 and $500',
+    'es-MX': 'Ingresa un monto valido entre $1 y $500',
+    'fr-FR': 'Entrez un montant valide entre 1 $ et 500 $',
+    'hi-IN': '$1 और $500 के बीच मान्य राशि दर्ज करें',
+    'it-IT': 'Inserisci un importo valido tra $1 e $500',
+    'pt-BR': 'Digite um valor valido entre $1 e $500',
+  },
+  supportCustomDonateCta: {
+    'de-DE': 'Benutzerdefiniert spenden',
+    'en-US': 'Donate Custom',
+    'es-MX': 'Donar monto personalizado',
+    'fr-FR': 'Don personnalisable',
+    'hi-IN': 'कस्टम दान करें',
+    'it-IT': 'Dona importo personalizzato',
+    'pt-BR': 'Doar valor personalizado',
+  },
+  supportDurationDay: {
+    'de-DE': '{{count}} Tag{{plural[[e]]}}',
+    'en-US': '{{count}} day{{plural[[s]]}}',
+    'es-MX': '{{count}} dia{{plural[[s]]}}',
+    'fr-FR': '{{count}} jour{{plural[[s]]}}',
+    'hi-IN': '{{count}} दिन',
+    'it-IT': '{{count}} giorno{{plural[[i]]}}',
+    'pt-BR': '{{count}} dia{{plural[[s]]}}',
+  },
+  supportGoAdFreeButton: {
+    'de-DE': 'Unterstuetzen / Werbefrei',
+    'en-US': 'Support / Go Ad-Free',
+    'es-MX': 'Apoyar / Sin anuncios',
+    'fr-FR': 'Soutenir / Sans pub',
+    'hi-IN': 'सपोर्ट / बिना विज्ञापन',
+    'it-IT': 'Supporta / Senza pubblicita',
+    'pt-BR': 'Apoiar / Sem anuncios',
+  },
+  supportHistoryActiveUntil: {
+    'de-DE': 'Aktiv bis',
+    'en-US': 'Active until',
+    'es-MX': 'Activo hasta',
+    'fr-FR': 'Actif jusqu au',
+    'hi-IN': 'सक्रिय रहेगा',
+    'it-IT': 'Attivo fino al',
+    'pt-BR': 'Ativo ate',
+  },
+  supportHistoryEmpty: {
+    'de-DE': 'Noch keine Zahlungen oder Spenden.',
+    'en-US': 'No payments or donations yet.',
+    'es-MX': 'Aun no hay pagos ni donaciones.',
+    'fr-FR': 'Aucun paiement ou don pour le moment.',
+    'hi-IN': 'अभी तक कोई भुगतान या दान नहीं है।',
+    'it-IT': 'Nessun pagamento o donazione ancora.',
+    'pt-BR': 'Ainda nao ha pagamentos ou doacoes.',
+  },
+  supportHistoryLoading: {
+    'de-DE': 'Zahlungsverlauf wird geladen...',
+    'en-US': 'Loading payment history...',
+    'es-MX': 'Cargando historial de pagos...',
+    'fr-FR': 'Chargement de l historique des paiements...',
+    'hi-IN': 'भुगतान इतिहास लोड हो रहा है...',
+    'it-IT': 'Caricamento cronologia pagamenti...',
+    'pt-BR': 'Carregando historico de pagamentos...',
+  },
+  supportHistoryTitle: {
+    'de-DE': 'Dein Zahlungsverlauf',
+    'en-US': 'Your payment history',
+    'es-MX': 'Tu historial de pagos',
+    'fr-FR': 'Votre historique de paiements',
+    'hi-IN': 'आपका भुगतान इतिहास',
+    'it-IT': 'La tua cronologia pagamenti',
+    'pt-BR': 'Seu historico de pagamentos',
+  },
+  supportLoginRequired: {
+    'de-DE': 'Bitte melde dich an, bevor du das Spiel unterstuetzt.',
+    'en-US': 'Please sign in before supporting the game.',
+    'es-MX': 'Inicia sesion antes de apoyar el juego.',
+    'fr-FR': 'Veuillez vous connecter avant de soutenir le jeu.',
+    'hi-IN': 'गेम को सपोर्ट करने से पहले साइन इन करें।',
+    'it-IT': 'Accedi prima di supportare il gioco.',
+    'pt-BR': 'Faca login antes de apoiar o jogo.',
+  },
+  supportMonetizationDescription: {
+    'de-DE': 'Halte das Spiel am Laufen und waehle die Option, die am besten zu dir passt.',
+    'en-US': 'Keep the game running and choose the option that fits you best.',
+    'es-MX': 'Ayuda a mantener el juego y elige la opcion que mejor te funcione.',
+    'fr-FR': 'Aidez a faire vivre le jeu et choisissez l option qui vous convient.',
+    'hi-IN': 'गेम को चलाए रखने में मदद करें और आपके लिए सही विकल्प चुनें।',
+    'it-IT': 'Aiuta a mantenere vivo il gioco e scegli l opzione migliore per te.',
+    'pt-BR': 'Ajude a manter o jogo no ar e escolha a opcao ideal para voce.',
+  },
+  supportMonetizationTitle: {
+    'de-DE': 'Coup Online unterstuetzen',
+    'en-US': 'Support Coup Online',
+    'es-MX': 'Apoyar Coup Online',
+    'fr-FR': 'Soutenir Coup Online',
+    'hi-IN': 'Coup Online को सपोर्ट करें',
+    'it-IT': 'Supporta Coup Online',
+    'pt-BR': 'Apoiar Coup Online',
+  },
+  supportMonetizationTooltip: {
+    'de-DE': 'Unterstuetze die Entwicklung und schalte werbefreie Optionen frei',
+    'en-US': 'Support development and unlock ad-free options',
+    'es-MX': 'Apoya el desarrollo y desbloquea opciones sin anuncios',
+    'fr-FR': 'Soutenez le developpement et debloquez les options sans pub',
+    'hi-IN': 'डेवलपमेंट को सपोर्ट करें और बिना विज्ञापन विकल्प अनलॉक करें',
+    'it-IT': 'Supporta lo sviluppo e sblocca opzioni senza pubblicita',
+    'pt-BR': 'Apoie o desenvolvimento e desbloqueie opcoes sem anuncios',
+  },
+  supportPaymentReturnPending: {
+    'de-DE': 'Danke! Deine Zahlung wurde abgeschlossen. Werbefreier Status sollte in Kuerze aktiv werden.',
+    'en-US': 'Thanks! Your payment completed. Ad-free status should activate shortly.',
+    'es-MX': 'Gracias. Tu pago se completo. El estado sin anuncios deberia activarse pronto.',
+    'fr-FR': 'Merci. Votre paiement est termine. Le mode sans pub devrait s activer bientot.',
+    'hi-IN': 'धन्यवाद! आपका भुगतान पूरा हो गया। बिना विज्ञापन स्थिति जल्द सक्रिय होनी चाहिए।',
+    'it-IT': 'Grazie! Il pagamento e stato completato. Lo stato senza pubblicita dovrebbe attivarsi a breve.',
+    'pt-BR': 'Obrigado! Seu pagamento foi concluido. O status sem anuncios deve ativar em breve.',
+  },
+  supportPaymentReturnSuccess: {
+    'de-DE': 'Danke fuer deine Unterstuetzung. Werbefreier Status ist jetzt aktiv.',
+    'en-US': 'Thanks for your support. Ad-free status is now active.',
+    'es-MX': 'Gracias por tu apoyo. El estado sin anuncios ya esta activo.',
+    'fr-FR': 'Merci pour votre soutien. Le mode sans pub est maintenant actif.',
+    'hi-IN': 'आपके समर्थन के लिए धन्यवाद। बिना विज्ञापन स्थिति अब सक्रिय है।',
+    'it-IT': 'Grazie per il supporto. Lo stato senza pubblicita e ora attivo.',
+    'pt-BR': 'Obrigado pelo apoio. O status sem anuncios agora esta ativo.',
+  },
+  supportPremiumMonthlyCta: {
+    'de-DE': '$1.99 / Monat · Werbefrei fuer',
+    'en-US': '$1.99 / month · Go Ad-Free',
+    'es-MX': '$1.99 / mes · Sin anuncios',
+    'fr-FR': '1,99 $ / mois · Sans pub',
+    'hi-IN': '$1.99 / माह · बिना विज्ञापन',
+    'it-IT': '$1.99 / mese · Senza pubblicita',
+    'pt-BR': '$1.99 / mes · Sem anuncios',
+  },
+  supportStartingCheckout: {
+    'de-DE': 'Checkout wird gestartet...',
+    'en-US': 'Starting checkout...',
+    'es-MX': 'Iniciando pago...',
+    'fr-FR': 'Demarrage du paiement...',
+    'hi-IN': 'चेकआउट शुरू हो रहा है...',
+    'it-IT': 'Avvio checkout...',
+    'pt-BR': 'Iniciando checkout...',
+  },
+  supportTabHistory: {
+    'de-DE': 'Verlauf',
+    'en-US': 'History',
+    'es-MX': 'Historial',
+    'fr-FR': 'Historique',
+    'hi-IN': 'इतिहास',
+    'it-IT': 'Storico',
+    'pt-BR': 'Historico',
+  },
+  supportTabSupport: {
+    'de-DE': 'Support',
+    'en-US': 'Support',
+    'es-MX': 'Apoyo',
+    'fr-FR': 'Support',
+    'hi-IN': 'सपोर्ट',
+    'it-IT': 'Supporto',
+    'pt-BR': 'Apoio',
   },
   system: {
     'de-DE': 'System',

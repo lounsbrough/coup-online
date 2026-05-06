@@ -10,6 +10,8 @@
     "@fontsource/roboto": "^5.2.10",
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
+    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/stripe-js": "^3.4.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.5.0",
