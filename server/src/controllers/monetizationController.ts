@@ -1,4 +1,6 @@
 import { Application, Request, RequestHandler, Response } from 'express'
+import type Stripe from 'stripe'
+import { PaymentProductId } from '../../../shared/types/monetization'
 import { adminAuth } from '../firebase'
 import { verifyIdToken } from '../auth'
 import {
@@ -15,6 +17,17 @@ import {
 } from '../utilities/monetization'
 
 type RequestWithRawBody = Request & { rawBody?: Buffer }
+
+const isPaymentProductId = (value: string): value is PaymentProductId => {
+  return [
+    'premium_month',
+    'premium_year',
+    'donation_fixed_1',
+    'donation_fixed_2',
+    'donation_fixed_3',
+    'donation_custom',
+  ].includes(value)
+}
 
 export const registerMonetizationControllers = ({
   app,
@@ -43,10 +56,12 @@ export const registerMonetizationControllers = ({
       const { productType, productId, donationAmountCents, successUrl, cancelUrl } = req.body as {
         productType?: CheckoutProductType | string
         productId?: string
-        donationAmountCents?: number
+        donationAmountCents?: number | string
         successUrl?: string
         cancelUrl?: string
       }
+
+      let normalizedDonationAmountCents: number | undefined
 
       if (!productType || !productId || !successUrl || !cancelUrl) {
         res.status(400).json({ error: 'Missing required parameters' })
@@ -64,6 +79,8 @@ export const registerMonetizationControllers = ({
           res.status(400).json({ error: 'Invalid custom donation amount' })
           return
         }
+
+        normalizedDonationAmountCents = amount
       }
 
       const user = await adminAuth.getUser(decoded.uid)
@@ -72,7 +89,7 @@ export const registerMonetizationControllers = ({
         userEmail: user.email || '',
         productType,
         productId,
-        ...(donationAmountCents !== undefined ? { donationAmountCents } : {}),
+        ...(normalizedDonationAmountCents !== undefined ? { donationAmountCents: normalizedDonationAmountCents } : {}),
         successUrl,
         cancelUrl,
       })
@@ -101,11 +118,11 @@ export const registerMonetizationControllers = ({
       const event = constructWebhookEvent(rawBody, signature)
 
       if (event.type === 'checkout.session.completed') {
-        const session = event.data.object
+        const session = event.data.object as Stripe.Checkout.Session
         await handleCheckoutSessionCompleted(session)
 
         const { userId, productId, donationAmountCents } = session.metadata || {}
-        if (userId && productId) {
+        if (userId && productId && isPaymentProductId(productId)) {
           const premiumStatus = await grantPremiumAccess(
             userId,
             productId,

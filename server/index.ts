@@ -35,7 +35,9 @@ const app = express()
 app.use(cors())
 app.use(json({
   verify: (req, _res, buf) => {
-    if (req.url === '/api/payments/webhook') {
+    const requestPath = req.url?.split('?')[0]?.replace(/\/+$/, '')
+
+    if (requestPath === '/api/payments/webhook') {
       (req as RequestWithRawBody).rawBody = Buffer.from(buf)
     }
   },

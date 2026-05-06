@@ -1,17 +1,12 @@
 import { firestore } from '../firebase'
-import { MonetizationHistoryEntry } from '../../../shared/types/monetization'
+import { MonetizationHistoryEntry, PaymentProductId, UserPremiumStatus } from '../../../shared/types/monetization'
 import { getValue, setValue } from './storage'
 
 const premiumStatusKey = (userId: string) => `premium-status:${userId}`
 const USERS_COLLECTION = 'users'
 const MONETIZATION_HISTORY_COLLECTION = 'monetizationHistory'
 
-export type PremiumStatus = {
-  isActive: boolean
-  expiresAt?: string
-}
-
-const getProductDescription = (productId: string, donationAmountCents?: number): string => {
+const getProductDescription = (productId: PaymentProductId, donationAmountCents?: number): string => {
   switch (productId) {
     case 'premium_month':
       return 'Ad-free - 1 month'
@@ -32,7 +27,7 @@ const getProductDescription = (productId: string, donationAmountCents?: number):
   }
 }
 
-const productDurationDays: Record<string, number> = {
+const productDurationDays: Partial<Record<PaymentProductId, number>> = {
   premium_month: 30,
   premium_year: 365,
   donation_fixed_1: 7,
@@ -48,7 +43,7 @@ const getCustomDonationDurationDays = (donationAmountCents: number): number => {
   return 7
 }
 
-const getBaseDate = (expiresAt?: string): Date => {
+export const getBaseDate = (expiresAt?: string): Date => {
   if (!expiresAt) return new Date()
 
   const parsed = new Date(expiresAt)
@@ -59,13 +54,13 @@ const getBaseDate = (expiresAt?: string): Date => {
   return parsed
 }
 
-export const getUserPremiumStatus = async (userId: string): Promise<PremiumStatus> => {
+export const getUserPremiumStatus = async (userId: string): Promise<UserPremiumStatus> => {
   const value = await getValue(premiumStatusKey(userId))
   if (!value) {
     return { isActive: false }
   }
 
-  const status = JSON.parse(value.toString()) as PremiumStatus
+  const status = JSON.parse(value.toString()) as UserPremiumStatus
   if (!status.expiresAt) {
     return status
   }
@@ -91,14 +86,20 @@ export const getUserMonetizationHistory = async (userId: string): Promise<Moneti
 
 export const recordMonetizationHistory = async (
   userId: string,
-  productId: string,
+  productId: PaymentProductId,
   amountCents: number,
   currency = 'usd',
   expiresAt?: string,
   donationAmountCents?: number,
 ): Promise<MonetizationHistoryEntry[]> => {
+  const historyCollection = firestore
+    .collection(USERS_COLLECTION)
+    .doc(userId)
+    .collection(MONETIZATION_HISTORY_COLLECTION)
+  const entryRef = historyCollection.doc()
+
   const entry: MonetizationHistoryEntry = {
-    id: `${Date.now()}-${productId}`,
+    id: entryRef.id,
     productId,
     category: productId.startsWith('premium') ? 'premium' : 'donation',
     amountCents,
@@ -108,21 +109,16 @@ export const recordMonetizationHistory = async (
     ...(expiresAt ? { expiresAt } : {}),
   }
 
-  await firestore
-    .collection(USERS_COLLECTION)
-    .doc(userId)
-    .collection(MONETIZATION_HISTORY_COLLECTION)
-    .doc(entry.id)
-    .set(entry)
+  await entryRef.set(entry)
 
   return getUserMonetizationHistory(userId)
 }
 
 export const grantPremiumAccess = async (
   userId: string,
-  productId: string,
+  productId: PaymentProductId,
   donationAmountCents?: number,
-): Promise<PremiumStatus> => {
+): Promise<UserPremiumStatus> => {
   const isCustomDonation = productId === 'donation_custom'
   const durationDays = isCustomDonation && donationAmountCents
     ? getCustomDonationDurationDays(donationAmountCents)
@@ -136,7 +132,7 @@ export const grantPremiumAccess = async (
   const nextExpiration = getBaseDate(currentStatus.expiresAt)
   nextExpiration.setDate(nextExpiration.getDate() + durationDays)
 
-  const status: PremiumStatus = {
+  const status: UserPremiumStatus = {
     isActive: true,
     expiresAt: nextExpiration.toISOString(),
   }

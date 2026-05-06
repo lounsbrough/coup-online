@@ -1,3 +1,5 @@
+import type { UserPremiumStatus } from './monetization';
+
 export type PlayerActionStats = {
   totalBluffsMade: number;
   successfulBluffsMade: number;
@@ -80,10 +82,7 @@ export type UserStats = {
   };
 
   // Monetization
-  premiumStatus?: {
-    isActive: boolean;
-    expiresAt?: string;
-  };
+  premiumStatus?: UserPremiumStatus;
 
   lastPlayedAt?: string;
   createdAt: string;

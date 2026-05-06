@@ -82,8 +82,10 @@ export async function createCheckoutSession({
     metadata.donationAmountCents = String(donationAmountCents)
   }
 
+  const normalizedUserEmail = userEmail.trim()
+
   return stripe.checkout.sessions.create({
-    customer_email: userEmail,
+    ...(normalizedUserEmail ? { customer_email: normalizedUserEmail } : {}),
     line_items: [
       {
         price_data: {
