@@ -2,7 +2,8 @@ import { useEffect } from "react"
 import { describe, it, expect } from 'vitest'
 import { grey } from "@mui/material/colors"
 import { Actions, EventMessages, PublicGameState, AvailableLanguageCode } from "@shared"
-import { TranslationContextProvider, useTranslationContext } from "./TranslationsContext"
+import TranslationContextProvider from "./TranslationContextProvider"
+import { useTranslationContext } from "./TranslationsContext"
 import { render } from '../../tests/utilities/render'
 
 const TestTranslationComponent = ({ language }: { language: AvailableLanguageCode }) => {

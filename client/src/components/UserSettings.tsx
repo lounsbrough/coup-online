@@ -7,6 +7,7 @@ import LanguageSelector from "./LanguageSelector"
 import { useTranslationContext } from "../contexts/TranslationsContext"
 import { useUserSettingsContext } from "../contexts/UserSettingsContext"
 import { getShowImageLabel } from '../helpers/easterEggs'
+import SupportMonetizationButton from './monetization/SupportMonetizationButton'
 
 function UserSettings() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -120,6 +121,9 @@ function UserSettings() {
               {isConnected
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
                 : <CancelOutlined color="error" sx={{ verticalAlign: 'middle' }} />}
+            </Grid>
+            <Grid alignContent="center">
+              <SupportMonetizationButton />
             </Grid>
           </Grid>
         </DialogContent>

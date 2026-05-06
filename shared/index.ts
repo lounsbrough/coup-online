@@ -1,4 +1,5 @@
 export * from './types/game'
+export * from './types/monetization'
 export * from './types/user'
 export * from './game/logic'
 export * from './helpers/state'
