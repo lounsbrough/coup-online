@@ -82,7 +82,6 @@ export type UserStats = {
   // Monetization
   premiumStatus?: {
     isActive: boolean;
-    tier: 'premium_monthly' | 'premium_annual' | 'supporter';
     expiresAt?: string;
   };
 

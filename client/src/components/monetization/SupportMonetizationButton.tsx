@@ -215,8 +215,9 @@ export default function SupportMonetizationButton({
     }
   }
 
-//   Not ready for this quite yet
-  return null
+  if (!import.meta.env.VITE_ENABLE_PAYMENTS) {
+    return null
+  }
 
   return (
     <>

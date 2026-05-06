@@ -6,11 +6,8 @@ const premiumStatusKey = (userId: string) => `premium-status:${userId}`
 const USERS_COLLECTION = 'users'
 const MONETIZATION_HISTORY_COLLECTION = 'monetizationHistory'
 
-type PremiumTier = 'premium_monthly' | 'premium_annual' | 'supporter'
-
 export type PremiumStatus = {
   isActive: boolean
-  tier?: PremiumTier
   expiresAt?: string
 }
 
@@ -41,14 +38,6 @@ const productDurationDays: Record<string, number> = {
   donation_fixed_1: 7,
   donation_fixed_2: 30,
   donation_fixed_3: 90,
-}
-
-const productTier: Record<string, PremiumTier> = {
-  premium_month: 'premium_monthly',
-  premium_year: 'premium_annual',
-  donation_fixed_1: 'supporter',
-  donation_fixed_2: 'supporter',
-  donation_fixed_3: 'supporter',
 }
 
 const getCustomDonationDurationDays = (donationAmountCents: number): number => {
@@ -138,9 +127,8 @@ export const grantPremiumAccess = async (
   const durationDays = isCustomDonation && donationAmountCents
     ? getCustomDonationDurationDays(donationAmountCents)
     : productDurationDays[productId]
-  const tier = isCustomDonation ? 'supporter' : productTier[productId]
 
-  if (!durationDays || !tier) {
+  if (!durationDays) {
     throw new Error(`Unsupported premium product: ${productId}`)
   }
 
@@ -150,7 +138,6 @@ export const grantPremiumAccess = async (
 
   const status: PremiumStatus = {
     isActive: true,
-    tier,
     expiresAt: nextExpiration.toISOString(),
   }
 

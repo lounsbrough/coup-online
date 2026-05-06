@@ -3,7 +3,6 @@
  */
 export type UserPremiumStatus = {
     isActive: boolean;
-    tier: 'premium_month' | 'premium_year' | 'donor_grace'; // Donor grace is temporary ad-free from donations
     expiresAt?: string; // ISO timestamp when premium/grace period expires
 };
 
