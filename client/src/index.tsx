@@ -5,11 +5,11 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 import './index.css'
 import App from './components/App'
 import reportWebVitals from './reportWebVitals'
-import { MaterialThemeContextProvider } from './contexts/MaterialThemeContext'
+import MaterialThemeContextProvider from './contexts/MaterialThemeContextProvider'
 import TranslationContextProvider from './contexts/TranslationContextProvider'
-import { UserSettingsContextProvider } from './contexts/UserSettingsContext'
-import { NotificationsContextProvider } from './contexts/NotificationsContext'
-import { AuthContextProvider } from './contexts/AuthContext'
+import UserSettingsContextProvider from './contexts/UserSettingsContextProvider'
+import NotificationsContextProvider from './contexts/NotificationsContextProvider'
+import AuthContextProvider from './contexts/AuthContextProvider'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

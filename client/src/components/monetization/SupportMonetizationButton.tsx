@@ -215,6 +215,9 @@ export default function SupportMonetizationButton({
     }
   }
 
+//   Not ready for this quite yet
+  return null
+
   return (
     <>
       <Tooltip title={t('supportMonetizationTooltip')}>

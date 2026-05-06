@@ -1,6 +1,4 @@
-import { createContext, useMemo, useContext, ReactNode } from 'react'
-import { confirmActionsStorageKey, showBackgroundImageStorageKey } from '../helpers/localStorageKeys'
-import { usePersistedState } from '../hooks/usePersistedState'
+import { createContext, useContext } from 'react'
 
 interface UserSettingsContextType {
   showBackgroundImage: boolean
@@ -9,7 +7,7 @@ interface UserSettingsContextType {
   setConfirmActions: (value: boolean) => void
 }
 
-const UserSettingsContext = createContext<UserSettingsContextType>({
+export const UserSettingsContext = createContext<UserSettingsContextType>({
   showBackgroundImage: true,
   confirmActions: true,
   setShowBackgroundImage: () => {
@@ -19,31 +17,6 @@ const UserSettingsContext = createContext<UserSettingsContextType>({
     console.warn('setConfirmActions called without a provider')
   },
 })
-
-interface UserSettingsContextProviderProps {
-  children: ReactNode
-}
-
-export function UserSettingsContextProvider({ children }: Readonly<UserSettingsContextProviderProps>) {
-  const [showBackgroundImage, setShowBackgroundImage] = usePersistedState<boolean>(showBackgroundImageStorageKey, true)
-  const [confirmActions, setConfirmActions] = usePersistedState<boolean>(confirmActionsStorageKey, true)
-
-  const contextValue = useMemo<UserSettingsContextType>(
-    () => ({
-      showBackgroundImage,
-      confirmActions,
-      setShowBackgroundImage,
-      setConfirmActions
-    }),
-    [showBackgroundImage, confirmActions, setShowBackgroundImage, setConfirmActions]
-  )
-
-  return (
-    <UserSettingsContext.Provider value={contextValue}>
-      {children}
-    </UserSettingsContext.Provider>
-  )
-}
 
 export const useUserSettingsContext = () => {
   const context = useContext(UserSettingsContext)
