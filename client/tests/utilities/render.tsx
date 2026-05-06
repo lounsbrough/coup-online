@@ -2,11 +2,12 @@
 import React, { useMemo } from "react"
 import { vi } from "vitest"
 import { screen, render as testingLibraryRender } from "@testing-library/react"
+import { PaletteMode } from "@mui/material"
 import Chance from 'chance'
 import { GameStateContext } from "../../src/contexts/GameStateContext"
 import { MAX_PLAYER_COUNT, PublicGameState, PublicPlayer } from '@shared'
-import { MaterialThemeContextProvider, useColorModeContext } from "../../src/contexts/MaterialThemeContext"
-import { PaletteMode } from "@mui/material"
+import { useColorModeContext } from "../../src/contexts/MaterialThemeContext"
+import MaterialThemeContextProvider from "../../src/contexts/MaterialThemeContextProvider"
 
 vi.mock("../../src/contexts/WebSocketContext", () => ({ useWebSocketContext: () => ({}) }))
 

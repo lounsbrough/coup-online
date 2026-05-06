@@ -1,3 +1,5 @@
+import type { UserPremiumStatus } from './monetization';
+
 export type PlayerActionStats = {
   totalBluffsMade: number;
   successfulBluffsMade: number;
@@ -78,6 +80,9 @@ export type UserStats = {
   processedGames: {
     [gameId: string]: string; // ISO timestamp
   };
+
+  // Monetization
+  premiumStatus?: UserPremiumStatus;
 
   lastPlayedAt?: string;
   createdAt: string;

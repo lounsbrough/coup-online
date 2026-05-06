@@ -1,6 +1,7 @@
 import { within, waitFor, act, render, fireEvent } from '@testing-library/react'
 import { vi, beforeEach, afterEach, expect, it } from 'vitest'
-import { NotificationsContextProvider, useNotificationsContext } from './NotificationsContext'
+import NotificationsContextProvider from './NotificationsContextProvider'
+import { useNotificationsContext } from './NotificationsContext'
 
 function MockComponentThatWantsToShowNotification() {
   const { showNotification, removeNotification } = useNotificationsContext()
