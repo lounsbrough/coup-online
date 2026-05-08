@@ -1,10 +1,10 @@
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2023-10-16'
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_not_configured')
 
 export { stripe }
+
+export type CheckoutSession = Awaited<ReturnType<typeof stripe.checkout.sessions.create>>
 
 export const PREMIUM_PRODUCTS = {
   premium_month: {
@@ -57,7 +57,7 @@ export async function createCheckoutSession({
   donationAmountCents,
   successUrl,
   cancelUrl,
-}: CreateCheckoutSessionParams): Promise<Stripe.Checkout.Session> {
+}: CreateCheckoutSessionParams) {
   const metadata: Record<string, string> = {
     userId,
     productType,
@@ -110,7 +110,7 @@ export async function createCheckoutSession({
   })
 }
 
-export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session): Promise<void> {
+export async function handleCheckoutSessionCompleted(session: CheckoutSession): Promise<void> {
   const { userId, productType, productId, donationAmountCents } = session.metadata || {}
 
   if (!userId || !productType || !productId) {
@@ -129,7 +129,7 @@ export async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Se
   }
 }
 
-export function constructWebhookEvent(body: string | Buffer, signature: string): Stripe.Event {
+export function constructWebhookEvent(body: string | Buffer, signature: string) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
   return stripe.webhooks.constructEvent(body, signature, webhookSecret)
 }

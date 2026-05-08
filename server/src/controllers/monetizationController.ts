@@ -1,5 +1,5 @@
 import { Application, Request, RequestHandler, Response } from 'express'
-import type Stripe from 'stripe'
+import type { CheckoutSession } from '../utilities/stripe'
 import { PaymentProductId } from '../../../shared/types/monetization'
 import { adminAuth } from '../firebase'
 import { verifyIdToken } from '../auth'
@@ -118,7 +118,7 @@ export const registerMonetizationControllers = ({
       const event = constructWebhookEvent(rawBody, signature)
 
       if (event.type === 'checkout.session.completed') {
-        const session = event.data.object as Stripe.Checkout.Session
+        const session = event.data.object as CheckoutSession
         await handleCheckoutSessionCompleted(session)
 
         const { userId, productId, donationAmountCents } = session.metadata || {}

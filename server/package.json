@@ -32,7 +32,7 @@
     "joi": "^18.2.1",
     "iovalkey": "^0.3.3",
     "socket.io": "^4.8.3",
-    "stripe": "^14.0.0"
+    "stripe": "^22.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
