@@ -1,10 +1,18 @@
+.cheat-sheet-container {
+  container-type: inline-size;
+}
+
 .cheat-sheet-table {
   font-weight: 900;
   width: 100%;
 }
 
+.cheat-sheet-desktop thead th {
+  background: rgba(128, 128, 128, 0.15);
+  padding: 8px 0;
+}
+
 .cheat-sheet-table th {
-  font-size: larger;
   font-size: 1.2rem;
   padding: 4px 0;
 }
@@ -19,17 +27,48 @@
   color: white;
 }
 
+.cheat-sheet-table td:last-child {
+  white-space: normal;
+}
+
 .cheat-sheet-table td span {
   vertical-align: middle;
 }
 
-@media screen and (max-width: 899px) {
-  .cheat-sheet-table th {
-    font-size: 1.2rem;
+.cheat-sheet-mobile {
+  display: none;
+}
+
+.cheat-sheet-mobile-header th {
+  font-size: 1.1rem;
+  padding-top: 8px;
+  color: white;
+}
+
+.cheat-sheet-mobile-header th > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cheat-sheet-mobile tr:not(.cheat-sheet-mobile-header) > th {
+  font-size: 0.85rem !important;
+  color: white;
+}
+
+@container (max-width: 500px) {
+  .cheat-sheet-desktop {
+    display: none;
   }
 
-  .cheat-sheet-table td {
-    font-size: 1rem;
-    padding: 2px;
+  .cheat-sheet-mobile {
+    display: table;
+  }
+
+  .cheat-sheet-mobile td {
+    white-space: normal;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    height: auto;
   }
 }
