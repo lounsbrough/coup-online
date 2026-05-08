@@ -564,5 +564,52 @@ describe('ai', () => {
         }),
       ).toEqual({ response: Responses.Challenge })
     })
+
+    it('should block as Contessa when claimConfirmed is true and desperate', () => {
+      randomlyDecideToBluffMock.mockReturnValue(false)
+
+      expect(
+        decideActionResponse({
+          roomId: chance.string(),
+          isStarted: chance.bool(),
+          turn: chance.natural(),
+          eventLogs: [],
+          chatMessages: [],
+          lastEventTimestamp: chance.date(),
+          players: [
+            {
+              ...getRandomPublicPlayer(),
+              name: 'hailey',
+              influenceCount: 2,
+              deadInfluences: [],
+            },
+            {
+              ...getRandomPublicPlayer(),
+              name: 'david',
+              influenceCount: 1,
+              deadInfluences: [Influences.Assassin],
+            },
+          ],
+          selfPlayer: {
+            ...getRandomPublicPlayer(),
+            id: chance.string(),
+            name: 'david',
+            coins: 0,
+            influences: [Influences.Ambassador],
+            deadInfluences: [Influences.Assassin],
+          },
+          pendingAction: {
+            action: Actions.Assassinate,
+            targetPlayer: 'david',
+            claimConfirmed: true,
+            pendingPlayers: new Set(['david']),
+          },
+          turnPlayer: 'hailey',
+          settings: { eventLogRetentionTurns: 3, allowRevive: true },
+          pendingInfluenceLoss: {},
+          deckCount: 11,
+        })
+      ).toEqual({ response: Responses.Block, claimedInfluence: Influences.Contessa })
+    })
   })
 })
