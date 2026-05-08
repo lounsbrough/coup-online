@@ -163,66 +163,66 @@ export default function RulesDrawerContent() {
                 <th colSpan={2}><span><Group /> {t('anyone')}</span></th>
               </tr>
               <tr style={{ background: actionColors[Actions.Income] }}>
-                <th className="cheat-sheet-mobile-label">{t('action')}</th>
+                <th>{t('action')}</th>
                 <td>{t(Actions.Income)}<br />{t('collectCoins', { count: 1 })}</td>
               </tr>
               <tr style={{ background: actionColors[Actions.Income] }}>
-                <th className="cheat-sheet-mobile-label">{t('action')}</th>
+                <th>{t('action')}</th>
                 <td>{t(Actions.ForeignAid)}<br />{t('collectCoins', { count: 2 })}</td>
               </tr>
               <tr style={{ background: actionColors[Actions.Income] }}>
-                <th className="cheat-sheet-mobile-label">{t('action')}</th>
+                <th>{t('action')}</th>
                 <td>{t(Actions.Coup)}<br />{t('payCoins', { count: 7 })}<br />{t('killAnInfluence')}</td>
               </tr>
               <tr style={{ background: actionColors[Actions.Income] }}>
-                <th className="cheat-sheet-mobile-label">{t('action')}</th>
+                <th>{t('action')}</th>
                 <td>{t(Actions.Revive)}<br />{t('payCoins', { count: 10 })}<br />{t('reviveAnInfluence')}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Duke] }} className="cheat-sheet-mobile-header">
                 <th colSpan={2}><span><InfluenceIcon influence={Influences.Duke} /> {t(Influences.Duke)}</span></th>
               </tr>
               <tr style={{ background: influenceColors[Influences.Duke] }}>
-                <th className="cheat-sheet-mobile-label">{t('action')}</th>
+                <th>{t('action')}</th>
                 <td>{t(Actions.Tax)}<br />{t('collectCoins', { count: 3 })}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Duke] }}>
-                <th className="cheat-sheet-mobile-label">{t('block')}</th>
+                <th>{t('block')}</th>
                 <td>{t(Actions.ForeignAid)}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Assassin] }} className="cheat-sheet-mobile-header">
                 <th colSpan={2}><span><InfluenceIcon influence={Influences.Assassin} /> {t(Influences.Assassin)}</span></th>
               </tr>
               <tr style={{ background: influenceColors[Influences.Assassin] }}>
-                <th className="cheat-sheet-mobile-label">{t('action')}</th>
+                <th>{t('action')}</th>
                 <td>{t(Actions.Assassinate)}<br />{t('payCoins', { count: 3 })}<br />{t('killAnInfluence')}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Ambassador] }} className="cheat-sheet-mobile-header">
                 <th colSpan={2}><span><InfluenceIcon influence={Influences.Ambassador} /> {t(Influences.Ambassador)}</span></th>
               </tr>
               <tr style={{ background: influenceColors[Influences.Ambassador] }}>
-                <th className="cheat-sheet-mobile-label">{t('action')}</th>
+                <th>{t('action')}</th>
                 <td>{t(Actions.Exchange)}<br />{t('draw2InfluencesAndDiscard2')}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Ambassador] }}>
-                <th className="cheat-sheet-mobile-label">{t('block')}</th>
+                <th>{t('block')}</th>
                 <td>{t(Actions.Steal)}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Captain] }} className="cheat-sheet-mobile-header">
                 <th colSpan={2}><span><InfluenceIcon influence={Influences.Captain} /> {t(Influences.Captain)}</span></th>
               </tr>
               <tr style={{ background: influenceColors[Influences.Captain] }}>
-                <th className="cheat-sheet-mobile-label">{t('action')}</th>
+                <th>{t('action')}</th>
                 <td>{t(Actions.Steal)}<br />{t('steal2CoinsFromSomeone')}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Captain] }}>
-                <th className="cheat-sheet-mobile-label">{t('block')}</th>
+                <th>{t('block')}</th>
                 <td>{t(Actions.Steal)}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Contessa] }} className="cheat-sheet-mobile-header">
                 <th colSpan={2}><span><InfluenceIcon influence={Influences.Contessa} /> {t(Influences.Contessa)}</span></th>
               </tr>
               <tr style={{ background: influenceColors[Influences.Contessa] }}>
-                <th className="cheat-sheet-mobile-label">{t('block')}</th>
+                <th>{t('block')}</th>
                 <td>{t(Actions.Assassinate)}</td>
               </tr>
             </tbody>

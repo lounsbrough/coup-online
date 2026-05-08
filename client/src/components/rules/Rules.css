@@ -51,7 +51,7 @@
   gap: 4px;
 }
 
-.cheat-sheet-mobile-label {
+.cheat-sheet-mobile tr:not(.cheat-sheet-mobile-header) > th {
   font-size: 0.85rem !important;
   color: white;
 }
