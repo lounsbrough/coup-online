@@ -401,6 +401,10 @@ export const decideActionResponse = (gameState: PublicGameState): {
     && gameState.pendingAction.targetPlayer === gameState.selfPlayer?.name
     && gameState.selfPlayer?.influences.length === 1
   ) {
+    if (!isChallengeable) {
+      return { response: Responses.Block, claimedInfluence: Influences.Contessa }
+    }
+
     const probabilityOfAssassin = getProbabilityOfPlayerInfluence(gameState, Influences.Assassin, gameState.turnPlayer)
     const probabilityOfContessa = getProbabilityOfPlayerInfluence(gameState, Influences.Contessa, gameState.selfPlayer.name)
 
