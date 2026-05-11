@@ -64,8 +64,8 @@
     "cypress": "^15.14.2",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
-    "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.11",
-    "vitest": "^4.1.5"
+    "typescript-eslint": "^8.59.3",
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6"
   }
 }
