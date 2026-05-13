@@ -12,10 +12,13 @@ type InfluenceVariables = {
   secondaryInfluence: Influences | undefined
 }
 
+type TextVariables = Record<string, string | number>
+
 export type TranslationVariables = PlayerVariables & InfluenceVariables & {
   gameState: PublicGameState | undefined
   count: number | undefined
   action: Actions | undefined
+  textVars: TextVariables | undefined
 }
 
 type TranslationContextType = {

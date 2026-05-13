@@ -37,6 +37,12 @@ function TranslationContextProvider({ children }: Readonly<{ children: ReactNode
       })
     }
 
+    if (variables.textVars !== undefined) {
+      Object.entries(variables.textVars).forEach(([varName, value]) => {
+        template = template.replaceAll(`{{${varName}}}`, value.toString())
+      })
+    }
+
     const segments: (ReactNode)[] = [template]
 
     if (variables.action) {

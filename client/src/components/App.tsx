@@ -28,6 +28,8 @@ import Profile from './pages/Profile'
 import Leaderboard from './pages/Leaderboard'
 import AppBreadcrumbs from './AppBreadcrumbs'
 import AdSenseManager from './monetization/AdSenseManager'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
@@ -132,6 +134,8 @@ function App() {
                 <Route path="create-game" element={<CreateGame />} />
                 <Route path="profile/:uid" element={<Profile />} />
                 <Route path="leaderboard" element={<Leaderboard />} />
+                <Route path="privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="terms-of-service" element={<TermsOfService />} />
                 <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link component={RouterLink} to={'/'}>{t('home')}</Link></Typography>} />
               </Route>
             </Routes>
