@@ -104,27 +104,32 @@ const decideCoupTarget = (gameState: PublicGameState) => {
     return [dangerFactor + revengeFactor + Math.random() * 3, opponent]
   })
 
-  return opponentAffinities.sort((a, b) => b[0] - a[0])[0][1]
+  return opponentAffinities.toSorted((a, b) => b[0] - a[0])[0][1]
 }
 
-const decideAssasinationTarget = (gameState: PublicGameState) => {
+const calculateAssassinationAffinity = (gameState: PublicGameState, opponent: PublicPlayer) => {
+  const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
+  const vengefulness = (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100
+  const dangerFactor = getPlayerDangerFactor(opponent)
+  const revengeFactor = (gameState.selfPlayer?.grudges[opponent.name] ?? 0) * vengefulness * 2
+  const contessaFactor = opponent.claimedInfluences.has(Influences.Contessa) ? -10 - 10 * (1 - skepticism) : 0
+
+  return dangerFactor + revengeFactor + contessaFactor + Math.random() * 3
+}
+
+const considerAssasinationTargets = (gameState: PublicGameState): { affinity: number; target: PublicPlayer } => {
   const requiredTarget = checkRequiredTargetPlayer(gameState)
-  if (requiredTarget) return requiredTarget
+  if (requiredTarget) {
+    return { affinity: calculateAssassinationAffinity(gameState, requiredTarget), target: requiredTarget }
+  }
 
   const opponents = getOpponents(gameState)
-
-  const skepticism = (gameState.selfPlayer?.personality?.skepticism ?? 50) / 100
-
-  const vengefulness = (gameState.selfPlayer?.personality?.vengefulness ?? 50) / 100
   const opponentAffinities: [number, PublicPlayer][] = opponents.map((opponent) => {
-    const dangerFactor = getPlayerDangerFactor(opponent)
-    const revengeFactor = (gameState.selfPlayer?.grudges[opponent.name] ?? 0) * vengefulness * 2
-    const contessaFactor = opponent.claimedInfluences.has(Influences.Contessa) ? -10 - 10 * (1 - skepticism) : 0
-    return [dangerFactor + revengeFactor + contessaFactor + Math.random() * 3, opponent]
+    return [calculateAssassinationAffinity(gameState, opponent), opponent]
   })
 
-  // TODO: return affinity as well to decide if action should even be taken
-  return opponentAffinities.sort((a, b) => b[0] - a[0])[0][1]
+  const [affinity, target] = opponentAffinities.toSorted((a, b) => b[0] - a[0])[0]
+  return { affinity, target }
 }
 
 const checkEndGameAction = (gameState: PublicGameState): {
@@ -139,6 +144,10 @@ const checkEndGameAction = (gameState: PublicGameState): {
 
   if (gameState.selfPlayer?.influences.length === 1) {
     if (opponents.length === 1 && opponents[0].coins >= 7) {
+      if (gameState.selfPlayer.coins >= 10) {
+        return { action: Actions.Coup, targetPlayer: opponents[0].name }
+      }
+
       if (opponents[0].influenceCount === 1 && gameState.selfPlayer.coins >= 7) {
         return { action: Actions.Coup, targetPlayer: opponents[0].name }
       }
@@ -146,10 +155,12 @@ const checkEndGameAction = (gameState: PublicGameState): {
       const assassinate = { action: Actions.Assassinate, targetPlayer: opponents[0].name }
       const steal = { action: Actions.Steal, targetPlayer: opponents[0].name }
 
+      // Not enough coins to assassinate, stealing is your only move.
       if (gameState.selfPlayer.coins < 3) {
         return steal
       }
 
+      // Impossible to steal them below 7 coins, assassination is your only move.
       if (opponents[0].coins >= 9) {
         return assassinate
       }
@@ -215,6 +226,11 @@ export const decideAction = (gameState: PublicGameState): {
     throw new Error('AI could not determine self player')
   }
 
+  const endGameAction = checkEndGameAction(gameState)
+  if (endGameAction) {
+    return endGameAction
+  }
+
   let willCoup = false
   let willRevive = false
   if (gameState.selfPlayer?.coins >= 10) {
@@ -226,9 +242,6 @@ export const decideAction = (gameState: PublicGameState): {
       willCoup = true
     }
   } else if (gameState.selfPlayer?.coins >= 7) {
-    const endGameAction = checkEndGameAction(gameState)
-    if (endGameAction) return endGameAction
-
     willCoup = Math.random() > 0.5
   }
 
@@ -309,8 +322,10 @@ export const decideAction = (gameState: PublicGameState): {
       || randomlyDecideToBluff(getFinalBluffMarginForAction(Influences.Assassin))
     )
   ) {
-    const targetPlayer = decideAssasinationTarget(gameState)
-    return { action: Actions.Assassinate, targetPlayer: targetPlayer.name }
+    const result = considerAssasinationTargets(gameState)
+    if (result.affinity >= 3) {
+      return { action: Actions.Assassinate, targetPlayer: result.target.name }
+    }
   }
 
   const claimedDukeCount = gameState.players.filter(({ claimedInfluences }) => claimedInfluences.has(Influences.Duke)).length

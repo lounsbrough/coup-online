@@ -11,6 +11,7 @@ import {
 import {
   decideAction,
   decideActionResponse,
+  decideBlockResponse,
   getOpponents,
   getPlayerDangerFactor,
   getProbabilityOfPlayerInfluence,
@@ -78,7 +79,7 @@ describe('ai', () => {
       ...getRandomPlayer(),
       ...selfPlayer,
     }
-    gameState.turnPlayer = gameState.selfPlayer!.name
+    gameState.turnPlayer = gameState.selfPlayer.name
 
     return gameState
   }
@@ -510,6 +511,126 @@ describe('ai', () => {
       })
 
       expect(decidedAction.action).not.toBe(Actions.Tax)
+    })
+
+    it('should choose Coup when 10 coins, 1 influence left, and last opponent has 7+ coins', () => {
+      // Mandatory Coup must override the steal/assassinate endgame logic
+      expect(
+        decideAction(
+          getRandomPublicGameState({
+            players: [
+              {
+                name: 'bot',
+                influenceCount: 1,
+                coins: 10,
+                deadInfluences: [Influences.Duke],
+              },
+              {
+                name: 'opponent',
+                influenceCount: 2,
+                coins: 7,
+                deadInfluences: [],
+              },
+            ],
+            selfPlayer: {
+              name: 'bot',
+              coins: 10,
+              influences: [Influences.Contessa],
+              deadInfluences: [Influences.Duke],
+            },
+          })
+        )
+      ).toEqual({ action: Actions.Coup, targetPlayer: 'opponent' })
+    })
+
+    it('should choose Steal or Assassinate when one influence left against last 7+ coin opponent', () => {
+      const decidedAction = decideAction(
+        getRandomPublicGameState({
+          players: [
+            {
+              name: 'bot',
+              influenceCount: 1,
+              coins: 4,
+              deadInfluences: [Influences.Duke],
+            },
+            {
+              name: 'opponent',
+              influenceCount: 2,
+              coins: 7,
+              deadInfluences: [],
+            },
+          ],
+          selfPlayer: {
+            name: 'bot',
+            coins: 4,
+            influences: [Influences.Contessa],
+            deadInfluences: [Influences.Duke],
+          },
+        })
+      )
+
+      expect([Actions.Steal, Actions.Assassinate]).toContain(decidedAction.action)
+      expect(decidedAction.targetPlayer).toBe('opponent')
+    })
+
+    it('should choose Steal with fewer than 3 coins when one influence left against last 7+ coin opponent', () => {
+      expect(
+        decideAction(
+          getRandomPublicGameState({
+            players: [
+              {
+                name: 'bot',
+                influenceCount: 1,
+                coins: 2,
+                deadInfluences: [Influences.Duke],
+              },
+              {
+                name: 'opponent',
+                influenceCount: 2,
+                coins: 7,
+                deadInfluences: [],
+              },
+            ],
+            selfPlayer: {
+              name: 'bot',
+              coins: 2,
+              influences: [Influences.Contessa],
+              deadInfluences: [Influences.Duke],
+            },
+          })
+        )
+      ).toEqual({ action: Actions.Steal, targetPlayer: 'opponent' })
+    })
+  })
+
+  describe('decideBlockResponse', () => {
+    it('should challenge any block when one influence left against last 7+ coin opponent', () => {
+      expect(
+        decideBlockResponse(
+          getRandomPublicGameState({
+            players: [
+              {
+                name: 'bot',
+                influenceCount: 1,
+                coins: 2,
+                deadInfluences: [Influences.Duke],
+              },
+              {
+                name: 'opponent',
+                influenceCount: 2,
+                coins: 7,
+                deadInfluences: [],
+              },
+            ],
+            selfPlayer: {
+              name: 'bot',
+              coins: 2,
+              influences: [Influences.Contessa],
+              deadInfluences: [Influences.Duke],
+            },
+          })
+        )
+      ).toEqual({ response: Responses.Challenge })
     })
   })
 

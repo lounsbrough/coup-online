@@ -3,7 +3,7 @@
     "module": "nodenext",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2022",
+    "target": "es2023",
     "noImplicitAny": true,
     "moduleResolution": "nodenext",
     "sourceMap": true,

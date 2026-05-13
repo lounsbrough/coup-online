@@ -9,6 +9,8 @@ const routeLabels: Record<string, keyof Translations> = {
   'join-game': 'joinExistingGame',
   leaderboard: 'leaderboard',
   profile: 'profile',
+  'privacy-policy': 'privacyPolicy',
+  'terms-of-service': 'termsOfService',
 }
 
 function AppBreadcrumbs() {

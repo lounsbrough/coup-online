@@ -31,6 +31,20 @@ const TestTranslationComponent = ({ language }: { language: AvailableLanguageCod
   )
 }
 
+const TestTextVarsComponent = ({ language }: { language: AvailableLanguageCode }) => {
+  const { t, setLanguage } = useTranslationContext()
+
+  useEffect(() => {
+    setLanguage(language)
+  }, [])
+
+  return (
+    <p data-testid="privacy-policy-text-vars">
+      {t('privacyPolicyContent', { textVars: { contactEmail: 'privacy@example.com' } })}
+    </p>
+  )
+}
+
 describe('TranslationContextProvider', () => {
   it('should translate action with template parameters', async () => {
     const { getByTestId, getByText } = render(
@@ -54,5 +68,16 @@ describe('TranslationContextProvider', () => {
     )
 
     getByText('Fechar')
+  })
+
+  it('should replace textVars placeholders in translation templates', async () => {
+    const { getByTestId } = render(
+      <TranslationContextProvider>
+        <TestTextVarsComponent language={AvailableLanguageCode['en-US']} />
+      </TranslationContextProvider>
+    )
+
+    expect(getByTestId('privacy-policy-text-vars'))
+      .toHaveTextContent('Privacy contact: privacy@example.com')
   })
 })
