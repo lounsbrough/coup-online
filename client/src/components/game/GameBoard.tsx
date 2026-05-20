@@ -7,7 +7,7 @@ import PlayerDecision from "./PlayerDecision"
 import SnarkyDeadComment from "./SnarkyDeadComment"
 import Victory from "./Victory"
 import PlayAgain from "./PlayAgain"
-import WebOfLies from "./WebOfLies"
+import GameSummary from "./GameSummary"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import CardDeck from "../icons/CardDeck"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
@@ -64,7 +64,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
         )}
         {gameIsOver && (
           <Grid sx={{ m: 5 }}>
-            <WebOfLies />
+            <GameSummary />
           </Grid>
         )}
         {gameState.selfPlayer?.influences.length === 0 && (

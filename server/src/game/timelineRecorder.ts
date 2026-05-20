@@ -22,6 +22,7 @@ export const recordTimelineAction = (
     actualHand: [...player.influences],
     isBluff,
     outcome: 'unchallenged',
+    waitTimeMs: Date.now() - state.lastEventTimestamp.getTime(),
     ...(targetPlayer && { targetPlayer }),
   }
 

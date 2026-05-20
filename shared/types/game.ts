@@ -177,6 +177,7 @@ export type TimelineEntry = {
   blockIsBluff?: boolean;
   blockChallengedBy?: string;
   targetPlayer?: string;
+  waitTimeMs?: number;
 };
 
 export type AiPersonality = {
@@ -348,7 +349,8 @@ export type PublicGameState = Pick<
   > & {
     players: PublicPlayer[];
     selfPlayer?: Player;
-    deckCount: number;    gameTimeline?: TimelineEntry[];  };
+    deckCount: number; gameTimeline?: TimelineEntry[];
+  };
 
 export type DehydratedPublicGameState = Omit<
   PublicGameState,

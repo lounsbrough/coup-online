@@ -254,8 +254,8 @@ export type Translations = ActionMessages &
     deleteAccountConfirmMessage: TranslationsForString
     yourRanking: TranslationsForString
     notEnoughGames: TranslationsForString
-    // Web of Lies timeline
-    webOfLies: TranslationsForString
+    // Game Summary timeline
+    gameSummary: TranslationsForString
     bluff: TranslationsForString
     truth: TranslationsForString
     successfulBluffs: TranslationsForString
@@ -2790,14 +2790,14 @@ const translations: Translations = {
     'it-IT': 'La tua classifica',
     'pt-BR': 'Sua classificação',
   },
-  webOfLies: {
-    'de-DE': 'Netz der Lügen',
-    'en-US': 'Web of Lies',
-    'es-MX': 'Red de Mentiras',
-    'fr-FR': 'Toile de Mensonges',
-    'hi-IN': 'झूठ का जाल',
-    'it-IT': 'Rete di Bugie',
-    'pt-BR': 'Teia de Mentiras',
+  gameSummary: {
+    'de-DE': 'Spielübersicht',
+    'en-US': 'Game Summary',
+    'es-MX': 'Resumen del Juego',
+    'fr-FR': 'Résumé de la Partie',
+    'hi-IN': 'खेल सारांश',
+    'it-IT': 'Riepilogo Partita',
+    'pt-BR': 'Resumo do Jogo',
   },
   bluff: {
     'de-DE': 'Bluff',

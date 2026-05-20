@@ -6,6 +6,7 @@ import {
   IconButton,
   Paper,
   Stack,
+  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material'
@@ -15,7 +16,7 @@ import { useGameStateContext } from '../../contexts/GameStateContext'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import CoupTypography from '../utilities/CoupTypography'
 
-function WebOfLies() {
+function GameSummary() {
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const theme = useTheme()
@@ -25,19 +26,23 @@ function WebOfLies() {
     return null
   }
 
+  const gameTimeline = gameState.gameTimeline
   const players = gameState.players
   const getPlayerColor = (playerName: string) =>
     players.find((p) => p.name === playerName)?.color ?? theme.palette.primary.main
 
-  const successfulBluffs = gameState.gameTimeline.filter(
+  const successfulBluffs = gameTimeline.filter(
     (entry) => entry.isBluff && entry.outcome !== 'challenge_succeeded'
   )
 
-  const soulReads = gameState.gameTimeline.filter(
+  const soulReads = gameTimeline.filter(
     (entry) => entry.outcome === 'challenge_succeeded'
   )
 
-  const longestBluffStreak = getLongestBluffStreak(gameState.gameTimeline)
+  const longestBluffStreak = getLongestBluffStreak(gameTimeline)
+
+  const slowpoke = getSlowestPlayer(gameTimeline)
+  const speedDemon = getFastestPlayer(gameTimeline)
 
   return (
     <Paper
@@ -58,7 +63,7 @@ function WebOfLies() {
         onClick={() => setExpanded(!expanded)}
       >
         <CoupTypography variant="h5" addTextShadow sx={{ fontWeight: 700 }}>
-          {t('webOfLies')}
+          {t('gameSummary')}
         </CoupTypography>
         <IconButton size="small">
           {expanded ? <ExpandLess /> : <ExpandMore />}
@@ -66,7 +71,7 @@ function WebOfLies() {
       </Box>
 
       <Collapse in={expanded}>
-        {(successfulBluffs.length > 0 || soulReads.length > 0) && (
+        {(successfulBluffs.length > 0 || soulReads.length > 0 || slowpoke || speedDemon) && (
           <Stack direction="row" spacing={1} justifyContent="center" sx={{ my: 1.5, flexWrap: 'wrap', gap: 0.5 }}>
             {successfulBluffs.length > 0 && (
               <Chip
@@ -97,11 +102,43 @@ function WebOfLies() {
                 variant="outlined"
               />
             )}
+            {slowpoke && (
+              <Tooltip
+                title={
+                  <Stack spacing={0.5}>
+                    {getPlayerWaitRanking(gameTimeline).map(({ player, totalMs }, i) => (
+                      <Typography key={player} variant="caption">
+                        {i === 0 ? '🐌' : i === getPlayerWaitRanking(gameTimeline).length - 1 ? '⚡' : '  '}{' '}
+                        {player}: {formatWaitTime(totalMs)}
+                      </Typography>
+                    ))}
+                  </Stack>
+                }
+                arrow
+              >
+                <Stack direction="row" spacing={0.5}>
+                  <Chip
+                    size="small"
+                    label={`🐌 ${slowpoke.player}: ${formatWaitTime(slowpoke.totalMs)}`}
+                    color="error"
+                    variant="outlined"
+                  />
+                  {speedDemon && (
+                    <Chip
+                      size="small"
+                      label={`⚡ ${speedDemon.player}: ${formatWaitTime(speedDemon.totalMs)}`}
+                      color="success"
+                      variant="outlined"
+                    />
+                  )}
+                </Stack>
+              </Tooltip>
+            )}
           </Stack>
         )}
 
         <Stack spacing={0.5} sx={{ mt: 1, maxHeight: '40vh', overflowY: 'auto' }}>
-          {gameState.gameTimeline.map((entry, index) => (
+          {gameTimeline.map((entry, index) => (
             <TimelineRow
               key={index}
               entry={entry}
@@ -254,4 +291,53 @@ function getLongestBluffStreak(timeline: TimelineEntry[]): { player: string; cou
   return best
 }
 
-export default WebOfLies
+function getPlayerWaitTotals(timeline: TimelineEntry[]): { [player: string]: number } {
+  const totals: { [player: string]: number } = {}
+  for (const entry of timeline) {
+    if (entry.waitTimeMs) {
+      totals[entry.player] = (totals[entry.player] ?? 0) + entry.waitTimeMs
+    }
+  }
+  return totals
+}
+
+function getPlayerWaitRanking(timeline: TimelineEntry[]): { player: string; totalMs: number }[] {
+  const totals = getPlayerWaitTotals(timeline)
+  return Object.entries(totals)
+    .map(([player, totalMs]) => ({ player, totalMs }))
+    .sort((a, b) => b.totalMs - a.totalMs)
+}
+
+function getSlowestPlayer(timeline: TimelineEntry[]): { player: string; totalMs: number } | null {
+  const totals = getPlayerWaitTotals(timeline)
+  let slowest: { player: string; totalMs: number } | null = null
+  for (const [player, totalMs] of Object.entries(totals)) {
+    if (!slowest || totalMs > slowest.totalMs) {
+      slowest = { player, totalMs }
+    }
+  }
+  return slowest
+}
+
+function getFastestPlayer(timeline: TimelineEntry[]): { player: string; totalMs: number } | null {
+  const totals = getPlayerWaitTotals(timeline)
+  const players = Object.keys(totals)
+  if (players.length < 2) return null
+  let fastest: { player: string; totalMs: number } | null = null
+  for (const [player, totalMs] of Object.entries(totals)) {
+    if (!fastest || totalMs < fastest.totalMs) {
+      fastest = { player, totalMs }
+    }
+  }
+  return fastest
+}
+
+function formatWaitTime(ms: number): string {
+  const seconds = Math.round(ms / 1000)
+  if (seconds < 60) return `${seconds}s`
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+  return `${minutes}m ${remainingSeconds}s`
+}
+
+export default GameSummary
