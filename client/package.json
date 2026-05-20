@@ -54,6 +54,12 @@
       "last 1 safari version"
     ]
   },
+  "pnpm": {
+    "overrides": {
+      "systeminformation@>=4.17.0 <=5.31.5": ">=5.31.6",
+      "ws@>=8.0.0 <8.20.1": ">=8.20.1"
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@shared": "link:../shared",
