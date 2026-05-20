@@ -58,9 +58,11 @@ jobs:
           port: 8222
           script: |
             set -e
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
             cd /var/www/html/coup-online/server
             git pull
-            sudo npm i -g pnpm
+            npm i -g pnpm
             pnpm i
             pnpm build
             /home/pi/.local/share/pnpm/pm2 restart coup-online
