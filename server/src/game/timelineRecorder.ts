@@ -6,17 +6,19 @@ export const recordTimelineAction = (
   action: Actions,
   targetPlayer?: string,
 ): void => {
+  const claimedInfluence = ActionAttributes[action].influenceRequired
+  if (!claimedInfluence) return
+
   const player = state.players.find(({ name }) => name === playerName)
   if (!player) return
 
-  const claimedInfluence = ActionAttributes[action].influenceRequired
-  const isBluff = claimedInfluence ? !player.influences.includes(claimedInfluence) : false
+  const isBluff = !player.influences.includes(claimedInfluence)
 
   const entry: TimelineEntry = {
     turn: state.turn,
     player: playerName,
     action,
-    ...(claimedInfluence && { claimedInfluence }),
+    claimedInfluence,
     actualHand: [...player.influences],
     isBluff,
     outcome: 'unchallenged',
