@@ -36,7 +36,11 @@ function LoginButton({ buttonProps }: Readonly<{ buttonProps?: ButtonProps }>) {
   if (loading) {
     return (
       <IconButton disabled size="large">
-        <CircularProgress size="1em" />
+        <CircularProgress size={32} sx={{
+          width: '1.6em',
+          height: '1.6em',
+          padding: 0.25
+        }} />
       </IconButton>
     )
   }
@@ -49,7 +53,11 @@ function LoginButton({ buttonProps }: Readonly<{ buttonProps?: ButtonProps }>) {
             <Avatar
               {...(user.photoURL ? { src: user.photoURL } : {})}
               alt={user.displayName ?? ''}
-              sx={{ width: '1.6em', height: '1.6em' }}
+              sx={{
+                width: '1.6em',
+                height: '1.6em',
+                backgroundColor: 'action.hover'
+              }}
             >
               {user.displayName?.[0]?.toUpperCase() || <Person />}
             </Avatar>
