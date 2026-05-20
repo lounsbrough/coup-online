@@ -1,5 +1,6 @@
 allowBuilds:
   '@firebase/util': false
+  cypress: true
   protobufjs: false
 overrides:
   systeminformation@>=4.17.0 <=5.31.5: ">=5.31.6"
