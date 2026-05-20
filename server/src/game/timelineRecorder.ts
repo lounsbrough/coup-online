@@ -33,11 +33,26 @@ export const recordTimelineBlock = (
   blockerName: string,
   claimedInfluence: Influences,
 ): void => {
-  const lastEntry = getLastTimelineEntry(state)
-  if (!lastEntry) return
-
   const blocker = state.players.find(({ name }) => name === blockerName)
   if (!blocker) return
+
+  let lastEntry = getLastTimelineEntry(state)
+
+  // If no timeline entry exists (e.g. Foreign Aid has no influence claim),
+  // create one so the block is captured
+  if (!lastEntry || lastEntry.turn !== state.turn || lastEntry.player !== state.turnPlayer) {
+    const entry: TimelineEntry = {
+      turn: state.turn,
+      player: state.turnPlayer!,
+      action: state.pendingAction!.action,
+      actualHand: [],
+      isBluff: false,
+      outcome: 'blocked',
+      ...(state.pendingAction!.targetPlayer && { targetPlayer: state.pendingAction!.targetPlayer }),
+    }
+    state.gameTimeline.push(entry)
+    lastEntry = entry
+  }
 
   lastEntry.blockedBy = blockerName
   lastEntry.blockClaimedInfluence = claimedInfluence
