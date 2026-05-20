@@ -11,6 +11,7 @@ import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
 import { recordBluff, recordChallengeMade, recordCoup, recordInfluenceKill, recordInfluenceClaim, recordSuccessfulBluff, recordSuccessfulChallenge } from './statsAccumulator'
+import { recordTimelineAction, recordTimelineActionChallenge, recordTimelineBlock, recordTimelineBlockChallenge } from './timelineRecorder'
 
 const getPlayerInRoom = ({ gameState, playerId }: {
   gameState: GameState
@@ -560,6 +561,8 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
         }
       }
 
+      recordTimelineAction(state, player.name, action, targetPlayer)
+
       logEvent(state, {
         event: EventMessages.ActionPending,
         action,
@@ -710,6 +713,8 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
         recordBluff(state, player.name)
       }
 
+      recordTimelineBlock(state, player.name, claimedInfluence)
+
       logEvent(state, {
         event: EventMessages.BlockPending,
         primaryPlayer: player.name,
@@ -769,6 +774,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       })
       // Challenge failed: the action player was telling the truth
       recordInfluenceKill(state, state.turnPlayer, challengePlayer.name)
+      recordTimelineActionChallenge(state, challengePlayer.name, false)
       promptPlayerToLoseInfluence(state, challengePlayer.name)
       delete state.pendingActionChallenge
       state.pendingAction.claimConfirmed = true
@@ -815,6 +821,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       // Challenge succeeded: the action player was bluffing
       recordSuccessfulChallenge(state, challengePlayer.name)
       recordInfluenceKill(state, challengePlayer.name, state.turnPlayer!)
+      recordTimelineActionChallenge(state, challengePlayer.name, true)
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
       if (claimedInfluence) {
         removeClaimedInfluence(actionPlayer, claimedInfluence)
@@ -986,6 +993,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
       })
       // Block challenge failed — blocker was telling the truth
       recordInfluenceKill(state, state.pendingBlock.sourcePlayer, challengePlayer.name)
+      recordTimelineBlockChallenge(state, challengePlayer.name, false)
       if (state.pendingAction.action === Actions.Assassinate) {
         const assassin = state.players.find(({ name }) => name === state.turnPlayer)
 
@@ -1027,6 +1035,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
       // Block challenge succeeded — blocker was bluffing
       recordSuccessfulChallenge(state, challengePlayer.name)
       recordInfluenceKill(state, challengePlayer.name, blockPlayer.name)
+      recordTimelineBlockChallenge(state, challengePlayer.name, true)
       const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
       if (claimedInfluence) {
         addClaimedInfluence(actionPlayer, claimedInfluence)

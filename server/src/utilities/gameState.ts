@@ -52,6 +52,8 @@ export const getPublicGameState = ({ gameState, playerId }: {
     }
   })
 
+  const gameIsOver = gameState.isStarted && gameState.players.filter(({ influences }) => influences.length).length === 1
+
   return {
     eventLogs: gameState.eventLogs,
     chatMessages: gameState.chatMessages.map((chatMessage) => ({
@@ -72,7 +74,8 @@ export const getPublicGameState = ({ gameState, playerId }: {
     ...(gameState.pendingBlock && { pendingBlock: gameState.pendingBlock }),
     ...(gameState.pendingBlockChallenge && { pendingBlockChallenge: gameState.pendingBlockChallenge }),
     ...(gameState.turnPlayer && { turnPlayer: gameState.turnPlayer }),
-    ...(gameState.resetGameRequest && { resetGameRequest: gameState.resetGameRequest })
+    ...(gameState.resetGameRequest && { resetGameRequest: gameState.resetGameRequest }),
+    ...(gameIsOver && gameState.gameTimeline?.length && { gameTimeline: gameState.gameTimeline })
   }
 }
 

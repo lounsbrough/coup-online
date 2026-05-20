@@ -163,6 +163,7 @@ const getNewGameState = (roomId: string, settings: GameSettings): GameState => (
   isStarted: false,
   eventLogs: [],
   chatMessages: [],
+  gameTimeline: [],
   lastEventTimestamp: new Date(),
   turn: 1,
   settings

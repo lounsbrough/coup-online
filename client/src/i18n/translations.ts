@@ -254,6 +254,21 @@ export type Translations = ActionMessages &
     deleteAccountConfirmMessage: TranslationsForString
     yourRanking: TranslationsForString
     notEnoughGames: TranslationsForString
+    // Web of Lies timeline
+    webOfLies: TranslationsForString
+    bluff: TranslationsForString
+    truth: TranslationsForString
+    successfulBluffs: TranslationsForString
+    soulReads: TranslationsForString
+    soulRead: TranslationsForString
+    longestBluffStreak: TranslationsForString
+    claimedInfluence: TranslationsForString
+    actualHand: TranslationsForString
+    blockedBy: TranslationsForString
+    challengedBy: TranslationsForString
+    challengeFailed: TranslationsForString
+    blockChallengedBy: TranslationsForString
+    unchallenged: TranslationsForString
   }
 
 const translations: Translations = {
@@ -2774,6 +2789,132 @@ const translations: Translations = {
     'hi-IN': 'आपकी रैंकिंग',
     'it-IT': 'La tua classifica',
     'pt-BR': 'Sua classificação',
+  },
+  webOfLies: {
+    'de-DE': 'Netz der Lügen',
+    'en-US': 'Web of Lies',
+    'es-MX': 'Red de Mentiras',
+    'fr-FR': 'Toile de Mensonges',
+    'hi-IN': 'झूठ का जाल',
+    'it-IT': 'Rete di Bugie',
+    'pt-BR': 'Teia de Mentiras',
+  },
+  bluff: {
+    'de-DE': 'Bluff',
+    'en-US': 'Bluff',
+    'es-MX': 'Farol',
+    'fr-FR': 'Bluff',
+    'hi-IN': 'ब्लफ़',
+    'it-IT': 'Bluff',
+    'pt-BR': 'Blefe',
+  },
+  truth: {
+    'de-DE': 'Wahrheit',
+    'en-US': 'Truth',
+    'es-MX': 'Verdad',
+    'fr-FR': 'Vérité',
+    'hi-IN': 'सच',
+    'it-IT': 'Verità',
+    'pt-BR': 'Verdade',
+  },
+  successfulBluffs: {
+    'de-DE': '{{count}} erfolgreiche Bluffs',
+    'en-US': '{{count}} Successful Bluffs',
+    'es-MX': '{{count}} Faroles exitosos',
+    'fr-FR': '{{count}} Bluffs réussis',
+    'hi-IN': '{{count}} सफल ब्लफ़',
+    'it-IT': '{{count}} Bluff riusciti',
+    'pt-BR': '{{count}} Blefes bem-sucedidos',
+  },
+  soulReads: {
+    'de-DE': '{{count}} Durchschaut',
+    'en-US': '{{count}} Soul Reads',
+    'es-MX': '{{count}} Lecturas certeras',
+    'fr-FR': '{{count}} Lectures parfaites',
+    'hi-IN': '{{count}} सोल रीड',
+    'it-IT': '{{count}} Letture perfette',
+    'pt-BR': '{{count}} Leituras certeiras',
+  },
+  soulRead: {
+    'de-DE': '{{player}} hat den Bluff durchschaut!',
+    'en-US': '{{player}} called the bluff!',
+    'es-MX': '¡{{player}} descubrió el farol!',
+    'fr-FR': '{{player}} a percé le bluff !',
+    'hi-IN': '{{player}} ने ब्लफ़ पकड़ा!',
+    'it-IT': '{{player}} ha smascherato il bluff!',
+    'pt-BR': '{{player}} descobriu o blefe!',
+  },
+  longestBluffStreak: {
+    'de-DE': '{{player}}: {{count}} Bluffs in Folge',
+    'en-US': '{{player}}: {{count}} bluffs in a row',
+    'es-MX': '{{player}}: {{count}} faroles seguidos',
+    'fr-FR': '{{player}} : {{count}} bluffs d\'affilée',
+    'hi-IN': '{{player}}: लगातार {{count}} ब्लफ़',
+    'it-IT': '{{player}}: {{count}} bluff di fila',
+    'pt-BR': '{{player}}: {{count}} blefes seguidos',
+  },
+  claimedInfluence: {
+    'de-DE': 'Behaupteter Einfluss',
+    'en-US': 'Claimed',
+    'es-MX': 'Influencia declarada',
+    'fr-FR': 'Influence revendiquée',
+    'hi-IN': 'दावा किया गया प्रभाव',
+    'it-IT': 'Influenza dichiarata',
+    'pt-BR': 'Influência declarada',
+  },
+  actualHand: {
+    'de-DE': 'Tatsächliche Hand',
+    'en-US': 'Hand',
+    'es-MX': 'Mano real',
+    'fr-FR': 'Main réelle',
+    'hi-IN': 'वास्तविक हाथ',
+    'it-IT': 'Mano reale',
+    'pt-BR': 'Mão real',
+  },
+  blockedBy: {
+    'de-DE': 'Blockiert von {{player}}',
+    'en-US': 'Blocked by {{player}}',
+    'es-MX': 'Bloqueado por {{player}}',
+    'fr-FR': 'Bloqué par {{player}}',
+    'hi-IN': '{{player}} द्वारा ब्लॉक किया गया',
+    'it-IT': 'Bloccato da {{player}}',
+    'pt-BR': 'Bloqueado por {{player}}',
+  },
+  challengedBy: {
+    'de-DE': '⚔️ {{player}} hat herausgefordert',
+    'en-US': '⚔️ Challenged by {{player}}',
+    'es-MX': '⚔️ Desafiado por {{player}}',
+    'fr-FR': '⚔️ Contesté par {{player}}',
+    'hi-IN': '⚔️ {{player}} ने चुनौती दी',
+    'it-IT': '⚔️ Sfidato da {{player}}',
+    'pt-BR': '⚔️ Desafiado por {{player}}',
+  },
+  challengeFailed: {
+    'de-DE': '— Herausforderung fehlgeschlagen',
+    'en-US': '— Challenge failed',
+    'es-MX': '— Desafío fallido',
+    'fr-FR': '— Contestation échouée',
+    'hi-IN': '— चुनौती विफल',
+    'it-IT': '— Sfida fallita',
+    'pt-BR': '— Desafio falhou',
+  },
+  blockChallengedBy: {
+    'de-DE': '⚔️ Block herausgefordert von {{player}}',
+    'en-US': '⚔️ Block challenged by {{player}}',
+    'es-MX': '⚔️ Bloqueo desafiado por {{player}}',
+    'fr-FR': '⚔️ Bloc contesté par {{player}}',
+    'hi-IN': '⚔️ ब्लॉक को {{player}} ने चुनौती दी',
+    'it-IT': '⚔️ Blocco sfidato da {{player}}',
+    'pt-BR': '⚔️ Bloqueio desafiado por {{player}}',
+  },
+  unchallenged: {
+    'de-DE': 'Nicht herausgefordert',
+    'en-US': 'Unchallenged',
+    'es-MX': 'Sin desafío',
+    'fr-FR': 'Non contesté',
+    'hi-IN': 'बिना चुनौती',
+    'it-IT': 'Non sfidato',
+    'pt-BR': 'Sem desafio',
   },
 }
 
