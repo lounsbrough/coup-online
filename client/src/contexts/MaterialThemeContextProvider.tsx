@@ -152,6 +152,15 @@ function MaterialThemeContextProvider({
 
     theme = createTheme(theme, {
       palette: customPaletteColors,
+      components: {
+        MuiCircularProgress: {
+          styleOverrides: {
+            root: {
+              opacity: 0.75,
+            },
+          },
+        },
+      },
     })
 
     return theme
