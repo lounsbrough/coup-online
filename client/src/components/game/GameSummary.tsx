@@ -167,7 +167,8 @@ function TimelineRow({ entry, getPlayerColor }: {
         display: 'flex',
         alignItems: 'center',
         gap: 1,
-        p: 0.75,
+        py: 0.75,
+        px: 1.5,
         borderRadius: 1,
         background: entry.isBluff
           ? 'rgba(255, 152, 0, 0.08)'
@@ -175,11 +176,7 @@ function TimelineRow({ entry, getPlayerColor }: {
         borderLeft: `3px solid ${getPlayerColor(entry.player)}`,
       }}
     >
-      <Typography variant="caption" sx={{ color: 'text.secondary', minWidth: 28 }}>
-        T{entry.turn}
-      </Typography>
-
-      <Box sx={{ flex: 1, minWidth: 0 }}>
+      <Box sx={{ flex: 1, minWidth: 0, textAlign: 'center' }}>
         <Typography variant="body2" component="span" sx={{ fontWeight: 600, color: getPlayerColor(entry.player) }}>
           {entry.player}
         </Typography>
@@ -256,15 +253,17 @@ function TimelineRow({ entry, getPlayerColor }: {
         )}
       </Box>
 
-      {showBluffLabel && (
-        <Chip
-          label={entry.isBluff ? t('bluff') : t('truth')}
-          size="small"
-          color={entry.isBluff ? 'warning' : 'success'}
-          variant={entry.isBluff ? 'filled' : 'outlined'}
-          sx={{ fontWeight: 700, fontSize: '0.7rem' }}
-        />
-      )}
+      <Box sx={{ minWidth: 60, display: 'flex', justifyContent: 'center' }}>
+        {showBluffLabel && (
+          <Chip
+            label={entry.isBluff ? t('bluff') : t('truth')}
+            size="small"
+            color={entry.isBluff ? 'warning' : 'success'}
+            variant={entry.isBluff ? 'filled' : 'outlined'}
+            sx={{ fontWeight: 700, fontSize: '0.7rem' }}
+          />
+        )}
+      </Box>
     </Box>
   )
 }
