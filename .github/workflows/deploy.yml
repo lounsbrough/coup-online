@@ -58,6 +58,7 @@ jobs:
           port: 8222
           script: |
             set -e
+            export CI=true
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
             cd /var/www/html/coup-online/server
