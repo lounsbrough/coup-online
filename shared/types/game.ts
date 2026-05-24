@@ -163,6 +163,23 @@ export type EventMessage = {
   turn: number;
 };
 
+export type TimelineEntry = {
+  turn: number;
+  player: string;
+  action: Actions;
+  claimedInfluence?: Influences;
+  actualHand: Influences[];
+  isBluff: boolean;
+  outcome: 'unchallenged' | 'challenge_failed' | 'challenge_succeeded' | 'blocked' | 'block_challenged_failed' | 'block_challenged_succeeded';
+  challengedBy?: string;
+  blockedBy?: string;
+  blockClaimedInfluence?: Influences;
+  blockIsBluff?: boolean;
+  blockChallengedBy?: string;
+  targetPlayer?: string;
+  waitTimeMs?: number;
+};
+
 export type AiPersonality = {
   vengefulness: number;
   honesty: number;
@@ -264,6 +281,7 @@ export type GameState = {
   deck: Influences[];
   eventLogs: EventMessage[];
   chatMessages: ChatMessage[];
+  gameTimeline: TimelineEntry[];
   lastEventTimestamp: Date;
   isStarted: boolean;
   availablePlayerColors: string[];
@@ -332,6 +350,7 @@ export type PublicGameState = Pick<
     players: PublicPlayer[];
     selfPlayer?: Player;
     deckCount: number;
+    gameTimeline?: TimelineEntry[];
   };
 
 export type DehydratedPublicGameState = Omit<

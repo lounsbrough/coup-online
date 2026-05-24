@@ -70,6 +70,7 @@ const getRandomGameState = ({
     deck: createDeckForPlayerCount(playerCount),
     eventLogs: [],
     chatMessages: [],
+    gameTimeline: [],
     lastEventTimestamp: chance.date(),
     isStarted: chance.bool(),
     availablePlayerColors: chance.n(chance.color, MAX_PLAYER_COUNT),

@@ -60,6 +60,7 @@ export const dehydrateGameState = (hydrated: GameState): DehydratedGameState => 
   deck: hydrated.deck,
   settings: hydrated.settings,
   availablePlayerColors: hydrated.availablePlayerColors,
+  gameTimeline: hydrated.gameTimeline,
   players: hydrated.players.map((player) => ({
     ...player,
     claimedInfluences: [...player.claimedInfluences],
@@ -85,6 +86,7 @@ export const dehydratePublicGameState = (hydrated: PublicGameState): DehydratedP
       unclaimedInfluences: [...hydrated.selfPlayer.unclaimedInfluences]
     }
   }),
+  ...(hydrated.gameTimeline && { gameTimeline: hydrated.gameTimeline }),
 })
 
 const rehydrateCommonGameState = (dehydrated: DehydratedGameState | DehydratedPublicGameState) => ({
@@ -137,6 +139,7 @@ export const rehydrateGameState = (dehydrated: DehydratedGameState): GameState =
     deck: dehydrated.deck,
     settings: dehydrated.settings,
     availablePlayerColors: dehydrated.availablePlayerColors,
+    gameTimeline: dehydrated.gameTimeline ?? [],
     players: dehydrated.players.map((player) => ({
       ...player,
       claimedInfluences: new Set(player.claimedInfluences),
@@ -163,4 +166,5 @@ export const rehydratePublicGameState = (dehydrated: DehydratedPublicGameState):
       unclaimedInfluences: new Set(dehydrated.selfPlayer.unclaimedInfluences)
     }
   }),
+  ...(dehydrated.gameTimeline && { gameTimeline: dehydrated.gameTimeline }),
 })

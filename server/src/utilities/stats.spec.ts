@@ -74,6 +74,7 @@ const createTestGameState = ({
     settings: { eventLogRetentionTurns: 100, allowRevive: false },
     gameId: chance.guid(),
     gameActionStats: actionStats,
+    gameTimeline: [],
   }
 }
 

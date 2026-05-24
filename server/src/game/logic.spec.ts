@@ -51,6 +51,7 @@ const getRandomGameState = ({
     turn: chance.natural(),
     turnPlayer: chance.pickone(players).name,
     settings: { eventLogRetentionTurns: 100, allowRevive: true },
+    gameTimeline: [],
   }
 
   if (isStarted) {
