@@ -269,6 +269,7 @@ export type Translations = ActionMessages &
     challengeFailed: TranslationsForString
     blockChallengedBy: TranslationsForString
     unchallenged: TranslationsForString
+    averageWaitTime: TranslationsForString
   }
 
 const translations: Translations = {
@@ -2852,6 +2853,15 @@ const translations: Translations = {
     'hi-IN': '{{player}}: लगातार {{count}} ब्लफ़',
     'it-IT': '{{player}}: {{count}} bluff di fila',
     'pt-BR': '{{player}}: {{count}} blefes seguidos',
+  },
+  averageWaitTime: {
+    'de-DE': 'Durchschnittliche Wartezeit',
+    'en-US': 'Average Wait Time',
+    'es-MX': 'Tiempo de espera promedio',
+    'fr-FR': 'Temps d\'attente moyen',
+    'hi-IN': 'औसत प्रतीक्षा समय',
+    'it-IT': 'Tempo di attesa medio',
+    'pt-BR': 'Tempo médio de espera',
   },
   claimedInfluence: {
     'de-DE': 'Behaupteter Einfluss',

@@ -106,10 +106,12 @@ function GameSummary() {
               <Tooltip
                 title={
                   <Stack spacing={0.5}>
-                    {getPlayerWaitRanking(gameTimeline).map(({ player, totalMs }, i) => (
+                    <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                      {t('averageWaitTime')}
+                    </Typography>
+                    {getPlayerWaitRanking(gameTimeline).map(({ player, avgMs }) => (
                       <Typography key={player} variant="caption">
-                        {i === 0 ? '🐌' : i === getPlayerWaitRanking(gameTimeline).length - 1 ? '⚡' : '  '}{' '}
-                        {player}: {formatWaitTime(totalMs)}
+                        {player}: {formatWaitTime(avgMs)}
                       </Typography>
                     ))}
                   </Stack>
@@ -119,14 +121,14 @@ function GameSummary() {
                 <Stack direction="row" spacing={0.5}>
                   <Chip
                     size="small"
-                    label={`🐌 ${slowpoke.player}: ${formatWaitTime(slowpoke.totalMs)}`}
+                    label={`🐌 ${slowpoke.player}: ${formatWaitTime(slowpoke.avgMs)}`}
                     color="error"
                     variant="outlined"
                   />
                   {speedDemon && (
                     <Chip
                       size="small"
-                      label={`⚡ ${speedDemon.player}: ${formatWaitTime(speedDemon.totalMs)}`}
+                      label={`⚡ ${speedDemon.player}: ${formatWaitTime(speedDemon.avgMs)}`}
                       color="success"
                       variant="outlined"
                     />
@@ -290,42 +292,48 @@ function getLongestBluffStreak(timeline: TimelineEntry[]): { player: string; cou
   return best
 }
 
-function getPlayerWaitTotals(timeline: TimelineEntry[]): { [player: string]: number } {
+function getPlayerWaitAverages(timeline: TimelineEntry[]): { [player: string]: number } {
   const totals: { [player: string]: number } = {}
+  const counts: { [player: string]: number } = {}
   for (const entry of timeline) {
     if (entry.waitTimeMs) {
       totals[entry.player] = (totals[entry.player] ?? 0) + entry.waitTimeMs
+      counts[entry.player] = (counts[entry.player] ?? 0) + 1
     }
   }
-  return totals
+  const averages: { [player: string]: number } = {}
+  for (const player of Object.keys(totals)) {
+    averages[player] = totals[player] / counts[player]
+  }
+  return averages
 }
 
-function getPlayerWaitRanking(timeline: TimelineEntry[]): { player: string; totalMs: number }[] {
-  const totals = getPlayerWaitTotals(timeline)
-  return Object.entries(totals)
-    .map(([player, totalMs]) => ({ player, totalMs }))
-    .sort((a, b) => b.totalMs - a.totalMs)
+function getPlayerWaitRanking(timeline: TimelineEntry[]): { player: string; avgMs: number }[] {
+  const averages = getPlayerWaitAverages(timeline)
+  return Object.entries(averages)
+    .map(([player, avgMs]) => ({ player, avgMs }))
+    .sort((a, b) => b.avgMs - a.avgMs)
 }
 
-function getSlowestPlayer(timeline: TimelineEntry[]): { player: string; totalMs: number } | null {
-  const totals = getPlayerWaitTotals(timeline)
-  let slowest: { player: string; totalMs: number } | null = null
-  for (const [player, totalMs] of Object.entries(totals)) {
-    if (!slowest || totalMs > slowest.totalMs) {
-      slowest = { player, totalMs }
+function getSlowestPlayer(timeline: TimelineEntry[]): { player: string; avgMs: number } | null {
+  const averages = getPlayerWaitAverages(timeline)
+  let slowest: { player: string; avgMs: number } | null = null
+  for (const [player, avgMs] of Object.entries(averages)) {
+    if (!slowest || avgMs > slowest.avgMs) {
+      slowest = { player, avgMs }
     }
   }
   return slowest
 }
 
-function getFastestPlayer(timeline: TimelineEntry[]): { player: string; totalMs: number } | null {
-  const totals = getPlayerWaitTotals(timeline)
-  const players = Object.keys(totals)
+function getFastestPlayer(timeline: TimelineEntry[]): { player: string; avgMs: number } | null {
+  const averages = getPlayerWaitAverages(timeline)
+  const players = Object.keys(averages)
   if (players.length < 2) return null
-  let fastest: { player: string; totalMs: number } | null = null
-  for (const [player, totalMs] of Object.entries(totals)) {
-    if (!fastest || totalMs < fastest.totalMs) {
-      fastest = { player, totalMs }
+  let fastest: { player: string; avgMs: number } | null = null
+  for (const [player, avgMs] of Object.entries(averages)) {
+    if (!fastest || avgMs < fastest.avgMs) {
+      fastest = { player, avgMs }
     }
   }
   return fastest
