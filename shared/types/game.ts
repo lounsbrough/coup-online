@@ -349,7 +349,8 @@ export type PublicGameState = Pick<
   > & {
     players: PublicPlayer[];
     selfPlayer?: Player;
-    deckCount: number; gameTimeline?: TimelineEntry[];
+    deckCount: number;
+    gameTimeline?: TimelineEntry[];
   };
 
 export type DehydratedPublicGameState = Omit<

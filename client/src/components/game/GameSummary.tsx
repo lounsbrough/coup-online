@@ -59,13 +59,16 @@ function GameSummary() {
       }}
     >
       <Box
+        role="button"
+        tabIndex={0}
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
         onClick={() => setExpanded(!expanded)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded(!expanded) } }}
       >
         <CoupTypography variant="h5" addTextShadow sx={{ fontWeight: 700 }}>
           {t('gameSummary')}
         </CoupTypography>
-        <IconButton size="small">
+        <IconButton size="small" tabIndex={-1}>
           {expanded ? <ExpandLess /> : <ExpandMore />}
         </IconButton>
       </Box>
@@ -296,7 +299,7 @@ function getPlayerWaitAverages(timeline: TimelineEntry[]): { [player: string]: n
   const totals: { [player: string]: number } = {}
   const counts: { [player: string]: number } = {}
   for (const entry of timeline) {
-    if (entry.waitTimeMs) {
+    if (typeof entry.waitTimeMs === 'number') {
       totals[entry.player] = (totals[entry.player] ?? 0) + entry.waitTimeMs
       counts[entry.player] = (counts[entry.player] ?? 0) + 1
     }
