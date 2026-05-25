@@ -176,6 +176,7 @@ function ChooseAction() {
                     <Box sx={{ textAlign: 'center' }}>
                       {lackingCoins && <Typography>{t('notEnoughCoins', { count: actionAttributes.coinsRequired })}</Typography>}
                       {noDeadInfluencesForRevive && <Typography>{t('noDeadInfluences')}</Typography>}
+                      {emptyTreasury && <Typography>{t('emptyTreasury')}</Typography>}
                     </Box>
                   )}
                   placement="top">

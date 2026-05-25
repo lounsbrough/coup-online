@@ -67,6 +67,7 @@ export type Translations = ActionMessages &
     draw2InfluencesAndDiscard2: TranslationsForString
     effect: TranslationsForString
     enableReformation: TranslationsForString
+    emptyTreasury: TranslationsForString
     eventLog: TranslationsForString
     eventLogRetentionTurns: TranslationsForString
     examineDecision: TranslationsForString
@@ -931,6 +932,15 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव',
     'it-IT': 'Effetto',
     'pt-BR': 'Efeito',
+  },
+  emptyTreasury: {
+    'de-DE': 'Die Staatskasse ist leer',
+    'en-US': 'The treasury is empty',
+    'es-MX': 'El tesoro está vacío',
+    'fr-FR': 'Le trésor est vide',
+    'hi-IN': 'खजाना खाली है',
+    'it-IT': 'Il tesoro è vuoto',
+    'pt-BR': 'O tesouro está vazio',
   },
   enableReformation: {
     'de-DE': 'Reformation aktivieren',
