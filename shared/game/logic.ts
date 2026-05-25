@@ -4,6 +4,7 @@ export const canPlayerChooseAction = (state: PublicGameState) =>
   state.selfPlayer
   && state.turnPlayer === state.selfPlayer.name
   && !state.pendingAction
+  && !state.pendingExamine
   && !Object.keys(state.pendingInfluenceLoss).length
 
 export const canPlayerChooseActionResponse = (state: PublicGameState) =>
@@ -31,3 +32,15 @@ export const canPlayerChooseBlockChallengeResponse = (state: PublicGameState) =>
   && state.pendingBlock
   && state.pendingBlockChallenge
   && state.pendingBlock.sourcePlayer === state.selfPlayer.name
+
+export const canPlayerRevealForExamine = (state: PublicGameState) =>
+  state.selfPlayer
+  && state.pendingExamine
+  && state.pendingExamine.targetPlayer === state.selfPlayer.name
+  && !state.pendingExamine.revealedInfluence
+
+export const canPlayerMakeExamineDecision = (state: PublicGameState) =>
+  state.selfPlayer
+  && state.pendingExamine
+  && state.pendingExamine.examiner === state.selfPlayer.name
+  && !!state.pendingExamine.revealedInfluence

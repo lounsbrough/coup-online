@@ -114,6 +114,16 @@ function WaitingRoom() {
                   {t('reviveIsEnabled')}
                 </CoupTypography>
               )}
+              {gameState.settings.enableReformation && (
+                <CoupTypography mt={2} addTextShadow>
+                  {t('reformationIsEnabled')}
+                </CoupTypography>
+              )}
+              {gameState.settings.useInquisitor && (
+                <CoupTypography mt={2} addTextShadow>
+                  {t('inquisitorIsEnabled')}
+                </CoupTypography>
+              )}
               {gameState.settings.speedRoundSeconds && (
                 <CoupTypography mt={2} addTextShadow>
                   {t('speedRoundSeconds')}: {gameState.settings.speedRoundSeconds}

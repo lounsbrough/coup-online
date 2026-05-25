@@ -19,7 +19,7 @@ function ChooseAction() {
     return null
   }
 
-  if (selectedAction && (!ActionAttributes[selectedAction].requiresTarget || selectedTargetPlayer)) {
+  if (selectedAction && (!ActionAttributes[selectedAction].requiresTarget || selectedTargetPlayer) && selectedAction !== Actions.Convert) {
     return <PlayerActionConfirmation
       message={t(EventMessages.ActionConfirm, {
         action: selectedAction,
@@ -40,7 +40,33 @@ function ChooseAction() {
     />
   }
 
-  if (selectedAction) {
+  if (selectedAction === Actions.Convert && selectedTargetPlayer !== undefined) {
+    const targetForConvert = selectedTargetPlayer || undefined
+    return <PlayerActionConfirmation
+      message={t(EventMessages.ActionConfirm, {
+        action: selectedAction,
+        gameState,
+        secondaryPlayer: targetForConvert || gameState.selfPlayer?.name
+      })}
+      action={PlayerActions.action}
+      variables={{
+        action: selectedAction,
+        playerId: getPlayerId(),
+        roomId: gameState.roomId,
+        ...(targetForConvert && { targetPlayer: targetForConvert })
+      }}
+      onCancel={() => {
+        setSelectedAction(undefined)
+        setSelectedTargetPlayer(undefined)
+      }}
+    />
+  }
+
+  if (selectedAction && (ActionAttributes[selectedAction].requiresTarget || selectedAction === Actions.Convert)) {
+    const alivePlayers = gameState.players.filter((p) => p.influenceCount > 0)
+    const allSameFaction = gameState.settings.enableReformation
+      && alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)
+
     return (
       <>
         <CoupTypography
@@ -53,30 +79,53 @@ function ChooseAction() {
           {t('chooseATarget')}
         </CoupTypography>
         <Grid container spacing={2} justifyContent="center">
+          {selectedAction === Actions.Convert && (
+            <GrowingButton
+              onClick={() => {
+                setSelectedTargetPlayer('')
+              }}
+              variant="contained"
+              color={Actions.Convert as Actions}
+            >{t('convertSelf')}</GrowingButton>
+          )}
           {gameState.players.map((player) => {
-            if (player.name === gameState.selfPlayer?.name || !player.influenceCount
+            if (player.name === gameState.selfPlayer?.name || !player.influenceCount) {
+              return null
+            }
+
+            if (
+              gameState.settings.enableReformation
+              && !allSameFaction
+              && player.faction === gameState.selfPlayer?.faction
+              && selectedAction !== Actions.Convert
             ) {
               return null
             }
+
+            const cannotAffordConvert = selectedAction === Actions.Convert && (gameState.selfPlayer?.coins ?? 0) < 2
 
             const paletteColor = theme.palette.augmentColor({
               color: { main: player.color }
             })
 
-            return <GrowingButton
-              key={player.name}
-              onClick={() => {
-                setSelectedTargetPlayer(player.name)
-              }}
-              sx={{
-                '&:hover': {
-                  background: paletteColor.dark
-                },
-                background: paletteColor.main,
-                color: paletteColor.contrastText
-              }}
-              variant="contained"
-            >{player.name}</GrowingButton>
+            return <Tooltip key={player.name} title={cannotAffordConvert ? t('notEnoughCoins', { count: 2 }) : undefined}>
+              <span>
+                <GrowingButton
+                  onClick={() => {
+                    setSelectedTargetPlayer(player.name)
+                  }}
+                  disabled={cannotAffordConvert}
+                  sx={{
+                    '&:hover': {
+                      background: paletteColor.dark
+                    },
+                    background: paletteColor.main,
+                    color: paletteColor.contrastText
+                  }}
+                  variant="contained"
+                >{player.name}</GrowingButton>
+              </span>
+            </Tooltip>
           })}
         </Grid>
       </>
@@ -100,9 +149,25 @@ function ChooseAction() {
               return null
             }
 
+            if ((action === Actions.Convert || action === Actions.Embezzle) && !gameState.settings.enableReformation) {
+              return null
+            }
+
+            if ((action === Actions.Convert || action === Actions.Embezzle) && gameState.settings.enableReformation) {
+              const alivePlayers = gameState.players.filter((p) => p.influenceCount > 0)
+              if (alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)) {
+                return null
+              }
+            }
+
+            if (action === Actions.Examine && !gameState.settings.useInquisitor) {
+              return null
+            }
+
             const lackingCoins = !!actionAttributes.coinsRequired && gameState.selfPlayer!.coins < actionAttributes.coinsRequired
             const noDeadInfluencesForRevive = action === Actions.Revive && !gameState.selfPlayer!.deadInfluences.length
-            const isActionDisabled = lackingCoins || noDeadInfluencesForRevive
+            const emptyTreasury = action === Actions.Embezzle && gameState.treasury === 0
+            const isActionDisabled = lackingCoins || noDeadInfluencesForRevive || emptyTreasury
 
             return (
               <Grid key={index}>

@@ -1,6 +1,7 @@
 import {
   Actions,
   EventMessages,
+  Factions,
   Influences,
   Responses,
   AvailableLanguageCode,
@@ -11,7 +12,10 @@ type TranslationsForString = { [key in AvailableLanguageCode]: string }
 
 type ActionMessages = {
   [Actions.Assassinate]: TranslationsForString
+  [Actions.Convert]: TranslationsForString
   [Actions.Coup]: TranslationsForString
+  [Actions.Embezzle]: TranslationsForString
+  [Actions.Examine]: TranslationsForString
   [Actions.Exchange]: TranslationsForString
   [Actions.ForeignAid]: TranslationsForString
   [Actions.Income]: TranslationsForString
@@ -29,6 +33,7 @@ export type Translations = ActionMessages &
     add: TranslationsForString
     addAiPlayer: TranslationsForString
     addPlayersToStartGame: TranslationsForString
+    allowKeep: TranslationsForString
     allowRevive: TranslationsForString
     anyone: TranslationsForString
     block: TranslationsForString
@@ -41,6 +46,7 @@ export type Translations = ActionMessages &
     cheatSheet: TranslationsForString
     chooseATarget: TranslationsForString
     chooseAnAction: TranslationsForString
+    chooseCardToReveal: TranslationsForString
     chooseInfluenceToLose: TranslationsForString
     chooseInfluenceToReveal: TranslationsForString
     chooseInfluencesToKeep: TranslationsForString
@@ -52,14 +58,18 @@ export type Translations = ActionMessages &
     confirm: TranslationsForString
     confirmActions: TranslationsForString
     contents: TranslationsForString
+    convertSelf: TranslationsForString
     copyInviteLink: TranslationsForString
     createGame: TranslationsForString
     createNewGame: TranslationsForString
-    draw2InfluencesAndDiscard2: TranslationsForString
     dark: TranslationsForString
+    deck: TranslationsForString
+    draw2InfluencesAndDiscard2: TranslationsForString
     effect: TranslationsForString
+    enableReformation: TranslationsForString
     eventLog: TranslationsForString
     eventLogRetentionTurns: TranslationsForString
+    examineDecision: TranslationsForString
     [EventMessages.ActionConfirm]: ActionMessages
     [EventMessages.ActionPending]: Partial<ActionMessages>
     [EventMessages.ActionProcessed]: ActionMessages
@@ -76,6 +86,7 @@ export type Translations = ActionMessages &
     [EventMessages.PlayerLostInfluence]: TranslationsForString
     [EventMessages.PlayerReplacedInfluence]: TranslationsForString
     [EventMessages.PlayerReplacedWithAi]: TranslationsForString
+    forceSwap: TranslationsForString
     forfeit: TranslationsForString
     forfeitConfirmationMessage: TranslationsForString
     forfeitConfirmationTitle: TranslationsForString
@@ -95,6 +106,8 @@ export type Translations = ActionMessages &
     [Influences.Captain]: TranslationsForString
     [Influences.Contessa]: TranslationsForString
     [Influences.Duke]: TranslationsForString
+    [Influences.Inquisitor]: TranslationsForString
+    inquisitorIsEnabled: TranslationsForString
     inviteLinkCopied: TranslationsForString
     joinExistingGame: TranslationsForString
     joinGame: TranslationsForString
@@ -102,6 +115,7 @@ export type Translations = ActionMessages &
     killAnInfluence: TranslationsForString
     language: TranslationsForString
     learnToPlay: TranslationsForString
+    [Factions.Loyalist]: TranslationsForString
     light: TranslationsForString
     loseInfluence: TranslationsForString
     losingAChallenge: TranslationsForString
@@ -121,6 +135,8 @@ export type Translations = ActionMessages &
     privacyPolicy: TranslationsForString
     privacyPolicyContent: TranslationsForString
     random: TranslationsForString
+    [Factions.Reformist]: TranslationsForString
+    reformationIsEnabled: TranslationsForString
     reportBug: TranslationsForString
     reportIncorrectTranslation: TranslationsForString
     requestFeature: TranslationsForString
@@ -194,6 +210,8 @@ export type Translations = ActionMessages &
     termsOfService: TranslationsForString
     termsOfServiceContent: TranslationsForString
     title: TranslationsForString
+    treasury: TranslationsForString
+    useInquisitor: TranslationsForString
     vengefulness: TranslationsForString
     waitingOnOtherPlayers: TranslationsForString
     websocketsConnection: TranslationsForString
@@ -309,6 +327,15 @@ const translations: Translations = {
     'it-IT': 'Assassinare',
     'pt-BR': 'Assassinar',
   },
+  [Actions.Convert]: {
+    'de-DE': 'Konvertieren',
+    'en-US': 'Convert',
+    'es-MX': 'Convertir',
+    'fr-FR': 'Convertir',
+    'hi-IN': 'धर्म परिवर्तन',
+    'it-IT': 'Convertire',
+    'pt-BR': 'Converter',
+  },
   [Actions.Coup]: {
     'de-DE': 'Putsch',
     'en-US': 'Coup',
@@ -317,6 +344,24 @@ const translations: Translations = {
     'hi-IN': 'अवधारणा',
     'it-IT': 'Colpo di Stato',
     'pt-BR': 'Golpe de Estado',
+  },
+  [Actions.Embezzle]: {
+    'de-DE': 'Unterschlagen',
+    'en-US': 'Embezzle',
+    'es-MX': 'Malversar',
+    'fr-FR': 'Détourner',
+    'hi-IN': 'गबन करना',
+    'it-IT': 'Appropriarsi',
+    'pt-BR': 'Desviar',
+  },
+  [Actions.Examine]: {
+    'de-DE': 'Untersuchen',
+    'en-US': 'Examine',
+    'es-MX': 'Examinar',
+    'fr-FR': 'Examiner',
+    'hi-IN': 'जाँच करना',
+    'it-IT': 'Esaminare',
+    'pt-BR': 'Examinar',
   },
   [Actions.Exchange]: {
     'de-DE': 'Austausch',
@@ -408,6 +453,15 @@ const translations: Translations = {
     'hi-IN': 'खेल शुरू करने के लिए कम से कम एक और खिलाड़ी जोड़ें',
     'it-IT': 'Aggiungi almeno un altro giocatore per iniziare il gioco',
     'pt-BR': 'Adicione pelo menos mais um jogador para iniciar o jogo',
+  },
+  allowKeep: {
+    'de-DE': 'Behalten erlauben',
+    'en-US': 'Allow Keep',
+    'es-MX': 'Permitir Conservar',
+    'fr-FR': 'Autoriser à garder',
+    'hi-IN': 'रखने दें',
+    'it-IT': 'Permetti di tenere',
+    'pt-BR': 'Permitir Manter',
   },
   allowRevive: {
     'de-DE': 'Wiederbeleben erlauben',
@@ -616,6 +670,15 @@ const translations: Translations = {
     'it-IT': "Scegli un'Azione",
     'pt-BR': 'Escolher uma Ação',
   },
+  chooseCardToReveal: {
+    'de-DE': 'Wähle eine Karte zum Aufdecken',
+    'en-US': 'Choose a card to reveal',
+    'es-MX': 'Elige una carta para revelar',
+    'fr-FR': 'Choisissez une carte à révéler',
+    'hi-IN': 'प्रकट करने के लिए एक कार्ड चुनें',
+    'it-IT': 'Scegli una carta da rivelare',
+    'pt-BR': 'Escolha uma carta para revelar',
+  },
   chooseInfluenceToLose: {
     'de-DE': 'Wähle eine Einflusskarte, die du verlieren möchtest',
     'en-US': 'Choose an influence to lose',
@@ -734,6 +797,15 @@ const translations: Translations = {
     'it-IT': 'Contenuti',
     'pt-BR': 'Conteúdo',
   },
+  convertSelf: {
+    'de-DE': 'Sich selbst konvertieren',
+    'en-US': 'Convert Self',
+    'es-MX': 'Convertirse',
+    'fr-FR': 'Se convertir',
+    'hi-IN': 'स्वयं को परिवर्तित करें',
+    'it-IT': 'Converti te stesso',
+    'pt-BR': 'Converter-se',
+  },
   copyInviteLink: {
     'de-DE': 'Einladungslink kopieren',
     'en-US': 'Copy Invite Link',
@@ -787,6 +859,15 @@ const translations: Translations = {
     'hi-IN': 'गहरा',
     'it-IT': 'Scuro',
     'pt-BR': 'Escuro',
+  },
+  deck: {
+    'de-DE': 'Deck',
+    'en-US': 'Deck',
+    'es-MX': 'Mazo',
+    'fr-FR': 'Pioche',
+    'hi-IN': 'डेक',
+    'it-IT': 'Mazzo',
+    'pt-BR': 'Baralho',
   },
   deleteAccount: {
     'de-DE': 'Konto löschen',
@@ -851,6 +932,15 @@ const translations: Translations = {
     'it-IT': 'Effetto',
     'pt-BR': 'Efeito',
   },
+  enableReformation: {
+    'de-DE': 'Reformation aktivieren',
+    'en-US': 'Enable Reformation',
+    'es-MX': 'Habilitar Reforma',
+    'fr-FR': 'Activer la Réforme',
+    'hi-IN': 'सुधार सक्षम करें',
+    'it-IT': 'Abilita Riforma',
+    'pt-BR': 'Ativar Reforma',
+  },
   error: {
     'de-DE': 'Fehler',
     'en-US': 'Error',
@@ -878,6 +968,15 @@ const translations: Translations = {
     'it-IT': 'Conservazione del registro eventi (turni)',
     'pt-BR': 'Retenção do registro de eventos (turnos)',
   },
+  examineDecision: {
+    'de-DE': 'Die aufgedeckte Karte ist {{primaryInfluence}}',
+    'en-US': 'The revealed card is {{primaryInfluence}}',
+    'es-MX': 'La carta revelada es {{primaryInfluence}}',
+    'fr-FR': 'La carte révélée est {{primaryInfluence}}',
+    'hi-IN': 'प्रकट कार्ड {{primaryInfluence}} है',
+    'it-IT': 'La carta rivelata è {{primaryInfluence}}',
+    'pt-BR': 'A carta revelada é {{primaryInfluence}}',
+  },
   [EventMessages.ActionConfirm]: {
     [Actions.Assassinate]: {
       'de-DE': '{{action[[Attentat]]}} {{secondaryPlayer}}',
@@ -896,6 +995,33 @@ const translations: Translations = {
       'hi-IN': '{{action[[गद्दारी]]}} {{secondaryPlayer}}',
       'it-IT': '{{action[[Colpo di Stato]]}} {{secondaryPlayer}}',
       'pt-BR': '{{action[[Golpear]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Convert]: {
+      'de-DE': '{{action[[Konvertieren]]}} {{secondaryPlayer}}',
+      'en-US': '{{action[[Convert]]}} {{secondaryPlayer}}',
+      'es-MX': '{{action[[Convertir]]}} {{secondaryPlayer}}',
+      'fr-FR': '{{action[[Convertir]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{action[[धर्म परिवर्तन]]}} {{secondaryPlayer}}',
+      'it-IT': '{{action[[Convertire]]}} {{secondaryPlayer}}',
+      'pt-BR': '{{action[[Converter]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Embezzle]: {
+      'de-DE': '{{action[[Unterschlagen]]}} aus der Staatskasse',
+      'en-US': '{{action[[Embezzle]]}} from treasury',
+      'es-MX': '{{action[[Malversar]]}} del tesoro',
+      'fr-FR': '{{action[[Détourner]]}} du trésor',
+      'hi-IN': '{{action[[गबन]]}} खजाने से',
+      'it-IT': '{{action[[Appropriarsi]]}} dal tesoro',
+      'pt-BR': '{{action[[Desviar]]}} do tesouro',
+    },
+    [Actions.Examine]: {
+      'de-DE': '{{action[[Untersuchen]]}} {{secondaryPlayer}}',
+      'en-US': '{{action[[Examine]]}} {{secondaryPlayer}}',
+      'es-MX': '{{action[[Examinar]]}} {{secondaryPlayer}}',
+      'fr-FR': '{{action[[Examiner]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{action[[जाँच]]}} {{secondaryPlayer}}',
+      'it-IT': '{{action[[Esaminare]]}} {{secondaryPlayer}}',
+      'pt-BR': '{{action[[Examinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
       'de-DE': '{{action[[Austausch]]}} von Einflusskarten',
@@ -967,6 +1093,36 @@ const translations: Translations = {
         '{{primaryPlayer}} sta cercando di {{action[[Assassinare]]}} {{secondaryPlayer}}',
       'pt-BR':
         '{{primaryPlayer}} está tentando {{action[[Assassinar]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Embezzle]: {
+      'de-DE':
+        '{{primaryPlayer}} versucht, aus der Staatskasse zu {{action[[Unterschlagen]]}}',
+      'en-US':
+        '{{primaryPlayer}} is trying to {{action[[Embezzle]]}} from treasury',
+      'es-MX':
+        '{{primaryPlayer}} está intentando {{action[[Malversar]]}} del tesoro',
+      'fr-FR':
+        '{{primaryPlayer}} essaie de {{action[[Détourner]]}} du trésor',
+      'hi-IN': '{{primaryPlayer}} खजाने से {{action[[गबन]]}} करने की कोशिश कर रहा है',
+      'it-IT':
+        '{{primaryPlayer}} sta cercando di {{action[[Appropriarsi]]}} dal tesoro',
+      'pt-BR':
+        '{{primaryPlayer}} está tentando {{action[[Desviar]]}} do tesouro',
+    },
+    [Actions.Examine]: {
+      'de-DE':
+        '{{primaryPlayer}} versucht, {{secondaryPlayer}} zu {{action[[Untersuchen]]}}',
+      'en-US':
+        '{{primaryPlayer}} is trying to {{action[[Examine]]}} {{secondaryPlayer}}',
+      'es-MX':
+        '{{primaryPlayer}} está intentando {{action[[Examinar]]}} a {{secondaryPlayer}}',
+      'fr-FR':
+        '{{primaryPlayer}} essaie de {{action[[Examiner]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{primaryPlayer}} {{secondaryPlayer}} की {{action[[जाँच]]}} करने की कोशिश कर रहा है',
+      'it-IT':
+        '{{primaryPlayer}} sta cercando di {{action[[Esaminare]]}} {{secondaryPlayer}}',
+      'pt-BR':
+        '{{primaryPlayer}} está tentando {{action[[Examinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
       'de-DE':
@@ -1052,6 +1208,33 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} {{action[[गद्दारी]]}} {{secondaryPlayer}}',
       'it-IT': '{{primaryPlayer}} ha {{action[[Colpito]]}} {{secondaryPlayer}}',
       'pt-BR': '{{primaryPlayer}} {{action[[Golpeou]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Convert]: {
+      'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Konvertiert]]}}',
+      'en-US': '{{primaryPlayer}} {{action[[Converted]]}} {{secondaryPlayer}}',
+      'es-MX': '{{primaryPlayer}} ha {{action[[Convertido]]}} a {{secondaryPlayer}}',
+      'fr-FR': '{{primaryPlayer}} a {{action[[Converti]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को {{action[[परिवर्तित]]}} किया',
+      'it-IT': '{{primaryPlayer}} ha {{action[[Convertito]]}} {{secondaryPlayer}}',
+      'pt-BR': '{{primaryPlayer}} {{action[[Converteu]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Embezzle]: {
+      'de-DE': '{{primaryPlayer}} hat aus der Staatskasse {{action[[Unterschlagen]]}}',
+      'en-US': '{{primaryPlayer}} {{action[[Embezzled]]}} from treasury',
+      'es-MX': '{{primaryPlayer}} ha {{action[[Malversado]]}} del tesoro',
+      'fr-FR': '{{primaryPlayer}} a {{action[[Détourné]]}} du trésor',
+      'hi-IN': '{{primaryPlayer}} ने खजाने से {{action[[गबन]]}} किया',
+      'it-IT': '{{primaryPlayer}} ha {{action[[Appropriato]]}} dal tesoro',
+      'pt-BR': '{{primaryPlayer}} {{action[[Desviou]]}} do tesouro',
+    },
+    [Actions.Examine]: {
+      'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Untersucht]]}}',
+      'en-US': '{{primaryPlayer}} {{action[[Examined]]}} {{secondaryPlayer}}',
+      'es-MX': '{{primaryPlayer}} ha {{action[[Examinado]]}} a {{secondaryPlayer}}',
+      'fr-FR': '{{primaryPlayer}} a {{action[[Examiné]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} की {{action[[जाँच]]}} की',
+      'it-IT': '{{primaryPlayer}} ha {{action[[Esaminato]]}} {{secondaryPlayer}}',
+      'pt-BR': '{{primaryPlayer}} {{action[[Examinou]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
       'de-DE':
@@ -1263,6 +1446,15 @@ const translations: Translations = {
     'hi-IN': 'सबसे तेज़ जीत',
     'it-IT': 'Vittoria più rapida',
     'pt-BR': 'Vitória mais rápida',
+  },
+  forceSwap: {
+    'de-DE': 'Tausch erzwingen',
+    'en-US': 'Force Swap',
+    'es-MX': 'Forzar Intercambio',
+    'fr-FR': 'Forcer l\'échange',
+    'hi-IN': 'जबरन अदला-बदली',
+    'it-IT': 'Forza scambio',
+    'pt-BR': 'Forçar Troca',
   },
   forfeit: {
     'de-DE': 'Aufgeben',
@@ -1487,6 +1679,15 @@ const translations: Translations = {
     'it-IT': 'Duca',
     'pt-BR': 'Duque',
   },
+  [Influences.Inquisitor]: {
+    'de-DE': 'Inquisitor',
+    'en-US': 'Inquisitor',
+    'es-MX': 'Inquisidor',
+    'fr-FR': 'Inquisiteur',
+    'hi-IN': 'जाँचकर्ता',
+    'it-IT': 'Inquisitore',
+    'pt-BR': 'Inquisidor',
+  },
   info: {
     'de-DE': 'Info',
     'en-US': 'Info',
@@ -1495,6 +1696,15 @@ const translations: Translations = {
     'hi-IN': 'जानकारी',
     'it-IT': 'Info',
     'pt-BR': 'Info',
+  },
+  inquisitorIsEnabled: {
+    'de-DE': 'Inquisitor ist aktiviert',
+    'en-US': 'Inquisitor is enabled',
+    'es-MX': 'El Inquisidor está habilitado',
+    'fr-FR': "L'Inquisiteur est activé",
+    'hi-IN': 'इन्क्विज़िटर सक्षम है',
+    'it-IT': "L'Inquisitore è abilitato",
+    'pt-BR': 'Inquisidor está habilitado',
   },
   inviteLinkCopied: {
     'de-DE': 'Einladungslink kopiert',
@@ -1583,6 +1793,15 @@ const translations: Translations = {
     'hi-IN': 'खेलना सीखें',
     'it-IT': 'Impara a Giocare',
     'pt-BR': 'Aprenda a Jogar',
+  },
+  [Factions.Loyalist]: {
+    'de-DE': 'Loyalist',
+    'en-US': 'Loyalist',
+    'es-MX': 'Lealista',
+    'fr-FR': 'Loyaliste',
+    'hi-IN': 'वफादार',
+    'it-IT': 'Lealista',
+    'pt-BR': 'Lealista',
   },
   light: {
     'de-DE': 'Hell',
@@ -1827,6 +2046,15 @@ const translations: Translations = {
     'it-IT': '{{primaryPlayer}} Vince!',
     'pt-BR': '{{primaryPlayer}} Vence!',
   },
+  [Factions.Reformist]: {
+    'de-DE': 'Reformist',
+    'en-US': 'Reformist',
+    'es-MX': 'Reformista',
+    'fr-FR': 'Réformiste',
+    'hi-IN': 'सुधारवादी',
+    'it-IT': 'Riformista',
+    'pt-BR': 'Reformista',
+  },
   playstyle: {
     'de-DE': 'Spielstil',
     'en-US': 'Playstyle',
@@ -1907,6 +2135,15 @@ const translations: Translations = {
     'hi-IN': 'रिकॉर्ड',
     'it-IT': 'Record',
     'pt-BR': 'Histórico',
+  },
+  reformationIsEnabled: {
+    'de-DE': 'Reformation ist aktiviert',
+    'en-US': 'Reformation is enabled',
+    'es-MX': 'La Reforma está habilitada',
+    'fr-FR': 'La Réforme est activée',
+    'hi-IN': 'सुधार सक्षम है',
+    'it-IT': 'La Riforma è abilitata',
+    'pt-BR': 'Reforma está habilitada',
   },
   reportBug: {
     'de-DE': 'Fehler melden',
@@ -2773,6 +3010,15 @@ const translations: Translations = {
     'it-IT': 'Coup',
     'pt-BR': 'Coup',
   },
+  treasury: {
+    'de-DE': 'Staatskasse',
+    'en-US': 'Treasury',
+    'es-MX': 'Tesoro',
+    'fr-FR': 'Trésor',
+    'hi-IN': 'खजाना',
+    'it-IT': 'Tesoro',
+    'pt-BR': 'Tesouro',
+  },
   truth: {
     'de-DE': 'Wahrheit',
     'en-US': 'Truth',
@@ -2808,6 +3054,15 @@ const translations: Translations = {
     'hi-IN': 'बिना चुनौती',
     'it-IT': 'Non sfidato',
     'pt-BR': 'Sem desafio',
+  },
+  useInquisitor: {
+    'de-DE': 'Inquisitor verwenden',
+    'en-US': 'Use Inquisitor',
+    'es-MX': 'Usar Inquisidor',
+    'fr-FR': 'Utiliser l\'Inquisiteur',
+    'hi-IN': 'जाँचकर्ता का उपयोग करें',
+    'it-IT': 'Usa Inquisitore',
+    'pt-BR': 'Usar Inquisidor',
   },
   vengefulness: {
     'de-DE': 'Rachsucht',

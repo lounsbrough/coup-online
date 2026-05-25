@@ -38,6 +38,7 @@ export const getRandomGameState = (): PublicGameState => {
     settings: { eventLogRetentionTurns: 3, allowRevive: false },
     isStarted: true,
     pendingInfluenceLoss: {},
+    treasury: 0,
     turnPlayer: chance.string(),
     deckCount: chance.natural({ min: 0, max: 15 }),
     selfPlayer: {

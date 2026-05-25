@@ -45,6 +45,7 @@ export const getPublicGameState = ({ gameState, playerId }: {
       grudges: player.grudges,
       ...(player.uid && { uid: player.uid }),
       ...(player.photoURL && { photoURL: player.photoURL }),
+      ...(player.faction && { faction: player.faction }),
       ...(!player.personalityHidden && player.personality && { personality: player.personality })
     })
     if (player.id === playerId) {
@@ -67,12 +68,14 @@ export const getPublicGameState = ({ gameState, playerId }: {
     players: publicPlayers,
     roomId: gameState.roomId,
     deckCount: gameState.deck.length,
+    treasury: gameState.treasury,
     turn: gameState.turn,
     ...(selfPlayer && { selfPlayer }),
     ...(gameState.pendingAction && { pendingAction: gameState.pendingAction }),
     ...(gameState.pendingActionChallenge && { pendingActionChallenge: gameState.pendingActionChallenge }),
     ...(gameState.pendingBlock && { pendingBlock: gameState.pendingBlock }),
     ...(gameState.pendingBlockChallenge && { pendingBlockChallenge: gameState.pendingBlockChallenge }),
+    ...(gameState.pendingExamine && { pendingExamine: gameState.pendingExamine }),
     ...(gameState.turnPlayer && { turnPlayer: gameState.turnPlayer }),
     ...(gameState.resetGameRequest && { resetGameRequest: gameState.resetGameRequest }),
     ...(gameIsOver && gameState.gameTimeline?.length && { gameTimeline: gameState.gameTimeline })
@@ -93,7 +96,10 @@ export const validateGameState = (state: DehydratedGameState) => {
   ) {
     throw new PlayersMustHave2InfluencesError()
   }
-  const cardCounts = Object.fromEntries(Object.values(Influences).map((influence) => [influence, 0]))
+  const influencesInGame = state.settings?.useInquisitor
+    ? Object.values(Influences).filter((i) => i !== Influences.Ambassador)
+    : Object.values(Influences).filter((i) => i !== Influences.Inquisitor)
+  const cardCounts = Object.fromEntries(influencesInGame.map((influence) => [influence, 0]))
   state.deck.forEach((card) => cardCounts[card]++)
   state.players.forEach(({ influences, deadInfluences }) => {
     influences.forEach((card) => cardCounts[card]++)

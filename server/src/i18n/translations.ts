@@ -58,6 +58,15 @@ const translations = {
     'it-IT': 'L\'influenza rivendicata è necessaria',
     'pt-BR': 'A influência reivindicada é necessária',
   },
+  cannotTargetSameFaction: {
+    'de-DE': 'Du kannst keinen Spieler der gleichen Fraktion anvisieren',
+    'en-US': 'You cannot target a player in your own faction',
+    'es-MX': 'No puedes apuntar a un jugador de tu propia facción',
+    'fr-FR': 'Vous ne pouvez pas cibler un joueur de votre propre faction',
+    'hi-IN': 'आप अपने गुट के खिलाड़ी को लक्ष्य नहीं बना सकते',
+    'it-IT': 'Non puoi mirare a un giocatore della tua stessa fazione',
+    'pt-BR': 'Você não pode mirar em um jogador da sua própria facção',
+  },
   deckIsEmpty: {
     'de-DE': 'Das Deck ist leer',
     'en-US': 'Deck is empty',

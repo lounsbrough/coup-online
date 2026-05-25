@@ -117,7 +117,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
             alignItems='center'
             sx={{
               ...centeredOnSmallScreen,
-              fontSize: '2rem'
+              fontSize: '1.25rem'
             }}>
             <Tooltip
               title={
@@ -131,13 +131,33 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
                 display='flex'
                 alignItems='center'
                 component='span'
-                fontSize='smaller'
+                fontSize='inherit'
                 addTextShadow
               >
-                {gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} />
+                {t('deck')}: {gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} />
               </CoupTypography>
             </Tooltip>
           </Grid>
+          {gameState.settings.enableReformation && (
+            <Grid
+              container
+              size={12}
+              alignItems='center'
+              sx={{
+                ...centeredOnSmallScreen,
+                fontSize: '1.25rem'
+              }}>
+              <CoupTypography
+                display='flex'
+                alignItems='center'
+                component='span'
+                fontSize='inherit'
+                addTextShadow
+              >
+                {t('treasury')}: {gameState.treasury} 🪙
+              </CoupTypography>
+            </Grid>
+          )}
           <Grid size={12}>
             <RequestReset />
           </Grid>

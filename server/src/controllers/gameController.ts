@@ -23,6 +23,7 @@ import {
   blockResponseHandler,
   checkAutoMoveHandler,
   createGameHandler,
+  examineDecisionHandler,
   forfeitGameHandler,
   getGameStateHandler,
   joinGameHandler,
@@ -31,6 +32,7 @@ import {
   resetGameHandler,
   resetGameRequestCancelHandler,
   resetGameRequestHandler,
+  revealForExamineHandler,
   sendChatMessageHandler,
   setChatMessageDeletedHandler,
   setEmojiOnChatMessageHandler,
@@ -150,6 +152,8 @@ export const registerGameControllers = ({
           allowRevive: Joi.bool().required(),
           aiMoveDelayMs: Joi.number().integer().min(0).max(10000),
           speedRoundSeconds: Joi.number().integer().min(5).max(60),
+          enableReformation: Joi.bool(),
+          useInquisitor: Joi.bool(),
         }).required(),
         language: languageRule,
         uid: Joi.string().optional(),
@@ -512,6 +516,44 @@ export const registerGameControllers = ({
         language: languageRule,
       }),
     },
+    [PlayerActions.revealForExamine]: {
+      handler: revealForExamineHandler,
+      express: {
+        method: 'post',
+        parseParams: (req) => ({
+          roomId: req.body.roomId as string,
+          playerId: req.body.playerId as string,
+          influence: req.body.influence as string,
+          language: req.body.language as AvailableLanguageCode,
+        }),
+        validator: validateExpressBody,
+      },
+      joiSchema: Joi.object().keys({
+        roomId: Joi.string().required(),
+        playerId: Joi.string().required(),
+        influence: Joi.string().allow(...Object.values(Influences)).required(),
+        language: languageRule,
+      }),
+    },
+    [PlayerActions.examineDecision]: {
+      handler: examineDecisionHandler,
+      express: {
+        method: 'post',
+        parseParams: (req) => ({
+          roomId: req.body.roomId as string,
+          playerId: req.body.playerId as string,
+          forceSwap: req.body.forceSwap as boolean,
+          language: req.body.language as AvailableLanguageCode,
+        }),
+        validator: validateExpressBody,
+      },
+      joiSchema: Joi.object().keys({
+        roomId: Joi.string().required(),
+        playerId: Joi.string().required(),
+        forceSwap: Joi.bool().required(),
+        language: languageRule,
+      }),
+    },
   }
 
   io.on('connection', (socket) => {
@@ -608,23 +650,23 @@ export const registerGameControllers = ({
     res: Response<DehydratedPublicGameStateOrError>,
     props: { language: AvailableLanguageCode } & T,
   ) => {
-    try {
-      const { playerId, gameState } = await handler(props)
-      const publicGameState = dehydratePublicGameState(getPublicGameState({ gameState, playerId }))
-      const serverTime = new Date().toISOString()
-      res.status(200).json({ gameState: publicGameState, serverTime })
-    } catch (error) {
-      console.error(error, { event, props })
-      if (event === PlayerActions.checkAutoMove) return
+      try {
+        const { playerId, gameState } = await handler(props)
+        const publicGameState = dehydratePublicGameState(getPublicGameState({ gameState, playerId }))
+        const serverTime = new Date().toISOString()
+        res.status(200).json({ gameState: publicGameState, serverTime })
+      } catch (error) {
+        console.error(error, { event, props })
+        if (event === PlayerActions.checkAutoMove) return
 
-      if (error instanceof GameMutationInputError) {
-        const message = error.getMessage(props.language)
-        res.status(error.httpCode || 400).send({ error: message })
-      } else {
-        res.status(500).send({ error: genericErrorMessage })
+        if (error instanceof GameMutationInputError) {
+          const message = error.getMessage(props.language)
+          res.status(error.httpCode || 400).send({ error: message })
+        } else {
+          res.status(500).send({ error: genericErrorMessage })
+        }
       }
     }
-  }
 
   getObjectEntries(eventHandlers).forEach(([event, { express, handler, joiSchema }]) => {
     app[express.method](`/${event}`, express.validator(joiSchema), (req, res) => {

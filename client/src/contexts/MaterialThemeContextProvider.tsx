@@ -52,6 +52,7 @@ function MaterialThemeContextProvider({
       [Influences.Contessa]: isLightMode ? '#9B6000' : '#C38E3A',
       [Influences.Captain]: isLightMode ? '#00338A' : '#3868BA',
       [Influences.Ambassador]: isLightMode ? '#3D6600' : '#78A831',
+      [Influences.Inquisitor]: isLightMode ? '#1A5C5C' : '#3A9E9E',
       [Influences.Duke]: isLightMode ? '#73007B' : '#AA35B2',
     }
 
@@ -59,6 +60,9 @@ function MaterialThemeContextProvider({
       [Actions.Assassinate]: influenceColors[Influences.Assassin],
       [Actions.Coup]: primaryColor,
       [Actions.Exchange]: influenceColors[Influences.Ambassador],
+      [Actions.Examine]: influenceColors[Influences.Inquisitor],
+      [Actions.Convert]: primaryColor,
+      [Actions.Embezzle]: primaryColor,
       [Actions.ForeignAid]: primaryColor,
       [Actions.Income]: primaryColor,
       [Actions.Revive]: primaryColor,
