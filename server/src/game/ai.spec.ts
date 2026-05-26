@@ -65,6 +65,7 @@ describe('ai', () => {
       turn: chance.natural(),
       players: [],
       pendingInfluenceLoss: {},
+      treasury: 0,
       settings: { eventLogRetentionTurns: 3, allowRevive: true },
       roomId: chance.string(),
     }
@@ -368,6 +369,7 @@ describe('ai', () => {
           },
           settings: { eventLogRetentionTurns: 3, allowRevive: false },
           pendingInfluenceLoss: {},
+          treasury: 0,
           deckCount: 11,
         }),
       ).toEqual({
@@ -409,6 +411,7 @@ describe('ai', () => {
           },
           settings: { eventLogRetentionTurns: 3, allowRevive: true },
           pendingInfluenceLoss: {},
+          treasury: 0,
           deckCount: 11,
         }),
       ).toEqual({
@@ -459,6 +462,7 @@ describe('ai', () => {
         },
         settings: { eventLogRetentionTurns: 3, allowRevive: false },
         pendingInfluenceLoss: {},
+        treasury: 0,
         deckCount: 11,
       })
 
@@ -507,6 +511,7 @@ describe('ai', () => {
         },
         settings: { eventLogRetentionTurns: 3, allowRevive: true },
         pendingInfluenceLoss: {},
+        treasury: 0,
         deckCount: 11,
       })
 
@@ -681,6 +686,7 @@ describe('ai', () => {
           turnPlayer: 'hailey',
           settings: { eventLogRetentionTurns: 3, allowRevive: true },
           pendingInfluenceLoss: {},
+          treasury: 0,
           deckCount: 11,
         }),
       ).toEqual({ response: Responses.Challenge })
@@ -728,6 +734,7 @@ describe('ai', () => {
           turnPlayer: 'hailey',
           settings: { eventLogRetentionTurns: 3, allowRevive: true },
           pendingInfluenceLoss: {},
+          treasury: 0,
           deckCount: 11,
         })
       ).toEqual({ response: Responses.Block, claimedInfluence: Influences.Contessa })

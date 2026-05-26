@@ -50,7 +50,7 @@ describe('createDeckForPlayerCount', () => {
   )
 
   it('should include Inquisitor and exclude Ambassador when useInquisitor is set', () => {
-    const deck = createDeckForPlayerCount(4, { useInquisitor: true })
+    const deck = createDeckForPlayerCount(4, { eventLogRetentionTurns: 100, allowRevive: false, useInquisitor: true })
     expect(deck).toContain(Influences.Inquisitor)
     expect(deck).not.toContain(Influences.Ambassador)
   })

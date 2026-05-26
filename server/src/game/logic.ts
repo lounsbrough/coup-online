@@ -297,15 +297,19 @@ export const humanOpponentsRemain = (gameState: GameState, player: Player) =>
 export const resetGame = async (roomId: string): Promise<GameState> => {
   const oldGameState = await getGameState(roomId)
   const newGameState = getNewGameState(roomId, oldGameState.settings)
-  newGameState.players = oldGameState.players.map(({ faction, ...player }) => ({
-    ...player,
-    coins: 2,
-    influences: [],
-    claimedInfluences: new Set(),
-    unclaimedInfluences: new Set(),
-    deadInfluences: [],
-    grudges: {}
-  }))
+  newGameState.players = oldGameState.players.map(({ ...player }) => {
+    delete player.faction
+
+    return {
+      ...player,
+      coins: 2,
+      influences: [],
+      claimedInfluences: new Set(),
+      unclaimedInfluences: new Set(),
+      deadInfluences: [],
+      grudges: {}
+    }
+  })
   newGameState.deck = createDeckForPlayerCount(newGameState.players.length, newGameState.settings)
   newGameState.availablePlayerColors = oldGameState.availablePlayerColors
   newGameState.chatMessages = oldGameState.chatMessages

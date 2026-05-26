@@ -42,6 +42,7 @@ export type Translations = ActionMessages &
     cancel: TranslationsForString
     cardCountInDeck: TranslationsForString
     challenge: TranslationsForString
+    changeAPlayersFaction: TranslationsForString
     chat: TranslationsForString
     cheatSheet: TranslationsForString
     chooseATarget: TranslationsForString
@@ -64,6 +65,7 @@ export type Translations = ActionMessages &
     createNewGame: TranslationsForString
     dark: TranslationsForString
     deck: TranslationsForString
+    draw1InfluenceAndDiscard1: TranslationsForString
     draw2InfluencesAndDiscard2: TranslationsForString
     effect: TranslationsForString
     enableReformation: TranslationsForString
@@ -119,6 +121,7 @@ export type Translations = ActionMessages &
     [Factions.Loyalist]: TranslationsForString
     light: TranslationsForString
     loseInfluence: TranslationsForString
+    lookAtAPlayersCard: TranslationsForString
     losingAChallenge: TranslationsForString
     losingInfluence: TranslationsForString
     messageWasDeleted: TranslationsForString
@@ -159,15 +162,20 @@ export type Translations = ActionMessages &
     rulesChallenge: TranslationsForString
     rulesContents: TranslationsForString
     rulesContessa: TranslationsForString
+    rulesConvert: TranslationsForString
     rulesCoup: TranslationsForString
     rulesDuke: TranslationsForString
+    rulesEmbezzle: TranslationsForString
+    rulesExamine: TranslationsForString
     rulesExchange: TranslationsForString
     rulesForeignAid: TranslationsForString
     rulesGoal: TranslationsForString
     rulesIncome: TranslationsForString
     rulesInfluences: TranslationsForString
+    rulesInquisitor: TranslationsForString
     rulesLosingAChallenge: TranslationsForString
     rulesLosingInfluence: TranslationsForString
+    rulesReformation: TranslationsForString
     rulesRevive: TranslationsForString
     rulesSetup: TranslationsForString
     rulesSteal: TranslationsForString
@@ -208,6 +216,7 @@ export type Translations = ActionMessages &
     startingPlayerBeginsWith1Coin: TranslationsForString
     steal2CoinsFromSomeone: TranslationsForString
     system: TranslationsForString
+    takeAllTreasuryCoins: TranslationsForString
     termsOfService: TranslationsForString
     termsOfServiceContent: TranslationsForString
     title: TranslationsForString
@@ -608,6 +617,15 @@ const translations: Translations = {
     'it-IT': 'Precisione sfide',
     'pt-BR': 'Precisão de desafios',
   },
+  changeAPlayersFaction: {
+    'de-DE': 'Fraktion eines Spielers ändern',
+    'en-US': "Change a player's faction",
+    'es-MX': 'Cambiar la facción de un jugador',
+    'fr-FR': "Changer la faction d'un joueur",
+    'hi-IN': 'एक खिलाड़ी का गुट बदलें',
+    'it-IT': 'Cambia la fazione di un giocatore',
+    'pt-BR': 'Mudar a facção de um jogador',
+  },
   challengeFailed: {
     'de-DE': '— Herausforderung fehlgeschlagen',
     'en-US': '— Challenge failed',
@@ -914,6 +932,15 @@ const translations: Translations = {
     'hi-IN': 'यह नाम पहले से लिया गया है',
     'it-IT': 'Questo nome è già in uso',
     'pt-BR': 'Este nome já está em uso',
+  },
+  draw1InfluenceAndDiscard1: {
+    'de-DE': 'Ziehe 1 Einflusskarte & lege 1 ab',
+    'en-US': 'Draw 1 influence and discard 1',
+    'es-MX': 'Robar 1 influencia y descartar 1',
+    'fr-FR': 'Piocher 1 influence et en défausser 1',
+    'hi-IN': '1 प्रभाव खींचें और 1 को त्यागें',
+    'it-IT': 'Pesca 1 influenza e scarta 1',
+    'pt-BR': 'Comprar 1 influência e descartar 1',
   },
   draw2InfluencesAndDiscard2: {
     'de-DE': 'Ziehe 2 Einflusskarten & lege 2 ab',
@@ -1849,6 +1876,15 @@ const translations: Translations = {
     'it-IT': 'Perdere {{primaryInfluence}}',
     'pt-BR': 'Perder {{primaryInfluence}}',
   },
+  lookAtAPlayersCard: {
+    'de-DE': 'Karte eines Spielers ansehen',
+    'en-US': "Look at a player's card",
+    'es-MX': 'Mirar la carta de un jugador',
+    'fr-FR': "Regarder la carte d'un joueur",
+    'hi-IN': 'एक खिलाड़ी का कार्ड देखें',
+    'it-IT': 'Guarda la carta di un giocatore',
+    'pt-BR': 'Ver a carta de um jogador',
+  },
   losingAChallenge: {
     'de-DE': 'Herausforderung verlieren',
     'en-US': 'Losing a Challenge',
@@ -2385,6 +2421,22 @@ const translations: Translations = {
     'it-IT': 'Può bloccare i tentativi di assassinio.',
     'pt-BR': 'Pode bloquear tentativas de assassinato.',
   },
+  rulesConvert: {
+    'de-DE':
+      'Kostet zwei Münzen (werden in die Staatskasse gezahlt). Ändert die Fraktion eines Spielers (einschließlich der eigenen). Kann nicht herausgefordert oder blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
+    'en-US':
+      'Costs two coins (paid to the treasury). Change the faction of any player (including yourself). Cannot be Challenged or Blocked. Only available when Reformation is enabled.',
+    'es-MX':
+      'Cuesta dos monedas (pagadas al tesoro). Cambia la facción de cualquier jugador (incluido tú mismo). No puede ser desafiado ni bloqueado. Solo disponible cuando la Reforma está habilitada.',
+    'fr-FR':
+      'Coûte deux pièces (payées au trésor). Change la faction de n\'importe quel joueur (y compris vous-même). Ne peut pas être contesté ni bloqué. Disponible uniquement lorsque la Réforme est activée.',
+    'hi-IN':
+      'दो सिक्कों की लागत (खजाने में भुगतान)। किसी भी खिलाड़ी (स्वयं सहित) का गुट बदलें। चुनौती या अवरुद्ध नहीं किया जा सकता। केवल सुधार सक्षम होने पर उपलब्ध।',
+    'it-IT':
+      'Costa due monete (pagate al tesoro). Cambia la fazione di qualsiasi giocatore (incluso te stesso). Non può essere sfidato o bloccato. Disponibile solo quando la Riforma è abilitata.',
+    'pt-BR':
+      'Custa duas moedas (pagas ao tesouro). Muda a facção de qualquer jogador (incluindo você mesmo). Não pode ser desafiado ou bloqueado. Disponível apenas quando a Reforma está habilitada.',
+  },
   rulesCoup: {
     'de-DE':
       'Kostet sieben Münzen. Zwingt einen Spieler, eine Einflusskarte aufzugeben. Kann nicht herausgefordert oder blockiert werden. Wenn du deinen Zug mit zehn oder mehr Münzen beginnst, musst du einen Putsch durchführen (oder wiederbeleben, wenn aktiviert).',
@@ -2409,6 +2461,38 @@ const translations: Translations = {
     'hi-IN': 'करों की वसूली और विदेशी सहायता को अवरुद्ध कर सकता है।',
     'it-IT': "Può tassare e bloccare l'Aiuto Estero.",
     'pt-BR': 'Pode cobrar impostos e bloquear Ajuda Estrangeira.',
+  },
+  rulesEmbezzle: {
+    'de-DE':
+      'Nimm alle Münzen aus der Staatskasse. Kann herausgefordert werden (andere Spieler behaupten, dass du KEIN Herzog bist). Kann nicht blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
+    'en-US':
+      'Take all coins from the treasury. Can be Challenged (other players claim you are NOT a Duke). Cannot be Blocked. Only available when Reformation is enabled.',
+    'es-MX':
+      'Toma todas las monedas del tesoro. Puede ser desafiado (otros jugadores afirman que NO eres un Duque). No puede ser bloqueado. Solo disponible cuando la Reforma está habilitada.',
+    'fr-FR':
+      'Prenez toutes les pièces du trésor. Peut être contesté (les autres joueurs prétendent que vous N\'êtes PAS un Duc). Ne peut pas être bloqué. Disponible uniquement lorsque la Réforme est activée.',
+    'hi-IN':
+      'खजाने से सभी सिक्के लें। इसे चुनौती दी जा सकती है (अन्य खिलाड़ी दावा करते हैं कि आप ड्यूक नहीं हैं)। अवरुद्ध नहीं किया जा सकता। केवल सुधार सक्षम होने पर उपलब्ध।',
+    'it-IT':
+      'Prendi tutte le monete dal tesoro. Può essere sfidato (gli altri giocatori affermano che NON sei un Duca). Non può essere bloccato. Disponibile solo quando la Riforma è abilitata.',
+    'pt-BR':
+      'Pegue todas as moedas do tesouro. Pode ser desafiado (outros jogadores afirmam que você NÃO é um Duque). Não pode ser bloqueado. Disponível apenas quando a Reforma está habilitada.',
+  },
+  rulesExamine: {
+    'de-DE':
+      'Schau dir eine Einflusskarte eines anderen Spielers an. Dann entscheide, ob du ihn zwingst die Karte zu tauschen oder sie zu behalten. Kann herausgefordert werden. Kann nicht blockiert werden. Nur verfügbar, wenn Inquisitor aktiviert ist.',
+    'en-US':
+      'Look at one Influence card of another player. Then decide whether to force them to swap it or let them keep it. Can be Challenged. Cannot be Blocked. Only available when Inquisitor is enabled.',
+    'es-MX':
+      'Mira una carta de influencia de otro jugador. Luego decide si forzarlo a cambiarla o dejarlo conservarla. Puede ser desafiado. No puede ser bloqueado. Solo disponible cuando el Inquisidor está habilitado.',
+    'fr-FR':
+      "Regardez une carte d'influence d'un autre joueur. Puis décidez si vous le forcez à l'échanger ou si vous le laissez la garder. Peut être contesté. Ne peut pas être bloqué. Disponible uniquement lorsque l'Inquisiteur est activé.",
+    'hi-IN':
+      'किसी अन्य खिलाड़ी का एक प्रभाव कार्ड देखें। फिर तय करें कि उसे बदलने के लिए मजबूर करना है या रखने देना है। चुनौती दी जा सकती है। अवरुद्ध नहीं किया जा सकता। केवल इन्क्विज़िटर सक्षम होने पर उपलब्ध।',
+    'it-IT':
+      "Guarda una carta di influenza di un altro giocatore. Poi decidi se costringerlo a scambiarla o lasciargliela tenere. Può essere sfidato. Non può essere bloccato. Disponibile solo quando l'Inquisitore è abilitato.",
+    'pt-BR':
+      'Olhe uma carta de influência de outro jogador. Depois decida se força a troca ou permite que ele a mantenha. Pode ser desafiado. Não pode ser bloqueado. Disponível apenas quando o Inquisidor está habilitado.',
   },
   rulesExchange: {
     'de-DE':
@@ -2473,6 +2557,22 @@ const translations: Translations = {
     'it-IT': 'Ci sono cinque personaggi diversi nel mazzo di influenza.',
     'pt-BR': 'Existem cinco personagens diferentes no baralho de influência.',
   },
+  rulesInquisitor: {
+    'de-DE':
+      'Kann die Einflusskarte eines anderen Spielers untersuchen und einen Tausch erzwingen. Kann eine Einflusskarte austauschen (ziehe eine, behalte eine). Kann Diebstahlversuche blockieren. Ersetzt den Botschafter, wenn aktiviert.',
+    'en-US':
+      'Can Examine another player\'s Influence card and force a swap. Can Exchange one Influence card (draw one, keep one). Can Block stealing attempts. Replaces the Ambassador when enabled.',
+    'es-MX':
+      'Puede examinar la carta de influencia de otro jugador y forzar un intercambio. Puede intercambiar una carta de influencia (roba una, quédate con una). Puede bloquear intentos de robo. Reemplaza al Embajador cuando está habilitado.',
+    'fr-FR':
+      "Peut examiner la carte d'influence d'un autre joueur et forcer un échange. Peut échanger une carte d'influence (piocher une, garder une). Peut bloquer les tentatives de vol. Remplace l'Ambassadeur lorsqu'il est activé.",
+    'hi-IN':
+      'किसी अन्य खिलाड़ी के प्रभाव कार्ड की जांच कर सकता है और बदलने के लिए मजबूर कर सकता है। एक प्रभाव कार्ड का आदान-प्रदान कर सकता है (एक खींचें, एक रखें)। चोरी के प्रयासों को रोक सकता है। सक्षम होने पर राजदूत का स्थान लेता है।',
+    'it-IT':
+      "Può esaminare la carta di influenza di un altro giocatore e forzare uno scambio. Può scambiare una carta di influenza (pesca una, tieni una). Può bloccare i tentativi di furto. Sostituisce l'Ambasciatore quando abilitato.",
+    'pt-BR':
+      'Pode examinar a carta de influência de outro jogador e forçar uma troca. Pode trocar uma carta de influência (comprar uma, manter uma). Pode bloquear tentativas de roubo. Substitui o Embaixador quando habilitado.',
+  },
   rulesLosingAChallenge: {
     'de-DE':
       'Jeder Spieler, der eine Herausforderung verliert, muss eine ihrer Einflusskarten aufdecken, damit alle sie sehen können. Wenn das ihre letzte Einflusskarte ist, scheiden sie aus dem Spiel aus.',
@@ -2504,6 +2604,22 @@ const translations: Translations = {
       'Ogni volta che un giocatore perde una carta di influenza, sceglie quale delle sue carte rivelare.',
     'pt-BR':
       'Sempre que um jogador perder uma carta de influência, ele escolhe qual de suas cartas revelar.',
+  },
+  rulesReformation: {
+    'de-DE':
+      'Die Reformations-Erweiterung fügt Fraktionen (Loyalisten und Reformisten), eine Staatskasse und neue Aktionen hinzu. Spieler können nur Spieler der gegnerischen Fraktion angreifen, es sei denn alle Spieler gehören derselben Fraktion an. Konvertieren ändert Fraktionen, Unterschlagen nimmt Münzen aus der Staatskasse und Untersuchen enthüllt Karten von Gegnern.',
+    'en-US':
+      'The Reformation expansion adds factions (Loyalists and Reformists), a treasury, and new actions. Players can only target players of the opposing faction unless all players share the same faction. Convert changes factions, Embezzle takes coins from the treasury, and Examine reveals opponents\' cards.',
+    'es-MX':
+      'La expansión Reforma agrega facciones (Leales y Reformistas), un tesoro y nuevas acciones. Los jugadores solo pueden atacar a jugadores de la facción opuesta a menos que todos compartan la misma facción. Convertir cambia facciones, Malversar toma monedas del tesoro y Examinar revela las cartas de los oponentes.',
+    'fr-FR':
+      "L'extension Réforme ajoute des factions (Loyalistes et Réformistes), un trésor et de nouvelles actions. Les joueurs ne peuvent cibler que les joueurs de la faction adverse, sauf si tous les joueurs partagent la même faction. Convertir change les factions, Détourner prend des pièces du trésor et Examiner révèle les cartes des adversaires.",
+    'hi-IN':
+      'सुधार विस्तार में गुट (वफादार और सुधारवादी), एक खजाना और नई क्रियाएं जोड़ी गई हैं। खिलाड़ी केवल विरोधी गुट के खिलाड़ियों को लक्षित कर सकते हैं जब तक कि सभी खिलाड़ी एक ही गुट में न हों। धर्मांतरण गुट बदलता है, गबन खजाने से सिक्के लेता है, और जांच विरोधियों के कार्ड प्रकट करता है।',
+    'it-IT':
+      "L'espansione Riforma aggiunge fazioni (Lealisti e Riformisti), un tesoro e nuove azioni. I giocatori possono prendere di mira solo i giocatori della fazione avversaria a meno che tutti i giocatori condividano la stessa fazione. Convertire cambia fazioni, Appropriarsi prende monete dal tesoro ed Esaminare rivela le carte degli avversari.",
+    'pt-BR':
+      'A expansão Reforma adiciona facções (Lealistas e Reformistas), um tesouro e novas ações. Os jogadores só podem atacar jogadores da facção oposta, a menos que todos compartilhem a mesma facção. Converter muda facções, Desviar pega moedas do tesouro e Examinar revela as cartas dos oponentes.',
   },
   rulesRevive: {
     'de-DE':
@@ -2992,6 +3108,15 @@ const translations: Translations = {
     'hi-IN': 'सिस्टम',
     'it-IT': 'Sistema',
     'pt-BR': 'Sistema',
+  },
+  takeAllTreasuryCoins: {
+    'de-DE': 'Alle Münzen aus der Staatskasse nehmen',
+    'en-US': 'Take all coins from the treasury',
+    'es-MX': 'Tomar todas las monedas del tesoro',
+    'fr-FR': 'Prendre toutes les pièces du trésor',
+    'hi-IN': 'खजाने से सभी सिक्के लें',
+    'it-IT': 'Prendi tutte le monete dal tesoro',
+    'pt-BR': 'Pegar todas as moedas do tesouro',
   },
   termsOfService: {
     'de-DE': 'Nutzungsbedingungen',

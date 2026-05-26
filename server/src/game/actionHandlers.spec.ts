@@ -1,6 +1,6 @@
 import { vi, type MockInstance, describe, it, expect, afterEach } from 'vitest'
 import Chance from 'chance'
-import { Actions, Influences, Responses } from '../../../shared/types/game'
+import { Actions, Factions, Influences, Responses } from '../../../shared/types/game'
 import {
   actionChallengeResponseHandler,
   actionHandler,
@@ -8,12 +8,14 @@ import {
   blockChallengeResponseHandler,
   blockResponseHandler,
   createGameHandler,
+  examineDecisionHandler,
   joinGameHandler,
   loseInfluencesHandler,
   removeFromGameHandler,
   resetGameHandler,
   resetGameRequestCancelHandler,
   resetGameRequestHandler,
+  revealForExamineHandler,
   startGameHandler,
 } from './actionHandlers'
 import { getValue, setValue } from '../utilities/storage'
@@ -22,6 +24,7 @@ import * as identifiers from '../utilities/identifiers'
 import {
   ActionNotChallengeableError,
   ActionNotCurrentlyAllowedError,
+  CannotTargetSameFactionError,
   ClaimedInfluenceAlreadyConfirmedError,
   ClaimedInfluenceInvalidError,
   ClaimedInfluenceRequiredError,
@@ -87,10 +90,11 @@ describe('actionHandlers', () => {
         influences?: Influences[];
         deadInfluences?: Influences[];
       }[],
+      settings?: Record<string, unknown>,
     ) => {
       const { roomId } = await createGameHandler({
         ...players[0],
-        settings: { eventLogRetentionTurns: 100, allowRevive: true },
+        settings: { eventLogRetentionTurns: 100, allowRevive: true, ...settings },
       })
 
       for (const player of players) {
@@ -1267,6 +1271,404 @@ describe('actionHandlers', () => {
       gameState = await getGameState(roomId)
 
       expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('convert other player -> faction changes and coins go to treasury', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 4, influences: [Influences.Duke, Influences.Captain] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+        { ...hailey, influences: [Influences.Assassin, Influences.Duke] },
+      ])
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        state.settings.enableReformation = true
+        state.treasury = 0
+        state.players[0].faction = Factions.Loyalist
+        state.players[1].faction = Factions.Reformist
+        state.players[2].faction = Factions.Loyalist
+      })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Convert,
+        targetPlayer: harper.playerName,
+      })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.players[0].coins).toBe(2)
+      expect(gameState.treasury).toBe(2)
+      expect(gameState.players[1].faction).toBe(Factions.Loyalist)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('convert self -> faction changes and 1 coin goes to treasury', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 3, influences: [Influences.Duke, Influences.Captain] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+      ])
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        state.settings.enableReformation = true
+        state.treasury = 0
+        state.players[0].faction = Factions.Loyalist
+        state.players[1].faction = Factions.Reformist
+      })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Convert,
+      })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.players[0].coins).toBe(2)
+      expect(gameState.treasury).toBe(1)
+      expect(gameState.players[0].faction).toBe(Factions.Reformist)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('convert not allowed when reformation disabled', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 4, influences: [Influences.Duke, Influences.Captain] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+      ])
+
+      await expect(
+        actionHandler({
+          roomId,
+          playerId: david.playerId,
+          action: Actions.Convert,
+          targetPlayer: harper.playerName,
+        }),
+      ).rejects.toThrow(ActionNotCurrentlyAllowedError)
+    })
+
+    it('convert not allowed when all same faction', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 4, influences: [Influences.Duke, Influences.Captain] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+      ])
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        state.settings.enableReformation = true
+        state.treasury = 0
+        state.players[0].faction = Factions.Loyalist
+        state.players[1].faction = Factions.Loyalist
+      })
+
+      await expect(
+        actionHandler({
+          roomId,
+          playerId: david.playerId,
+          action: Actions.Convert,
+          targetPlayer: harper.playerName,
+        }),
+      ).rejects.toThrow(ActionNotCurrentlyAllowedError)
+    })
+
+    it('embezzle -> pass -> takes all treasury coins', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 2, influences: [Influences.Duke, Influences.Captain] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+        { ...hailey, influences: [Influences.Assassin, Influences.Duke] },
+      ])
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        state.settings.enableReformation = true
+        state.treasury = 5
+        state.players[0].faction = Factions.Loyalist
+        state.players[1].faction = Factions.Reformist
+        state.players[2].faction = Factions.Loyalist
+      })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Embezzle,
+      })
+
+      await actionResponseHandler({
+        roomId,
+        playerId: harper.playerId,
+        response: Responses.Pass,
+      })
+      await actionResponseHandler({
+        roomId,
+        playerId: hailey.playerId,
+        response: Responses.Pass,
+      })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.players[0].coins).toBe(7)
+      expect(gameState.treasury).toBe(0)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('embezzle -> inverse challenge succeeds (player has Duke) -> loses influence', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 2, influences: [Influences.Duke, Influences.Captain] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+      ])
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        state.settings.enableReformation = true
+        state.treasury = 5
+        state.players[0].faction = Factions.Loyalist
+        state.players[1].faction = Factions.Reformist
+      })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Embezzle,
+      })
+
+      await actionResponseHandler({
+        roomId,
+        playerId: harper.playerId,
+        response: Responses.Challenge,
+      })
+
+      let gameState = await getGameState(roomId)
+
+      // Inverse challenge: David HAS a Duke, so challenge succeeds
+      expect(gameState.pendingInfluenceLoss[david.playerName]).toHaveLength(1)
+      expect(gameState.treasury).toBe(5)
+
+      await loseInfluencesHandler({
+        roomId,
+        playerId: david.playerId,
+        influences: [Influences.Captain],
+      })
+
+      gameState = await getGameState(roomId)
+
+      expect(gameState.players[0].coins).toBe(2)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('embezzle -> inverse challenge fails (player has no Duke) -> embezzle succeeds', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 2, influences: [Influences.Captain, Influences.Assassin] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+      ])
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        state.settings.enableReformation = true
+        state.treasury = 5
+        state.players[0].faction = Factions.Loyalist
+        state.players[1].faction = Factions.Reformist
+      })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Embezzle,
+      })
+
+      await actionResponseHandler({
+        roomId,
+        playerId: harper.playerId,
+        response: Responses.Challenge,
+      })
+
+      let gameState = await getGameState(roomId)
+
+      // Inverse challenge: David does NOT have a Duke, so challenge fails
+      expect(gameState.pendingInfluenceLoss[harper.playerName]).toHaveLength(1)
+
+      await loseInfluencesHandler({
+        roomId,
+        playerId: harper.playerId,
+        influences: [Influences.Ambassador],
+      })
+
+      gameState = await getGameState(roomId)
+
+      expect(gameState.players[0].coins).toBe(7)
+      expect(gameState.treasury).toBe(0)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('examine -> pass -> reveal -> force swap', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Duke] },
+        { ...harper, influences: [Influences.Inquisitor, Influences.Contessa] },
+      ], { useInquisitor: true })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Examine,
+        targetPlayer: harper.playerName,
+      })
+
+      await actionResponseHandler({
+        roomId,
+        playerId: harper.playerId,
+        response: Responses.Pass,
+      })
+
+      let gameState = await getGameState(roomId)
+
+      expect(gameState.pendingExamine).toBeDefined()
+      expect(gameState.pendingExamine!.examiner).toBe(david.playerName)
+      expect(gameState.pendingExamine!.targetPlayer).toBe(harper.playerName)
+
+      await revealForExamineHandler({
+        roomId,
+        playerId: harper.playerId,
+        influence: Influences.Inquisitor,
+      })
+
+      gameState = await getGameState(roomId)
+
+      expect(gameState.pendingExamine!.revealedInfluence).toBe(Influences.Inquisitor)
+
+      await examineDecisionHandler({
+        roomId,
+        playerId: david.playerId,
+        forceSwap: true,
+      })
+
+      gameState = await getGameState(roomId)
+
+      expect(gameState.pendingExamine).toBeUndefined()
+      expect(gameState.players[1].influences).toHaveLength(2)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('examine -> pass -> reveal -> allow keep', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Duke] },
+        { ...harper, influences: [Influences.Inquisitor, Influences.Contessa] },
+      ], { useInquisitor: true })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Examine,
+        targetPlayer: harper.playerName,
+      })
+
+      await actionResponseHandler({
+        roomId,
+        playerId: harper.playerId,
+        response: Responses.Pass,
+      })
+
+      await revealForExamineHandler({
+        roomId,
+        playerId: harper.playerId,
+        influence: Influences.Contessa,
+      })
+
+      await examineDecisionHandler({
+        roomId,
+        playerId: david.playerId,
+        forceSwap: false,
+      })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.pendingExamine).toBeUndefined()
+      expect(gameState.players[1].influences).toContain(Influences.Contessa)
+      expect(gameState.players[1].influences).toHaveLength(2)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('examine not allowed when inquisitor disabled', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Captain, Influences.Duke] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+      ])
+
+      await expect(
+        actionHandler({
+          roomId,
+          playerId: david.playerId,
+          action: Actions.Examine,
+          targetPlayer: harper.playerName,
+        }),
+      ).rejects.toThrow(ActionNotCurrentlyAllowedError)
+    })
+
+    it('faction targeting -> cannot target same faction', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 7, influences: [Influences.Duke, Influences.Assassin] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+        { ...hailey, influences: [Influences.Captain, Influences.Duke] },
+      ])
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        state.settings.enableReformation = true
+        state.treasury = 0
+        state.players[0].faction = Factions.Loyalist
+        state.players[1].faction = Factions.Loyalist
+        state.players[2].faction = Factions.Reformist
+      })
+
+      await expect(
+        actionHandler({
+          roomId,
+          playerId: david.playerId,
+          action: Actions.Coup,
+          targetPlayer: harper.playerName,
+        }),
+      ).rejects.toThrow(CannotTargetSameFactionError)
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Coup,
+        targetPlayer: hailey.playerName,
+      })
+
+      await loseInfluencesHandler({
+        roomId,
+        playerId: hailey.playerId,
+        influences: [Influences.Captain],
+      })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.players[0].coins).toBe(0)
+      expect(gameState.turnPlayer).toBe(harper.playerName)
+    })
+
+    it('faction targeting -> can target same faction when all same', async () => {
+      const roomId = await setupTestGame([
+        { ...david, coins: 7, influences: [Influences.Duke, Influences.Assassin] },
+        { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
+      ])
+
+      await mutateGameState(await getGameState(roomId), (state) => {
+        state.settings.enableReformation = true
+        state.treasury = 0
+        state.players[0].faction = Factions.Loyalist
+        state.players[1].faction = Factions.Loyalist
+      })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Coup,
+        targetPlayer: harper.playerName,
+      })
+
+      await loseInfluencesHandler({
+        roomId,
+        playerId: harper.playerId,
+        influences: [Influences.Ambassador],
+      })
+
+      const gameState = await getGameState(roomId)
+
+      expect(gameState.players[0].coins).toBe(0)
     })
   })
 })

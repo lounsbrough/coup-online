@@ -33,8 +33,7 @@ vi.mock('iovalkey', () => {
   }
 
   return {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    default: vi.fn(function (this: any) {
+    default: vi.fn(function () {
       return mockClient
     }),
   }
