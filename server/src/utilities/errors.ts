@@ -372,6 +372,18 @@ export class TargetPlayerIsSelfError extends GameMutationInputError {
   }
 }
 
+export class CannotTargetSameFactionError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'cannotTargetSameFaction',
+      language
+    })
+  }
+}
+
 export class SpeedRoundTimerExpiredError extends GameMutationInputError {
   getMessage: (language: AvailableLanguageCode) => string
 

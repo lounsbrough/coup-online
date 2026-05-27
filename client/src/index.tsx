@@ -10,6 +10,7 @@ import TranslationContextProvider from './contexts/TranslationContextProvider'
 import UserSettingsContextProvider from './contexts/UserSettingsContextProvider'
 import NotificationsContextProvider from './contexts/NotificationsContextProvider'
 import AuthContextProvider from './contexts/AuthContextProvider'
+import GameSettingsContextProvider from './contexts/GameSettingsContextProvider'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,17 +18,19 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <MaterialThemeContextProvider>
-        <AuthContextProvider>
-          <TranslationContextProvider>
-            <NotificationsContextProvider>
-              <UserSettingsContextProvider>
-                <App />
-              </UserSettingsContextProvider>
-            </NotificationsContextProvider>
-          </TranslationContextProvider>
-        </AuthContextProvider>
-      </MaterialThemeContextProvider>
+      <GameSettingsContextProvider>
+        <MaterialThemeContextProvider>
+          <AuthContextProvider>
+            <TranslationContextProvider>
+              <NotificationsContextProvider>
+                <UserSettingsContextProvider>
+                  <App />
+                </UserSettingsContextProvider>
+              </NotificationsContextProvider>
+            </TranslationContextProvider>
+          </AuthContextProvider>
+        </MaterialThemeContextProvider>
+      </GameSettingsContextProvider>
     </BrowserRouter>
     <SpeedInsights sampleRate={0.2} />
   </React.StrictMode>

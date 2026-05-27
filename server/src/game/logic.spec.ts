@@ -48,6 +48,7 @@ const getRandomGameState = ({
     players,
     pendingInfluenceLoss: {},
     roomId: chance.string(),
+    treasury: 0,
     turn: chance.natural(),
     turnPlayer: chance.pickone(players).name,
     settings: { eventLogRetentionTurns: 100, allowRevive: true },

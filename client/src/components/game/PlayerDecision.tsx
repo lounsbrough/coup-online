@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '@shared'
+import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, canPlayerMakeExamineDecision, canPlayerRevealForExamine } from '@shared'
 import ChooseAction from "./ChooseAction"
 import ChooseActionResponse from "./ChooseActionResponse"
 import ChooseChallengeResponse from "./ChooseChallengeResponse"
@@ -9,6 +9,8 @@ import { useGameStateContext } from "../../contexts/GameStateContext"
 import ChooseInfluencesToKeep from "./ChooseInfluencesToKeep"
 import WaitingOnOtherPlayers from "./WaitingOnOtherPlayers"
 import SpeedRoundTimer from './SpeedRoundTimer'
+import ChooseExamineReveal from './ChooseExamineReveal'
+import ChooseExamineDecision from './ChooseExamineDecision'
 
 function PlayerDecision() {
   const { gameState } = useGameStateContext()
@@ -32,6 +34,10 @@ function PlayerDecision() {
     decision = <ChooseBlockResponse />
   } else if (canPlayerChooseBlockChallengeResponse(gameState)) {
     decision = <ChooseChallengeResponse />
+  } else if (canPlayerRevealForExamine(gameState)) {
+    decision = <ChooseExamineReveal />
+  } else if (canPlayerMakeExamineDecision(gameState)) {
+    decision = <ChooseExamineDecision />
   }
 
   if (decision) {

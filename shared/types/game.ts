@@ -3,7 +3,13 @@ export enum Influences {
   Contessa = 'Contessa',
   Captain = 'Captain',
   Ambassador = 'Ambassador',
+  Inquisitor = 'Inquisitor',
   Duke = 'Duke',
+}
+
+export enum Factions {
+  Loyalist = 'Loyalist',
+  Reformist = 'Reformist',
 }
 
 export enum Actions {
@@ -14,6 +20,9 @@ export enum Actions {
   ForeignAid = 'Foreign Aid',
   Income = 'Income',
   Exchange = 'Exchange',
+  Examine = 'Examine',
+  Convert = 'Convert',
+  Embezzle = 'Embezzle',
   Revive = 'Revive',
 }
 
@@ -35,6 +44,8 @@ export enum PlayerActions {
   blockResponse = 'blockResponse',
   blockChallengeResponse = 'blockChallengeResponse',
   loseInfluences = 'loseInfluences',
+  revealForExamine = 'revealForExamine',
+  examineDecision = 'examineDecision',
   sendChatMessage = 'sendChatMessage',
   setChatMessageDeleted = 'setChatMessageDeleted',
   setEmojiOnChatMessage = 'setEmojiOnChatMessage',
@@ -63,6 +74,10 @@ export const InfluenceAttributes: {
   },
   [Influences.Ambassador]: {
     legalAction: Actions.Exchange,
+    legalBlock: Actions.Steal,
+  },
+  [Influences.Inquisitor]: {
+    legalAction: Actions.Examine,
     legalBlock: Actions.Steal,
   },
   [Influences.Duke]: {
@@ -119,6 +134,23 @@ export const ActionAttributes: {
     blockable: false,
     challengeable: true,
     influenceRequired: Influences.Ambassador,
+    requiresTarget: false,
+  },
+  [Actions.Examine]: {
+    blockable: false,
+    challengeable: true,
+    influenceRequired: Influences.Inquisitor,
+    requiresTarget: true,
+  },
+  [Actions.Convert]: {
+    blockable: false,
+    challengeable: false,
+    coinsRequired: 1,
+    requiresTarget: false,
+  },
+  [Actions.Embezzle]: {
+    blockable: false,
+    challengeable: true,
     requiresTarget: false,
   },
   [Actions.Revive]: {
@@ -203,6 +235,7 @@ export type Player = {
   };
   uid?: string;
   photoURL?: string;
+  faction?: Factions;
 };
 
 export type DehydratedPlayer = Omit<
@@ -233,6 +266,8 @@ export type GameSettings = {
   allowRevive: boolean;
   aiMoveDelayMs?: number;
   speedRoundSeconds?: number;
+  enableReformation?: boolean;
+  useInquisitor?: boolean;
 };
 
 export type ChatMessage = {
@@ -277,6 +312,12 @@ type DehydratedPendingBlock = Omit<PendingBlock, 'pendingPlayers'> & {
   pendingPlayers: string[];
 };
 
+export type PendingExamine = {
+  examiner: string;
+  targetPlayer: string;
+  revealedInfluence?: Influences;
+};
+
 export type GameState = {
   deck: Influences[];
   eventLogs: EventMessage[];
@@ -299,6 +340,8 @@ export type GameState = {
       putBackInDeck: boolean;
     }[];
   };
+  pendingExamine?: PendingExamine;
+  treasury: number;
   roomId: string;
   turnPlayer?: string;
   turn: number;
@@ -335,6 +378,7 @@ export type PublicGameState = Pick<
   | 'roomId'
   | 'turn'
   | 'settings'
+  | 'treasury'
 > &
   Partial<
     Pick<
@@ -343,6 +387,7 @@ export type PublicGameState = Pick<
       | 'pendingActionChallenge'
       | 'pendingBlock'
       | 'pendingBlockChallenge'
+      | 'pendingExamine'
       | 'resetGameRequest'
       | 'turnPlayer'
     >

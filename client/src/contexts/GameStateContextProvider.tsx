@@ -7,6 +7,7 @@ import { useWebSocketContext } from './WebSocketContext'
 import { getBaseUrl } from '../helpers/api'
 import { useTranslationContext } from './TranslationsContext'
 import { GameStateContext } from './GameStateContext'
+import { useGameSettingsContext } from './GameSettingsContext'
 
 function GameStateContextProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [hasInitialStateLoaded, setHasInitialStateLoaded] = useState(false)
@@ -15,6 +16,7 @@ function GameStateContextProvider({ children }: Readonly<{ children: ReactNode }
   const [searchParams] = useSearchParams()
   const { socket, isConnected } = useWebSocketContext()
   const { language } = useTranslationContext()
+  const { setUseInquisitor } = useGameSettingsContext()
 
   const roomId = searchParams.get('roomId')
 
@@ -22,6 +24,10 @@ function GameStateContextProvider({ children }: Readonly<{ children: ReactNode }
     dehydratedGameState ? rehydratePublicGameState(dehydratedGameState) : undefined,
     [dehydratedGameState]
   )
+
+  useEffect(() => {
+    setUseInquisitor(gameState?.settings.useInquisitor ?? false)
+  }, [gameState?.settings.useInquisitor, setUseInquisitor])
 
   const updateServerTimeOffset = useCallback((serverTime?: string) => {
     if (serverTime) {

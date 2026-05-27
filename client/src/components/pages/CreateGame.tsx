@@ -20,9 +20,11 @@ import { useTranslationContext } from '../../contexts/TranslationsContext'
 import { useAuthContext } from '../../contexts/AuthContext'
 import {
   allowReviveStorageKey,
+  enableReformationStorageKey,
   eventLogRetentionTurnsStorageKey,
   speedRoundEnabledStorageKey,
   speedRoundSecondsStorageKey,
+  useInquisitorStorageKey,
 } from '../../helpers/localStorageKeys'
 import CoupTypography from '../utilities/CoupTypography'
 import LoadingTextField from '../utilities/LoadingTextField'
@@ -36,6 +38,8 @@ function CreateGame() {
   const [allowRevive, setAllowRevive] = usePersistedState<boolean>(allowReviveStorageKey, false)
   const [speedRoundEnabled, setSpeedRoundEnabled] = usePersistedState<boolean>(speedRoundEnabledStorageKey, false)
   const [speedRoundSeconds, setSpeedRoundSeconds] = usePersistedState<number>(speedRoundSecondsStorageKey, 10)
+  const [enableReformation, setEnableReformation] = usePersistedState<boolean>(enableReformationStorageKey, false)
+  const [useInquisitor, setUseInquisitor] = usePersistedState<boolean>(useInquisitorStorageKey, false)
   const navigate = useNavigate()
   const { t } = useTranslationContext()
   const { user } = useAuthContext()
@@ -71,6 +75,8 @@ function CreateGame() {
               eventLogRetentionTurns,
               allowRevive,
               ...(speedRoundEnabled && { speedRoundSeconds }),
+              ...(enableReformation && { enableReformation }),
+              ...(useInquisitor && { useInquisitor }),
             },
             ...(user && { uid: user.uid }),
             ...(user?.photoURL && { photoURL: user.photoURL }),
@@ -168,6 +174,34 @@ function CreateGame() {
               </Box>
             </Grid>
           )}
+          <Grid sx={{ maxWidth: '300px', width: '90%' }}>
+            <Box mt={2}>
+              <CoupTypography component="span" mt={2} addTextShadow>
+                {t('enableReformation')}:
+              </CoupTypography>
+              <Switch
+                checked={enableReformation}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setEnableReformation(event.target.checked)
+                }}
+                slotProps={{ input: { 'aria-label': 'controlled' } }}
+              />
+            </Box>
+          </Grid>
+          <Grid sx={{ maxWidth: '300px', width: '90%' }}>
+            <Box mt={2}>
+              <CoupTypography component="span" mt={2} addTextShadow>
+                {t('useInquisitor')}:
+              </CoupTypography>
+              <Switch
+                checked={useInquisitor}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setUseInquisitor(event.target.checked)
+                }}
+                slotProps={{ input: { 'aria-label': 'controlled' } }}
+              />
+            </Box>
+          </Grid>
         </Grid>
         <Grid>
           <Button

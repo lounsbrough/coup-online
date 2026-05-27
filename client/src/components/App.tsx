@@ -30,11 +30,13 @@ import AppBreadcrumbs from './AppBreadcrumbs'
 import AdSenseManager from './monetization/AdSenseManager'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
+import Tutorial from './pages/Tutorial'
 
 function App() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false)
   const [latestReadMessageId, setLatestReadMessageId] = useState<string | null>(null)
+  const [rulesWiggle, setRulesWiggle] = useState(false)
   const { t } = useTranslationContext()
   const theme = useTheme()
   const { showBackgroundImage } = useUserSettingsContext()
@@ -61,7 +63,7 @@ function App() {
       <AdSenseManager />
       <WebSocketContextProvider>
         <GameStateContextProvider>
-          <RulesBubble rulesOpen={leftDrawerOpen} setRulesOpen={setLeftDrawerOpen} />
+          <RulesBubble rulesOpen={leftDrawerOpen} setRulesOpen={setLeftDrawerOpen} wiggle={rulesWiggle} setWiggle={setRulesWiggle} />
           <ChatBubble chatOpen={rightDrawerOpen} setChatOpen={setRightDrawerOpen} latestReadMessageId={latestReadMessageId} setLatestReadMessageId={setLatestReadMessageId} />
           <DualSideDrawer
             openLeft={leftDrawerOpen}
@@ -126,7 +128,7 @@ function App() {
             <AppBreadcrumbs />
             <Routes>
               <Route path="/">
-                <Route index element={<Home setRulesOpen={setLeftDrawerOpen} />} />
+                <Route index element={<Home />} />
                 <Route path="game" element={
                   <Game leftDrawerOpen={leftDrawerOpen} rightDrawerOpen={rightDrawerOpen} />
                 } />
@@ -136,6 +138,7 @@ function App() {
                 <Route path="leaderboard" element={<Leaderboard />} />
                 <Route path="privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="terms-of-service" element={<TermsOfService />} />
+                <Route path="tutorial" element={<Tutorial setRulesWiggle={setRulesWiggle} />} />
                 <Route path="*" element={<Typography variant='h3' sx={{ mt: 10 }}>{t('pageNotFound')} 😱 - <Link component={RouterLink} to={'/'}>{t('home')}</Link></Typography>} />
               </Route>
             </Routes>

@@ -77,6 +77,7 @@ const getRandomGameState = ({
     players: [],
     pendingInfluenceLoss: {},
     roomId: chance.string(),
+    treasury: 0,
     turn: chance.natural(),
     settings: { eventLogRetentionTurns: 100, allowRevive: true },
   }
@@ -123,6 +124,7 @@ describe('gameState', () => {
         lastEventTimestamp: gameState.lastEventTimestamp,
         isStarted: gameState.isStarted,
         turn: gameState.turn,
+        treasury: gameState.treasury,
         pendingInfluenceLoss: gameState.pendingInfluenceLoss,
         roomId: gameState.roomId,
         deckCount:
@@ -299,7 +301,7 @@ describe('gameState', () => {
 
   describe('validateGameState', () => {
     it.each([
-      { mutation: () => {} },
+      { mutation: () => { } },
       {
         mutation: (state: GameState) => {
           state.players[0].influences.push(

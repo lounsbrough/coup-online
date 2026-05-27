@@ -61,11 +61,13 @@ export const dehydrateGameState = (hydrated: GameState): DehydratedGameState => 
   settings: hydrated.settings,
   availablePlayerColors: hydrated.availablePlayerColors,
   gameTimeline: hydrated.gameTimeline,
+  treasury: hydrated.treasury,
   players: hydrated.players.map((player) => ({
     ...player,
     claimedInfluences: [...player.claimedInfluences],
     unclaimedInfluences: [...player.unclaimedInfluences]
   })),
+  ...(hydrated.pendingExamine && { pendingExamine: hydrated.pendingExamine }),
   ...(hydrated.gameId && { gameId: hydrated.gameId }),
   ...(hydrated.gameActionStats && { gameActionStats: hydrated.gameActionStats }),
 })
@@ -74,6 +76,7 @@ export const dehydratePublicGameState = (hydrated: PublicGameState): DehydratedP
   ...dehydrateCommonGameState(hydrated),
   deckCount: hydrated.deckCount,
   settings: hydrated.settings,
+  treasury: hydrated.treasury,
   players: hydrated.players.map((player) => ({
     ...player,
     claimedInfluences: [...player.claimedInfluences],
@@ -86,6 +89,7 @@ export const dehydratePublicGameState = (hydrated: PublicGameState): DehydratedP
       unclaimedInfluences: [...hydrated.selfPlayer.unclaimedInfluences]
     }
   }),
+  ...(hydrated.pendingExamine && { pendingExamine: hydrated.pendingExamine }),
   ...(hydrated.gameTimeline && { gameTimeline: hydrated.gameTimeline }),
 })
 
@@ -140,11 +144,13 @@ export const rehydrateGameState = (dehydrated: DehydratedGameState): GameState =
     settings: dehydrated.settings,
     availablePlayerColors: dehydrated.availablePlayerColors,
     gameTimeline: dehydrated.gameTimeline ?? [],
+    treasury: dehydrated.treasury ?? 0,
     players: dehydrated.players.map((player) => ({
       ...player,
       claimedInfluences: new Set(player.claimedInfluences),
       unclaimedInfluences: new Set(player.unclaimedInfluences),
     })),
+    ...(dehydrated.pendingExamine && { pendingExamine: dehydrated.pendingExamine }),
     ...(dehydrated.gameId && { gameId: dehydrated.gameId }),
     ...(dehydrated.gameActionStats && { gameActionStats: dehydrated.gameActionStats }),
   });
@@ -154,6 +160,7 @@ export const rehydratePublicGameState = (dehydrated: DehydratedPublicGameState):
   ...rehydrateCommonGameState(dehydrated),
   deckCount: dehydrated.deckCount,
   settings: dehydrated.settings,
+  treasury: dehydrated.treasury ?? 0,
   players: dehydrated.players.map((player) => ({
     ...player,
     claimedInfluences: new Set(player.claimedInfluences),
@@ -166,5 +173,6 @@ export const rehydratePublicGameState = (dehydrated: DehydratedPublicGameState):
       unclaimedInfluences: new Set(dehydrated.selfPlayer.unclaimedInfluences)
     }
   }),
+  ...(dehydrated.pendingExamine && { pendingExamine: dehydrated.pendingExamine }),
   ...(dehydrated.gameTimeline && { gameTimeline: dehydrated.gameTimeline }),
 })

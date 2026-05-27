@@ -23,6 +23,14 @@ export default function RulesDrawerContent() {
 
   const anyIndicator = <><Group sx={{ mb: -1 }} /><br /><span style={{ verticalAlign: 'middle' }}>{` ${t('anyone')}`}</span></>
 
+  const getNotInfluenceBackground = (influence: Influences) => `repeating-linear-gradient(
+    -40deg,
+    transparent,
+    transparent 15px,
+    ${influenceColors[influence]} 15px,
+    ${influenceColors[influence]} 20px
+  )`
+
   return (
     <DialogContent sx={{
       px: 4,
@@ -84,20 +92,27 @@ export default function RulesDrawerContent() {
                 </td>
                 <td />
               </tr>
-              <tr style={{ background: influenceColors[Influences.Duke] }}>
+              <tr style={{ background: actionColors[Actions.Convert] }}>
+                <td>{anyIndicator}</td>
                 <td>
-                  <InfluenceIcon influence={Influences.Duke} />
+                  {t('convertSelf')}
                   <br />
-                  {t(Influences.Duke)}
-                </td>
-                <td>
-                  {t(Actions.Tax)}
+                  {t('payCoins', { count: 1 })}
                   <br />
-                  {t('collectCoins', { count: 3 })}
+                  {t('changeYourFaction')}
                 </td>
+                <td />
+              </tr>
+              <tr style={{ background: actionColors[Actions.Convert] }}>
+                <td>{anyIndicator}</td>
                 <td>
-                  {t(Actions.ForeignAid)}
+                  {t('convertOther')}
+                  <br />
+                  {t('payCoins', { count: 2 })}
+                  <br />
+                  {t('changeAPlayersFaction')}
                 </td>
+                <td />
               </tr>
               <tr style={{ background: influenceColors[Influences.Assassin] }}>
                 <td>
@@ -155,6 +170,53 @@ export default function RulesDrawerContent() {
                   {t(Actions.Assassinate)}
                 </td>
               </tr>
+              <tr style={{ background: influenceColors[Influences.Inquisitor] }}>
+                <td>
+                  <InfluenceIcon influence={Influences.Inquisitor} />
+                  <br />
+                  {t(Influences.Inquisitor)}
+                </td>
+                <td>
+                  {t(Actions.Exchange)}
+                  <br />
+                  {t('draw1InfluenceAndDiscard1')}
+                  <br /><br />
+                  {t(Actions.Examine)}
+                  <br />
+                  {t('lookAtAPlayersCard')}
+                </td>
+                <td>
+                  {t(Actions.Steal)}
+                </td>
+              </tr>
+              <tr style={{ background: influenceColors[Influences.Duke] }}>
+                <td>
+                  <InfluenceIcon influence={Influences.Duke} />
+                  <br />
+                  {t(Influences.Duke)}
+                </td>
+                <td>
+                  {t(Actions.Tax)}
+                  <br />
+                  {t('collectCoins', { count: 3 })}
+                </td>
+                <td>
+                  {t(Actions.ForeignAid)}
+                </td>
+              </tr>
+              <tr style={{ background: getNotInfluenceBackground(Influences.Duke) }}>
+                <td>
+                  <InfluenceIcon influence={Influences.Duke} />
+                  <br />
+                  {t('not')} {t(Influences.Duke)}
+                </td>
+                <td>
+                  {t(Actions.Embezzle)}
+                  <br />
+                  {t('takeAllTreasuryCoins')}
+                </td>
+                <td />
+              </tr>
             </tbody>
           </table>
           <table className="cheat-sheet-table cheat-sheet-mobile">
@@ -178,16 +240,13 @@ export default function RulesDrawerContent() {
                 <th>{t('action')}</th>
                 <td>{t(Actions.Revive)}<br />{t('payCoins', { count: 10 })}<br />{t('reviveAnInfluence')}</td>
               </tr>
-              <tr style={{ background: influenceColors[Influences.Duke] }} className="cheat-sheet-mobile-header">
-                <th colSpan={2}><span><InfluenceIcon influence={Influences.Duke} /> {t(Influences.Duke)}</span></th>
-              </tr>
-              <tr style={{ background: influenceColors[Influences.Duke] }}>
+              <tr style={{ background: actionColors[Actions.Convert] }}>
                 <th>{t('action')}</th>
-                <td>{t(Actions.Tax)}<br />{t('collectCoins', { count: 3 })}</td>
+                <td>{t('convertSelf')}<br />{t('payCoins', { count: 1 })}<br />{t('changeYourFaction')}</td>
               </tr>
-              <tr style={{ background: influenceColors[Influences.Duke] }}>
-                <th>{t('block')}</th>
-                <td>{t(Actions.ForeignAid)}</td>
+              <tr style={{ background: actionColors[Actions.Convert] }}>
+                <th>{t('action')}</th>
+                <td>{t('convertOther')}<br />{t('payCoins', { count: 2 })}<br />{t('changeAPlayersFaction')}</td>
               </tr>
               <tr style={{ background: influenceColors[Influences.Assassin] }} className="cheat-sheet-mobile-header">
                 <th colSpan={2}><span><InfluenceIcon influence={Influences.Assassin} /> {t(Influences.Assassin)}</span></th>
@@ -225,6 +284,39 @@ export default function RulesDrawerContent() {
                 <th>{t('block')}</th>
                 <td>{t(Actions.Assassinate)}</td>
               </tr>
+              <tr style={{ background: influenceColors[Influences.Inquisitor] }} className="cheat-sheet-mobile-header">
+                <th colSpan={2}><span><InfluenceIcon influence={Influences.Inquisitor} /> {t(Influences.Inquisitor)}</span></th>
+              </tr>
+              <tr style={{ background: influenceColors[Influences.Inquisitor] }}>
+                <th>{t('action')}</th>
+                <td>{t(Actions.Exchange)}<br />{t('draw1InfluenceAndDiscard1')}</td>
+              </tr>
+              <tr style={{ background: influenceColors[Influences.Inquisitor] }}>
+                <th>{t('action')}</th>
+                <td>{t(Actions.Examine)}<br />{t('lookAtAPlayersCard')}</td>
+              </tr>
+              <tr style={{ background: influenceColors[Influences.Inquisitor] }}>
+                <th>{t('block')}</th>
+                <td>{t(Actions.Steal)}</td>
+              </tr>
+              <tr style={{ background: influenceColors[Influences.Duke] }} className="cheat-sheet-mobile-header">
+                <th colSpan={2}><span><InfluenceIcon influence={Influences.Duke} /> {t(Influences.Duke)}</span></th>
+              </tr>
+              <tr style={{ background: influenceColors[Influences.Duke] }}>
+                <th>{t('action')}</th>
+                <td>{t(Actions.Tax)}<br />{t('collectCoins', { count: 3 })}</td>
+              </tr>
+              <tr style={{ background: influenceColors[Influences.Duke] }}>
+                <th>{t('block')}</th>
+                <td>{t(Actions.ForeignAid)}</td>
+              </tr>
+              <tr style={{ background: getNotInfluenceBackground(Influences.Duke) }} className="cheat-sheet-mobile-header">
+                <th colSpan={2}><span><InfluenceIcon influence={Influences.Duke} /> {t('not')} {t(Influences.Duke)}</span></th>
+              </tr>
+              <tr style={{ background: getNotInfluenceBackground(Influences.Duke) }}>
+                <th>{t('action')}</th>
+                <td>{t(Actions.Embezzle)}<br />{t('takeAllTreasuryCoins')}</td>
+              </tr>
             </tbody>
           </table>
         </Box>
@@ -244,6 +336,7 @@ export default function RulesDrawerContent() {
             <li>{influenceText[Influences.Assassin]}: {t('rulesAssassin')}</li>
             <li>{influenceText[Influences.Captain]}: {t('rulesCaptain')}</li>
             <li>{influenceText[Influences.Ambassador]}: {t('rulesAmbassador')}</li>
+            <li>{influenceText[Influences.Inquisitor]}: {t('rulesInquisitor')}</li>
             <li>{influenceText[Influences.Contessa]}: {t('rulesContessa')}</li>
           </ul>
           <p><strong>{t('actions')}</strong>: {t('rulesActions')}</p>
@@ -256,11 +349,16 @@ export default function RulesDrawerContent() {
             <li>{actionText[Actions.Assassinate]}: {t('rulesAssassinate')}</li>
             <li>{actionText[Actions.Steal]}: {t('rulesSteal')}</li>
             <li>{actionText[Actions.Exchange]}: {t('rulesExchange')}</li>
+            <li>{actionText[Actions.Examine]}: {t('rulesExamine')}</li>
+            <li>{actionText[Actions.Convert]}: {t('rulesConvert')}</li>
+            <li>{actionText[Actions.Embezzle]}: {t('rulesEmbezzle')}</li>
           </ul>
           <p><strong>{t('challenge')}</strong>: {t('rulesChallenge')}</p>
           <p><strong>{t('block')}</strong>: {t('rulesBlock')}</p>
           <p><strong>{t('losingAChallenge')}</strong>: {t('rulesLosingAChallenge')}</p>
           <p><strong>{t('losingInfluence')}</strong>: {t('rulesLosingInfluence')}</p>
+          <Divider sx={{ my: 4 }} />
+          <p><strong>{t('enableReformation')}</strong>: {t('rulesReformation')}</p>
         </Box>
       </DialogContentText>
     </DialogContent>
