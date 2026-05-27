@@ -3,15 +3,11 @@ import { Link as RouterLink } from "react-router"
 import GitHubLinks from "../GitHubLinks"
 import LegalLinks from "../LegalLinks"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import { AddCircle, EmojiEvents, Gavel, GroupAdd } from "@mui/icons-material"
+import { AddCircle, EmojiEvents, School, GroupAdd } from "@mui/icons-material"
 import CoupTypography from '../utilities/CoupTypography'
 import SupportMonetizationButton from '../monetization/SupportMonetizationButton'
 
-interface HomeProps {
-  setRulesOpen: (open: boolean) => void
-}
-
-function Home({ setRulesOpen }: Readonly<HomeProps>) {
+function Home() {
   const { t } = useTranslationContext()
 
   return (
@@ -24,9 +20,10 @@ function Home({ setRulesOpen }: Readonly<HomeProps>) {
       </CoupTypography>
       <Grid container direction="column" alignItems="center" spacing={3} mt={10}>
         <Button
-          variant='contained'
-          onClick={() => setRulesOpen(true)}
-          startIcon={<Gavel />}
+          variant="contained"
+          component={RouterLink}
+          to="/tutorial"
+          startIcon={<School />}
         >{t('learnToPlay')}</Button>
         <Button
           variant="contained"

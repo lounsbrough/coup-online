@@ -34,17 +34,30 @@ describe('createDeckForPlayerCount', () => {
     'should return a deck with correct number of each influence for $playerCount players',
     ({ playerCount }) => {
       const deck = createDeckForPlayerCount(playerCount)
+      const expectedInfluences = Object.values(Influences).filter((i) => i !== Influences.Inquisitor)
       const counts = Object.fromEntries(
-        Object.values(Influences).map((influence) => [influence, 0]),
+        expectedInfluences.map((influence) => [influence, 0]),
       )
 
       deck.forEach((card) => {
         counts[card]++
       })
 
-      Object.values(counts).forEach((count) => {
-        expect(count).toBe(getCountOfEachInfluence(playerCount))
+      expectedInfluences.forEach((influence) => {
+        expect(counts[influence]).toBe(getCountOfEachInfluence(playerCount))
       })
     },
   )
+
+  it('should include Inquisitor and exclude Ambassador when useInquisitor is set', () => {
+    const deck = createDeckForPlayerCount(4, { eventLogRetentionTurns: 100, allowRevive: false, useInquisitor: true })
+    expect(deck).toContain(Influences.Inquisitor)
+    expect(deck).not.toContain(Influences.Ambassador)
+  })
+
+  it('should include Ambassador and exclude Inquisitor by default', () => {
+    const deck = createDeckForPlayerCount(4)
+    expect(deck).toContain(Influences.Ambassador)
+    expect(deck).not.toContain(Influences.Inquisitor)
+  })
 })

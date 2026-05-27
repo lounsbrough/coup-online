@@ -69,6 +69,7 @@ const createTestGameState = ({
     availablePlayerColors: [],
     players,
     pendingInfluenceLoss: {},
+    treasury: 0,
     roomId: chance.string({ length: 6 }),
     turn: 10,
     settings: { eventLogRetentionTurns: 100, allowRevive: false },

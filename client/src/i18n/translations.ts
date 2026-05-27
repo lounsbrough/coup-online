@@ -1,6 +1,7 @@
 import {
   Actions,
   EventMessages,
+  Factions,
   Influences,
   Responses,
   AvailableLanguageCode,
@@ -11,7 +12,10 @@ type TranslationsForString = { [key in AvailableLanguageCode]: string }
 
 type ActionMessages = {
   [Actions.Assassinate]: TranslationsForString
+  [Actions.Convert]: TranslationsForString
   [Actions.Coup]: TranslationsForString
+  [Actions.Embezzle]: TranslationsForString
+  [Actions.Examine]: TranslationsForString
   [Actions.Exchange]: TranslationsForString
   [Actions.ForeignAid]: TranslationsForString
   [Actions.Income]: TranslationsForString
@@ -29,18 +33,21 @@ export type Translations = ActionMessages &
     add: TranslationsForString
     addAiPlayer: TranslationsForString
     addPlayersToStartGame: TranslationsForString
+    allowKeep: TranslationsForString
     allowRevive: TranslationsForString
     anyone: TranslationsForString
     block: TranslationsForString
     blockAsInfluence: TranslationsForString
     briefDescriptionOfCoup: TranslationsForString
     cancel: TranslationsForString
-    cardCountInDeck: TranslationsForString
     challenge: TranslationsForString
+    changeAPlayersFaction: TranslationsForString
+    changeYourFaction: TranslationsForString
     chat: TranslationsForString
     cheatSheet: TranslationsForString
     chooseATarget: TranslationsForString
     chooseAnAction: TranslationsForString
+    chooseCardToReveal: TranslationsForString
     chooseInfluenceToLose: TranslationsForString
     chooseInfluenceToReveal: TranslationsForString
     chooseInfluencesToKeep: TranslationsForString
@@ -52,14 +59,21 @@ export type Translations = ActionMessages &
     confirm: TranslationsForString
     confirmActions: TranslationsForString
     contents: TranslationsForString
+    convertOther: TranslationsForString
+    convertSelf: TranslationsForString
     copyInviteLink: TranslationsForString
     createGame: TranslationsForString
     createNewGame: TranslationsForString
-    draw2InfluencesAndDiscard2: TranslationsForString
     dark: TranslationsForString
+    deck: TranslationsForString
+    draw1InfluenceAndDiscard1: TranslationsForString
+    draw2InfluencesAndDiscard2: TranslationsForString
     effect: TranslationsForString
+    enableReformation: TranslationsForString
+    emptyTreasury: TranslationsForString
     eventLog: TranslationsForString
     eventLogRetentionTurns: TranslationsForString
+    examineDecision: TranslationsForString
     [EventMessages.ActionConfirm]: ActionMessages
     [EventMessages.ActionPending]: Partial<ActionMessages>
     [EventMessages.ActionProcessed]: ActionMessages
@@ -76,6 +90,7 @@ export type Translations = ActionMessages &
     [EventMessages.PlayerLostInfluence]: TranslationsForString
     [EventMessages.PlayerReplacedInfluence]: TranslationsForString
     [EventMessages.PlayerReplacedWithAi]: TranslationsForString
+    forceSwap: TranslationsForString
     forfeit: TranslationsForString
     forfeitConfirmationMessage: TranslationsForString
     forfeitConfirmationTitle: TranslationsForString
@@ -95,6 +110,8 @@ export type Translations = ActionMessages &
     [Influences.Captain]: TranslationsForString
     [Influences.Contessa]: TranslationsForString
     [Influences.Duke]: TranslationsForString
+    [Influences.Inquisitor]: TranslationsForString
+    inquisitorIsEnabled: TranslationsForString
     inviteLinkCopied: TranslationsForString
     joinExistingGame: TranslationsForString
     joinGame: TranslationsForString
@@ -102,13 +119,16 @@ export type Translations = ActionMessages &
     killAnInfluence: TranslationsForString
     language: TranslationsForString
     learnToPlay: TranslationsForString
+    [Factions.Loyalist]: TranslationsForString
     light: TranslationsForString
     loseInfluence: TranslationsForString
+    lookAtAPlayersCard: TranslationsForString
     losingAChallenge: TranslationsForString
     losingInfluence: TranslationsForString
     messageWasDeleted: TranslationsForString
     noChatMessages: TranslationsForString
     noDeadInfluences: TranslationsForString
+    not: TranslationsForString
     notEnoughCoins: TranslationsForString
     numberOfPlayers: TranslationsForString
     pageNotFound: TranslationsForString
@@ -121,6 +141,8 @@ export type Translations = ActionMessages &
     privacyPolicy: TranslationsForString
     privacyPolicyContent: TranslationsForString
     random: TranslationsForString
+    [Factions.Reformist]: TranslationsForString
+    reformationIsEnabled: TranslationsForString
     reportBug: TranslationsForString
     reportIncorrectTranslation: TranslationsForString
     requestFeature: TranslationsForString
@@ -142,15 +164,20 @@ export type Translations = ActionMessages &
     rulesChallenge: TranslationsForString
     rulesContents: TranslationsForString
     rulesContessa: TranslationsForString
+    rulesConvert: TranslationsForString
     rulesCoup: TranslationsForString
     rulesDuke: TranslationsForString
+    rulesEmbezzle: TranslationsForString
+    rulesExamine: TranslationsForString
     rulesExchange: TranslationsForString
     rulesForeignAid: TranslationsForString
     rulesGoal: TranslationsForString
     rulesIncome: TranslationsForString
     rulesInfluences: TranslationsForString
+    rulesInquisitor: TranslationsForString
     rulesLosingAChallenge: TranslationsForString
     rulesLosingInfluence: TranslationsForString
+    rulesReformation: TranslationsForString
     rulesRevive: TranslationsForString
     rulesSetup: TranslationsForString
     rulesSteal: TranslationsForString
@@ -191,9 +218,49 @@ export type Translations = ActionMessages &
     startingPlayerBeginsWith1Coin: TranslationsForString
     steal2CoinsFromSomeone: TranslationsForString
     system: TranslationsForString
+    takeAllTreasuryCoins: TranslationsForString
     termsOfService: TranslationsForString
     termsOfServiceContent: TranslationsForString
     title: TranslationsForString
+    treasury: TranslationsForString
+    tutorial: TranslationsForString
+    tutorialBack: TranslationsForString
+    tutorialComplete: TranslationsForString
+    tutorialFinish: TranslationsForString
+    tutorialIntro: TranslationsForString
+    tutorialNext: TranslationsForString
+    tutorialRestart: TranslationsForString
+    tutorialRulesHint: TranslationsForString
+    tutorialStartingCoins: TranslationsForString
+    tutorialStep10Content: TranslationsForString
+    tutorialStep10Title: TranslationsForString
+    tutorialStep1Content: TranslationsForString
+    tutorialStep1Title: TranslationsForString
+    tutorialStep2Content: TranslationsForString
+    tutorialStep2Title: TranslationsForString
+    tutorialStep3Content: TranslationsForString
+    tutorialStep3Title: TranslationsForString
+    tutorialStep4Content: TranslationsForString
+    tutorialStep4Dialogue: TranslationsForString
+    tutorialStep4Title: TranslationsForString
+    tutorialStep5Block: TranslationsForString
+    tutorialStep5Content: TranslationsForString
+    tutorialStep5Ok: TranslationsForString
+    tutorialStep5Title: TranslationsForString
+    tutorialStep6Content: TranslationsForString
+    tutorialStep6Title: TranslationsForString
+    tutorialStep7Content: TranslationsForString
+    tutorialStep7Detail: TranslationsForString
+    tutorialStep7Title: TranslationsForString
+    tutorialStep8Challenge: TranslationsForString
+    tutorialStep8Content: TranslationsForString
+    tutorialStep8Result: TranslationsForString
+    tutorialStep8Reveal: TranslationsForString
+    tutorialStep8Title: TranslationsForString
+    tutorialStep9Content: TranslationsForString
+    tutorialStep9Detail: TranslationsForString
+    tutorialStep9Title: TranslationsForString
+    useInquisitor: TranslationsForString
     vengefulness: TranslationsForString
     waitingOnOtherPlayers: TranslationsForString
     websocketsConnection: TranslationsForString
@@ -309,6 +376,15 @@ const translations: Translations = {
     'it-IT': 'Assassinare',
     'pt-BR': 'Assassinar',
   },
+  [Actions.Convert]: {
+    'de-DE': 'Konvertieren',
+    'en-US': 'Convert',
+    'es-MX': 'Convertir',
+    'fr-FR': 'Convertir',
+    'hi-IN': 'धर्म परिवर्तन',
+    'it-IT': 'Convertire',
+    'pt-BR': 'Converter',
+  },
   [Actions.Coup]: {
     'de-DE': 'Putsch',
     'en-US': 'Coup',
@@ -317,6 +393,24 @@ const translations: Translations = {
     'hi-IN': 'अवधारणा',
     'it-IT': 'Colpo di Stato',
     'pt-BR': 'Golpe de Estado',
+  },
+  [Actions.Embezzle]: {
+    'de-DE': 'Unterschlagen',
+    'en-US': 'Embezzle',
+    'es-MX': 'Malversar',
+    'fr-FR': 'Détourner',
+    'hi-IN': 'गबन करना',
+    'it-IT': 'Appropriarsi',
+    'pt-BR': 'Desviar',
+  },
+  [Actions.Examine]: {
+    'de-DE': 'Untersuchen',
+    'en-US': 'Examine',
+    'es-MX': 'Examinar',
+    'fr-FR': 'Examiner',
+    'hi-IN': 'जाँच करना',
+    'it-IT': 'Esaminare',
+    'pt-BR': 'Examinar',
   },
   [Actions.Exchange]: {
     'de-DE': 'Austausch',
@@ -408,6 +502,15 @@ const translations: Translations = {
     'hi-IN': 'खेल शुरू करने के लिए कम से कम एक और खिलाड़ी जोड़ें',
     'it-IT': 'Aggiungi almeno un altro giocatore per iniziare il gioco',
     'pt-BR': 'Adicione pelo menos mais um jogador para iniciar o jogo',
+  },
+  allowKeep: {
+    'de-DE': 'Behalten erlauben',
+    'en-US': 'Allow Keep',
+    'es-MX': 'Permitir Conservar',
+    'fr-FR': 'Autoriser à garder',
+    'hi-IN': 'रखने दें',
+    'it-IT': 'Permetti di tenere',
+    'pt-BR': 'Permitir Manter',
   },
   allowRevive: {
     'de-DE': 'Wiederbeleben erlauben',
@@ -526,15 +629,6 @@ const translations: Translations = {
     'it-IT': 'Annulla',
     'pt-BR': 'Cancelar',
   },
-  cardCountInDeck: {
-    'de-DE': '{{count}} Karte{{plural[[n]]}} im Deck',
-    'en-US': '{{count}} card{{plural[[s]]}} in the deck',
-    'es-MX': '{{count}} carta{{plural[[s]]}} en el mazo',
-    'fr-FR': '{{count}} carte{{plural[[s]]}} dans le paquet',
-    'hi-IN': 'डेक में {{count}} कार्ड',
-    'it-IT': '{{count}} carta{{plural[[e]]}} nel mazzo',
-    'pt-BR': '{{count}} carta{{plural[[s]]}} no baralho',
-  },
   challenge: {
     'de-DE': 'Herausfordern',
     'en-US': 'Challenge',
@@ -571,6 +665,15 @@ const translations: Translations = {
     'it-IT': '⚔️ Sfidato da {{player}}',
     'pt-BR': '⚔️ Desafiado por {{player}}',
   },
+  changeAPlayersFaction: {
+    'de-DE': 'Fraktion eines Spielers ändern',
+    'en-US': "Change a player's faction",
+    'es-MX': 'Cambiar la facción de un jugador',
+    'fr-FR': "Changer la faction d'un joueur",
+    'hi-IN': 'एक खिलाड़ी का गुट बदलें',
+    'it-IT': 'Cambia la fazione di un giocatore',
+    'pt-BR': 'Mudar a facção de um jogador',
+  },
   changeDisplayName: {
     'de-DE': 'Anzeigename ändern',
     'en-US': 'Change Display Name',
@@ -579,6 +682,15 @@ const translations: Translations = {
     'hi-IN': 'प्रदर्शित नाम बदलें',
     'it-IT': 'Cambia nome',
     'pt-BR': 'Alterar nome',
+  },
+  changeYourFaction: {
+    'de-DE': 'Deine Fraktion ändern',
+    'en-US': 'Change your faction',
+    'es-MX': 'Cambiar tu facción',
+    'fr-FR': 'Changer votre faction',
+    'hi-IN': 'अपना गुट बदलें',
+    'it-IT': 'Cambia la tua fazione',
+    'pt-BR': 'Mude sua facção',
   },
   chat: {
     'de-DE': 'Chat',
@@ -615,6 +727,15 @@ const translations: Translations = {
     'hi-IN': 'एक क्रिया चुनें',
     'it-IT': "Scegli un'Azione",
     'pt-BR': 'Escolher uma Ação',
+  },
+  chooseCardToReveal: {
+    'de-DE': 'Wähle eine Karte zum Aufdecken',
+    'en-US': 'Choose a card to reveal',
+    'es-MX': 'Elige una carta para revelar',
+    'fr-FR': 'Choisissez une carte à révéler',
+    'hi-IN': 'प्रकट करने के लिए एक कार्ड चुनें',
+    'it-IT': 'Scegli una carta da rivelare',
+    'pt-BR': 'Escolha uma carta para revelar',
   },
   chooseInfluenceToLose: {
     'de-DE': 'Wähle eine Einflusskarte, die du verlieren möchtest',
@@ -734,6 +855,24 @@ const translations: Translations = {
     'it-IT': 'Contenuti',
     'pt-BR': 'Conteúdo',
   },
+  convertOther: {
+    'de-DE': 'Anderen konvertieren',
+    'en-US': 'Convert Other',
+    'es-MX': 'Convertir a Otro',
+    'fr-FR': 'Convertir un Autre',
+    'hi-IN': 'अन्य को परिवर्तित करें',
+    'it-IT': 'Converti un Altro',
+    'pt-BR': 'Converter Outro',
+  },
+  convertSelf: {
+    'de-DE': 'Sich selbst konvertieren',
+    'en-US': 'Convert Self',
+    'es-MX': 'Convertirse',
+    'fr-FR': 'Se convertir',
+    'hi-IN': 'स्वयं को परिवर्तित करें',
+    'it-IT': 'Converti te stesso',
+    'pt-BR': 'Converter-se',
+  },
   copyInviteLink: {
     'de-DE': 'Einladungslink kopieren',
     'en-US': 'Copy Invite Link',
@@ -788,6 +927,15 @@ const translations: Translations = {
     'it-IT': 'Scuro',
     'pt-BR': 'Escuro',
   },
+  deck: {
+    'de-DE': 'Deck',
+    'en-US': 'Deck',
+    'es-MX': 'Mazo',
+    'fr-FR': 'Pioche',
+    'hi-IN': 'डेक',
+    'it-IT': 'Mazzo',
+    'pt-BR': 'Baralho',
+  },
   deleteAccount: {
     'de-DE': 'Konto löschen',
     'en-US': 'Delete Account',
@@ -833,6 +981,15 @@ const translations: Translations = {
     'it-IT': 'Questo nome è già in uso',
     'pt-BR': 'Este nome já está em uso',
   },
+  draw1InfluenceAndDiscard1: {
+    'de-DE': 'Ziehe 1 Einflusskarte & lege 1 ab',
+    'en-US': 'Draw 1 influence and discard 1',
+    'es-MX': 'Robar 1 influencia y descartar 1',
+    'fr-FR': 'Piocher 1 influence et en défausser 1',
+    'hi-IN': '1 प्रभाव खींचें और 1 को त्यागें',
+    'it-IT': 'Pesca 1 influenza e scarta 1',
+    'pt-BR': 'Comprar 1 influência e descartar 1',
+  },
   draw2InfluencesAndDiscard2: {
     'de-DE': 'Ziehe 2 Einflusskarten & lege 2 ab',
     'en-US': 'Draw 2 influences and discard 2',
@@ -850,6 +1007,24 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव',
     'it-IT': 'Effetto',
     'pt-BR': 'Efeito',
+  },
+  emptyTreasury: {
+    'de-DE': 'Die Staatskasse ist leer',
+    'en-US': 'The treasury is empty',
+    'es-MX': 'El tesoro está vacío',
+    'fr-FR': 'Le trésor est vide',
+    'hi-IN': 'खजाना खाली है',
+    'it-IT': 'Il tesoro è vuoto',
+    'pt-BR': 'O tesouro está vazio',
+  },
+  enableReformation: {
+    'de-DE': 'Reformation aktivieren',
+    'en-US': 'Enable Reformation',
+    'es-MX': 'Habilitar Reforma',
+    'fr-FR': 'Activer la Réforme',
+    'hi-IN': 'सुधार सक्षम करें',
+    'it-IT': 'Abilita Riforma',
+    'pt-BR': 'Ativar Reforma',
   },
   error: {
     'de-DE': 'Fehler',
@@ -878,6 +1053,15 @@ const translations: Translations = {
     'it-IT': 'Conservazione del registro eventi (turni)',
     'pt-BR': 'Retenção do registro de eventos (turnos)',
   },
+  examineDecision: {
+    'de-DE': 'Die aufgedeckte Karte ist {{primaryInfluence}}',
+    'en-US': 'The revealed card is {{primaryInfluence}}',
+    'es-MX': 'La carta revelada es {{primaryInfluence}}',
+    'fr-FR': 'La carte révélée est {{primaryInfluence}}',
+    'hi-IN': 'प्रकट कार्ड {{primaryInfluence}} है',
+    'it-IT': 'La carta rivelata è {{primaryInfluence}}',
+    'pt-BR': 'A carta revelada é {{primaryInfluence}}',
+  },
   [EventMessages.ActionConfirm]: {
     [Actions.Assassinate]: {
       'de-DE': '{{action[[Attentat]]}} {{secondaryPlayer}}',
@@ -896,6 +1080,33 @@ const translations: Translations = {
       'hi-IN': '{{action[[गद्दारी]]}} {{secondaryPlayer}}',
       'it-IT': '{{action[[Colpo di Stato]]}} {{secondaryPlayer}}',
       'pt-BR': '{{action[[Golpear]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Convert]: {
+      'de-DE': '{{action[[Konvertieren]]}} {{secondaryPlayer}}',
+      'en-US': '{{action[[Convert]]}} {{secondaryPlayer}}',
+      'es-MX': '{{action[[Convertir]]}} {{secondaryPlayer}}',
+      'fr-FR': '{{action[[Convertir]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{action[[धर्म परिवर्तन]]}} {{secondaryPlayer}}',
+      'it-IT': '{{action[[Convertire]]}} {{secondaryPlayer}}',
+      'pt-BR': '{{action[[Converter]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Embezzle]: {
+      'de-DE': '{{action[[Unterschlagen]]}} aus der Staatskasse',
+      'en-US': '{{action[[Embezzle]]}} from treasury',
+      'es-MX': '{{action[[Malversar]]}} del tesoro',
+      'fr-FR': '{{action[[Détourner]]}} du trésor',
+      'hi-IN': '{{action[[गबन]]}} खजाने से',
+      'it-IT': '{{action[[Appropriarsi]]}} dal tesoro',
+      'pt-BR': '{{action[[Desviar]]}} do tesouro',
+    },
+    [Actions.Examine]: {
+      'de-DE': '{{action[[Untersuchen]]}} {{secondaryPlayer}}',
+      'en-US': '{{action[[Examine]]}} {{secondaryPlayer}}',
+      'es-MX': '{{action[[Examinar]]}} {{secondaryPlayer}}',
+      'fr-FR': '{{action[[Examiner]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{action[[जाँच]]}} {{secondaryPlayer}}',
+      'it-IT': '{{action[[Esaminare]]}} {{secondaryPlayer}}',
+      'pt-BR': '{{action[[Examinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
       'de-DE': '{{action[[Austausch]]}} von Einflusskarten',
@@ -967,6 +1178,36 @@ const translations: Translations = {
         '{{primaryPlayer}} sta cercando di {{action[[Assassinare]]}} {{secondaryPlayer}}',
       'pt-BR':
         '{{primaryPlayer}} está tentando {{action[[Assassinar]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Embezzle]: {
+      'de-DE':
+        '{{primaryPlayer}} versucht, aus der Staatskasse zu {{action[[Unterschlagen]]}}',
+      'en-US':
+        '{{primaryPlayer}} is trying to {{action[[Embezzle]]}} from treasury',
+      'es-MX':
+        '{{primaryPlayer}} está intentando {{action[[Malversar]]}} del tesoro',
+      'fr-FR':
+        '{{primaryPlayer}} essaie de {{action[[Détourner]]}} du trésor',
+      'hi-IN': '{{primaryPlayer}} खजाने से {{action[[गबन]]}} करने की कोशिश कर रहा है',
+      'it-IT':
+        '{{primaryPlayer}} sta cercando di {{action[[Appropriarsi]]}} dal tesoro',
+      'pt-BR':
+        '{{primaryPlayer}} está tentando {{action[[Desviar]]}} do tesouro',
+    },
+    [Actions.Examine]: {
+      'de-DE':
+        '{{primaryPlayer}} versucht, {{secondaryPlayer}} zu {{action[[Untersuchen]]}}',
+      'en-US':
+        '{{primaryPlayer}} is trying to {{action[[Examine]]}} {{secondaryPlayer}}',
+      'es-MX':
+        '{{primaryPlayer}} está intentando {{action[[Examinar]]}} a {{secondaryPlayer}}',
+      'fr-FR':
+        '{{primaryPlayer}} essaie de {{action[[Examiner]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{primaryPlayer}} {{secondaryPlayer}} की {{action[[जाँच]]}} करने की कोशिश कर रहा है',
+      'it-IT':
+        '{{primaryPlayer}} sta cercando di {{action[[Esaminare]]}} {{secondaryPlayer}}',
+      'pt-BR':
+        '{{primaryPlayer}} está tentando {{action[[Examinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
       'de-DE':
@@ -1052,6 +1293,33 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} {{action[[गद्दारी]]}} {{secondaryPlayer}}',
       'it-IT': '{{primaryPlayer}} ha {{action[[Colpito]]}} {{secondaryPlayer}}',
       'pt-BR': '{{primaryPlayer}} {{action[[Golpeou]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Convert]: {
+      'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Konvertiert]]}}',
+      'en-US': '{{primaryPlayer}} {{action[[Converted]]}} {{secondaryPlayer}}',
+      'es-MX': '{{primaryPlayer}} ha {{action[[Convertido]]}} a {{secondaryPlayer}}',
+      'fr-FR': '{{primaryPlayer}} a {{action[[Converti]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को {{action[[परिवर्तित]]}} किया',
+      'it-IT': '{{primaryPlayer}} ha {{action[[Convertito]]}} {{secondaryPlayer}}',
+      'pt-BR': '{{primaryPlayer}} {{action[[Converteu]]}} {{secondaryPlayer}}',
+    },
+    [Actions.Embezzle]: {
+      'de-DE': '{{primaryPlayer}} hat aus der Staatskasse {{action[[Unterschlagen]]}}',
+      'en-US': '{{primaryPlayer}} {{action[[Embezzled]]}} from treasury',
+      'es-MX': '{{primaryPlayer}} ha {{action[[Malversado]]}} del tesoro',
+      'fr-FR': '{{primaryPlayer}} a {{action[[Détourné]]}} du trésor',
+      'hi-IN': '{{primaryPlayer}} ने खजाने से {{action[[गबन]]}} किया',
+      'it-IT': '{{primaryPlayer}} ha {{action[[Appropriato]]}} dal tesoro',
+      'pt-BR': '{{primaryPlayer}} {{action[[Desviou]]}} do tesouro',
+    },
+    [Actions.Examine]: {
+      'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Untersucht]]}}',
+      'en-US': '{{primaryPlayer}} {{action[[Examined]]}} {{secondaryPlayer}}',
+      'es-MX': '{{primaryPlayer}} ha {{action[[Examinado]]}} a {{secondaryPlayer}}',
+      'fr-FR': '{{primaryPlayer}} a {{action[[Examiné]]}} {{secondaryPlayer}}',
+      'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} की {{action[[जाँच]]}} की',
+      'it-IT': '{{primaryPlayer}} ha {{action[[Esaminato]]}} {{secondaryPlayer}}',
+      'pt-BR': '{{primaryPlayer}} {{action[[Examinou]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
       'de-DE':
@@ -1263,6 +1531,15 @@ const translations: Translations = {
     'hi-IN': 'सबसे तेज़ जीत',
     'it-IT': 'Vittoria più rapida',
     'pt-BR': 'Vitória mais rápida',
+  },
+  forceSwap: {
+    'de-DE': 'Tausch erzwingen',
+    'en-US': 'Force Swap',
+    'es-MX': 'Forzar Intercambio',
+    'fr-FR': 'Forcer l\'échange',
+    'hi-IN': 'जबरन अदला-बदली',
+    'it-IT': 'Forza scambio',
+    'pt-BR': 'Forçar Troca',
   },
   forfeit: {
     'de-DE': 'Aufgeben',
@@ -1487,6 +1764,15 @@ const translations: Translations = {
     'it-IT': 'Duca',
     'pt-BR': 'Duque',
   },
+  [Influences.Inquisitor]: {
+    'de-DE': 'Inquisitor',
+    'en-US': 'Inquisitor',
+    'es-MX': 'Inquisidor',
+    'fr-FR': 'Inquisiteur',
+    'hi-IN': 'जाँचकर्ता',
+    'it-IT': 'Inquisitore',
+    'pt-BR': 'Inquisidor',
+  },
   info: {
     'de-DE': 'Info',
     'en-US': 'Info',
@@ -1495,6 +1781,15 @@ const translations: Translations = {
     'hi-IN': 'जानकारी',
     'it-IT': 'Info',
     'pt-BR': 'Info',
+  },
+  inquisitorIsEnabled: {
+    'de-DE': 'Inquisitor ist aktiviert',
+    'en-US': 'Inquisitor is enabled',
+    'es-MX': 'El Inquisidor está habilitado',
+    'fr-FR': "L'Inquisiteur est activé",
+    'hi-IN': 'इन्क्विज़िटर सक्षम है',
+    'it-IT': "L'Inquisitore è abilitato",
+    'pt-BR': 'Inquisidor está habilitado',
   },
   inviteLinkCopied: {
     'de-DE': 'Einladungslink kopiert',
@@ -1584,6 +1879,15 @@ const translations: Translations = {
     'it-IT': 'Impara a Giocare',
     'pt-BR': 'Aprenda a Jogar',
   },
+  [Factions.Loyalist]: {
+    'de-DE': 'Loyalist',
+    'en-US': 'Loyalist',
+    'es-MX': 'Lealista',
+    'fr-FR': 'Loyaliste',
+    'hi-IN': 'वफादार',
+    'it-IT': 'Lealista',
+    'pt-BR': 'Lealista',
+  },
   light: {
     'de-DE': 'Hell',
     'en-US': 'Light',
@@ -1610,6 +1914,15 @@ const translations: Translations = {
     'hi-IN': 'सबसे लंबी जीत की श्रृंखला',
     'it-IT': 'Serie vittorie più lunga',
     'pt-BR': 'Maior sequência de vitórias',
+  },
+  lookAtAPlayersCard: {
+    'de-DE': 'Karte eines Spielers ansehen',
+    'en-US': "Look at a player's card",
+    'es-MX': 'Mirar la carta de un jugador',
+    'fr-FR': "Regarder la carte d'un joueur",
+    'hi-IN': 'एक खिलाड़ी का कार्ड देखें',
+    'it-IT': 'Guarda la carta di un giocatore',
+    'pt-BR': 'Ver a carta de um jogador',
   },
   loseInfluence: {
     'de-DE': 'Verliere {{primaryInfluence}}',
@@ -1709,6 +2022,15 @@ const translations: Translations = {
     'hi-IN': 'अभी तक कोई आँकड़े नहीं',
     'it-IT': 'Nessuna statistica ancora',
     'pt-BR': 'Nenhuma estatística ainda',
+  },
+  not: {
+    'de-DE': 'NICHT',
+    'en-US': 'NOT',
+    'es-MX': 'NO',
+    'fr-FR': 'PAS',
+    'hi-IN': 'नहीं',
+    'it-IT': 'NON',
+    'pt-BR': 'NÃO',
   },
   notEnoughCoins: {
     'de-DE': 'Nicht genug Münzen ({{count}})',
@@ -1827,6 +2149,15 @@ const translations: Translations = {
     'it-IT': '{{primaryPlayer}} Vince!',
     'pt-BR': '{{primaryPlayer}} Vence!',
   },
+  [Factions.Reformist]: {
+    'de-DE': 'Reformist',
+    'en-US': 'Reformist',
+    'es-MX': 'Reformista',
+    'fr-FR': 'Réformiste',
+    'hi-IN': 'सुधारवादी',
+    'it-IT': 'Riformista',
+    'pt-BR': 'Reformista',
+  },
   playstyle: {
     'de-DE': 'Spielstil',
     'en-US': 'Playstyle',
@@ -1907,6 +2238,15 @@ const translations: Translations = {
     'hi-IN': 'रिकॉर्ड',
     'it-IT': 'Record',
     'pt-BR': 'Histórico',
+  },
+  reformationIsEnabled: {
+    'de-DE': 'Reformation ist aktiviert',
+    'en-US': 'Reformation is enabled',
+    'es-MX': 'La Reforma está habilitada',
+    'fr-FR': 'La Réforme est activée',
+    'hi-IN': 'सुधार सक्षम है',
+    'it-IT': 'La Riforma è abilitata',
+    'pt-BR': 'Reforma está habilitada',
   },
   reportBug: {
     'de-DE': 'Fehler melden',
@@ -2138,6 +2478,22 @@ const translations: Translations = {
     'it-IT': 'Può bloccare i tentativi di assassinio.',
     'pt-BR': 'Pode bloquear tentativas de assassinato.',
   },
+  rulesConvert: {
+    'de-DE':
+      'Kostet ein bis zwei Münzen (werden in die Staatskasse gezahlt). Ändert die Fraktion eines Spielers, entweder deine eigene oder die eines anderen. Kann nicht herausgefordert oder blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
+    'en-US':
+      'Costs one to two coins (paid to the treasury). Change the faction of a player—either yourself (one coin) or another player (two coins). Cannot be Challenged or Blocked. Only available when Reformation is enabled.',
+    'es-MX':
+      'Cuesta de una a dos monedas (pagadas al tesoro). Cambia la facción de un jugador—la tuya propia (una moneda) o la de otro jugador (dos monedas). No puede ser desafiado ni bloqueado. Solo disponible cuando la Reforma está habilitada.',
+    'fr-FR':
+      'Coûte une à deux pièces (payées au trésor). Changez la faction d\'un joueur—la vôtre (une pièce) ou celle d\'un autre joueur (deux pièces). Ne peut pas être contesté ni bloqué. Disponible uniquement lorsque la Réforme est activée.',
+    'hi-IN':
+      'एक से दो सिक्कों की लागत (खजाने में भुगतान)। एक खिलाड़ी का गुट बदलें—अपना (एक सिक्का) या किसी अन्य खिलाड़ी का (दो सिक्के)। चुनौती या अवरुद्ध नहीं किया जा सकता। केवल सुधार सक्षम होने पर उपलब्ध।',
+    'it-IT':
+      'Costa da una a due monete (pagate al tesoro). Cambia la fazione di un giocatore—la tua (una moneta) o quella di un altro giocatore (due monete). Non può essere sfidato o bloccato. Disponibile solo quando la Riforma è abilitata.',
+    'pt-BR':
+      'Custa uma a duas moedas (pagas ao tesouro). Mude a facção de um jogador—a sua (uma moeda) ou a de outro jogador (duas moedas). Não pode ser desafiado ou bloqueado. Disponível apenas quando a Reforma está habilitada.',
+  },
   rulesCoup: {
     'de-DE':
       'Kostet sieben Münzen. Zwingt einen Spieler, eine Einflusskarte aufzugeben. Kann nicht herausgefordert oder blockiert werden. Wenn du deinen Zug mit zehn oder mehr Münzen beginnst, musst du einen Putsch durchführen (oder wiederbeleben, wenn aktiviert).',
@@ -2162,6 +2518,38 @@ const translations: Translations = {
     'hi-IN': 'करों की वसूली और विदेशी सहायता को अवरुद्ध कर सकता है।',
     'it-IT': "Può tassare e bloccare l'Aiuto Estero.",
     'pt-BR': 'Pode cobrar impostos e bloquear Ajuda Estrangeira.',
+  },
+  rulesEmbezzle: {
+    'de-DE':
+      'Nimm alle Münzen aus der Staatskasse. Kann herausgefordert werden (andere Spieler behaupten, dass du KEIN Herzog bist). Kann nicht blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
+    'en-US':
+      'Take all coins from the treasury. Can be Challenged (other players claim you are NOT a Duke). Cannot be Blocked. Only available when Reformation is enabled.',
+    'es-MX':
+      'Toma todas las monedas del tesoro. Puede ser desafiado (otros jugadores afirman que NO eres un Duque). No puede ser bloqueado. Solo disponible cuando la Reforma está habilitada.',
+    'fr-FR':
+      'Prenez toutes les pièces du trésor. Peut être contesté (les autres joueurs prétendent que vous N\'êtes PAS un Duc). Ne peut pas être bloqué. Disponible uniquement lorsque la Réforme est activée.',
+    'hi-IN':
+      'खजाने से सभी सिक्के लें। इसे चुनौती दी जा सकती है (अन्य खिलाड़ी दावा करते हैं कि आप ड्यूक नहीं हैं)। अवरुद्ध नहीं किया जा सकता। केवल सुधार सक्षम होने पर उपलब्ध।',
+    'it-IT':
+      'Prendi tutte le monete dal tesoro. Può essere sfidato (gli altri giocatori affermano che NON sei un Duca). Non può essere bloccato. Disponibile solo quando la Riforma è abilitata.',
+    'pt-BR':
+      'Pegue todas as moedas do tesouro. Pode ser desafiado (outros jogadores afirmam que você NÃO é um Duque). Não pode ser bloqueado. Disponível apenas quando a Reforma está habilitada.',
+  },
+  rulesExamine: {
+    'de-DE':
+      'Schau dir eine Einflusskarte eines anderen Spielers an. Dann entscheide, ob du ihn zwingst die Karte zu tauschen oder sie zu behalten. Kann herausgefordert werden. Kann nicht blockiert werden. Nur verfügbar, wenn Inquisitor aktiviert ist.',
+    'en-US':
+      'Look at one Influence card of another player. Then decide whether to force them to swap it or let them keep it. Can be Challenged. Cannot be Blocked. Only available when Inquisitor is enabled.',
+    'es-MX':
+      'Mira una carta de influencia de otro jugador. Luego decide si forzarlo a cambiarla o dejarlo conservarla. Puede ser desafiado. No puede ser bloqueado. Solo disponible cuando el Inquisidor está habilitado.',
+    'fr-FR':
+      "Regardez une carte d'influence d'un autre joueur. Puis décidez si vous le forcez à l'échanger ou si vous le laissez la garder. Peut être contesté. Ne peut pas être bloqué. Disponible uniquement lorsque l'Inquisiteur est activé.",
+    'hi-IN':
+      'किसी अन्य खिलाड़ी का एक प्रभाव कार्ड देखें। फिर तय करें कि उसे बदलने के लिए मजबूर करना है या रखने देना है। चुनौती दी जा सकती है। अवरुद्ध नहीं किया जा सकता। केवल इन्क्विज़िटर सक्षम होने पर उपलब्ध।',
+    'it-IT':
+      "Guarda una carta di influenza di un altro giocatore. Poi decidi se costringerlo a scambiarla o lasciargliela tenere. Può essere sfidato. Non può essere bloccato. Disponibile solo quando l'Inquisitore è abilitato.",
+    'pt-BR':
+      'Olhe uma carta de influência de outro jogador. Depois decida se força a troca ou permite que ele a mantenha. Pode ser desafiado. Não pode ser bloqueado. Disponível apenas quando o Inquisidor está habilitado.',
   },
   rulesExchange: {
     'de-DE':
@@ -2226,6 +2614,22 @@ const translations: Translations = {
     'it-IT': 'Ci sono cinque personaggi diversi nel mazzo di influenza.',
     'pt-BR': 'Existem cinco personagens diferentes no baralho de influência.',
   },
+  rulesInquisitor: {
+    'de-DE':
+      'Kann die Einflusskarte eines anderen Spielers untersuchen und einen Tausch erzwingen. Kann eine Einflusskarte austauschen (ziehe eine, behalte eine). Kann Diebstahlversuche blockieren. Ersetzt den Botschafter, wenn aktiviert.',
+    'en-US':
+      'Can Examine another player\'s Influence card and force a swap. Can Exchange one Influence card (draw one, keep one). Can Block stealing attempts. Replaces the Ambassador when enabled.',
+    'es-MX':
+      'Puede examinar la carta de influencia de otro jugador y forzar un intercambio. Puede intercambiar una carta de influencia (roba una, quédate con una). Puede bloquear intentos de robo. Reemplaza al Embajador cuando está habilitado.',
+    'fr-FR':
+      "Peut examiner la carte d'influence d'un autre joueur et forcer un échange. Peut échanger une carte d'influence (piocher une, garder une). Peut bloquer les tentatives de vol. Remplace l'Ambassadeur lorsqu'il est activé.",
+    'hi-IN':
+      'किसी अन्य खिलाड़ी के प्रभाव कार्ड की जांच कर सकता है और बदलने के लिए मजबूर कर सकता है। एक प्रभाव कार्ड का आदान-प्रदान कर सकता है (एक खींचें, एक रखें)। चोरी के प्रयासों को रोक सकता है। सक्षम होने पर राजदूत का स्थान लेता है।',
+    'it-IT':
+      "Può esaminare la carta di influenza di un altro giocatore e forzare uno scambio. Può scambiare una carta di influenza (pesca una, tieni una). Può bloccare i tentativi di furto. Sostituisce l'Ambasciatore quando abilitato.",
+    'pt-BR':
+      'Pode examinar a carta de influência de outro jogador e forçar uma troca. Pode trocar uma carta de influência (comprar uma, manter uma). Pode bloquear tentativas de roubo. Substitui o Embaixador quando habilitado.',
+  },
   rulesLosingAChallenge: {
     'de-DE':
       'Jeder Spieler, der eine Herausforderung verliert, muss eine ihrer Einflusskarten aufdecken, damit alle sie sehen können. Wenn das ihre letzte Einflusskarte ist, scheiden sie aus dem Spiel aus.',
@@ -2257,6 +2661,22 @@ const translations: Translations = {
       'Ogni volta che un giocatore perde una carta di influenza, sceglie quale delle sue carte rivelare.',
     'pt-BR':
       'Sempre que um jogador perder uma carta de influência, ele escolhe qual de suas cartas revelar.',
+  },
+  rulesReformation: {
+    'de-DE':
+      'Die Reformations-Erweiterung fügt Fraktionen (Loyalisten und Reformisten), eine Staatskasse und neue Aktionen hinzu. Spieler können nur Spieler der gegnerischen Fraktion angreifen, es sei denn alle Spieler gehören derselben Fraktion an. Konvertieren ändert Fraktionen, Unterschlagen nimmt Münzen aus der Staatskasse und Untersuchen enthüllt Karten von Gegnern.',
+    'en-US':
+      'The Reformation expansion adds factions (Loyalists and Reformists), a treasury, and new actions. Players can only target players of the opposing faction unless all players share the same faction. Convert changes factions, Embezzle takes coins from the treasury, and Examine reveals opponents\' cards.',
+    'es-MX':
+      'La expansión Reforma agrega facciones (Leales y Reformistas), un tesoro y nuevas acciones. Los jugadores solo pueden atacar a jugadores de la facción opuesta a menos que todos compartan la misma facción. Convertir cambia facciones, Malversar toma monedas del tesoro y Examinar revela las cartas de los oponentes.',
+    'fr-FR':
+      "L'extension Réforme ajoute des factions (Loyalistes et Réformistes), un trésor et de nouvelles actions. Les joueurs ne peuvent cibler que les joueurs de la faction adverse, sauf si tous les joueurs partagent la même faction. Convertir change les factions, Détourner prend des pièces du trésor et Examiner révèle les cartes des adversaires.",
+    'hi-IN':
+      'सुधार विस्तार में गुट (वफादार और सुधारवादी), एक खजाना और नई क्रियाएं जोड़ी गई हैं। खिलाड़ी केवल विरोधी गुट के खिलाड़ियों को लक्षित कर सकते हैं जब तक कि सभी खिलाड़ी एक ही गुट में न हों। धर्मांतरण गुट बदलता है, गबन खजाने से सिक्के लेता है, और जांच विरोधियों के कार्ड प्रकट करता है।',
+    'it-IT':
+      "L'espansione Riforma aggiunge fazioni (Lealisti e Riformisti), un tesoro e nuove azioni. I giocatori possono prendere di mira solo i giocatori della fazione avversaria a meno che tutti i giocatori condividano la stessa fazione. Convertire cambia fazioni, Appropriarsi prende monete dal tesoro ed Esaminare rivela le carte degli avversari.",
+    'pt-BR':
+      'A expansão Reforma adiciona facções (Lealistas e Reformistas), um tesouro e novas ações. Os jogadores só podem atacar jogadores da facção oposta, a menos que todos compartilhem a mesma facção. Converter muda facções, Desviar pega moedas do tesouro e Examinar revela as cartas dos oponentes.',
   },
   rulesRevive: {
     'de-DE':
@@ -2746,6 +3166,15 @@ const translations: Translations = {
     'it-IT': 'Sistema',
     'pt-BR': 'Sistema',
   },
+  takeAllTreasuryCoins: {
+    'de-DE': 'Alle Münzen aus der Staatskasse nehmen',
+    'en-US': 'Take all coins from the treasury',
+    'es-MX': 'Tomar todas las monedas del tesoro',
+    'fr-FR': 'Prendre toutes les pièces du trésor',
+    'hi-IN': 'खजाने से सभी सिक्के लें',
+    'it-IT': 'Prendi tutte le monete dal tesoro',
+    'pt-BR': 'Pegar todas as moedas do tesouro',
+  },
   termsOfService: {
     'de-DE': 'Nutzungsbedingungen',
     'en-US': 'Terms of Service',
@@ -2772,6 +3201,15 @@ const translations: Translations = {
     'hi-IN': 'Coup',
     'it-IT': 'Coup',
     'pt-BR': 'Coup',
+  },
+  treasury: {
+    'de-DE': 'Staatskasse',
+    'en-US': 'Treasury',
+    'es-MX': 'Tesoro',
+    'fr-FR': 'Trésor',
+    'hi-IN': 'खजाना',
+    'it-IT': 'Tesoro',
+    'pt-BR': 'Tesouro',
   },
   truth: {
     'de-DE': 'Wahrheit',
@@ -2800,6 +3238,339 @@ const translations: Translations = {
     'it-IT': 'turni',
     'pt-BR': 'turnos',
   },
+  tutorial: {
+    'de-DE': 'Tutorial',
+    'en-US': 'Tutorial',
+    'es-MX': 'Tutorial',
+    'fr-FR': 'Tutoriel',
+    'hi-IN': 'ट्यूटोरियल',
+    'it-IT': 'Tutorial',
+    'pt-BR': 'Tutorial',
+  },
+  tutorialBack: {
+    'de-DE': 'Zurück',
+    'en-US': 'Back',
+    'es-MX': 'Atrás',
+    'fr-FR': 'Retour',
+    'hi-IN': 'पीछे',
+    'it-IT': 'Indietro',
+    'pt-BR': 'Voltar',
+  },
+  tutorialComplete: {
+    'de-DE': 'Du bist bereit zu spielen! 🎉',
+    'en-US': "You're ready to play! 🎉",
+    'es-MX': '¡Estás listo para jugar! 🎉',
+    'fr-FR': 'Vous êtes prêt à jouer ! 🎉',
+    'hi-IN': 'आप खेलने के लिए तैयार हैं! 🎉',
+    'it-IT': 'Sei pronto per giocare! 🎉',
+    'pt-BR': 'Você está pronto para jogar! 🎉',
+  },
+  tutorialFinish: {
+    'de-DE': 'Fertig',
+    'en-US': 'Finish',
+    'es-MX': 'Terminar',
+    'fr-FR': 'Terminer',
+    'hi-IN': 'समाप्त',
+    'it-IT': 'Fine',
+    'pt-BR': 'Finalizar',
+  },
+  tutorialIntro: {
+    'de-DE': 'Folge diesem Beispielspiel mit drei Spielern, um die Grundlagen von Coup zu lernen.',
+    'en-US': 'Follow this example game with three players to learn the basics of Coup.',
+    'es-MX': 'Sigue este juego de ejemplo con tres jugadores para aprender los conceptos básicos de Coup.',
+    'fr-FR': 'Suivez cet exemple de partie avec trois joueurs pour apprendre les bases de Coup.',
+    'hi-IN': 'Coup की मूल बातें सीखने के लिए तीन खिलाड़ियों के साथ इस उदाहरण खेल का अनुसरण करें।',
+    'it-IT': 'Segui questa partita di esempio con tre giocatori per imparare le basi di Coup.',
+    'pt-BR': 'Siga este jogo de exemplo com três jogadores para aprender o básico de Coup.',
+  },
+  tutorialNext: {
+    'de-DE': 'Weiter',
+    'en-US': 'Next',
+    'es-MX': 'Siguiente',
+    'fr-FR': 'Suivant',
+    'hi-IN': 'अगला',
+    'it-IT': 'Avanti',
+    'pt-BR': 'Próximo',
+  },
+  tutorialRestart: {
+    'de-DE': 'Tutorial neu starten',
+    'en-US': 'Restart Tutorial',
+    'es-MX': 'Reiniciar Tutorial',
+    'fr-FR': 'Recommencer le Tutoriel',
+    'hi-IN': 'ट्यूटोरियल पुनः आरंभ करें',
+    'it-IT': 'Ricomincia il Tutorial',
+    'pt-BR': 'Reiniciar Tutorial',
+  },
+  tutorialRulesHint: {
+    'de-DE': 'Verwende die Regel-Schaltfläche unten links, um jederzeit die vollständigen Regeln und den Spickzettel anzuzeigen.',
+    'en-US': 'Use the rules button in the bottom left corner to view the full rules and cheat sheet at any time.',
+    'es-MX': 'Usa el botón de reglas en la esquina inferior izquierda para ver las reglas completas y la hoja de referencia en cualquier momento.',
+    'fr-FR': 'Utilisez le bouton des règles en bas à gauche pour consulter les règles complètes et l\'aide-mémoire à tout moment.',
+    'hi-IN': 'पूर्ण नियम और चीट शीट किसी भी समय देखने के लिए नीचे बाएँ कोने में नियम बटन का उपयोग करें।',
+    'it-IT': 'Usa il pulsante delle regole in basso a sinistra per visualizzare le regole complete e il foglio riassuntivo in qualsiasi momento.',
+    'pt-BR': 'Use o botão de regras no canto inferior esquerdo para ver as regras completas e a folha de referência a qualquer momento.',
+  },
+  tutorialStartingCoins: {
+    'de-DE': 'Jeder Spieler startet mit 2 Münzen',
+    'en-US': 'Each player starts with 2 coins',
+    'es-MX': 'Cada jugador comienza con 2 monedas',
+    'fr-FR': 'Chaque joueur commence avec 2 pièces',
+    'hi-IN': 'प्रत्येक खिलाड़ी 2 सिक्कों से शुरू करता है',
+    'it-IT': 'Ogni giocatore inizia con 2 monete',
+    'pt-BR': 'Cada jogador começa com 2 moedas',
+  },
+  tutorialStep10Content: {
+    'de-DE': 'Das Spiel geht weiter, bis nur noch ein Spieler Einflusskarten hat. Denke daran: Du kannst JEDE Aktion beanspruchen, unabhängig von deinen Karten — aber wenn du herausgefordert wirst und bluffst, verlierst du eine Einflusskarte! Das ist das Herz von Coup: Täuschung, Risiko und Timing.',
+    'en-US': "The game continues until only one player has influence cards remaining. Remember: you can claim ANY action regardless of your cards — but if you're challenged and you're bluffing, you lose an influence! That's the heart of Coup: deception, risk, and timing.",
+    'es-MX': 'El juego continúa hasta que solo un jugador tenga cartas de influencia. Recuerda: puedes reclamar CUALQUIER acción independientemente de tus cartas — ¡pero si te desafían y estás mintiendo, pierdes una influencia! Ese es el corazón de Coup: engaño, riesgo y oportunidad.',
+    'fr-FR': "Le jeu continue jusqu'à ce qu'un seul joueur ait des cartes d'influence. Rappelez-vous : vous pouvez revendiquer N'IMPORTE QUELLE action quelles que soient vos cartes — mais si on vous conteste et que vous bluffez, vous perdez une influence ! C'est le cœur de Coup : tromperie, risque et opportunité.",
+    'hi-IN': 'खेल तब तक जारी रहता है जब तक केवल एक खिलाड़ी के पास प्रभाव कार्ड बचे हों। याद रखें: आप अपने कार्ड की परवाह किए बिना कोई भी क्रिया का दावा कर सकते हैं — लेकिन अगर आपको चुनौती दी जाती है और आप झांसा दे रहे हैं, तो आप एक प्रभाव खो देते हैं! यही Coup का दिल है: धोखा, जोखिम और समय।',
+    'it-IT': "Il gioco continua finché solo un giocatore ha carte di influenza. Ricorda: puoi rivendicare QUALSIASI azione indipendentemente dalle tue carte — ma se vieni sfidato e stai bluffando, perdi un'influenza! Questo è il cuore di Coup: inganno, rischio e tempismo.",
+    'pt-BR': 'O jogo continua até que apenas um jogador tenha cartas de influência. Lembre-se: você pode reivindicar QUALQUER ação independentemente de suas cartas — mas se for desafiado e estiver blefando, perde uma influência! Esse é o coração de Coup: engano, risco e oportunidade.',
+  },
+  tutorialStep10Title: {
+    'de-DE': 'Das Spiel geht weiter...',
+    'en-US': 'The Game Continues...',
+    'es-MX': 'El Juego Continúa...',
+    'fr-FR': 'Le Jeu Continue...',
+    'hi-IN': 'खेल जारी है...',
+    'it-IT': 'Il Gioco Continua...',
+    'pt-BR': 'O Jogo Continua...',
+  },
+  tutorialStep1Content: {
+    'de-DE': 'In Coup beginnt jeder Spieler mit 2 Einflusskarten (geheim) und 2 Münzen. Dein Ziel ist es, der letzte Spieler mit Einflusskarten zu sein. Du verlierst eine Karte, wenn du erfolgreich herausgefordert wirst, jemand einen Putsch gegen dich durchführt oder jemand dich meuchelt.',
+    'en-US': 'In Coup, each player starts with 2 influence cards (kept secret) and 2 coins. Your goal is to be the last player with influence cards. You lose a card when you are successfully challenged, someone coups you, or someone assassinates you.',
+    'es-MX': 'En Coup, cada jugador comienza con 2 cartas de influencia (secretas) y 2 monedas. Tu objetivo es ser el último jugador con cartas de influencia. Pierdes una carta cuando te desafían exitosamente, alguien te hace un golpe o alguien te asesina.',
+    'fr-FR': "Dans Coup, chaque joueur commence avec 2 cartes d'influence (gardées secrètes) et 2 pièces. Votre objectif est d'être le dernier joueur avec des cartes d'influence. Vous perdez une carte quand vous êtes contesté avec succès, que quelqu'un vous fait un coup ou que quelqu'un vous assassine.",
+    'hi-IN': 'Coup में, प्रत्येक खिलाड़ी 2 प्रभाव कार्ड (गुप्त) और 2 सिक्कों से शुरू करता है। आपका लक्ष्य प्रभाव कार्ड वाला अंतिम खिलाड़ी बनना है। जब आपको सफलतापूर्वक चुनौती दी जाती है, कोई आप पर तख्तापलट करता है, या कोई आपकी हत्या करता है तो आप एक कार्ड खो देते हैं।',
+    'it-IT': "In Coup, ogni giocatore inizia con 2 carte di influenza (segrete) e 2 monete. Il tuo obiettivo è essere l'ultimo giocatore con carte di influenza. Perdi una carta quando vieni sfidato con successo, qualcuno ti fa un colpo di stato o qualcuno ti assassina.",
+    'pt-BR': 'Em Coup, cada jogador começa com 2 cartas de influência (secretas) e 2 moedas. Seu objetivo é ser o último jogador com cartas de influência. Você perde uma carta quando é desafiado com sucesso, alguém dá um golpe em você ou alguém te assassina.',
+  },
+  tutorialStep1Title: {
+    'de-DE': 'Die Grundlagen',
+    'en-US': 'The Basics',
+    'es-MX': 'Lo Básico',
+    'fr-FR': 'Les Bases',
+    'hi-IN': 'मूल बातें',
+    'it-IT': 'Le Basi',
+    'pt-BR': 'O Básico',
+  },
+  tutorialStep2Content: {
+    'de-DE': 'Lass uns ein 3-Spieler-Spiel zwischen Alice, Bob und Carol anschauen. Jeder bekommt 2 zufällige Einflusskarten, die nur sie sehen können:',
+    'en-US': "Let's watch a 3-player game between Alice, Bob, and Carol. Each gets 2 random influence cards that only they can see:",
+    'es-MX': 'Veamos un juego de 3 jugadores entre Alice, Bob y Carol. Cada uno recibe 2 cartas de influencia aleatorias que solo ellos pueden ver:',
+    'fr-FR': 'Regardons une partie à 3 joueurs entre Alice, Bob et Carol. Chacun reçoit 2 cartes d\'influence aléatoires que seul il peut voir :',
+    'hi-IN': 'आइए Alice, Bob और Carol के बीच 3-खिलाड़ी खेल देखें। प्रत्येक को 2 यादृच्छिक प्रभाव कार्ड मिलते हैं जो केवल वे देख सकते हैं:',
+    'it-IT': 'Guardiamo una partita a 3 giocatori tra Alice, Bob e Carol. Ognuno riceve 2 carte di influenza casuali che solo loro possono vedere:',
+    'pt-BR': 'Vamos assistir um jogo de 3 jogadores entre Alice, Bob e Carol. Cada um recebe 2 cartas de influência aleatórias que só eles podem ver:',
+  },
+  tutorialStep2Title: {
+    'de-DE': 'Spielaufbau',
+    'en-US': 'Game Setup',
+    'es-MX': 'Preparación del Juego',
+    'fr-FR': 'Mise en Place',
+    'hi-IN': 'खेल की तैयारी',
+    'it-IT': 'Preparazione del Gioco',
+    'pt-BR': 'Preparação do Jogo',
+  },
+  tutorialStep3Content: {
+    'de-DE': 'Alice ist am Zug. Sie hat den Herzog, also beansprucht sie Steuern (nimm 3 Münzen). Niemand fordert sie heraus, also bekommt sie die Münzen. Merke: Sie hätte Tax auch OHNE den Herzog beanspruchen können — es ist ein Bluff-Spiel!',
+    'en-US': "Alice goes first. She has the Duke, so she claims Tax (take 3 coins). Nobody challenges her, so she gets the coins. Note: she could have claimed Tax even WITHOUT the Duke — it's a bluffing game!",
+    'es-MX': 'Alice va primero. Tiene al Duque, así que reclama Impuesto (tomar 3 monedas). Nadie la desafía, así que obtiene las monedas. Nota: ¡podría haber reclamado Impuesto incluso SIN el Duque — es un juego de engaño!',
+    'fr-FR': "Alice commence. Elle a le Duc, donc elle revendique la Taxe (prendre 3 pièces). Personne ne la conteste, donc elle obtient les pièces. Note : elle aurait pu revendiquer la Taxe même SANS le Duc — c'est un jeu de bluff !",
+    'hi-IN': 'Alice पहले जाती है। उसके पास Duke है, इसलिए वह Tax का दावा करती है (3 सिक्के लें)। कोई उसे चुनौती नहीं देता, इसलिए उसे सिक्के मिलते हैं। ध्यान दें: वह Duke के बिना भी Tax का दावा कर सकती थी — यह एक ब्लफ़ गेम है!',
+    'it-IT': "Alice va per prima. Ha il Duca, quindi rivendica la Tassa (prendere 3 monete). Nessuno la sfida, quindi ottiene le monete. Nota: avrebbe potuto rivendicare la Tassa anche SENZA il Duca — è un gioco di bluff!",
+    'pt-BR': 'Alice vai primeiro. Ela tem o Duque, então reivindica Imposto (pegar 3 moedas). Ninguém a desafia, então ela fica com as moedas. Nota: ela poderia ter reivindicado Imposto mesmo SEM o Duque — é um jogo de blefe!',
+  },
+  tutorialStep3Title: {
+    'de-DE': 'Runde 1: Aktion beanspruchen',
+    'en-US': 'Turn 1: Claiming an Action',
+    'es-MX': 'Turno 1: Reclamar una Acción',
+    'fr-FR': 'Tour 1 : Revendiquer une Action',
+    'hi-IN': 'मोड़ 1: एक क्रिया का दावा',
+    'it-IT': 'Turno 1: Rivendicare un\'Azione',
+    'pt-BR': 'Turno 1: Reivindicar uma Ação',
+  },
+  tutorialStep4Content: {
+    'de-DE': 'Bob ist dran. Er hat NICHT den Kapitän, aber er behauptet trotzdem, er wolle von Alice stehlen! Im echten Spiel könnte er damit durchkommen, wenn niemand herausfordert...',
+    'en-US': "Bob's turn. He does NOT have the Captain, but he claims he wants to Steal from Alice anyway! In a real game, he might get away with it if nobody challenges...",
+    'es-MX': 'Turno de Bob. NO tiene al Capitán, ¡pero reclama que quiere Robar a Alice de todos modos! En un juego real, podría salirse con la suya si nadie desafía...',
+    'fr-FR': "Tour de Bob. Il N'a PAS le Capitaine, mais il prétend quand même vouloir Voler Alice ! Dans une vraie partie, il pourrait s'en sortir si personne ne conteste...",
+    'hi-IN': 'Bob की बारी। उसके पास Captain नहीं है, लेकिन वह फिर भी Alice से चोरी करने का दावा करता है! असली खेल में, अगर कोई चुनौती नहीं देता तो वह बच सकता है...',
+    'it-IT': "Turno di Bob. NON ha il Capitano, ma dichiara di voler Rubare ad Alice comunque! In una partita vera, potrebbe farla franca se nessuno lo sfida...",
+    'pt-BR': 'Turno do Bob. Ele NÃO tem o Capitão, mas reivindica que quer Roubar de Alice mesmo assim! Em um jogo real, ele pode se safar se ninguém desafiar...',
+  },
+  tutorialStep4Dialogue: {
+    'de-DE': 'von Alice stehlen',
+    'en-US': 'from Alice',
+    'es-MX': 'de Alice',
+    'fr-FR': 'd\'Alice',
+    'hi-IN': 'Alice से',
+    'it-IT': 'da Alice',
+    'pt-BR': 'de Alice',
+  },
+  tutorialStep4Title: {
+    'de-DE': 'Runde 2: Bluffen!',
+    'en-US': 'Turn 2: Bluffing!',
+    'es-MX': 'Turno 2: ¡Engañando!',
+    'fr-FR': 'Tour 2 : Bluffer !',
+    'hi-IN': 'मोड़ 2: ब्लफ़!',
+    'it-IT': 'Turno 2: Bluffare!',
+    'pt-BR': 'Turno 2: Blefando!',
+  },
+  tutorialStep5Block: {
+    'de-DE': 'Ich habe den',
+    'en-US': 'I have the',
+    'es-MX': 'Tengo al',
+    'fr-FR': "J'ai le",
+    'hi-IN': 'मेरे पास है',
+    'it-IT': 'Ho il',
+    'pt-BR': 'Eu tenho o',
+  },
+  tutorialStep5Content: {
+    'de-DE': 'Alice blockiert den Diebstahl und behauptet, sie habe den Kapitän (den sie tatsächlich hat). Bob könnte ihre Blockade herausfordern, aber er entscheidet sich dagegen. Der Diebstahl wird verhindert!',
+    'en-US': "Alice blocks the steal, claiming she has the Captain (which she actually does). Bob could challenge her block, but he decides not to. The steal is prevented!",
+    'es-MX': 'Alice bloquea el robo, afirmando que tiene al Capitán (lo cual es cierto). Bob podría desafiar su bloqueo, pero decide no hacerlo. ¡El robo es prevenido!',
+    'fr-FR': "Alice bloque le vol, prétendant avoir le Capitaine (ce qu'elle a vraiment). Bob pourrait contester son blocage, mais il décide de ne pas le faire. Le vol est empêché !",
+    'hi-IN': 'Alice चोरी को रोकती है, दावा करती है कि उसके पास Captain है (जो वास्तव में है)। Bob उसके ब्लॉक को चुनौती दे सकता था, लेकिन उसने नहीं दी। चोरी रोक दी गई!',
+    'it-IT': "Alice blocca il furto, sostenendo di avere il Capitano (che ha davvero). Bob potrebbe sfidare il suo blocco, ma decide di non farlo. Il furto è impedito!",
+    'pt-BR': 'Alice bloqueia o roubo, afirmando que tem o Capitão (o que ela realmente tem). Bob poderia desafiar seu bloqueio, mas decide não fazê-lo. O roubo é impedido!',
+  },
+  tutorialStep5Ok: {
+    'de-DE': '...OK.',
+    'en-US': '...OK.',
+    'es-MX': '...OK.',
+    'fr-FR': '...OK.',
+    'hi-IN': '...ठीक है।',
+    'it-IT': '...OK.',
+    'pt-BR': '...OK.',
+  },
+  tutorialStep5Title: {
+    'de-DE': 'Blockieren',
+    'en-US': 'Blocking',
+    'es-MX': 'Bloquear',
+    'fr-FR': 'Bloquer',
+    'hi-IN': 'अवरोधन',
+    'it-IT': 'Bloccare',
+    'pt-BR': 'Bloquear',
+  },
+  tutorialStep6Content: {
+    'de-DE': 'Bob will meuchelmorden (kostet 3 Münzen), hat aber nur 2. Er kann sich das nicht leisten! Stattdessen nimmt er Einkommen (1 Münze, kann nie blockiert oder herausgefordert werden).',
+    'en-US': "Bob wants to Assassinate (costs 3 coins) but only has 2. He can't afford it! Instead, he takes Income (1 coin, can never be blocked or challenged).",
+    'es-MX': 'Bob quiere Asesinar (cuesta 3 monedas) pero solo tiene 2. ¡No puede pagarlo! En su lugar, toma Ingreso (1 moneda, nunca puede ser bloqueado ni desafiado).',
+    'fr-FR': "Bob veut Assassiner (coûte 3 pièces) mais n'en a que 2. Il ne peut pas se le permettre ! À la place, il prend un Revenu (1 pièce, ne peut jamais être bloqué ni contesté).",
+    'hi-IN': 'Bob Assassinate करना चाहता है (3 सिक्के लगते हैं) लेकिन उसके पास केवल 2 हैं। वह इसे वहन नहीं कर सकता! इसके बजाय, वह Income लेता है (1 सिक्का, कभी ब्लॉक या चुनौती नहीं दी जा सकती)।',
+    'it-IT': "Bob vuole Assassinare (costa 3 monete) ma ne ha solo 2. Non può permetterselo! Invece, prende un Reddito (1 moneta, non può mai essere bloccato o sfidato).",
+    'pt-BR': 'Bob quer Assassinar (custa 3 moedas) mas só tem 2. Não pode pagar! Em vez disso, ele pega Renda (1 moeda, nunca pode ser bloqueada ou desafiada).',
+  },
+  tutorialStep6Title: {
+    'de-DE': 'Runde 3: Aktionskosten',
+    'en-US': 'Turn 3: Action Costs',
+    'es-MX': 'Turno 3: Costos de Acción',
+    'fr-FR': 'Tour 3 : Coûts des Actions',
+    'hi-IN': 'मोड़ 3: क्रिया लागत',
+    'it-IT': 'Turno 3: Costi delle Azioni',
+    'pt-BR': 'Turno 3: Custos de Ação',
+  },
+  tutorialStep7Content: {
+    'de-DE': 'Carol nutzt die Fähigkeit ihres Botschafters. Sie zieht 2 Karten vom Stapel, schaut sich alle 4 an und wählt 2 zum Behalten. Der Rest geht zurück in den Stapel.',
+    'en-US': "Carol uses her Ambassador's ability. She draws 2 cards from the deck, looks at all 4, and chooses 2 to keep. The rest go back into the deck.",
+    'es-MX': 'Carol usa la habilidad de su Embajador. Roba 2 cartas del mazo, mira las 4 y elige 2 para quedarse. El resto vuelve al mazo.',
+    'fr-FR': "Carol utilise la capacité de son Ambassadeur. Elle pioche 2 cartes du paquet, regarde les 4, et choisit 2 à garder. Le reste retourne dans le paquet.",
+    'hi-IN': 'Carol अपने Ambassador की क्षमता का उपयोग करती है। वह डेक से 2 कार्ड निकालती है, सभी 4 को देखती है, और 2 रखने के लिए चुनती है। बाकी वापस डेक में जाते हैं।',
+    'it-IT': "Carol usa l'abilità del suo Ambasciatore. Pesca 2 carte dal mazzo, guarda tutte e 4, e sceglie 2 da tenere. Il resto torna nel mazzo.",
+    'pt-BR': 'Carol usa a habilidade do seu Embaixador. Ela compra 2 cartas do baralho, olha todas as 4 e escolhe 2 para manter. O resto volta para o baralho.',
+  },
+  tutorialStep7Detail: {
+    'de-DE': 'Schaut 4 Karten an, behält 2',
+    'en-US': 'Looks at 4 cards, keeps 2',
+    'es-MX': 'Mira 4 cartas, se queda con 2',
+    'fr-FR': 'Regarde 4 cartes, en garde 2',
+    'hi-IN': '4 कार्ड देखती है, 2 रखती है',
+    'it-IT': 'Guarda 4 carte, ne tiene 2',
+    'pt-BR': 'Olha 4 cartas, fica com 2',
+  },
+  tutorialStep7Title: {
+    'de-DE': 'Runde 4: Austausch',
+    'en-US': 'Turn 4: Exchange',
+    'es-MX': 'Turno 4: Intercambio',
+    'fr-FR': 'Tour 4 : Échange',
+    'hi-IN': 'मोड़ 4: विनिमय',
+    'it-IT': 'Turno 4: Scambio',
+    'pt-BR': 'Turno 4: Troca',
+  },
+  tutorialStep8Challenge: {
+    'de-DE': 'Du hast nicht den',
+    'en-US': "You don't have the",
+    'es-MX': '\u00a1No tienes al',
+    'fr-FR': "Tu n'as pas le",
+    'hi-IN': '\u0924\u0941\u092e\u094d\u0939\u093e\u0930\u0947 \u092a\u093e\u0938 \u0928\u0939\u0940\u0902 \u0939\u0948',
+    'it-IT': 'Non hai il',
+    'pt-BR': 'Voc\u00ea n\u00e3o tem o',
+  },
+  tutorialStep8Content: {
+    'de-DE': 'Alice beansprucht erneut Steuern. Diesmal fordert Carol sie heraus! Alice muss ihren Herzog zeigen...',
+    'en-US': 'Alice claims Tax again. This time, Carol challenges her! Alice must reveal her Duke...',
+    'es-MX': 'Alice reclama Impuesto de nuevo. ¡Esta vez, Carol la desafía! Alice debe revelar su Duque...',
+    'fr-FR': 'Alice revendique à nouveau la Taxe. Cette fois, Carol la conteste ! Alice doit révéler son Duc...',
+    'hi-IN': 'Alice फिर से Tax का दावा करती है। इस बार, Carol उसे चुनौती देती है! Alice को अपना Duke दिखाना होगा...',
+    'it-IT': 'Alice rivendica di nuovo la Tassa. Questa volta, Carol la sfida! Alice deve rivelare il suo Duca...',
+    'pt-BR': 'Alice reivindica Imposto novamente. Desta vez, Carol a desafia! Alice deve revelar seu Duque...',
+  },
+  tutorialStep8Result: {
+    'de-DE': 'Carol VERLIERT die Herausforderung und muss eine Einflusskarte aufgeben!',
+    'en-US': 'Carol LOSES the challenge and must give up an influence card!',
+    'es-MX': '¡Carol PIERDE el desafío y debe renunciar a una carta de influencia!',
+    'fr-FR': "Carol PERD la contestation et doit abandonner une carte d'influence !",
+    'hi-IN': 'Carol चुनौती हार जाती है और उसे एक प्रभाव कार्ड छोड़ना होगा!',
+    'it-IT': "Carol PERDE la sfida e deve rinunciare a una carta d'influenza!",
+    'pt-BR': 'Carol PERDE o desafio e deve desistir de uma carta de influência!',
+  },
+  tutorialStep8Reveal: {
+    'de-DE': 'Zeigt den Herzog',
+    'en-US': 'Reveals Duke',
+    'es-MX': 'Revela al Duque',
+    'fr-FR': 'Révèle le Duc',
+    'hi-IN': 'Duke दिखाती है',
+    'it-IT': 'Rivela il Duca',
+    'pt-BR': 'Revela o Duque',
+  },
+  tutorialStep8Title: {
+    'de-DE': 'Herausforderung fehlgeschlagen!',
+    'en-US': 'Challenge Failed!',
+    'es-MX': '¡Desafío Fallido!',
+    'fr-FR': 'Contestation Échouée !',
+    'hi-IN': 'चुनौती विफल!',
+    'it-IT': 'Sfida Fallita!',
+    'pt-BR': 'Desafio Falhou!',
+  },
+  tutorialStep9Content: {
+    'de-DE': 'Bob hat jetzt 4 Münzen (nach mehreren Einkommens-Runden). Er beansprucht ein Attentat auf Carol! Carol hat nur noch eine Karte — wenn sie keine Contessa hat, um zu blockieren, ist sie raus!',
+    'en-US': "Bob now has 4 coins (after several Income turns). He claims Assassinate on Carol! Carol only has 1 card left — if she doesn't have the Contessa to block, she's out!",
+    'es-MX': 'Bob ahora tiene 4 monedas (después de varios turnos de Ingreso). ¡Reclama Asesinar a Carol! Carol solo tiene 1 carta — ¡si no tiene la Condesa para bloquear, está fuera!',
+    'fr-FR': "Bob a maintenant 4 pièces (après plusieurs tours de Revenu). Il revendique l'Assassinat de Carol ! Carol n'a plus qu'une carte — si elle n'a pas la Comtesse pour bloquer, elle est éliminée !",
+    'hi-IN': 'Bob के पास अब 4 सिक्के हैं (कई Income मोड़ों के बाद)। वह Carol पर Assassinate का दावा करता है! Carol के पास केवल 1 कार्ड बचा है — अगर उसके पास ब्लॉक करने के लिए Contessa नहीं है, तो वह बाहर है!',
+    'it-IT': "Bob ora ha 4 monete (dopo diversi turni di Reddito). Rivendica l'Assassinio di Carol! Carol ha solo 1 carta rimasta — se non ha la Contessa per bloccare, è fuori!",
+    'pt-BR': 'Bob agora tem 4 moedas (após várias rodadas de Renda). Ele reivindica Assassinar Carol! Carol só tem 1 carta — se não tiver a Condessa para bloquear, está fora!',
+  },
+  tutorialStep9Detail: {
+    'de-DE': 'Carol verliert ihre letzte Einflusskarte und ist aus dem Spiel!',
+    'en-US': 'Carol loses her last influence card and is out of the game!',
+    'es-MX': '¡Carol pierde su última carta de influencia y está fuera del juego!',
+    'fr-FR': "Carol perd sa dernière carte d'influence et est éliminée !",
+    'hi-IN': 'Carol अपना आखिरी प्रभाव कार्ड खो देती है और खेल से बाहर है!',
+    'it-IT': "Carol perde la sua ultima carta d'influenza ed è fuori dal gioco!",
+    'pt-BR': 'Carol perde sua última carta de influência e está fora do jogo!',
+  },
+  tutorialStep9Title: {
+    'de-DE': 'Meuchelmord!',
+    'en-US': 'Assassination!',
+    'es-MX': '¡Asesinato!',
+    'fr-FR': 'Assassinat !',
+    'hi-IN': 'हत्या!',
+    'it-IT': 'Assassinio!',
+    'pt-BR': 'Assassinato!',
+  },
   unchallenged: {
     'de-DE': 'Nicht herausgefordert',
     'en-US': 'Unchallenged',
@@ -2808,6 +3579,15 @@ const translations: Translations = {
     'hi-IN': 'बिना चुनौती',
     'it-IT': 'Non sfidato',
     'pt-BR': 'Sem desafio',
+  },
+  useInquisitor: {
+    'de-DE': 'Inquisitor verwenden',
+    'en-US': 'Use Inquisitor',
+    'es-MX': 'Usar Inquisidor',
+    'fr-FR': 'Utiliser l\'Inquisiteur',
+    'hi-IN': 'जाँचकर्ता का उपयोग करें',
+    'it-IT': 'Usa Inquisitore',
+    'pt-BR': 'Usar Inquisidor',
   },
   vengefulness: {
     'de-DE': 'Rachsucht',

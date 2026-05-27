@@ -1,4 +1,4 @@
-import { Box, Grid, Tooltip, Typography, useTheme } from "@mui/material"
+import { Box, Grid, useTheme } from "@mui/material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
@@ -117,27 +117,38 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
             alignItems='center'
             sx={{
               ...centeredOnSmallScreen,
-              fontSize: '2rem'
+              fontSize: '1.25rem'
             }}>
-            <Tooltip
-              title={
-                <Typography variant="h6">
-                  {t('cardCountInDeck', {
-                    count: gameState.deckCount
-                  })}
-                </Typography>
-              }>
+            <CoupTypography
+              display='flex'
+              alignItems='center'
+              component='span'
+              fontSize='inherit'
+              addTextShadow
+            >
+              {t('deck')}: {gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} />
+            </CoupTypography>
+          </Grid>
+          {gameState.settings.enableReformation && (
+            <Grid
+              container
+              size={12}
+              alignItems='center'
+              sx={{
+                ...centeredOnSmallScreen,
+                fontSize: '1.25rem'
+              }}>
               <CoupTypography
                 display='flex'
                 alignItems='center'
                 component='span'
-                fontSize='smaller'
+                fontSize='inherit'
                 addTextShadow
               >
-                {gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} />
+                {t('treasury')}: {gameState.treasury} 🪙
               </CoupTypography>
-            </Tooltip>
-          </Grid>
+            </Grid>
+          )}
           <Grid size={12}>
             <RequestReset />
           </Grid>

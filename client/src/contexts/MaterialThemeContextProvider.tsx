@@ -16,6 +16,7 @@ import {
   DARK_COLOR_MODE,
   SYSTEM_COLOR_MODE,
 } from './MaterialThemeContext'
+import { useGameSettingsContext } from './GameSettingsContext'
 
 function MaterialThemeContextProvider({
   children,
@@ -27,6 +28,7 @@ function MaterialThemeContextProvider({
 
   const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
   const isLargeScreen = useMediaQuery('screen and (min-width: 1200px)')
+  const { useInquisitor } = useGameSettingsContext()
 
   // Always use DARK_COLOR_MODE for now
   const activeColorMode: PaletteMode = DARK_COLOR_MODE
@@ -52,13 +54,17 @@ function MaterialThemeContextProvider({
       [Influences.Contessa]: isLightMode ? '#9B6000' : '#C38E3A',
       [Influences.Captain]: isLightMode ? '#00338A' : '#3868BA',
       [Influences.Ambassador]: isLightMode ? '#3D6600' : '#78A831',
+      [Influences.Inquisitor]: isLightMode ? '#1A5C5C' : '#3A9E9E',
       [Influences.Duke]: isLightMode ? '#73007B' : '#AA35B2',
     }
 
     const actionColors = {
       [Actions.Assassinate]: influenceColors[Influences.Assassin],
       [Actions.Coup]: primaryColor,
-      [Actions.Exchange]: influenceColors[Influences.Ambassador],
+      [Actions.Exchange]: useInquisitor ? influenceColors[Influences.Inquisitor] : influenceColors[Influences.Ambassador],
+      [Actions.Examine]: influenceColors[Influences.Inquisitor],
+      [Actions.Convert]: primaryColor,
+      [Actions.Embezzle]: primaryColor,
       [Actions.ForeignAid]: primaryColor,
       [Actions.Income]: primaryColor,
       [Actions.Revive]: primaryColor,
@@ -164,7 +170,7 @@ function MaterialThemeContextProvider({
     })
 
     return theme
-  }, [isLightMode, activeColorMode, isSmallScreen, isLargeScreen])
+  }, [isLightMode, activeColorMode, isSmallScreen, isLargeScreen, useInquisitor])
 
   return (
     <>

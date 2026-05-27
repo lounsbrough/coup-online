@@ -4,6 +4,7 @@ import Assassin from "./Assassin"
 import Duke from "./Duke"
 import Contessa from "./Contessa"
 import Captain from "./Captain"
+import Inquisitor from "./Inquisitor"
 import { SvgIcon, SxProps } from "@mui/material"
 import { QuestionMark } from "@mui/icons-material"
 
@@ -12,7 +13,8 @@ const iconMap = {
   [Influences.Assassin]: Assassin,
   [Influences.Captain]: Captain,
   [Influences.Contessa]: Contessa,
-  [Influences.Duke]: Duke
+  [Influences.Duke]: Duke,
+  [Influences.Inquisitor]: Inquisitor
 }
 
 function InfluenceIcon({ influence, sx }: { influence?: Influences | undefined, sx?: SxProps }) {

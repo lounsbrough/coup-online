@@ -1,11 +1,11 @@
 import crypto from 'node:crypto'
-import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError, SpeedRoundTimerExpiredError } from "../utilities/errors"
-import { ActionAttributes, Actions, AiPersonality, EventMessages, GameSettings, GameState, InfluenceAttributes, Influences, PlayerActions, Responses } from "../../../shared/types/game"
-import { getGameState, getPublicGameState, logEvent, logForcedMove, mutateGameState } from "../utilities/gameState"
+import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, CannotTargetSameFactionError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError, SpeedRoundTimerExpiredError } from "../utilities/errors"
+import { ActionAttributes, Actions, AiPersonality, EventMessages, Factions, GameSettings, GameState, InfluenceAttributes, Influences, PlayerActions, Responses } from "../../../shared/types/game"
+import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, logForcedMove, mutateGameState, shuffleDeck } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { getValue } from '../utilities/storage'
 import { shuffle } from '../utilities/array'
-import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, canTargetPlayer, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isAllSameFaction, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
 import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
@@ -370,6 +370,10 @@ export const checkAutoMoveHandler = async ({ roomId, playerId }: {
       result = await blockResponseHandler({ ...(params as Parameters<typeof blockResponseHandler>[0]), isForcedMove })
     } else if (move === PlayerActions.blockChallengeResponse) {
       result = await blockChallengeResponseHandler({ ...(params as Parameters<typeof blockChallengeResponseHandler>[0]), isForcedMove })
+    } else if (move === PlayerActions.revealForExamine) {
+      result = await revealForExamineHandler(params as Parameters<typeof revealForExamineHandler>[0])
+    } else if (move === PlayerActions.examineDecision) {
+      result = await examineDecisionHandler(params as Parameters<typeof examineDecisionHandler>[0])
     } else {
       throw new ActionNotCurrentlyAllowedError()
     }
@@ -407,6 +411,10 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
     throw new InsufficientCoinsError()
   }
 
+  if (action === Actions.Convert && targetPlayer && player.coins < 2) {
+    throw new InsufficientCoinsError()
+  }
+
   if (player.coins >= 10 && ![Actions.Coup, Actions.Revive].includes(action)) {
     throw new InvalidActionAt10CoinsError()
   }
@@ -420,6 +428,18 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
     }
   }
 
+  if ((action === Actions.Convert || action === Actions.Embezzle) && !gameState.settings.enableReformation) {
+    throw new ActionNotCurrentlyAllowedError()
+  }
+
+  if ((action === Actions.Convert || action === Actions.Embezzle) && isAllSameFaction(gameState)) {
+    throw new ActionNotCurrentlyAllowedError()
+  }
+
+  if (action === Actions.Examine && !gameState.settings.useInquisitor) {
+    throw new ActionNotCurrentlyAllowedError()
+  }
+
   if (targetPlayer && !gameState.players.some((player) => player.name === targetPlayer)) {
     throw new UnableToFindPlayerError()
   }
@@ -428,12 +448,19 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
     throw new TargetPlayerRequiredForActionError()
   }
 
-  if (!ActionAttributes[action].requiresTarget && targetPlayer) {
+  if (!ActionAttributes[action].requiresTarget && targetPlayer && action !== Actions.Convert) {
     throw new TargetPlayerNotAllowedForActionError()
   }
 
-  if (targetPlayer === player.name) {
+  if (targetPlayer === player.name && action !== Actions.Convert) {
     throw new TargetPlayerIsSelfError()
+  }
+
+  if (targetPlayer && action !== Actions.Convert) {
+    const target = gameState.players.find((p) => p.name === targetPlayer)
+    if (target && !canTargetPlayer(gameState, player, target)) {
+      throw new CannotTargetSameFactionError()
+    }
   }
 
   let latestState: GameState = gameState
@@ -528,6 +555,46 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
           event: EventMessages.ActionProcessed,
           action,
           primaryPlayer: player.name
+        })
+      })
+    } else if (action === Actions.Convert) {
+      latestState = await mutateGameState(gameState, (state) => {
+        if (isForcedMove) logForcedMove(state, player)
+
+        const convertingPlayer = state.players.find(({ id }) => id === playerId)
+
+        if (!convertingPlayer) {
+          throw new UnableToFindPlayerError()
+        }
+
+        if (convertingPlayer.coins !== player.coins) {
+          throw new StateChangedSinceValidationError()
+        }
+
+        if (!canPlayerChooseAction(getPublicGameState({ gameState: state, playerId: convertingPlayer.id }))) {
+          throw new ActionNotCurrentlyAllowedError()
+        }
+
+        if (targetPlayer) {
+          const target = state.players.find((p) => p.name === targetPlayer)
+          if (!target) {
+            throw new UnableToFindPlayerError()
+          }
+          convertingPlayer.coins -= 2
+          state.treasury += 2
+          target.faction = target.faction === Factions.Loyalist ? Factions.Reformist : Factions.Loyalist
+        } else {
+          convertingPlayer.coins -= 1
+          state.treasury += 1
+          convertingPlayer.faction = convertingPlayer.faction === Factions.Loyalist ? Factions.Reformist : Factions.Loyalist
+        }
+
+        moveTurnToNextPlayer(state)
+        logEvent(state, {
+          event: EventMessages.ActionProcessed,
+          action,
+          primaryPlayer: player.name,
+          secondaryPlayer: targetPlayer || player.name
         })
       })
     }
@@ -663,14 +730,50 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       if (isForcedMove) logForcedMove(state, player)
 
       recordChallengeMade(state, player.name)
-      state.pendingActionChallenge = {
-        sourcePlayer: player.name
+
+      if (state.pendingAction!.action === Actions.Embezzle) {
+        const actionPlayer = state.players.find(({ name }) => name === state.turnPlayer)
+        if (!actionPlayer) {
+          throw new UnableToFindPlayerError()
+        }
+
+        const hasDuke = actionPlayer.influences.includes(Influences.Duke)
+        if (hasDuke) {
+          logEvent(state, {
+            event: EventMessages.ChallengeSuccessful,
+            primaryPlayer: player.name,
+            secondaryPlayer: state.turnPlayer!
+          })
+          recordSuccessfulChallenge(state, player.name)
+          recordInfluenceKill(state, player.name, state.turnPlayer!)
+          recordTimelineActionChallenge(state, player.name, true)
+          holdGrudge({ state, offended: state.turnPlayer!, offender: player.name, weight: grudgeSizes[Responses.Challenge] })
+          delete state.pendingAction
+          promptPlayerToLoseInfluence(state, actionPlayer.name)
+        } else {
+          logEvent(state, {
+            event: EventMessages.ChallengeFailed,
+            primaryPlayer: player.name,
+            secondaryPlayer: state.turnPlayer!
+          })
+          recordInfluenceKill(state, state.turnPlayer!, player.name)
+          recordTimelineActionChallenge(state, player.name, false)
+          actionPlayer.influences.forEach((influence) => {
+            revealAndReplaceInfluence(state, actionPlayer.name, influence)
+          })
+          promptPlayerToLoseInfluence(state, player.name)
+          processPendingAction(state)
+        }
+      } else {
+        state.pendingActionChallenge = {
+          sourcePlayer: player.name
+        }
+        logEvent(state, {
+          event: EventMessages.ChallengePending,
+          primaryPlayer: player.name,
+          secondaryPlayer: state.turnPlayer!
+        })
       }
-      logEvent(state, {
-        event: EventMessages.ChallengePending,
-        primaryPlayer: player.name,
-        secondaryPlayer: state.turnPlayer!
-      })
     })
   } else if (response === Responses.Block) {
     if (!claimedInfluence) {
@@ -1227,6 +1330,65 @@ export const setEmojiOnChatMessageHandler = async ({
         delete existingMessage.emojis[emoji]
       }
     }
+  })
+
+  return { roomId, playerId, gameState: updatedState }
+}
+
+export const revealForExamineHandler = async ({ roomId, playerId, influence }: {
+  roomId: string
+  playerId: string
+  influence: Influences
+}) => {
+  const gameState = await getGameState(roomId)
+  const player = getPlayerInRoom({ gameState, playerId })
+
+  if (!gameState.pendingExamine || gameState.pendingExamine.targetPlayer !== player.name) {
+    throw new ActionNotCurrentlyAllowedError()
+  }
+
+  if (!player.influences.includes(influence)) {
+    throw new MissingInfluenceError()
+  }
+
+  const updatedState = await mutateGameState(gameState, (state) => {
+    state.pendingExamine!.revealedInfluence = influence
+  })
+
+  return { roomId, playerId, gameState: updatedState }
+}
+
+export const examineDecisionHandler = async ({ roomId, playerId, forceSwap }: {
+  roomId: string
+  playerId: string
+  forceSwap: boolean
+}) => {
+  const gameState = await getGameState(roomId)
+  const player = getPlayerInRoom({ gameState, playerId })
+
+  if (!gameState.pendingExamine || gameState.pendingExamine.examiner !== player.name || !gameState.pendingExamine.revealedInfluence) {
+    throw new ActionNotCurrentlyAllowedError()
+  }
+
+  const updatedState = await mutateGameState(gameState, (state) => {
+    const targetPlayer = state.players.find((p) => p.name === state.pendingExamine!.targetPlayer)
+
+    if (!targetPlayer) {
+      throw new UnableToFindPlayerError()
+    }
+
+    if (forceSwap) {
+      const influenceIndex = targetPlayer.influences.indexOf(state.pendingExamine!.revealedInfluence!)
+      if (influenceIndex !== -1) {
+        targetPlayer.influences.splice(influenceIndex, 1)
+        state.deck.push(state.pendingExamine!.revealedInfluence!)
+        shuffleDeck(state)
+        targetPlayer.influences.push(drawCardFromDeck(state))
+      }
+    }
+
+    delete state.pendingExamine
+    moveTurnToNextPlayer(state)
   })
 
   return { roomId, playerId, gameState: updatedState }

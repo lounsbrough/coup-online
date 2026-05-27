@@ -1,7 +1,8 @@
-import { vi, describe, it, expect } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { Chance } from 'chance'
 import {
   Actions,
+  Factions,
   Influences,
   Player,
   PublicGameState,
@@ -65,6 +66,7 @@ describe('ai', () => {
       turn: chance.natural(),
       players: [],
       pendingInfluenceLoss: {},
+      treasury: 0,
       settings: { eventLogRetentionTurns: 3, allowRevive: true },
       roomId: chance.string(),
     }
@@ -368,6 +370,7 @@ describe('ai', () => {
           },
           settings: { eventLogRetentionTurns: 3, allowRevive: false },
           pendingInfluenceLoss: {},
+          treasury: 0,
           deckCount: 11,
         }),
       ).toEqual({
@@ -409,6 +412,7 @@ describe('ai', () => {
           },
           settings: { eventLogRetentionTurns: 3, allowRevive: true },
           pendingInfluenceLoss: {},
+          treasury: 0,
           deckCount: 11,
         }),
       ).toEqual({
@@ -459,6 +463,7 @@ describe('ai', () => {
         },
         settings: { eventLogRetentionTurns: 3, allowRevive: false },
         pendingInfluenceLoss: {},
+        treasury: 0,
         deckCount: 11,
       })
 
@@ -507,6 +512,7 @@ describe('ai', () => {
         },
         settings: { eventLogRetentionTurns: 3, allowRevive: true },
         pendingInfluenceLoss: {},
+        treasury: 0,
         deckCount: 11,
       })
 
@@ -634,6 +640,189 @@ describe('ai', () => {
     })
   })
 
+  describe('decideAction - Embezzle', () => {
+    beforeEach(() => {
+      vi.resetAllMocks()
+    })
+
+    it('should not embezzle when all players are the same faction', () => {
+      const gameState = getRandomPublicGameState({
+        players: [
+          { name: 'bot', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
+          { name: 'opponent', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
+        ],
+        selfPlayer: {
+          name: 'bot',
+          coins: 0,
+          influences: [Influences.Contessa, Influences.Contessa],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+      })
+      gameState.settings.enableReformation = true
+      gameState.treasury = 5
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.99)
+      const result = decideAction(gameState)
+      vi.spyOn(Math, 'random').mockRestore()
+
+      expect(result.action).not.toBe(Actions.Embezzle)
+    })
+
+    it('should embezzle when reformation enabled, treasury > 0, and not all same faction', () => {
+      const gameState = getRandomPublicGameState({
+        players: [
+          { name: 'bot', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
+          { name: 'opponent', influenceCount: 2, deadInfluences: [], coins: 0, faction: Factions.Reformist },
+        ],
+        selfPlayer: {
+          name: 'bot',
+          coins: 0,
+          influences: [Influences.Contessa, Influences.Contessa],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+      })
+      gameState.settings.enableReformation = true
+      gameState.treasury = 5
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.99)
+      const result = decideAction(gameState)
+      vi.spyOn(Math, 'random').mockRestore()
+
+      expect(result).toEqual({ action: Actions.Embezzle })
+    })
+
+    it('should not embezzle when treasury is empty', () => {
+      const gameState = getRandomPublicGameState({
+        players: [
+          { name: 'bot', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
+          { name: 'opponent', influenceCount: 2, deadInfluences: [], coins: 0, faction: Factions.Reformist },
+        ],
+        selfPlayer: {
+          name: 'bot',
+          coins: 0,
+          influences: [Influences.Contessa, Influences.Contessa],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+      })
+      gameState.settings.enableReformation = true
+      gameState.treasury = 0
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.99)
+      const result = decideAction(gameState)
+      vi.spyOn(Math, 'random').mockRestore()
+
+      expect(result.action).not.toBe(Actions.Embezzle)
+    })
+  })
+
+  describe('decideAction - Convert', () => {
+    beforeEach(() => {
+      vi.resetAllMocks()
+    })
+
+    it('should not convert when all players are the same faction', () => {
+      const gameState = getRandomPublicGameState({
+        players: [
+          { name: 'bot', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
+          { name: 'opponent', influenceCount: 2, deadInfluences: [], coins: 0, faction: Factions.Loyalist },
+        ],
+        selfPlayer: {
+          name: 'bot',
+          coins: 5,
+          influences: [Influences.Contessa, Influences.Contessa],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+      })
+      gameState.settings.enableReformation = true
+      gameState.treasury = 0
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.01)
+      const result = decideAction(gameState)
+      vi.spyOn(Math, 'random').mockRestore()
+
+      expect(result.action).not.toBe(Actions.Convert)
+    })
+
+    it('should self-convert when outnumbered by different faction opponents', () => {
+      const gameState = getRandomPublicGameState({
+        players: [
+          { name: 'bot', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
+          { name: 'opponent1', influenceCount: 2, deadInfluences: [], coins: 0, faction: Factions.Reformist, claimedInfluences: new Set([Influences.Duke]) },
+          { name: 'opponent2', influenceCount: 2, deadInfluences: [], coins: 0, faction: Factions.Reformist, claimedInfluences: new Set([Influences.Duke]) },
+        ],
+        selfPlayer: {
+          name: 'bot',
+          coins: 3,
+          influences: [Influences.Contessa, Influences.Contessa],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+      })
+      gameState.settings.enableReformation = true
+      gameState.treasury = 0
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.99)
+      const result = decideAction(gameState)
+      vi.spyOn(Math, 'random').mockRestore()
+
+      expect(result).toEqual({ action: Actions.Convert })
+    })
+
+    it('should convert an opponent when has 2+ coins and different faction opponents exist', () => {
+      const gameState = getRandomPublicGameState({
+        players: [
+          { name: 'bot', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
+          { name: 'ally', influenceCount: 2, deadInfluences: [], coins: 0, faction: Factions.Loyalist, claimedInfluences: new Set([Influences.Duke]) },
+          { name: 'enemy', influenceCount: 2, deadInfluences: [], coins: 0, faction: Factions.Reformist, claimedInfluences: new Set([Influences.Duke]) },
+        ],
+        selfPlayer: {
+          name: 'bot',
+          coins: 3,
+          influences: [Influences.Contessa, Influences.Contessa],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+      })
+      gameState.settings.enableReformation = true
+      gameState.treasury = 0
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.99)
+      const result = decideAction(gameState)
+      vi.spyOn(Math, 'random').mockRestore()
+
+      expect(result.action).toBe(Actions.Convert)
+      expect(result.targetPlayer).toBe('enemy')
+    })
+
+    it('should not convert when reformation is disabled', () => {
+      const gameState = getRandomPublicGameState({
+        players: [
+          { name: 'bot', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
+          { name: 'opponent', influenceCount: 2, deadInfluences: [], coins: 0, faction: Factions.Reformist },
+        ],
+        selfPlayer: {
+          name: 'bot',
+          coins: 5,
+          influences: [Influences.Contessa, Influences.Contessa],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+      })
+      gameState.settings.enableReformation = false
+      gameState.treasury = 0
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.01)
+      const result = decideAction(gameState)
+      vi.spyOn(Math, 'random').mockRestore()
+
+      expect(result.action).not.toBe(Actions.Convert)
+    })
+  })
+
   describe('decideActionResponse', () => {
     it('should not block when player holds or claims last influence, challenge makes more sense', () => {
       expect(
@@ -681,6 +870,7 @@ describe('ai', () => {
           turnPlayer: 'hailey',
           settings: { eventLogRetentionTurns: 3, allowRevive: true },
           pendingInfluenceLoss: {},
+          treasury: 0,
           deckCount: 11,
         }),
       ).toEqual({ response: Responses.Challenge })
@@ -728,6 +918,7 @@ describe('ai', () => {
           turnPlayer: 'hailey',
           settings: { eventLogRetentionTurns: 3, allowRevive: true },
           pendingInfluenceLoss: {},
+          treasury: 0,
           deckCount: 11,
         })
       ).toEqual({ response: Responses.Block, claimedInfluence: Influences.Contessa })
