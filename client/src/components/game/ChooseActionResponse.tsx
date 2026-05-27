@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import { ActionAttributes, Actions, EventMessages, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
+import { ActionAttributes, Actions, EventMessages, getInfluencesForGame, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -7,6 +7,7 @@ import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import CoupTypography from "../utilities/CoupTypography"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
+import InfluenceButton from "./InfluenceButton"
 import getResponseIcon from "../../helpers/getResponseIcon"
 
 function ChooseActionResponse() {
@@ -56,20 +57,19 @@ function ChooseActionResponse() {
         <Grid container spacing={2} justifyContent="center">
           {Object.entries(InfluenceAttributes)
             .sort((a, b) => a[0].localeCompare(b[0]))
-            .map(([influence, influenceAttributes]) => {
-              if (influenceAttributes.legalBlock !== gameState.pendingAction?.action) {
-                return null
-              }
-
-              return <GrowingButton
+            .filter(([influence, { legalBlocks }]) =>
+              legalBlocks.includes(gameState.pendingAction!.action)
+              && getInfluencesForGame(gameState.settings).includes(influence as Influences)
+            )
+            .map(([influence]) =>
+              <InfluenceButton
                 key={influence}
+                influence={influence as Influences}
                 onClick={() => {
                   setSelectedInfluence(influence as Influences)
                 }}
-                color={influence as Influences}
-                variant="contained"
-              >{t(influence as Influences)}</GrowingButton>
-            })}
+              />
+            )}
         </Grid>
       </>
     )

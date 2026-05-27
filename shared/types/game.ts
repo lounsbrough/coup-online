@@ -58,31 +58,33 @@ export enum ServerEvents {
 
 export const InfluenceAttributes: {
   [influence in Influences]: {
-    legalAction?: Actions;
-    legalBlock?: Actions;
+    legalActions: Actions[];
+    legalBlocks: Actions[];
   };
 } = {
   [Influences.Assassin]: {
-    legalAction: Actions.Assassinate,
+    legalActions: [Actions.Assassinate],
+    legalBlocks: [],
   },
   [Influences.Contessa]: {
-    legalBlock: Actions.Assassinate,
+    legalActions: [],
+    legalBlocks: [Actions.Assassinate],
   },
   [Influences.Captain]: {
-    legalAction: Actions.Steal,
-    legalBlock: Actions.Steal,
+    legalActions: [Actions.Steal],
+    legalBlocks: [Actions.Steal],
   },
   [Influences.Ambassador]: {
-    legalAction: Actions.Exchange,
-    legalBlock: Actions.Steal,
+    legalActions: [Actions.Exchange],
+    legalBlocks: [Actions.Steal],
   },
   [Influences.Inquisitor]: {
-    legalAction: Actions.Examine,
-    legalBlock: Actions.Steal,
+    legalActions: [Actions.Examine, Actions.Exchange],
+    legalBlocks: [Actions.Steal],
   },
   [Influences.Duke]: {
-    legalAction: Actions.Tax,
-    legalBlock: Actions.ForeignAid,
+    legalActions: [Actions.Tax],
+    legalBlocks: [Actions.ForeignAid],
   },
 };
 
@@ -91,7 +93,6 @@ export const ActionAttributes: {
     blockable: boolean;
     challengeable: boolean;
     coinsRequired?: number;
-    influenceRequired?: Influences;
     requiresTarget: boolean;
   };
 } = {
@@ -99,13 +100,11 @@ export const ActionAttributes: {
     blockable: true,
     challengeable: true,
     coinsRequired: 3,
-    influenceRequired: Influences.Assassin,
     requiresTarget: true,
   },
   [Actions.Steal]: {
     blockable: true,
     challengeable: true,
-    influenceRequired: Influences.Captain,
     requiresTarget: true,
   },
   [Actions.Coup]: {
@@ -117,7 +116,6 @@ export const ActionAttributes: {
   [Actions.Tax]: {
     blockable: false,
     challengeable: true,
-    influenceRequired: Influences.Duke,
     requiresTarget: false,
   },
   [Actions.ForeignAid]: {
@@ -133,13 +131,11 @@ export const ActionAttributes: {
   [Actions.Exchange]: {
     blockable: false,
     challengeable: true,
-    influenceRequired: Influences.Ambassador,
     requiresTarget: false,
   },
   [Actions.Examine]: {
     blockable: false,
     challengeable: true,
-    influenceRequired: Influences.Inquisitor,
     requiresTarget: true,
   },
   [Actions.Convert]: {

@@ -5,7 +5,7 @@ import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import GrowingButton from "../utilities/GrowingButton"
+import InfluenceButton from "./InfluenceButton"
 import CoupTypography from '../utilities/CoupTypography'
 
 function ChooseChallengeResponse() {
@@ -64,16 +64,13 @@ function ChooseChallengeResponse() {
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
-            return <GrowingButton
+            return <InfluenceButton
               key={index}
+              influence={influence as Influences}
               onClick={() => {
                 setSelectedInfluence(influence as Influences)
               }}
-              color={influence as Influences}
-              variant="contained"
-            >
-              {t(influence as Influences)}
-            </GrowingButton>
+            />
           })}
       </Grid>
     </>

@@ -1,4 +1,5 @@
-import { ActionAttributes, Actions, GameState, Influences, TimelineEntry } from '../../../shared/types/game'
+import { Actions, GameState, Influences, TimelineEntry } from '../../../shared/types/game'
+import { getInfluenceRequiredForAction } from '../../../shared/game/logic'
 
 export const recordTimelineAction = (
   state: GameState,
@@ -6,7 +7,7 @@ export const recordTimelineAction = (
   action: Actions,
   targetPlayer?: string,
 ): void => {
-  const claimedInfluence = ActionAttributes[action].influenceRequired
+  const claimedInfluence = getInfluenceRequiredForAction(action, state.settings)
   if (!claimedInfluence) return
 
   const player = state.players.find(({ name }) => name === playerName)

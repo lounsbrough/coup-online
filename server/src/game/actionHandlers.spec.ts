@@ -1633,6 +1633,46 @@ describe('actionHandlers', () => {
       ).rejects.toThrow(ActionNotCurrentlyAllowedError)
     })
 
+    it('examine -> failed challenge -> examine proceeds without extra pass', async () => {
+      const roomId = await setupTestGame([
+        { ...david, influences: [Influences.Inquisitor, Influences.Duke] },
+        { ...harper, influences: [Influences.Captain, Influences.Contessa] },
+      ], { useInquisitor: true })
+
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Examine,
+        targetPlayer: harper.playerName,
+      })
+
+      await actionResponseHandler({
+        roomId,
+        playerId: harper.playerId,
+        response: Responses.Challenge,
+      })
+
+      await actionChallengeResponseHandler({
+        roomId,
+        playerId: david.playerId,
+        influence: Influences.Inquisitor,
+      })
+
+      await loseInfluencesHandler({
+        roomId,
+        playerId: harper.playerId,
+        influences: [Influences.Captain],
+      })
+
+      const gameState = await getGameState(roomId)
+
+      // Examine should proceed directly — no pending action response needed
+      expect(gameState.pendingAction).toBeUndefined()
+      expect(gameState.pendingExamine).toBeDefined()
+      expect(gameState.pendingExamine!.examiner).toBe(david.playerName)
+      expect(gameState.pendingExamine!.targetPlayer).toBe(harper.playerName)
+    })
+
     it('faction targeting -> cannot target same faction', async () => {
       const roomId = await setupTestGame([
         { ...david, coins: 7, influences: [Influences.Duke, Influences.Assassin] },

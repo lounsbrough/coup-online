@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { Box, DialogContent, DialogContentText, Divider, Typography, useTheme } from "@mui/material"
 import { Group } from "@mui/icons-material"
-import { ActionAttributes, Actions, Influences } from '@shared'
+import { ActionAttributes, Actions, getInfluenceRequiredForAction, Influences } from '@shared'
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import './Rules.css'
@@ -16,9 +16,10 @@ export default function RulesDrawerContent() {
   ), [t])
 
   const actionText = useMemo(() => Object.fromEntries(
-    Object.entries(ActionAttributes).map(([action, { influenceRequired }]) =>
-      [action, <Typography component="span" fontSize="large" fontWeight='bold' color={influenceRequired as Influences}>{t(action as Actions)}</Typography>]
-    )
+    Object.keys(ActionAttributes).map((action) => {
+      const influenceRequired = getInfluenceRequiredForAction(action as Actions, {})
+      return [action, <Typography component="span" fontSize="large" fontWeight='bold' color={influenceRequired as Influences}>{t(action as Actions)}</Typography>]
+    })
   ), [t])
 
   const anyIndicator = <><Group sx={{ mb: -1 }} /><br /><span style={{ verticalAlign: 'middle' }}>{` ${t('anyone')}`}</span></>

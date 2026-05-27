@@ -1,4 +1,30 @@
-import { PublicGameState } from "../types/game"
+import { Actions, GameSettings, InfluenceAttributes, Influences, PublicGameState } from "../types/game"
+
+export const getInfluencesForGame = (settings: GameSettings): Influences[] => {
+  const allInfluences = Object.values(Influences)
+  if (settings.useInquisitor) {
+    return allInfluences.filter((i) => i !== Influences.Ambassador)
+  }
+  return allInfluences.filter((i) => i !== Influences.Inquisitor)
+}
+
+export const getInfluenceRequiredForAction = (action: Actions, settings: { useInquisitor?: boolean }): Influences | undefined => {
+  const validInfluences = Object.entries(InfluenceAttributes)
+    .filter(([, attrs]) => attrs.legalActions.includes(action))
+    .map(([influence]) => influence as Influences)
+
+  if (validInfluences.length <= 1) return validInfluences[0]
+
+  if (action === Actions.Exchange) {
+    return settings.useInquisitor ? Influences.Inquisitor : Influences.Ambassador
+  }
+
+  throw new Error(`Multiple influences can perform action "${action}" but no resolution logic exists`)
+}
+
+export const canInfluenceLegallyPerformAction = (influence: Influences, action: Actions): boolean => {
+  return InfluenceAttributes[influence].legalActions.includes(action)
+}
 
 export const canPlayerChooseAction = (state: PublicGameState) =>
   state.selfPlayer
