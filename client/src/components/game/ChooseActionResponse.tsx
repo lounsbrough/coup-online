@@ -57,7 +57,7 @@ function ChooseActionResponse() {
           {Object.entries(InfluenceAttributes)
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map(([influence, influenceAttributes]) => {
-              if (influenceAttributes.legalBlock !== gameState.pendingAction?.action) {
+              if (!influenceAttributes.legalBlocks.includes(gameState.pendingAction!.action)) {
                 return null
               }
 

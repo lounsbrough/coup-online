@@ -1,4 +1,5 @@
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PlayerActions, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
+import { getInfluenceRequiredForAction } from '../../../shared/game/logic'
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 import { shuffle } from "../utilities/array"
 import { getCountOfEachInfluence } from "../utilities/deck"
@@ -404,7 +405,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
     throw new Error('AI could not determine self player')
   }
 
-  const requiredInfluenceForAction = ActionAttributes[gameState.pendingAction!.action].influenceRequired
+  const requiredInfluenceForAction = getInfluenceRequiredForAction(gameState.pendingAction!.action, gameState.settings)
   const isSelfTarget = gameState.pendingAction?.targetPlayer === gameState.selfPlayer.name
   const honesty = (gameState.selfPlayer.personality?.honesty ?? 50) / 100
   const skepticism = (gameState.selfPlayer.personality?.skepticism ?? 50) / 100
@@ -430,8 +431,8 @@ export const decideActionResponse = (gameState: PublicGameState): {
     )
   )
 
-  const legalBlockInfluences = shuffle(Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlock }]) => {
-    if (legalBlock === gameState.pendingAction?.action) {
+  const legalBlockInfluences = shuffle(Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlocks }]) => {
+    if (legalBlocks.includes(gameState.pendingAction!.action)) {
       agg.push(influence as Influences)
     }
     return agg
@@ -498,7 +499,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
 export const decideActionChallengeResponse = (gameState: PublicGameState): {
   influence: Influences
 } => {
-  const requiredInfluence = ActionAttributes[gameState.pendingAction!.action].influenceRequired
+  const requiredInfluence = getInfluenceRequiredForAction(gameState.pendingAction!.action, gameState.settings)
   const revealedInfluence = requiredInfluence && gameState.selfPlayer?.influences.some((i) => i === requiredInfluence)
     ? requiredInfluence
     : gameState.selfPlayer!.influences[Math.floor(Math.random() * gameState.selfPlayer!.influences.length)]

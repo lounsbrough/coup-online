@@ -6,7 +6,7 @@ import { generateRoomId } from "../utilities/identifiers"
 import { getValue } from '../utilities/storage'
 import { shuffle } from '../utilities/array'
 import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, canTargetPlayer, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isAllSameFaction, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
-import { canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse } from '../../../shared/game/logic'
+import { canInfluenceLegallyPerformAction, canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, getInfluenceRequiredForAction } from '../../../shared/game/logic'
 import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
@@ -619,7 +619,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
       }
 
       // Track influence claim and bluff stats
-      const requiredInfluence = ActionAttributes[action].influenceRequired
+      const requiredInfluence = getInfluenceRequiredForAction(action, state.settings)
       if (requiredInfluence) {
         recordInfluenceClaim(state, player.name, requiredInfluence)
         const actualPlayer = state.players.find(({ id }) => id === player.id)
@@ -679,7 +679,7 @@ export const processPassActionResponse = (state: GameState, playerName: string) 
   }
 
   // Everyone passed — if the action player was bluffing, the bluff succeeded
-  const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
+  const claimedInfluence = getInfluenceRequiredForAction(state.pendingAction.action, state.settings)
   if (claimedInfluence) {
     addClaimedInfluence(actionPlayer, claimedInfluence)
     if (!state.pendingAction.claimConfirmed && !actionPlayer.influences.includes(claimedInfluence)) {
@@ -780,7 +780,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       throw new ClaimedInfluenceRequiredError()
     }
 
-    if (InfluenceAttributes[claimedInfluence].legalBlock !== gameState.pendingAction!.action) {
+    if (!InfluenceAttributes[claimedInfluence].legalBlocks.includes(gameState.pendingAction!.action)) {
       throw new ClaimedInfluenceInvalidError()
     }
 
@@ -855,7 +855,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
   }
 
   let latestState: GameState
-  if (InfluenceAttributes[influence].legalAction === gameState.pendingAction!.action) {
+  if (canInfluenceLegallyPerformAction(influence, gameState.pendingAction!.action)) {
     latestState = await mutateGameState(gameState, (state) => {
       if (isForcedMove) logForcedMove(state, player)
 
@@ -881,7 +881,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       promptPlayerToLoseInfluence(state, challengePlayer.name)
       delete state.pendingActionChallenge
       state.pendingAction.claimConfirmed = true
-      if (state.pendingAction.targetPlayer) {
+      if (state.pendingAction.targetPlayer && ActionAttributes[state.pendingAction.action].blockable) {
         const targetPlayer = state.players.find(({ name }) => name === state.pendingAction!.targetPlayer)
 
         if (!targetPlayer) {
@@ -925,7 +925,7 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
       recordSuccessfulChallenge(state, challengePlayer.name)
       recordInfluenceKill(state, challengePlayer.name, state.turnPlayer!)
       recordTimelineActionChallenge(state, challengePlayer.name, true)
-      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      const claimedInfluence = getInfluenceRequiredForAction(state.pendingAction!.action, state.settings)
       if (claimedInfluence) {
         removeClaimedInfluence(actionPlayer, claimedInfluence)
         addUnclaimedInfluence(actionPlayer, claimedInfluence)
@@ -958,7 +958,7 @@ export const processPassBlockResponse = (state: GameState, playerName: string) =
     throw new UnableToFindPlayerError()
   }
 
-  const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
+  const claimedInfluence = getInfluenceRequiredForAction(state.pendingAction.action, state.settings)
   if (claimedInfluence) {
     addClaimedInfluence(actionPlayer, claimedInfluence)
   }
@@ -1083,7 +1083,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
         throw new UnableToFindPlayerError()
       }
 
-      const claimedInfluence = ActionAttributes[state.pendingAction.action].influenceRequired
+      const claimedInfluence = getInfluenceRequiredForAction(state.pendingAction.action, state.settings)
       if (claimedInfluence) {
         addClaimedInfluence(actionPlayer, claimedInfluence)
       }
@@ -1139,7 +1139,7 @@ export const blockChallengeResponseHandler = async ({ roomId, playerId, influenc
       recordSuccessfulChallenge(state, challengePlayer.name)
       recordInfluenceKill(state, challengePlayer.name, blockPlayer.name)
       recordTimelineBlockChallenge(state, challengePlayer.name, true)
-      const claimedInfluence = ActionAttributes[state.pendingAction!.action].influenceRequired
+      const claimedInfluence = getInfluenceRequiredForAction(state.pendingAction!.action, state.settings)
       if (claimedInfluence) {
         addClaimedInfluence(actionPlayer, claimedInfluence)
       }

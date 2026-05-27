@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { ExpandMore, ExpandLess } from '@mui/icons-material'
-import { ActionAttributes, TimelineEntry } from '@shared'
+import { TimelineEntry } from '@shared'
 import { useGameStateContext } from '../../contexts/GameStateContext'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import CoupTypography from '../utilities/CoupTypography'
@@ -163,8 +163,7 @@ function TimelineRow({ entry, getPlayerColor }: {
   const { t } = useTranslationContext()
   const theme = useTheme()
 
-  const influenceRequired = ActionAttributes[entry.action].influenceRequired
-  const showBluffLabel = influenceRequired !== undefined
+  const showBluffLabel = entry.claimedInfluence !== undefined
 
   return (
     <Box
