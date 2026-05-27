@@ -8,6 +8,7 @@ import { getCurrentTimestamp } from './time'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { GAME_STATE_TTL_SECONDS } from '../../../shared/helpers/constants'
 import { getCountOfEachInfluence } from './deck'
+import { getInfluencesForGame } from '../../../shared/game/logic'
 import { recordGameStats } from './stats'
 
 export const getGameState = async (
@@ -96,9 +97,7 @@ export const validateGameState = (state: DehydratedGameState) => {
   ) {
     throw new PlayersMustHave2InfluencesError()
   }
-  const influencesInGame = state.settings?.useInquisitor
-    ? Object.values(Influences).filter((i) => i !== Influences.Ambassador)
-    : Object.values(Influences).filter((i) => i !== Influences.Inquisitor)
+  const influencesInGame = getInfluencesForGame(state.settings)
   const cardCounts = Object.fromEntries(influencesInGame.map((influence) => [influence, 0]))
   state.deck.forEach((card) => cardCounts[card]++)
   state.players.forEach(({ influences, deadInfluences }) => {

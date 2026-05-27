@@ -1,5 +1,5 @@
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PlayerActions, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
-import { getInfluenceRequiredForAction } from '../../../shared/game/logic'
+import { getInfluenceRequiredForAction, getInfluencesForGame } from '../../../shared/game/logic'
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 import { shuffle } from "../utilities/array"
 import { getCountOfEachInfluence } from "../utilities/deck"
@@ -431,8 +431,9 @@ export const decideActionResponse = (gameState: PublicGameState): {
     )
   )
 
+  const influencesInGame = getInfluencesForGame(gameState.settings)
   const legalBlockInfluences = shuffle(Object.entries(InfluenceAttributes).reduce((agg, [influence, { legalBlocks }]) => {
-    if (legalBlocks.includes(gameState.pendingAction!.action)) {
+    if (influencesInGame.includes(influence as Influences) && legalBlocks.includes(gameState.pendingAction!.action)) {
       agg.push(influence as Influences)
     }
     return agg

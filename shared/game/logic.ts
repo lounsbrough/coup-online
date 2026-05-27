@@ -1,4 +1,12 @@
-import { Actions, InfluenceAttributes, Influences, PublicGameState } from "../types/game"
+import { Actions, GameSettings, InfluenceAttributes, Influences, PublicGameState } from "../types/game"
+
+export const getInfluencesForGame = (settings: GameSettings): Influences[] => {
+  const allInfluences = Object.values(Influences)
+  if (settings.useInquisitor) {
+    return allInfluences.filter((i) => i !== Influences.Ambassador)
+  }
+  return allInfluences.filter((i) => i !== Influences.Inquisitor)
+}
 
 export const getInfluenceRequiredForAction = (action: Actions, settings: { useInquisitor?: boolean }): Influences | undefined => {
   const validInfluences = Object.entries(InfluenceAttributes)

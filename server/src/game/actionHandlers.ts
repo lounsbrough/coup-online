@@ -6,7 +6,7 @@ import { generateRoomId } from "../utilities/identifiers"
 import { getValue } from '../utilities/storage'
 import { shuffle } from '../utilities/array'
 import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, canTargetPlayer, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isAllSameFaction, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
-import { canInfluenceLegallyPerformAction, canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, getInfluenceRequiredForAction } from '../../../shared/game/logic'
+import { canInfluenceLegallyPerformAction, canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, getInfluenceRequiredForAction, getInfluencesForGame } from '../../../shared/game/logic'
 import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
@@ -780,7 +780,8 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       throw new ClaimedInfluenceRequiredError()
     }
 
-    if (!InfluenceAttributes[claimedInfluence].legalBlocks.includes(gameState.pendingAction!.action)) {
+    if (!InfluenceAttributes[claimedInfluence].legalBlocks.includes(gameState.pendingAction!.action)
+      || !getInfluencesForGame(gameState.settings).includes(claimedInfluence)) {
       throw new ClaimedInfluenceInvalidError()
     }
 

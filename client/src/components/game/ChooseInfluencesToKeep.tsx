@@ -3,9 +3,9 @@ import { Checkbox, Grid } from "@mui/material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
-import { PlayerActions } from "@shared"
+import { Influences, PlayerActions } from "@shared"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import GrowingButton from "../utilities/GrowingButton"
+import InfluenceButton from "./InfluenceButton"
 import CoupTypography from '../utilities/CoupTypography'
 
 function ChooseInfluencesToKeep() {
@@ -54,8 +54,9 @@ function ChooseInfluencesToKeep() {
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
-            return <GrowingButton
+            return <InfluenceButton
               key={index}
+              influence={influence as Influences}
               disabled={checkedIndexes.length === 2 && !checkedIndexes.includes(index)}
               onClick={() => {
                 if (checkedIndexes.includes(index)) {
@@ -67,8 +68,6 @@ function ChooseInfluencesToKeep() {
                   ])
                 }
               }}
-              color={influence}
-              variant="contained"
             >
               <Checkbox
                 color="default"
@@ -76,7 +75,7 @@ function ChooseInfluencesToKeep() {
                 checked={checkedIndexes.includes(index)}
               />
               {t(influence)}
-            </GrowingButton>
+            </InfluenceButton>
           })}
       </Grid>
     </>

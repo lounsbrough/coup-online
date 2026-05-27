@@ -4,8 +4,7 @@ import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import CoupTypography from "../utilities/CoupTypography"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import GrowingButton from "../utilities/GrowingButton"
-import InfluenceIcon from "../icons/InfluenceIcon"
+import InfluenceButton from "./InfluenceButton"
 import useGameMutation from "../../hooks/useGameMutation"
 
 function ChooseExamineReveal() {
@@ -26,8 +25,9 @@ function ChooseExamineReveal() {
             </CoupTypography>
             <Grid container spacing={2} justifyContent="center">
                 {gameState.selfPlayer.influences.map((influence, index) => (
-                    <GrowingButton
+                    <InfluenceButton
                         key={index}
+                        influence={influence}
                         disabled={isMutating}
                         onClick={() => {
                             trigger({
@@ -36,11 +36,7 @@ function ChooseExamineReveal() {
                                 influence
                             })
                         }}
-                        variant="contained"
-                        startIcon={<InfluenceIcon influence={influence} />}
-                    >
-                        {t(influence as Influences)}
-                    </GrowingButton>
+                    />
                 ))}
             </Grid>
         </>

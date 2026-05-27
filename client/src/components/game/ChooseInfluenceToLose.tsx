@@ -5,7 +5,7 @@ import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import PlayerActionConfirmation from "./PlayerActionConfirmation"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
-import GrowingButton from "../utilities/GrowingButton"
+import InfluenceButton from "./InfluenceButton"
 import CoupTypography from '../utilities/CoupTypography'
 
 function ChooseInfluenceToLose() {
@@ -44,16 +44,13 @@ function ChooseInfluenceToLose() {
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {
-            return <GrowingButton
+            return <InfluenceButton
               key={index}
+              influence={influence}
               onClick={() => {
                 setSelectedInfluence(influence)
               }}
-              color={influence}
-              variant="contained"
-            >
-              {t(influence)}
-            </GrowingButton>
+            />
           })}
       </Grid>
     </>
