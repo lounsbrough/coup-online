@@ -16,7 +16,7 @@ function InfluenceButton({ influence, children, startIcon, ...props }: {
             color={influence}
             startIcon={<>{startIcon}<InfluenceIcon influence={influence} /></>}
             {...props}
-            sx={{ color: 'white', ...props.sx }}
+            sx={[{ color: 'white' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
         >
             {children ?? t(influence)}
         </GrowingButton>
