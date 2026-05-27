@@ -43,6 +43,7 @@ export type Translations = ActionMessages &
     cardCountInDeck: TranslationsForString
     challenge: TranslationsForString
     changeAPlayersFaction: TranslationsForString
+    changeYourFaction: TranslationsForString
     chat: TranslationsForString
     cheatSheet: TranslationsForString
     chooseATarget: TranslationsForString
@@ -59,6 +60,7 @@ export type Translations = ActionMessages &
     confirm: TranslationsForString
     confirmActions: TranslationsForString
     contents: TranslationsForString
+    convertOther: TranslationsForString
     convertSelf: TranslationsForString
     copyInviteLink: TranslationsForString
     createGame: TranslationsForString
@@ -127,6 +129,7 @@ export type Translations = ActionMessages &
     messageWasDeleted: TranslationsForString
     noChatMessages: TranslationsForString
     noDeadInfluences: TranslationsForString
+    not: TranslationsForString
     notEnoughCoins: TranslationsForString
     numberOfPlayers: TranslationsForString
     pageNotFound: TranslationsForString
@@ -617,15 +620,6 @@ const translations: Translations = {
     'it-IT': 'Precisione sfide',
     'pt-BR': 'Precisão de desafios',
   },
-  changeAPlayersFaction: {
-    'de-DE': 'Fraktion eines Spielers ändern',
-    'en-US': "Change a player's faction",
-    'es-MX': 'Cambiar la facción de un jugador',
-    'fr-FR': "Changer la faction d'un joueur",
-    'hi-IN': 'एक खिलाड़ी का गुट बदलें',
-    'it-IT': 'Cambia la fazione di un giocatore',
-    'pt-BR': 'Mudar a facção de um jogador',
-  },
   challengeFailed: {
     'de-DE': '— Herausforderung fehlgeschlagen',
     'en-US': '— Challenge failed',
@@ -644,6 +638,15 @@ const translations: Translations = {
     'it-IT': '⚔️ Sfidato da {{player}}',
     'pt-BR': '⚔️ Desafiado por {{player}}',
   },
+  changeAPlayersFaction: {
+    'de-DE': 'Fraktion eines Spielers ändern',
+    'en-US': "Change a player's faction",
+    'es-MX': 'Cambiar la facción de un jugador',
+    'fr-FR': "Changer la faction d'un joueur",
+    'hi-IN': 'एक खिलाड़ी का गुट बदलें',
+    'it-IT': 'Cambia la fazione di un giocatore',
+    'pt-BR': 'Mudar a facção de um jogador',
+  },
   changeDisplayName: {
     'de-DE': 'Anzeigename ändern',
     'en-US': 'Change Display Name',
@@ -652,6 +655,15 @@ const translations: Translations = {
     'hi-IN': 'प्रदर्शित नाम बदलें',
     'it-IT': 'Cambia nome',
     'pt-BR': 'Alterar nome',
+  },
+  changeYourFaction: {
+    'de-DE': 'Deine Fraktion ändern',
+    'en-US': 'Change your faction',
+    'es-MX': 'Cambiar tu facción',
+    'fr-FR': 'Changer votre faction',
+    'hi-IN': 'अपना गुट बदलें',
+    'it-IT': 'Cambia la tua fazione',
+    'pt-BR': 'Mude sua facção',
   },
   chat: {
     'de-DE': 'Chat',
@@ -815,6 +827,15 @@ const translations: Translations = {
     'hi-IN': 'सामग्री',
     'it-IT': 'Contenuti',
     'pt-BR': 'Conteúdo',
+  },
+  convertOther: {
+    'de-DE': 'Anderen konvertieren',
+    'en-US': 'Convert Other',
+    'es-MX': 'Convertir a Otro',
+    'fr-FR': 'Convertir un Autre',
+    'hi-IN': 'अन्य को परिवर्तित करें',
+    'it-IT': 'Converti un Altro',
+    'pt-BR': 'Converter Outro',
   },
   convertSelf: {
     'de-DE': 'Sich selbst konvertieren',
@@ -1867,15 +1888,6 @@ const translations: Translations = {
     'it-IT': 'Serie vittorie più lunga',
     'pt-BR': 'Maior sequência de vitórias',
   },
-  loseInfluence: {
-    'de-DE': 'Verliere {{primaryInfluence}}',
-    'en-US': 'Lose {{primaryInfluence}}',
-    'es-MX': 'Perder {{primaryInfluence}}',
-    'fr-FR': 'Perdre {{primaryInfluence}}',
-    'hi-IN': 'खोना {{primaryInfluence}}',
-    'it-IT': 'Perdere {{primaryInfluence}}',
-    'pt-BR': 'Perder {{primaryInfluence}}',
-  },
   lookAtAPlayersCard: {
     'de-DE': 'Karte eines Spielers ansehen',
     'en-US': "Look at a player's card",
@@ -1884,6 +1896,15 @@ const translations: Translations = {
     'hi-IN': 'एक खिलाड़ी का कार्ड देखें',
     'it-IT': 'Guarda la carta di un giocatore',
     'pt-BR': 'Ver a carta de um jogador',
+  },
+  loseInfluence: {
+    'de-DE': 'Verliere {{primaryInfluence}}',
+    'en-US': 'Lose {{primaryInfluence}}',
+    'es-MX': 'Perder {{primaryInfluence}}',
+    'fr-FR': 'Perdre {{primaryInfluence}}',
+    'hi-IN': 'खोना {{primaryInfluence}}',
+    'it-IT': 'Perdere {{primaryInfluence}}',
+    'pt-BR': 'Perder {{primaryInfluence}}',
   },
   losingAChallenge: {
     'de-DE': 'Herausforderung verlieren',
@@ -1974,6 +1995,15 @@ const translations: Translations = {
     'hi-IN': 'अभी तक कोई आँकड़े नहीं',
     'it-IT': 'Nessuna statistica ancora',
     'pt-BR': 'Nenhuma estatística ainda',
+  },
+  not: {
+    'de-DE': 'NICHT',
+    'en-US': 'NOT',
+    'es-MX': 'NO',
+    'fr-FR': 'PAS',
+    'hi-IN': 'नहीं',
+    'it-IT': 'NON',
+    'pt-BR': 'NÃO',
   },
   notEnoughCoins: {
     'de-DE': 'Nicht genug Münzen ({{count}})',
@@ -2423,19 +2453,19 @@ const translations: Translations = {
   },
   rulesConvert: {
     'de-DE':
-      'Kostet zwei Münzen (werden in die Staatskasse gezahlt). Ändert die Fraktion eines Spielers (einschließlich der eigenen). Kann nicht herausgefordert oder blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
+      'Kostet ein bis zwei Münzen (werden in die Staatskasse gezahlt). Ändert die Fraktion eines Spielers, entweder deine eigene oder die eines anderen. Kann nicht herausgefordert oder blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
     'en-US':
-      'Costs two coins (paid to the treasury). Change the faction of any player (including yourself). Cannot be Challenged or Blocked. Only available when Reformation is enabled.',
+      'Costs one to two coins (paid to the treasury). Change the faction of a player—either yourself (one coin) or another player (two coins). Cannot be Challenged or Blocked. Only available when Reformation is enabled.',
     'es-MX':
-      'Cuesta dos monedas (pagadas al tesoro). Cambia la facción de cualquier jugador (incluido tú mismo). No puede ser desafiado ni bloqueado. Solo disponible cuando la Reforma está habilitada.',
+      'Cuesta de una a dos monedas (pagadas al tesoro). Cambia la facción de un jugador—la tuya propia (una moneda) o la de otro jugador (dos monedas). No puede ser desafiado ni bloqueado. Solo disponible cuando la Reforma está habilitada.',
     'fr-FR':
-      'Coûte deux pièces (payées au trésor). Change la faction de n\'importe quel joueur (y compris vous-même). Ne peut pas être contesté ni bloqué. Disponible uniquement lorsque la Réforme est activée.',
+      'Coûte une à deux pièces (payées au trésor). Changez la faction d\'un joueur—la vôtre (une pièce) ou celle d\'un autre joueur (deux pièces). Ne peut pas être contesté ni bloqué. Disponible uniquement lorsque la Réforme est activée.',
     'hi-IN':
-      'दो सिक्कों की लागत (खजाने में भुगतान)। किसी भी खिलाड़ी (स्वयं सहित) का गुट बदलें। चुनौती या अवरुद्ध नहीं किया जा सकता। केवल सुधार सक्षम होने पर उपलब्ध।',
+      'एक से दो सिक्कों की लागत (खजाने में भुगतान)। एक खिलाड़ी का गुट बदलें—अपना (एक सिक्का) या किसी अन्य खिलाड़ी का (दो सिक्के)। चुनौती या अवरुद्ध नहीं किया जा सकता। केवल सुधार सक्षम होने पर उपलब्ध।',
     'it-IT':
-      'Costa due monete (pagate al tesoro). Cambia la fazione di qualsiasi giocatore (incluso te stesso). Non può essere sfidato o bloccato. Disponibile solo quando la Riforma è abilitata.',
+      'Costa da una a due monete (pagate al tesoro). Cambia la fazione di un giocatore—la tua (una moneta) o quella di un altro giocatore (due monete). Non può essere sfidato o bloccato. Disponibile solo quando la Riforma è abilitata.',
     'pt-BR':
-      'Custa duas moedas (pagas ao tesouro). Muda a facção de qualquer jogador (incluindo você mesmo). Não pode ser desafiado ou bloqueado. Disponível apenas quando a Reforma está habilitada.',
+      'Custa uma a duas moedas (pagas ao tesouro). Mude a facção de um jogador—a sua (uma moeda) ou a de outro jogador (duas moedas). Não pode ser desafiado ou bloqueado. Disponível apenas quando a Reforma está habilitada.',
   },
   rulesCoup: {
     'de-DE':
