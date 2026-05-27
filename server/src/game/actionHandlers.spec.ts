@@ -261,6 +261,42 @@ describe('actionHandlers', () => {
       ).rejects.toThrow(RoomIdAlreadyExistsError)
     })
 
+    it('starting game with useInquisitor builds deck without Ambassador', async () => {
+      const { roomId } = await createGameHandler({
+        ...harper,
+        settings: { eventLogRetentionTurns: 100, allowRevive: true, useInquisitor: true },
+      })
+      await joinGameHandler({ roomId, ...hailey })
+      await startGameHandler({ roomId, playerId: harper.playerId })
+
+      const gameState = await getGameState(roomId)
+      const allCards = [
+        ...gameState.deck,
+        ...gameState.players.flatMap((p) => [...p.influences, ...p.deadInfluences]),
+      ]
+
+      expect(allCards).not.toContain(Influences.Ambassador)
+      expect(allCards).toContain(Influences.Inquisitor)
+    })
+
+    it('starting game without useInquisitor builds deck without Inquisitor', async () => {
+      const { roomId } = await createGameHandler({
+        ...harper,
+        settings: { eventLogRetentionTurns: 100, allowRevive: true },
+      })
+      await joinGameHandler({ roomId, ...hailey })
+      await startGameHandler({ roomId, playerId: harper.playerId })
+
+      const gameState = await getGameState(roomId)
+      const allCards = [
+        ...gameState.deck,
+        ...gameState.players.flatMap((p) => [...p.influences, ...p.deadInfluences]),
+      ]
+
+      expect(allCards).not.toContain(Influences.Inquisitor)
+      expect(allCards).toContain(Influences.Ambassador)
+    })
+
     it('everyone passes on action', async () => {
       const roomId = await setupTestGame([david, harper, hailey])
 
