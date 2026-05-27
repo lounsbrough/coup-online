@@ -40,7 +40,6 @@ export type Translations = ActionMessages &
     blockAsInfluence: TranslationsForString
     briefDescriptionOfCoup: TranslationsForString
     cancel: TranslationsForString
-    cardCountInDeck: TranslationsForString
     challenge: TranslationsForString
     changeAPlayersFaction: TranslationsForString
     changeYourFaction: TranslationsForString
@@ -629,15 +628,6 @@ const translations: Translations = {
     'hi-IN': 'रद्द करें',
     'it-IT': 'Annulla',
     'pt-BR': 'Cancelar',
-  },
-  cardCountInDeck: {
-    'de-DE': '{{count}} Karte{{plural[[n]]}} im Deck',
-    'en-US': '{{count}} card{{plural[[s]]}} in the deck',
-    'es-MX': '{{count}} carta{{plural[[s]]}} en el mazo',
-    'fr-FR': '{{count}} carte{{plural[[s]]}} dans le paquet',
-    'hi-IN': 'डेक में {{count}} कार्ड',
-    'it-IT': '{{count}} carta{{plural[[e]]}} nel mazzo',
-    'pt-BR': '{{count}} carta{{plural[[s]]}} no baralho',
   },
   challenge: {
     'de-DE': 'Herausfordern',

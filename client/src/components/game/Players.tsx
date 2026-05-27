@@ -1,12 +1,12 @@
-import { Badge, Button, Chip, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material"
+import { Badge, Button, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Close, MonetizationOn } from "@mui/icons-material"
+import { Close, MonetizationOn, Shield, ShieldOutlined, ShieldTwoTone, Whatshot, WhatshotTwoTone } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
-import { PlayerActions } from "@shared"
+import { Factions, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
@@ -41,37 +41,47 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
             ...Array.from({ length: influenceCount }, () => undefined)
           ] : Array.from({ length: 2 }, () => undefined)
 
+          const showKickBadge = inWaitingRoom && (ai || humanPlayers.length > 1) && !!gameState.selfPlayer
+          const alivePlayers = gameState.players.filter((p) => p.influenceCount)
+          const allSameFaction = alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)
+          const showFactionBadge = !!faction && gameState.settings.enableReformation && !allSameFaction
+
+          const kickBadgeContent = (
+            <Button
+              sx={{
+                p: 0,
+                height: '28px',
+                width: '28px',
+                minWidth: 'unset',
+                borderRadius: '28px',
+                background: color
+              }}
+              disabled={isMutating}
+              variant="contained"
+              onClick={() => {
+                trigger({
+                  roomId: gameState.roomId,
+                  playerId: getPlayerId(),
+                  playerName: name
+                })
+              }}
+            >
+              <Close />
+            </Button>
+          )
+
+          const FactionIcon = faction === Factions.Loyalist ? ShieldTwoTone : WhatshotTwoTone
+
           return (
             <Badge
               key={index}
-              invisible={!inWaitingRoom || (!ai && humanPlayers.length === 1) || !gameState.selfPlayer}
-              badgeContent={
-                <Button
-                  sx={{
-                    p: 0,
-                    height: '28px',
-                    width: '28px',
-                    minWidth: 'unset',
-                    borderRadius: '28px',
-                    background: color
-                  }}
-                  disabled={isMutating}
-                  variant="contained"
-                  onClick={() => {
-                    trigger({
-                      roomId: gameState.roomId,
-                      playerId: getPlayerId(),
-                      playerName: name
-                    })
-                  }}
-                >
-                  <Close />
-                </Button>
-              }
+              invisible={!showKickBadge}
+              badgeContent={kickBadgeContent}
             >
               <Paper
                 elevation={isWaitingOnPlayer ? 5 : 1}
                 sx={{
+                  position: 'relative',
                   color: 'white',
                   alignContent: 'center',
                   background: playerColor,
@@ -86,6 +96,17 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                     "100%": { transform: 'scale(1)' }
                   },
                 }}>
+                {showFactionBadge && (
+                  <Tooltip title={<Typography variant="h6">{t(faction!)}</Typography>}>
+                    <FactionIcon sx={{
+                      fontSize: '30px',
+                      position: 'absolute',
+                      top: '-12px',
+                      left: '-12px',
+                      color: 'white',
+                    }} />
+                  </Tooltip>
+                )}
                 <Typography variant="h6" sx={{
                   fontWeight: 'bold',
                   color: cardTextColor
@@ -93,15 +114,6 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                 >
                   <OverflowTooltip>{name}</OverflowTooltip>
                 </Typography>
-                {faction && gameState.settings.enableReformation && (
-                  <Chip
-                    label={t(faction)}
-                    size="small"
-                    sx={{
-                      fontWeight: 'bold',
-                    }}
-                  />
-                )}
                 <Typography variant="h6" sx={{ color: cardTextColor }}>
                   {ai && (
                     <Tooltip title={

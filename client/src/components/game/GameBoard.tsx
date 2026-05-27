@@ -1,4 +1,4 @@
-import { Box, Grid, Tooltip, Typography, useTheme } from "@mui/material"
+import { Box, Grid, useTheme } from "@mui/material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
@@ -119,24 +119,15 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
               ...centeredOnSmallScreen,
               fontSize: '1.25rem'
             }}>
-            <Tooltip
-              title={
-                <Typography variant="h6">
-                  {t('cardCountInDeck', {
-                    count: gameState.deckCount
-                  })}
-                </Typography>
-              }>
-              <CoupTypography
-                display='flex'
-                alignItems='center'
-                component='span'
-                fontSize='inherit'
-                addTextShadow
-              >
-                {t('deck')}: {gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} />
-              </CoupTypography>
-            </Tooltip>
+            <CoupTypography
+              display='flex'
+              alignItems='center'
+              component='span'
+              fontSize='inherit'
+              addTextShadow
+            >
+              {t('deck')}: {gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} />
+            </CoupTypography>
           </Grid>
           {gameState.settings.enableReformation && (
             <Grid
