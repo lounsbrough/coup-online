@@ -224,6 +224,43 @@ export type Translations = ActionMessages &
     termsOfServiceContent: TranslationsForString
     title: TranslationsForString
     treasury: TranslationsForString
+    tutorial: TranslationsForString
+    tutorialBack: TranslationsForString
+    tutorialComplete: TranslationsForString
+    tutorialFinish: TranslationsForString
+    tutorialIntro: TranslationsForString
+    tutorialNext: TranslationsForString
+    tutorialRestart: TranslationsForString
+    tutorialRulesHint: TranslationsForString
+    tutorialStartingCoins: TranslationsForString
+    tutorialStep10Content: TranslationsForString
+    tutorialStep10Title: TranslationsForString
+    tutorialStep1Content: TranslationsForString
+    tutorialStep1Title: TranslationsForString
+    tutorialStep2Content: TranslationsForString
+    tutorialStep2Title: TranslationsForString
+    tutorialStep3Content: TranslationsForString
+    tutorialStep3Title: TranslationsForString
+    tutorialStep4Content: TranslationsForString
+    tutorialStep4Dialogue: TranslationsForString
+    tutorialStep4Title: TranslationsForString
+    tutorialStep5Block: TranslationsForString
+    tutorialStep5Content: TranslationsForString
+    tutorialStep5Ok: TranslationsForString
+    tutorialStep5Title: TranslationsForString
+    tutorialStep6Content: TranslationsForString
+    tutorialStep6Title: TranslationsForString
+    tutorialStep7Content: TranslationsForString
+    tutorialStep7Detail: TranslationsForString
+    tutorialStep7Title: TranslationsForString
+    tutorialStep8Challenge: TranslationsForString
+    tutorialStep8Content: TranslationsForString
+    tutorialStep8Result: TranslationsForString
+    tutorialStep8Reveal: TranslationsForString
+    tutorialStep8Title: TranslationsForString
+    tutorialStep9Content: TranslationsForString
+    tutorialStep9Detail: TranslationsForString
+    tutorialStep9Title: TranslationsForString
     useInquisitor: TranslationsForString
     vengefulness: TranslationsForString
     waitingOnOtherPlayers: TranslationsForString
@@ -3210,6 +3247,339 @@ const translations: Translations = {
     'hi-IN': 'मोड़',
     'it-IT': 'turni',
     'pt-BR': 'turnos',
+  },
+  tutorial: {
+    'de-DE': 'Tutorial',
+    'en-US': 'Tutorial',
+    'es-MX': 'Tutorial',
+    'fr-FR': 'Tutoriel',
+    'hi-IN': 'ट्यूटोरियल',
+    'it-IT': 'Tutorial',
+    'pt-BR': 'Tutorial',
+  },
+  tutorialBack: {
+    'de-DE': 'Zurück',
+    'en-US': 'Back',
+    'es-MX': 'Atrás',
+    'fr-FR': 'Retour',
+    'hi-IN': 'पीछे',
+    'it-IT': 'Indietro',
+    'pt-BR': 'Voltar',
+  },
+  tutorialComplete: {
+    'de-DE': 'Du bist bereit zu spielen! 🎉',
+    'en-US': "You're ready to play! 🎉",
+    'es-MX': '¡Estás listo para jugar! 🎉',
+    'fr-FR': 'Vous êtes prêt à jouer ! 🎉',
+    'hi-IN': 'आप खेलने के लिए तैयार हैं! 🎉',
+    'it-IT': 'Sei pronto per giocare! 🎉',
+    'pt-BR': 'Você está pronto para jogar! 🎉',
+  },
+  tutorialFinish: {
+    'de-DE': 'Fertig',
+    'en-US': 'Finish',
+    'es-MX': 'Terminar',
+    'fr-FR': 'Terminer',
+    'hi-IN': 'समाप्त',
+    'it-IT': 'Fine',
+    'pt-BR': 'Finalizar',
+  },
+  tutorialIntro: {
+    'de-DE': 'Folge diesem Beispielspiel mit drei Spielern, um die Grundlagen von Coup zu lernen.',
+    'en-US': 'Follow this example game with three players to learn the basics of Coup.',
+    'es-MX': 'Sigue este juego de ejemplo con tres jugadores para aprender los conceptos básicos de Coup.',
+    'fr-FR': 'Suivez cet exemple de partie avec trois joueurs pour apprendre les bases de Coup.',
+    'hi-IN': 'Coup की मूल बातें सीखने के लिए तीन खिलाड़ियों के साथ इस उदाहरण खेल का अनुसरण करें।',
+    'it-IT': 'Segui questa partita di esempio con tre giocatori per imparare le basi di Coup.',
+    'pt-BR': 'Siga este jogo de exemplo com três jogadores para aprender o básico de Coup.',
+  },
+  tutorialNext: {
+    'de-DE': 'Weiter',
+    'en-US': 'Next',
+    'es-MX': 'Siguiente',
+    'fr-FR': 'Suivant',
+    'hi-IN': 'अगला',
+    'it-IT': 'Avanti',
+    'pt-BR': 'Próximo',
+  },
+  tutorialRestart: {
+    'de-DE': 'Tutorial neu starten',
+    'en-US': 'Restart Tutorial',
+    'es-MX': 'Reiniciar Tutorial',
+    'fr-FR': 'Recommencer le Tutoriel',
+    'hi-IN': 'ट्यूटोरियल पुनः आरंभ करें',
+    'it-IT': 'Ricomincia il Tutorial',
+    'pt-BR': 'Reiniciar Tutorial',
+  },
+  tutorialRulesHint: {
+    'de-DE': 'Verwende die Regel-Schaltfläche unten links, um jederzeit die vollständigen Regeln und den Spickzettel anzuzeigen.',
+    'en-US': 'Use the rules button in the bottom left corner to view the full rules and cheat sheet at any time.',
+    'es-MX': 'Usa el botón de reglas en la esquina inferior izquierda para ver las reglas completas y la hoja de referencia en cualquier momento.',
+    'fr-FR': 'Utilisez le bouton des règles en bas à gauche pour consulter les règles complètes et l\'aide-mémoire à tout moment.',
+    'hi-IN': 'पूर्ण नियम और चीट शीट किसी भी समय देखने के लिए नीचे बाएँ कोने में नियम बटन का उपयोग करें।',
+    'it-IT': 'Usa il pulsante delle regole in basso a sinistra per visualizzare le regole complete e il foglio riassuntivo in qualsiasi momento.',
+    'pt-BR': 'Use o botão de regras no canto inferior esquerdo para ver as regras completas e a folha de referência a qualquer momento.',
+  },
+  tutorialStartingCoins: {
+    'de-DE': 'Jeder Spieler startet mit 2 Münzen',
+    'en-US': 'Each player starts with 2 coins',
+    'es-MX': 'Cada jugador comienza con 2 monedas',
+    'fr-FR': 'Chaque joueur commence avec 2 pièces',
+    'hi-IN': 'प्रत्येक खिलाड़ी 2 सिक्कों से शुरू करता है',
+    'it-IT': 'Ogni giocatore inizia con 2 monete',
+    'pt-BR': 'Cada jogador começa com 2 moedas',
+  },
+  tutorialStep10Content: {
+    'de-DE': 'Das Spiel geht weiter, bis nur noch ein Spieler Einflusskarten hat. Denke daran: Du kannst JEDE Aktion beanspruchen, unabhängig von deinen Karten — aber wenn du herausgefordert wirst und bluffst, verlierst du eine Einflusskarte! Das ist das Herz von Coup: Täuschung, Risiko und Timing.',
+    'en-US': "The game continues until only one player has influence cards remaining. Remember: you can claim ANY action regardless of your cards — but if you're challenged and you're bluffing, you lose an influence! That's the heart of Coup: deception, risk, and timing.",
+    'es-MX': 'El juego continúa hasta que solo un jugador tenga cartas de influencia. Recuerda: puedes reclamar CUALQUIER acción independientemente de tus cartas — ¡pero si te desafían y estás mintiendo, pierdes una influencia! Ese es el corazón de Coup: engaño, riesgo y oportunidad.',
+    'fr-FR': "Le jeu continue jusqu'à ce qu'un seul joueur ait des cartes d'influence. Rappelez-vous : vous pouvez revendiquer N'IMPORTE QUELLE action quelles que soient vos cartes — mais si on vous conteste et que vous bluffez, vous perdez une influence ! C'est le cœur de Coup : tromperie, risque et opportunité.",
+    'hi-IN': 'खेल तब तक जारी रहता है जब तक केवल एक खिलाड़ी के पास प्रभाव कार्ड बचे हों। याद रखें: आप अपने कार्ड की परवाह किए बिना कोई भी क्रिया का दावा कर सकते हैं — लेकिन अगर आपको चुनौती दी जाती है और आप झांसा दे रहे हैं, तो आप एक प्रभाव खो देते हैं! यही Coup का दिल है: धोखा, जोखिम और समय।',
+    'it-IT': "Il gioco continua finché solo un giocatore ha carte di influenza. Ricorda: puoi rivendicare QUALSIASI azione indipendentemente dalle tue carte — ma se vieni sfidato e stai bluffando, perdi un'influenza! Questo è il cuore di Coup: inganno, rischio e tempismo.",
+    'pt-BR': 'O jogo continua até que apenas um jogador tenha cartas de influência. Lembre-se: você pode reivindicar QUALQUER ação independentemente de suas cartas — mas se for desafiado e estiver blefando, perde uma influência! Esse é o coração de Coup: engano, risco e oportunidade.',
+  },
+  tutorialStep10Title: {
+    'de-DE': 'Das Spiel geht weiter...',
+    'en-US': 'The Game Continues...',
+    'es-MX': 'El Juego Continúa...',
+    'fr-FR': 'Le Jeu Continue...',
+    'hi-IN': 'खेल जारी है...',
+    'it-IT': 'Il Gioco Continua...',
+    'pt-BR': 'O Jogo Continua...',
+  },
+  tutorialStep1Content: {
+    'de-DE': 'In Coup beginnt jeder Spieler mit 2 Einflusskarten (geheim) und 2 Münzen. Dein Ziel ist es, der letzte Spieler mit Einflusskarten zu sein. Du verlierst eine Karte, wenn du erfolgreich herausgefordert wirst, jemand einen Putsch gegen dich durchführt oder jemand dich meuchelt.',
+    'en-US': 'In Coup, each player starts with 2 influence cards (kept secret) and 2 coins. Your goal is to be the last player with influence cards. You lose a card when you are successfully challenged, someone coups you, or someone assassinates you.',
+    'es-MX': 'En Coup, cada jugador comienza con 2 cartas de influencia (secretas) y 2 monedas. Tu objetivo es ser el último jugador con cartas de influencia. Pierdes una carta cuando te desafían exitosamente, alguien te hace un golpe o alguien te asesina.',
+    'fr-FR': "Dans Coup, chaque joueur commence avec 2 cartes d'influence (gardées secrètes) et 2 pièces. Votre objectif est d'être le dernier joueur avec des cartes d'influence. Vous perdez une carte quand vous êtes contesté avec succès, que quelqu'un vous fait un coup ou que quelqu'un vous assassine.",
+    'hi-IN': 'Coup में, प्रत्येक खिलाड़ी 2 प्रभाव कार्ड (गुप्त) और 2 सिक्कों से शुरू करता है। आपका लक्ष्य प्रभाव कार्ड वाला अंतिम खिलाड़ी बनना है। जब आपको सफलतापूर्वक चुनौती दी जाती है, कोई आप पर तख्तापलट करता है, या कोई आपकी हत्या करता है तो आप एक कार्ड खो देते हैं।',
+    'it-IT': "In Coup, ogni giocatore inizia con 2 carte di influenza (segrete) e 2 monete. Il tuo obiettivo è essere l'ultimo giocatore con carte di influenza. Perdi una carta quando vieni sfidato con successo, qualcuno ti fa un colpo di stato o qualcuno ti assassina.",
+    'pt-BR': 'Em Coup, cada jogador começa com 2 cartas de influência (secretas) e 2 moedas. Seu objetivo é ser o último jogador com cartas de influência. Você perde uma carta quando é desafiado com sucesso, alguém dá um golpe em você ou alguém te assassina.',
+  },
+  tutorialStep1Title: {
+    'de-DE': 'Die Grundlagen',
+    'en-US': 'The Basics',
+    'es-MX': 'Lo Básico',
+    'fr-FR': 'Les Bases',
+    'hi-IN': 'मूल बातें',
+    'it-IT': 'Le Basi',
+    'pt-BR': 'O Básico',
+  },
+  tutorialStep2Content: {
+    'de-DE': 'Lass uns ein 3-Spieler-Spiel zwischen Alice, Bob und Carol anschauen. Jeder bekommt 2 zufällige Einflusskarten, die nur sie sehen können:',
+    'en-US': "Let's watch a 3-player game between Alice, Bob, and Carol. Each gets 2 random influence cards that only they can see:",
+    'es-MX': 'Veamos un juego de 3 jugadores entre Alice, Bob y Carol. Cada uno recibe 2 cartas de influencia aleatorias que solo ellos pueden ver:',
+    'fr-FR': 'Regardons une partie à 3 joueurs entre Alice, Bob et Carol. Chacun reçoit 2 cartes d\'influence aléatoires que seul il peut voir :',
+    'hi-IN': 'आइए Alice, Bob और Carol के बीच 3-खिलाड़ी खेल देखें। प्रत्येक को 2 यादृच्छिक प्रभाव कार्ड मिलते हैं जो केवल वे देख सकते हैं:',
+    'it-IT': 'Guardiamo una partita a 3 giocatori tra Alice, Bob e Carol. Ognuno riceve 2 carte di influenza casuali che solo loro possono vedere:',
+    'pt-BR': 'Vamos assistir um jogo de 3 jogadores entre Alice, Bob e Carol. Cada um recebe 2 cartas de influência aleatórias que só eles podem ver:',
+  },
+  tutorialStep2Title: {
+    'de-DE': 'Spielaufbau',
+    'en-US': 'Game Setup',
+    'es-MX': 'Preparación del Juego',
+    'fr-FR': 'Mise en Place',
+    'hi-IN': 'खेल की तैयारी',
+    'it-IT': 'Preparazione del Gioco',
+    'pt-BR': 'Preparação do Jogo',
+  },
+  tutorialStep3Content: {
+    'de-DE': 'Alice ist am Zug. Sie hat den Herzog, also beansprucht sie Steuern (nimm 3 Münzen). Niemand fordert sie heraus, also bekommt sie die Münzen. Merke: Sie hätte Tax auch OHNE den Herzog beanspruchen können — es ist ein Bluff-Spiel!',
+    'en-US': "Alice goes first. She has the Duke, so she claims Tax (take 3 coins). Nobody challenges her, so she gets the coins. Note: she could have claimed Tax even WITHOUT the Duke — it's a bluffing game!",
+    'es-MX': 'Alice va primero. Tiene al Duque, así que reclama Impuesto (tomar 3 monedas). Nadie la desafía, así que obtiene las monedas. Nota: ¡podría haber reclamado Impuesto incluso SIN el Duque — es un juego de engaño!',
+    'fr-FR': "Alice commence. Elle a le Duc, donc elle revendique la Taxe (prendre 3 pièces). Personne ne la conteste, donc elle obtient les pièces. Note : elle aurait pu revendiquer la Taxe même SANS le Duc — c'est un jeu de bluff !",
+    'hi-IN': 'Alice पहले जाती है। उसके पास Duke है, इसलिए वह Tax का दावा करती है (3 सिक्के लें)। कोई उसे चुनौती नहीं देता, इसलिए उसे सिक्के मिलते हैं। ध्यान दें: वह Duke के बिना भी Tax का दावा कर सकती थी — यह एक ब्लफ़ गेम है!',
+    'it-IT': "Alice va per prima. Ha il Duca, quindi rivendica la Tassa (prendere 3 monete). Nessuno la sfida, quindi ottiene le monete. Nota: avrebbe potuto rivendicare la Tassa anche SENZA il Duca — è un gioco di bluff!",
+    'pt-BR': 'Alice vai primeiro. Ela tem o Duque, então reivindica Imposto (pegar 3 moedas). Ninguém a desafia, então ela fica com as moedas. Nota: ela poderia ter reivindicado Imposto mesmo SEM o Duque — é um jogo de blefe!',
+  },
+  tutorialStep3Title: {
+    'de-DE': 'Runde 1: Aktion beanspruchen',
+    'en-US': 'Turn 1: Claiming an Action',
+    'es-MX': 'Turno 1: Reclamar una Acción',
+    'fr-FR': 'Tour 1 : Revendiquer une Action',
+    'hi-IN': 'मोड़ 1: एक क्रिया का दावा',
+    'it-IT': 'Turno 1: Rivendicare un\'Azione',
+    'pt-BR': 'Turno 1: Reivindicar uma Ação',
+  },
+  tutorialStep4Content: {
+    'de-DE': 'Bob ist dran. Er hat NICHT den Kapitän, aber er behauptet trotzdem, er wolle von Alice stehlen! Im echten Spiel könnte er damit durchkommen, wenn niemand herausfordert...',
+    'en-US': "Bob's turn. He does NOT have the Captain, but he claims he wants to Steal from Alice anyway! In a real game, he might get away with it if nobody challenges...",
+    'es-MX': 'Turno de Bob. NO tiene al Capitán, ¡pero reclama que quiere Robar a Alice de todos modos! En un juego real, podría salirse con la suya si nadie desafía...',
+    'fr-FR': "Tour de Bob. Il N'a PAS le Capitaine, mais il prétend quand même vouloir Voler Alice ! Dans une vraie partie, il pourrait s'en sortir si personne ne conteste...",
+    'hi-IN': 'Bob की बारी। उसके पास Captain नहीं है, लेकिन वह फिर भी Alice से चोरी करने का दावा करता है! असली खेल में, अगर कोई चुनौती नहीं देता तो वह बच सकता है...',
+    'it-IT': "Turno di Bob. NON ha il Capitano, ma dichiara di voler Rubare ad Alice comunque! In una partita vera, potrebbe farla franca se nessuno lo sfida...",
+    'pt-BR': 'Turno do Bob. Ele NÃO tem o Capitão, mas reivindica que quer Roubar de Alice mesmo assim! Em um jogo real, ele pode se safar se ninguém desafiar...',
+  },
+  tutorialStep4Dialogue: {
+    'de-DE': 'von Alice stehlen',
+    'en-US': 'from Alice',
+    'es-MX': 'de Alice',
+    'fr-FR': 'd\'Alice',
+    'hi-IN': 'Alice से',
+    'it-IT': 'da Alice',
+    'pt-BR': 'de Alice',
+  },
+  tutorialStep4Title: {
+    'de-DE': 'Runde 2: Bluffen!',
+    'en-US': 'Turn 2: Bluffing!',
+    'es-MX': 'Turno 2: ¡Engañando!',
+    'fr-FR': 'Tour 2 : Bluffer !',
+    'hi-IN': 'मोड़ 2: ब्लफ़!',
+    'it-IT': 'Turno 2: Bluffare!',
+    'pt-BR': 'Turno 2: Blefando!',
+  },
+  tutorialStep5Block: {
+    'de-DE': 'Ich habe den',
+    'en-US': 'I have the',
+    'es-MX': 'Tengo al',
+    'fr-FR': "J'ai le",
+    'hi-IN': 'मेरे पास है',
+    'it-IT': 'Ho il',
+    'pt-BR': 'Eu tenho o',
+  },
+  tutorialStep5Content: {
+    'de-DE': 'Alice blockiert den Diebstahl und behauptet, sie habe den Kapitän (den sie tatsächlich hat). Bob könnte ihre Blockade herausfordern, aber er entscheidet sich dagegen. Der Diebstahl wird verhindert!',
+    'en-US': "Alice blocks the steal, claiming she has the Captain (which she actually does). Bob could challenge her block, but he decides not to. The steal is prevented!",
+    'es-MX': 'Alice bloquea el robo, afirmando que tiene al Capitán (lo cual es cierto). Bob podría desafiar su bloqueo, pero decide no hacerlo. ¡El robo es prevenido!',
+    'fr-FR': "Alice bloque le vol, prétendant avoir le Capitaine (ce qu'elle a vraiment). Bob pourrait contester son blocage, mais il décide de ne pas le faire. Le vol est empêché !",
+    'hi-IN': 'Alice चोरी को रोकती है, दावा करती है कि उसके पास Captain है (जो वास्तव में है)। Bob उसके ब्लॉक को चुनौती दे सकता था, लेकिन उसने नहीं दी। चोरी रोक दी गई!',
+    'it-IT': "Alice blocca il furto, sostenendo di avere il Capitano (che ha davvero). Bob potrebbe sfidare il suo blocco, ma decide di non farlo. Il furto è impedito!",
+    'pt-BR': 'Alice bloqueia o roubo, afirmando que tem o Capitão (o que ela realmente tem). Bob poderia desafiar seu bloqueio, mas decide não fazê-lo. O roubo é impedido!',
+  },
+  tutorialStep5Ok: {
+    'de-DE': '...OK.',
+    'en-US': '...OK.',
+    'es-MX': '...OK.',
+    'fr-FR': '...OK.',
+    'hi-IN': '...ठीक है।',
+    'it-IT': '...OK.',
+    'pt-BR': '...OK.',
+  },
+  tutorialStep5Title: {
+    'de-DE': 'Blockieren',
+    'en-US': 'Blocking',
+    'es-MX': 'Bloquear',
+    'fr-FR': 'Bloquer',
+    'hi-IN': 'अवरोधन',
+    'it-IT': 'Bloccare',
+    'pt-BR': 'Bloquear',
+  },
+  tutorialStep6Content: {
+    'de-DE': 'Bob will meuchelmorden (kostet 3 Münzen), hat aber nur 2. Er kann sich das nicht leisten! Stattdessen nimmt er Einkommen (1 Münze, kann nie blockiert oder herausgefordert werden).',
+    'en-US': "Bob wants to Assassinate (costs 3 coins) but only has 2. He can't afford it! Instead, he takes Income (1 coin, can never be blocked or challenged).",
+    'es-MX': 'Bob quiere Asesinar (cuesta 3 monedas) pero solo tiene 2. ¡No puede pagarlo! En su lugar, toma Ingreso (1 moneda, nunca puede ser bloqueado ni desafiado).',
+    'fr-FR': "Bob veut Assassiner (coûte 3 pièces) mais n'en a que 2. Il ne peut pas se le permettre ! À la place, il prend un Revenu (1 pièce, ne peut jamais être bloqué ni contesté).",
+    'hi-IN': 'Bob Assassinate करना चाहता है (3 सिक्के लगते हैं) लेकिन उसके पास केवल 2 हैं। वह इसे वहन नहीं कर सकता! इसके बजाय, वह Income लेता है (1 सिक्का, कभी ब्लॉक या चुनौती नहीं दी जा सकती)।',
+    'it-IT': "Bob vuole Assassinare (costa 3 monete) ma ne ha solo 2. Non può permetterselo! Invece, prende un Reddito (1 moneta, non può mai essere bloccato o sfidato).",
+    'pt-BR': 'Bob quer Assassinar (custa 3 moedas) mas só tem 2. Não pode pagar! Em vez disso, ele pega Renda (1 moeda, nunca pode ser bloqueada ou desafiada).',
+  },
+  tutorialStep6Title: {
+    'de-DE': 'Runde 3: Aktionskosten',
+    'en-US': 'Turn 3: Action Costs',
+    'es-MX': 'Turno 3: Costos de Acción',
+    'fr-FR': 'Tour 3 : Coûts des Actions',
+    'hi-IN': 'मोड़ 3: क्रिया लागत',
+    'it-IT': 'Turno 3: Costi delle Azioni',
+    'pt-BR': 'Turno 3: Custos de Ação',
+  },
+  tutorialStep7Content: {
+    'de-DE': 'Carol nutzt die Fähigkeit ihres Botschafters. Sie zieht 2 Karten vom Stapel, schaut sich alle 4 an und wählt 2 zum Behalten. Der Rest geht zurück in den Stapel.',
+    'en-US': "Carol uses her Ambassador's ability. She draws 2 cards from the deck, looks at all 4, and chooses 2 to keep. The rest go back into the deck.",
+    'es-MX': 'Carol usa la habilidad de su Embajador. Roba 2 cartas del mazo, mira las 4 y elige 2 para quedarse. El resto vuelve al mazo.',
+    'fr-FR': "Carol utilise la capacité de son Ambassadeur. Elle pioche 2 cartes du paquet, regarde les 4, et choisit 2 à garder. Le reste retourne dans le paquet.",
+    'hi-IN': 'Carol अपने Ambassador की क्षमता का उपयोग करती है। वह डेक से 2 कार्ड निकालती है, सभी 4 को देखती है, और 2 रखने के लिए चुनती है। बाकी वापस डेक में जाते हैं।',
+    'it-IT': "Carol usa l'abilità del suo Ambasciatore. Pesca 2 carte dal mazzo, guarda tutte e 4, e sceglie 2 da tenere. Il resto torna nel mazzo.",
+    'pt-BR': 'Carol usa a habilidade do seu Embaixador. Ela compra 2 cartas do baralho, olha todas as 4 e escolhe 2 para manter. O resto volta para o baralho.',
+  },
+  tutorialStep7Detail: {
+    'de-DE': 'Schaut 4 Karten an, behält 2',
+    'en-US': 'Looks at 4 cards, keeps 2',
+    'es-MX': 'Mira 4 cartas, se queda con 2',
+    'fr-FR': 'Regarde 4 cartes, en garde 2',
+    'hi-IN': '4 कार्ड देखती है, 2 रखती है',
+    'it-IT': 'Guarda 4 carte, ne tiene 2',
+    'pt-BR': 'Olha 4 cartas, fica com 2',
+  },
+  tutorialStep7Title: {
+    'de-DE': 'Runde 4: Austausch',
+    'en-US': 'Turn 4: Exchange',
+    'es-MX': 'Turno 4: Intercambio',
+    'fr-FR': 'Tour 4 : Échange',
+    'hi-IN': 'मोड़ 4: विनिमय',
+    'it-IT': 'Turno 4: Scambio',
+    'pt-BR': 'Turno 4: Troca',
+  },
+  tutorialStep8Challenge: {
+    'de-DE': 'Du hast nicht den',
+    'en-US': "You don't have the",
+    'es-MX': '\u00a1No tienes al',
+    'fr-FR': "Tu n'as pas le",
+    'hi-IN': '\u0924\u0941\u092e\u094d\u0939\u093e\u0930\u0947 \u092a\u093e\u0938 \u0928\u0939\u0940\u0902 \u0939\u0948',
+    'it-IT': 'Non hai il',
+    'pt-BR': 'Voc\u00ea n\u00e3o tem o',
+  },
+  tutorialStep8Content: {
+    'de-DE': 'Alice beansprucht erneut Steuern. Diesmal fordert Carol sie heraus! Alice muss ihren Herzog zeigen...',
+    'en-US': 'Alice claims Tax again. This time, Carol challenges her! Alice must reveal her Duke...',
+    'es-MX': 'Alice reclama Impuesto de nuevo. ¡Esta vez, Carol la desafía! Alice debe revelar su Duque...',
+    'fr-FR': 'Alice revendique à nouveau la Taxe. Cette fois, Carol la conteste ! Alice doit révéler son Duc...',
+    'hi-IN': 'Alice फिर से Tax का दावा करती है। इस बार, Carol उसे चुनौती देती है! Alice को अपना Duke दिखाना होगा...',
+    'it-IT': 'Alice rivendica di nuovo la Tassa. Questa volta, Carol la sfida! Alice deve rivelare il suo Duca...',
+    'pt-BR': 'Alice reivindica Imposto novamente. Desta vez, Carol a desafia! Alice deve revelar seu Duque...',
+  },
+  tutorialStep8Result: {
+    'de-DE': 'Carol VERLIERT die Herausforderung und muss eine Einflusskarte aufgeben!',
+    'en-US': 'Carol LOSES the challenge and must give up an influence card!',
+    'es-MX': '¡Carol PIERDE el desafío y debe renunciar a una carta de influencia!',
+    'fr-FR': "Carol PERD la contestation et doit abandonner une carte d'influence !",
+    'hi-IN': 'Carol चुनौती हार जाती है और उसे एक प्रभाव कार्ड छोड़ना होगा!',
+    'it-IT': "Carol PERDE la sfida e deve rinunciare a una carta d'influenza!",
+    'pt-BR': 'Carol PERDE o desafio e deve desistir de uma carta de influência!',
+  },
+  tutorialStep8Reveal: {
+    'de-DE': 'Zeigt den Herzog',
+    'en-US': 'Reveals Duke',
+    'es-MX': 'Revela al Duque',
+    'fr-FR': 'Révèle le Duc',
+    'hi-IN': 'Duke दिखाती है',
+    'it-IT': 'Rivela il Duca',
+    'pt-BR': 'Revela o Duque',
+  },
+  tutorialStep8Title: {
+    'de-DE': 'Herausforderung fehlgeschlagen!',
+    'en-US': 'Challenge Failed!',
+    'es-MX': '¡Desafío Fallido!',
+    'fr-FR': 'Contestation Échouée !',
+    'hi-IN': 'चुनौती विफल!',
+    'it-IT': 'Sfida Fallita!',
+    'pt-BR': 'Desafio Falhou!',
+  },
+  tutorialStep9Content: {
+    'de-DE': 'Bob hat jetzt 4 Münzen (nach mehreren Einkommens-Runden). Er beansprucht ein Attentat auf Carol! Carol hat nur noch eine Karte — wenn sie keine Contessa hat, um zu blockieren, ist sie raus!',
+    'en-US': "Bob now has 4 coins (after several Income turns). He claims Assassinate on Carol! Carol only has 1 card left — if she doesn't have the Contessa to block, she's out!",
+    'es-MX': 'Bob ahora tiene 4 monedas (después de varios turnos de Ingreso). ¡Reclama Asesinar a Carol! Carol solo tiene 1 carta — ¡si no tiene la Condesa para bloquear, está fuera!',
+    'fr-FR': "Bob a maintenant 4 pièces (après plusieurs tours de Revenu). Il revendique l'Assassinat de Carol ! Carol n'a plus qu'une carte — si elle n'a pas la Comtesse pour bloquer, elle est éliminée !",
+    'hi-IN': 'Bob के पास अब 4 सिक्के हैं (कई Income मोड़ों के बाद)। वह Carol पर Assassinate का दावा करता है! Carol के पास केवल 1 कार्ड बचा है — अगर उसके पास ब्लॉक करने के लिए Contessa नहीं है, तो वह बाहर है!',
+    'it-IT': "Bob ora ha 4 monete (dopo diversi turni di Reddito). Rivendica l'Assassinio di Carol! Carol ha solo 1 carta rimasta — se non ha la Contessa per bloccare, è fuori!",
+    'pt-BR': 'Bob agora tem 4 moedas (após várias rodadas de Renda). Ele reivindica Assassinar Carol! Carol só tem 1 carta — se não tiver a Condessa para bloquear, está fora!',
+  },
+  tutorialStep9Detail: {
+    'de-DE': 'Carol verliert ihre letzte Einflusskarte und ist aus dem Spiel!',
+    'en-US': 'Carol loses her last influence card and is out of the game!',
+    'es-MX': '¡Carol pierde su última carta de influencia y está fuera del juego!',
+    'fr-FR': "Carol perd sa dernière carte d'influence et est éliminée !",
+    'hi-IN': 'Carol अपना आखिरी प्रभाव कार्ड खो देती है और खेल से बाहर है!',
+    'it-IT': "Carol perde la sua ultima carta d'influenza ed è fuori dal gioco!",
+    'pt-BR': 'Carol perde sua última carta de influência e está fora do jogo!',
+  },
+  tutorialStep9Title: {
+    'de-DE': 'Meuchelmord!',
+    'en-US': 'Assassination!',
+    'es-MX': '¡Asesinato!',
+    'fr-FR': 'Assassinat !',
+    'hi-IN': 'हत्या!',
+    'it-IT': 'Assassinio!',
+    'pt-BR': 'Assassinato!',
   },
   unchallenged: {
     'de-DE': 'Nicht herausgefordert',
