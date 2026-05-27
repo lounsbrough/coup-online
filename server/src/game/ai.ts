@@ -72,6 +72,11 @@ export const getOpponents = (gameState: PublicGameState): PublicPlayer[] =>
   gameState.players.filter(({ name, influenceCount }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
 
+const areAllPlayersSameFaction = (gameState: PublicGameState): boolean => {
+  const alivePlayers = gameState.players.filter((p) => p.influenceCount > 0)
+  return alivePlayers.every((p) => p.faction === alivePlayers[0].faction)
+}
+
 const getTargetableOpponents = (gameState: PublicGameState): PublicPlayer[] => {
   const opponents = getOpponents(gameState)
   if (!gameState.settings.enableReformation) {
@@ -346,6 +351,7 @@ export const decideAction = (gameState: PublicGameState): {
   if (
     gameState.settings.enableReformation
     && gameState.treasury > 0
+    && !areAllPlayersSameFaction(gameState)
     && Math.random() > 0.7
   ) {
     return { action: Actions.Embezzle }
@@ -371,13 +377,20 @@ export const decideAction = (gameState: PublicGameState): {
 
   if (
     gameState.settings.enableReformation
-    && gameState.selfPlayer.coins >= 2
-    && getTargetableOpponents(gameState).length === 0
-    && getOpponents(gameState).length > 0
+    && !areAllPlayersSameFaction(gameState)
     && Math.random() > 0.5
   ) {
-    const target = getOpponents(gameState)[Math.floor(Math.random() * getOpponents(gameState).length)]
-    return { action: Actions.Convert, targetPlayer: target.name }
+    const sameTeamOpponents = getOpponents(gameState).filter(({ faction }) => faction === gameState.selfPlayer?.faction)
+    const differentTeamOpponents = getOpponents(gameState).filter(({ faction }) => faction !== gameState.selfPlayer?.faction)
+
+    if (differentTeamOpponents.length > sameTeamOpponents.length && gameState.selfPlayer.coins >= 1) {
+      return { action: Actions.Convert }
+    }
+
+    if (gameState.selfPlayer.coins >= 2 && differentTeamOpponents.length > 0) {
+      const target = differentTeamOpponents[Math.floor(Math.random() * differentTeamOpponents.length)]
+      return { action: Actions.Convert, targetPlayer: target.name }
+    }
   }
 
   return { action: Actions.Income }

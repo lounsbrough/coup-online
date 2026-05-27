@@ -272,8 +272,7 @@ export const startGame = (gameState: GameState) => {
 }
 
 const assignFactions = (gameState: GameState) => {
-  const shuffledPlayers = shuffle([...gameState.players])
-  shuffledPlayers.forEach((player, index) => {
+  gameState.players.forEach((player, index) => {
     player.faction = index % 2 ? Factions.Loyalist : Factions.Reformist
   })
 }
