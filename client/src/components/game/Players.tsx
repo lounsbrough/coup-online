@@ -1,7 +1,7 @@
 import { Badge, Button, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Close, MonetizationOn, Shield, ShieldOutlined, ShieldTwoTone, Whatshot, WhatshotTwoTone } from "@mui/icons-material"
+import { Close, MonetizationOn, ShieldTwoTone, WhatshotTwoTone } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
