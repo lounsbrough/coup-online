@@ -57,6 +57,11 @@ function ChooseInfluencesToKeep() {
             return <InfluenceButton
               key={index}
               influence={influence as Influences}
+              startIcon={<Checkbox
+                color="default"
+                sx={{ color: 'inherit', p: 0, mr: 0.75 }}
+                checked={checkedIndexes.includes(index)}
+              />}
               disabled={checkedIndexes.length === 2 && !checkedIndexes.includes(index)}
               onClick={() => {
                 if (checkedIndexes.includes(index)) {
@@ -68,14 +73,7 @@ function ChooseInfluencesToKeep() {
                   ])
                 }
               }}
-            >
-              <Checkbox
-                color="default"
-                sx={{ color: 'inherit', p: 0, mr: 1 }}
-                checked={checkedIndexes.includes(index)}
-              />
-              {t(influence)}
-            </InfluenceButton>
+            />
           })}
       </Grid>
     </>
