@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import { Influences, PlayerActions } from '@shared'
+import { PlayerActions } from '@shared'
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import CoupTypography from "../utilities/CoupTypography"
