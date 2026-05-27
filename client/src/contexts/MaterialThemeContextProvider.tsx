@@ -16,6 +16,7 @@ import {
   DARK_COLOR_MODE,
   SYSTEM_COLOR_MODE,
 } from './MaterialThemeContext'
+import { useGameSettingsContext } from './GameSettingsContext'
 
 function MaterialThemeContextProvider({
   children,
@@ -27,6 +28,7 @@ function MaterialThemeContextProvider({
 
   const isSmallScreen = useMediaQuery('screen and (max-width: 899px)')
   const isLargeScreen = useMediaQuery('screen and (min-width: 1200px)')
+  const { useInquisitor } = useGameSettingsContext()
 
   // Always use DARK_COLOR_MODE for now
   const activeColorMode: PaletteMode = DARK_COLOR_MODE
@@ -59,7 +61,7 @@ function MaterialThemeContextProvider({
     const actionColors = {
       [Actions.Assassinate]: influenceColors[Influences.Assassin],
       [Actions.Coup]: primaryColor,
-      [Actions.Exchange]: influenceColors[Influences.Ambassador],
+      [Actions.Exchange]: useInquisitor ? influenceColors[Influences.Inquisitor] : influenceColors[Influences.Ambassador],
       [Actions.Examine]: influenceColors[Influences.Inquisitor],
       [Actions.Convert]: primaryColor,
       [Actions.Embezzle]: primaryColor,
@@ -168,7 +170,7 @@ function MaterialThemeContextProvider({
     })
 
     return theme
-  }, [isLightMode, activeColorMode, isSmallScreen, isLargeScreen])
+  }, [isLightMode, activeColorMode, isSmallScreen, isLargeScreen, useInquisitor])
 
   return (
     <>
