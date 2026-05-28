@@ -1,4 +1,4 @@
-import { type ButtonProps } from "@mui/material"
+import { Box, type ButtonProps } from "@mui/material"
 import { Influences } from '@shared'
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import GrowingButton from "../utilities/GrowingButton"
@@ -14,7 +14,7 @@ function InfluenceButton({ influence, children, startIcon, ...props }: {
         <GrowingButton
             variant="contained"
             color={influence}
-            startIcon={<>{startIcon}<InfluenceIcon influence={influence} /></>}
+            startIcon={<Box sx={{ display: 'flex', alignItems: 'center' }}>{startIcon}<InfluenceIcon influence={influence} /></Box>}
             {...props}
             sx={[{ color: 'white' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
         >
