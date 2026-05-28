@@ -1,5 +1,9 @@
 export const COUP_GOLD = 'rgb(255, 187, 10)'
 
+export const CARD_SHADOW = '1px 1px 1px rgba(0, 0, 0, 0.8)'
+export const CARD_TEXT_SHADOW = { textShadow: CARD_SHADOW }
+export const CARD_ICON_FILTER = { filter: `drop-shadow(${CARD_SHADOW})` }
+
 export const getDiscreteGradient = (colors: string[]) => {
   if (!colors.length) return undefined
   if (colors.length === 1) return colors[0]

@@ -10,6 +10,7 @@ import { Factions, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { CARD_ICON_FILTER, CARD_TEXT_SHADOW } from "../../helpers/styles"
 
 function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }>) {
   const { gameState } = useGameStateContext()
@@ -33,7 +34,9 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
       {gameState.players
         .map(({ name, color, coins, influenceCount, deadInfluences, ai, personality, faction }, index) => {
           const playerColor = gameState.isStarted && !influenceCount ? '#777777' : color
-          const cardTextColor = theme.palette.mode === LIGHT_COLOR_MODE ? 'white' : 'black'
+          const lightColor = colord(playerColor).lighten(0.35).toHex()
+          const cardTextStyle = { color: lightColor, ...CARD_TEXT_SHADOW }
+          const cardIconStyle = { color: lightColor, ...CARD_ICON_FILTER }
           const isWaitingOnPlayer = waitingOnPlayers.some(({ name: waitingOnName }) => waitingOnName === name)
 
           const influences = gameState.isStarted ? [
@@ -70,8 +73,6 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
             </Button>
           )
 
-          const FactionIcon = faction === Factions.Loyalist ? ShieldTwoTone : WhatshotTwoTone
-
           return (
             <Badge
               key={index}
@@ -96,25 +97,14 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                     "100%": { transform: 'scale(1)' }
                   },
                 }}>
-                {showFactionBadge && (
-                  <Tooltip title={<Typography variant="h6">{t(faction!)}</Typography>}>
-                    <FactionIcon sx={{
-                      fontSize: '30px',
-                      position: 'absolute',
-                      top: '-12px',
-                      left: '-12px',
-                      color: 'white',
-                    }} />
-                  </Tooltip>
-                )}
                 <Typography variant="h6" sx={{
                   fontWeight: 'bold',
-                  color: cardTextColor
+                  ...cardTextStyle
                 }}
                 >
                   <OverflowTooltip>{name}</OverflowTooltip>
                 </Typography>
-                <Typography variant="h6" sx={{ color: cardTextColor }}>
+                <Typography variant="h6" sx={{ ...cardTextStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'nowrap' }}>
                   {ai && (
                     <Tooltip title={
                       personality ? (
@@ -138,10 +128,17 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                         </Typography>
                       )
                     }>
-                      <Bot sx={{ verticalAlign: 'text-bottom' }} />
+                      <Bot sx={{ verticalAlign: 'text-bottom', ...cardIconStyle }} />
                     </Tooltip>
                   )}
-                  <MonetizationOn sx={{ verticalAlign: 'text-bottom' }} />{` ${coins}`}
+                  <MonetizationOn sx={{ verticalAlign: 'text-bottom', ...cardIconStyle }} />{` ${coins}`}
+                  {showFactionBadge && (
+                    <Tooltip title={<Typography variant="h6">{t(faction!)}</Typography>}>
+                      {faction === Factions.Loyalist
+                        ? <ShieldTwoTone sx={{ ml: 0.25, ...cardIconStyle }} />
+                        : <WhatshotTwoTone sx={{ ml: 0.25, ...cardIconStyle }} />}
+                    </Tooltip>
+                  )}
                 </Typography>
                 <Grid
                   container mt={0.5}
@@ -160,7 +157,8 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                           width: '44px',
                           background: colord(playerColor).darken(colorModeFactor * 0.25).toHex(),
                           padding: 0.5,
-                          borderRadius: 2
+                          borderRadius: 2,
+                          ...cardTextStyle
                         }}>
                         <Tooltip
                           title={
@@ -172,7 +170,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                           }
                         >
                           <span>
-                            <InfluenceIcon sx={{ fontSize: '32px', color: colord(playerColor).lighten(colorModeFactor * 0.2).toHex() }} influence={influence} />
+                            <InfluenceIcon sx={{ fontSize: '32px', ...cardIconStyle }} influence={influence} />
                           </span>
                         </Tooltip>
                       </Grid>
