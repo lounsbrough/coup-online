@@ -71,8 +71,8 @@ export default function RulesDrawerContent() {
                       icon={<CheckCircle />}
                       label={t('reviveIsEnabled')}
                       color="success"
-                    size="small"
-                  />
+                      size="small"
+                    />
                   )}
                   {gameState.settings.enableReformation && (
                     <Chip

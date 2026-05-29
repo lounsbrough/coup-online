@@ -18,7 +18,7 @@ export const sameActiveFaction = (
   if (alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)) return false
   const playerA = alivePlayers.find((p) => p.name === playerAName)
   const playerB = alivePlayers.find((p) => p.name === playerBName)
-  return playerA?.faction === playerB?.faction
+  return !!playerA && !!playerB && playerA.faction === playerB.faction
 }
 
 export const getInfluencesForGame = (settings: GameSettings): Influences[] => {
