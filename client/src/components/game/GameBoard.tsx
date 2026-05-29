@@ -146,7 +146,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
                 fontSize='inherit'
                 addTextShadow
               >
-                {t('treasury')}: <Treasury sx={{ mx: 1, verticalAlign: 'text-bottom' }} /> {gameState.treasury}
+                {t('treasury')}: <Treasury sx={{ mx: 1, verticalAlign: 'text-bottom', fontSize: 'inherit' }} /> {gameState.treasury}
               </CoupTypography>
             </Grid>
           )}
