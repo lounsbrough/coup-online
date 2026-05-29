@@ -30,6 +30,10 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
   const colorModeFactor = theme.palette.mode === LIGHT_COLOR_MODE ? -1 : 1
   const waitingOnPlayers = getWaitingOnPlayers(gameState)
   const humanPlayers = gameState.players.filter(({ ai }) => !ai)
+  const alivePlayers = gameState.players.filter(({ influenceCount }) => influenceCount > 0)
+  const allSameFaction = gameState.settings.enableReformation
+    && alivePlayers.length > 1
+    && alivePlayers.every(({ faction }) => faction === alivePlayers[0]?.faction)
 
   return (
     <Grid container justifyContent="center" spacing={3}>
@@ -136,8 +140,8 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                   {showFactionBadge && (
                     <Tooltip title={<Typography variant="h6">{t(faction!)}</Typography>}>
                       {faction === Factions.Loyalist
-                        ? <Loyalists sx={{ ml: 1, ...cardIconStyle }} />
-                        : <Reformists sx={{ ml: 1, ...cardIconStyle }} />}
+                        ? <Loyalists sx={{ ml: 1, ...cardIconStyle, opacity: allSameFaction ? 0.35 : 1 }} />
+                        : <Reformists sx={{ ml: 1, ...cardIconStyle, opacity: allSameFaction ? 0.35 : 1 }} />}
                     </Tooltip>
                   )}
                 </Typography>
