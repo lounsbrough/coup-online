@@ -142,7 +142,7 @@ export const ActionAttributes: {
     blockable: false,
     challengeable: false,
     coinsRequired: 1,
-    requiresTarget: false,
+    requiresTarget: true,
   },
   [Actions.Embezzle]: {
     blockable: false,
@@ -167,6 +167,8 @@ export enum EventMessages {
   ActionConfirm = 'ActionConfirm',
   ActionPending = 'ActionPending',
   ActionProcessed = 'ActionProcessed',
+  ExamineKept = 'ExamineKept',
+  ExamineSwapped = 'ExamineSwapped',
   ForcedMoveProcessed = 'ForcedMoveProcessed',
   BlockPending = 'BlockPending',
   BlockSuccessful = 'BlockSuccessful',

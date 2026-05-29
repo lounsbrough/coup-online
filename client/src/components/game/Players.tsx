@@ -1,14 +1,16 @@
 import { Badge, Button, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Close, MonetizationOn, ShieldTwoTone, WhatshotTwoTone } from "@mui/icons-material"
+import { Close, MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
-import { Factions, PlayerActions } from "@shared"
+import { Factions, isAllSameFaction, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
+import Loyalists from "../icons/Loyalists"
+import Reformists from "../icons/Reformists"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { CARD_ICON_FILTER, CARD_TEXT_SHADOW } from "../../helpers/styles"
 
@@ -28,6 +30,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
   const colorModeFactor = theme.palette.mode === LIGHT_COLOR_MODE ? -1 : 1
   const waitingOnPlayers = getWaitingOnPlayers(gameState)
   const humanPlayers = gameState.players.filter(({ ai }) => !ai)
+  const allSameFaction = isAllSameFaction(gameState)
 
   return (
     <Grid container justifyContent="center" spacing={3}>
@@ -45,9 +48,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
           ] : Array.from({ length: 2 }, () => undefined)
 
           const showKickBadge = inWaitingRoom && (ai || humanPlayers.length > 1) && !!gameState.selfPlayer
-          const alivePlayers = gameState.players.filter((p) => p.influenceCount)
-          const allSameFaction = alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)
-          const showFactionBadge = !!faction && gameState.settings.enableReformation && !allSameFaction
+          const showFactionBadge = !!faction && gameState.settings.enableReformation
 
           const kickBadgeContent = (
             <Button
@@ -57,7 +58,8 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                 width: '28px',
                 minWidth: 'unset',
                 borderRadius: '28px',
-                background: color
+                background: color,
+                color: lightColor
               }}
               disabled={isMutating}
               variant="contained"
@@ -88,7 +90,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                   background: playerColor,
                   borderRadius: 3,
                   p: 1,
-                  width: theme.isLargeScreen ? '7rem' : '6rem',
+                  width: theme.isLargeScreen ? '7.2rem' : '6.5rem',
                   transition: theme.transitions.create(['transform', 'box-shadow']),
                   animation: isWaitingOnPlayer ? 'pulsePlayer 1.5s infinite' : undefined,
                   "@keyframes pulsePlayer": {
@@ -135,8 +137,8 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                   {showFactionBadge && (
                     <Tooltip title={<Typography variant="h6">{t(faction!)}</Typography>}>
                       {faction === Factions.Loyalist
-                        ? <ShieldTwoTone sx={{ ml: 0.25, ...cardIconStyle }} />
-                        : <WhatshotTwoTone sx={{ ml: 0.25, ...cardIconStyle }} />}
+                        ? <Loyalists sx={{ ml: 1, ...cardIconStyle, opacity: allSameFaction ? 0.35 : 1 }} />
+                        : <Reformists sx={{ ml: 1, ...cardIconStyle, opacity: allSameFaction ? 0.35 : 1 }} />}
                     </Tooltip>
                   )}
                 </Typography>
@@ -147,14 +149,15 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                   flexWrap="nowrap"
                 >
                   {influences.map((influence, index) => {
+                    const influenceBoxSize = 46
                     return (
                       <Grid
                         key={index}
                         sx={{
                           justifyContent: 'center',
                           alignContent: 'center',
-                          height: '44px',
-                          width: '44px',
+                          height: `${influenceBoxSize}px`,
+                          width: `${influenceBoxSize}px`,
                           background: colord(playerColor).darken(colorModeFactor * 0.25).toHex(),
                           padding: 0.5,
                           borderRadius: 2,
@@ -170,7 +173,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                           }
                         >
                           <span>
-                            <InfluenceIcon sx={{ fontSize: '32px', ...cardIconStyle }} influence={influence} />
+                            <InfluenceIcon sx={{ fontSize: '34px', ...cardIconStyle }} influence={influence} />
                           </span>
                         </Tooltip>
                       </Grid>

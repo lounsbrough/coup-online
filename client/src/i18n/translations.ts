@@ -59,6 +59,7 @@ export type Translations = ActionMessages &
     confirm: TranslationsForString
     confirmActions: TranslationsForString
     contents: TranslationsForString
+    copiesOfEachInfluence: TranslationsForString
     convertOther: TranslationsForString
     convertSelf: TranslationsForString
     copyInviteLink: TranslationsForString
@@ -77,6 +78,8 @@ export type Translations = ActionMessages &
     [EventMessages.ActionConfirm]: ActionMessages
     [EventMessages.ActionPending]: Partial<ActionMessages>
     [EventMessages.ActionProcessed]: ActionMessages
+    [EventMessages.ExamineKept]: TranslationsForString
+    [EventMessages.ExamineSwapped]: TranslationsForString
     [EventMessages.ForcedMoveProcessed]: TranslationsForString
     [EventMessages.BlockFailed]: TranslationsForString
     [EventMessages.BlockPending]: TranslationsForString
@@ -873,6 +876,15 @@ const translations: Translations = {
     'it-IT': 'Converti te stesso',
     'pt-BR': 'Converter-se',
   },
+  copiesOfEachInfluence: {
+    'de-DE': '{{count}} Kopien jedes Einflusses im Spiel',
+    'en-US': '{{count}} copies of each influence in the game',
+    'es-MX': '{{count}} copias de cada influencia en el juego',
+    'fr-FR': '{{count}} copies de chaque influence dans la partie',
+    'hi-IN': 'खेल में प्रत्येक प्रभाव की {{count}} प्रतियाँ',
+    'it-IT': '{{count}} copie di ogni influenza nella partita',
+    'pt-BR': '{{count}} cópias de cada influência no jogo',
+  },
   copyInviteLink: {
     'de-DE': 'Einladungslink kopieren',
     'en-US': 'Copy Invite Link',
@@ -1447,6 +1459,24 @@ const translations: Translations = {
       '{{primaryPlayer}} ने {{secondaryPlayer}} को सफलतापूर्वक चुनौती दी',
     'it-IT': '{{primaryPlayer}} ha sfidato con successo {{secondaryPlayer}}',
     'pt-BR': '{{primaryPlayer}} desafiou com sucesso {{secondaryPlayer}}',
+  },
+  [EventMessages.ExamineKept]: {
+    'de-DE': '{{primaryPlayer}} ließ {{secondaryPlayer}} behalten',
+    'en-US': '{{primaryPlayer}} allowed {{secondaryPlayer}} to keep their influence',
+    'es-MX': '{{primaryPlayer}} permitió a {{secondaryPlayer}} conservar su influencia',
+    'fr-FR': '{{primaryPlayer}} a laissé {{secondaryPlayer}} garder son influence',
+    'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को अपना प्रभाव रखने दिया',
+    'it-IT': '{{primaryPlayer}} ha lasciato {{secondaryPlayer}} mantenere la sua influenza',
+    'pt-BR': '{{primaryPlayer}} permitiu que {{secondaryPlayer}} mantivesse sua influência',
+  },
+  [EventMessages.ExamineSwapped]: {
+    'de-DE': '{{primaryPlayer}} zwang {{secondaryPlayer}}, ihre Influenz zu tauschen',
+    'en-US': '{{primaryPlayer}} forced {{secondaryPlayer}} to swap their influence',
+    'es-MX': '{{primaryPlayer}} obligó a {{secondaryPlayer}} a intercambiar su influencia',
+    'fr-FR': '{{primaryPlayer}} a forcé {{secondaryPlayer}} à échanger son influence',
+    'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को अपना प्रभाव बदलने के लिए मजबूर किया',
+    'it-IT': '{{primaryPlayer}} ha costretto {{secondaryPlayer}} a scambiare la sua influenza',
+    'pt-BR': '{{primaryPlayer}} forçou {{secondaryPlayer}} a trocar sua influência',
   },
   [EventMessages.ForcedMoveProcessed]: {
     'de-DE':

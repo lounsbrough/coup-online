@@ -1,0 +1,15 @@
+import { SvgIcon, SvgIconProps } from "@mui/material"
+import { ForwardedRef, forwardRef } from "react"
+
+const Loyalists = forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => (
+  <SvgIcon
+    ref={ref}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 -960 960 960"
+    {...props}
+  >
+    <path d="M17.91-99.83v-520.34h113.18v80h48.74v-320H293v80h48.5v-80h113.17v80h50.66v-80H618.5v80H667v-80h113.17v320h48.74v-80h113.18v520.34H543.41V-240q0-26.04-18.49-44.72-18.49-18.69-44.87-18.69t-44.92 18.69q-18.54 18.68-18.54 44.72v140.17H17.91ZM131.09-213h172.32v-27q0-73.6 51.51-125.09 51.51-51.5 125.13-51.5t125.08 51.5Q656.59-313.6 656.59-240v27h172.32v-214H667v-240H293v240H131.09v214ZM347-468.91h102.17v-142.18H347v142.18Zm163.83 0H613v-142.18H510.83v142.18ZM480-440Z"/>
+  </SvgIcon>
+))
+
+export default Loyalists

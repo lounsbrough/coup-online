@@ -1,12 +1,12 @@
 import crypto from 'node:crypto'
-import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, CannotTargetSameFactionError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError, SpeedRoundTimerExpiredError } from "../utilities/errors"
+import { DifferentPlayerNameError, GameInProgressError, GameNeedsAtLeast2PlayersToStartError, GameNotInProgressError, GameOverError, InsufficientCoinsError, InvalidActionAt10CoinsError, NoDeadInfluencesError, YouAreDeadError, PlayerNotInGameError, ReviveNotAllowedInGameError, RoomAlreadyHasPlayerError, RoomIsFullError, TargetPlayerNotAllowedForActionError, TargetPlayerRequiredForActionError, UnableToFindPlayerError, UnableToForfeitError, TargetPlayerIsSelfError, CannotBlockSameFactionError, CannotTargetSameFactionError, ActionNotCurrentlyAllowedError, MessageDoesNotExistError, MessageIsNotYoursError, MissingInfluenceError, BlockMayNotBeBlockedError, StateChangedSinceValidationError, ClaimedInfluenceAlreadyConfirmedError, ActionNotChallengeableError, ClaimedInfluenceRequiredError, ClaimedInfluenceInvalidError, RoomIdAlreadyExistsError, SpeedRoundTimerExpiredError } from "../utilities/errors"
 import { ActionAttributes, Actions, AiPersonality, EventMessages, Factions, GameSettings, GameState, InfluenceAttributes, Influences, PlayerActions, Responses } from "../../../shared/types/game"
 import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, logForcedMove, mutateGameState, shuffleDeck } from "../utilities/gameState"
 import { generateRoomId } from "../utilities/identifiers"
 import { getValue } from '../utilities/storage'
 import { shuffle } from '../utilities/array'
-import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, canTargetPlayer, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isAllSameFaction, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
-import { canInfluenceLegallyPerformAction, canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, getInfluenceRequiredForAction, getInfluencesForGame } from '../../../shared/game/logic'
+import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { canInfluenceLegallyPerformAction, canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, getInfluenceRequiredForAction, getInfluencesForGame, sameActiveFaction } from '../../../shared/game/logic'
 import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { AvailableLanguageCode } from '../../../shared/i18n/availableLanguages'
@@ -411,10 +411,6 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
     throw new InsufficientCoinsError()
   }
 
-  if (action === Actions.Convert && targetPlayer && player.coins < 2) {
-    throw new InsufficientCoinsError()
-  }
-
   if (player.coins >= 10 && ![Actions.Coup, Actions.Revive].includes(action)) {
     throw new InvalidActionAt10CoinsError()
   }
@@ -432,10 +428,6 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
     throw new ActionNotCurrentlyAllowedError()
   }
 
-  if ((action === Actions.Convert || action === Actions.Embezzle) && isAllSameFaction(gameState)) {
-    throw new ActionNotCurrentlyAllowedError()
-  }
-
   if (action === Actions.Examine && !gameState.settings.useInquisitor) {
     throw new ActionNotCurrentlyAllowedError()
   }
@@ -448,7 +440,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
     throw new TargetPlayerRequiredForActionError()
   }
 
-  if (!ActionAttributes[action].requiresTarget && targetPlayer && action !== Actions.Convert) {
+  if (!ActionAttributes[action].requiresTarget && targetPlayer) {
     throw new TargetPlayerNotAllowedForActionError()
   }
 
@@ -457,8 +449,7 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
   }
 
   if (targetPlayer && action !== Actions.Convert) {
-    const target = gameState.players.find((p) => p.name === targetPlayer)
-    if (target && !canTargetPlayer(gameState, player, target)) {
+    if (sameActiveFaction(gameState, player.name, targetPlayer)) {
       throw new CannotTargetSameFactionError()
     }
   }
@@ -575,26 +566,29 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
           throw new ActionNotCurrentlyAllowedError()
         }
 
-        if (targetPlayer) {
-          const target = state.players.find((p) => p.name === targetPlayer)
-          if (!target) {
-            throw new UnableToFindPlayerError()
-          }
-          convertingPlayer.coins -= 2
-          state.treasury += 2
-          target.faction = target.faction === Factions.Loyalist ? Factions.Reformist : Factions.Loyalist
-        } else {
-          convertingPlayer.coins -= 1
-          state.treasury += 1
-          convertingPlayer.faction = convertingPlayer.faction === Factions.Loyalist ? Factions.Reformist : Factions.Loyalist
+        if (!targetPlayer) {
+          throw new TargetPlayerRequiredForActionError()
         }
+
+        const target = state.players.find((p) => p.name === targetPlayer)
+        if (!target) {
+          throw new UnableToFindPlayerError()
+        }
+
+        const coinsRequired = target.id === convertingPlayer.id ? 1 : 2
+        if (convertingPlayer.coins < coinsRequired) {
+          throw new InsufficientCoinsError()
+        }
+        convertingPlayer.coins -= coinsRequired
+        state.treasury += coinsRequired
+        target.faction = target.faction === Factions.Loyalist ? Factions.Reformist : Factions.Loyalist
 
         moveTurnToNextPlayer(state)
         logEvent(state, {
           event: EventMessages.ActionProcessed,
           action,
           primaryPlayer: player.name,
-          secondaryPlayer: targetPlayer || player.name
+          secondaryPlayer: targetPlayer
         })
       })
     }
@@ -610,7 +604,12 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
         action,
         pendingPlayers: state.players.reduce((agg, cur) => {
           if (cur.influences.length && cur.name !== player.name) {
-            agg.add(cur.name)
+            const canChallenge = ActionAttributes[action].challengeable
+            const canBlock = ActionAttributes[action].blockable
+              && (ActionAttributes[action].requiresTarget || !sameActiveFaction(state, cur.name, player.name))
+            if (canChallenge || canBlock) {
+              agg.add(cur.name)
+            }
           }
           return agg
         }, new Set<string>()),
@@ -630,12 +629,16 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
 
       recordTimelineAction(state, player.name, action, targetPlayer)
 
-      logEvent(state, {
-        event: EventMessages.ActionPending,
-        action,
-        primaryPlayer: player.name,
-        ...(targetPlayer && { secondaryPlayer: targetPlayer })
-      })
+      if (!state.pendingAction.pendingPlayers.size) {
+        processPendingAction(state)
+      } else {
+        logEvent(state, {
+          event: EventMessages.ActionPending,
+          action,
+          primaryPlayer: player.name,
+          ...(targetPlayer && { secondaryPlayer: targetPlayer })
+        })
+      }
     })
   }
 
@@ -758,8 +761,19 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
           })
           recordInfluenceKill(state, state.turnPlayer!, player.name)
           recordTimelineActionChallenge(state, player.name, false)
-          actionPlayer.influences.forEach((influence) => {
-            revealAndReplaceInfluence(state, actionPlayer.name, influence)
+
+          const revealedInfluences = [...actionPlayer.influences]
+          removeClaimedInfluence(actionPlayer)
+          actionPlayer.influences = []
+          state.deck.push(...revealedInfluences)
+          shuffleDeck(state)
+          revealedInfluences.forEach((influence) => {
+            logEvent(state, {
+              event: EventMessages.PlayerReplacedInfluence,
+              primaryPlayer: actionPlayer.name,
+              influence
+            })
+            actionPlayer.influences.push(drawCardFromDeck(state))
           })
           promptPlayerToLoseInfluence(state, player.name)
           processPendingAction(state)
@@ -789,6 +803,10 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
       player.name !== gameState.pendingAction!.targetPlayer
     ) {
       throw new ActionNotCurrentlyAllowedError()
+    }
+
+    if (sameActiveFaction(gameState, player.name, gameState.turnPlayer!)) {
+      throw new CannotBlockSameFactionError()
     }
 
     latestState = await mutateGameState(gameState, (state) => {
@@ -897,11 +915,15 @@ export const actionChallengeResponseHandler = async ({ roomId, playerId, influen
         }
       } else if (ActionAttributes[state.pendingAction.action].blockable) {
         state.pendingAction.pendingPlayers = state.players.reduce((agg, cur) => {
-          if (cur.influences.length && cur.name !== state.turnPlayer) {
+          if (cur.influences.length && cur.name !== state.turnPlayer
+            && !sameActiveFaction(state, cur.name, state.turnPlayer!)) {
             agg.add(cur.name)
           }
           return agg
         }, new Set<string>())
+        if (!state.pendingAction.pendingPlayers.size) {
+          processPendingAction(state)
+        }
       } else {
         processPendingAction(state)
       }
@@ -1377,6 +1399,12 @@ export const examineDecisionHandler = async ({ roomId, playerId, forceSwap }: {
     if (!targetPlayer) {
       throw new UnableToFindPlayerError()
     }
+
+    logEvent(state, {
+      event: forceSwap ? EventMessages.ExamineSwapped : EventMessages.ExamineKept,
+      primaryPlayer: player.name,
+      secondaryPlayer: targetPlayer.name
+    })
 
     if (forceSwap) {
       const influenceIndex = targetPlayer.influences.indexOf(state.pendingExamine!.revealedInfluence!)

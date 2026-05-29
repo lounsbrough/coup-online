@@ -31,6 +31,15 @@ const translations = {
     'it-IT': 'Non puoi bloccare un blocco',
     'pt-BR': 'Você não pode bloquear um bloqueio',
   },
+  cannotBlockSameFaction: {
+    'de-DE': 'Du kannst einen Spieler der gleichen Fraktion nicht blockieren',
+    'en-US': 'You cannot block a player in your own faction',
+    'es-MX': 'No puedes bloquear a un jugador de tu propia facción',
+    'fr-FR': 'Vous ne pouvez pas bloquer un joueur de votre propre faction',
+    'hi-IN': 'आप अपने गुट के खिलाड़ी को ब्लॉक नहीं कर सकते',
+    'it-IT': 'Non puoi bloccare un giocatore della tua stessa fazione',
+    'pt-BR': 'Você não pode bloquear um jogador da sua própria facção',
+  },
   cannotTargetSameFaction: {
     'de-DE': 'Du kannst keinen Spieler der gleichen Fraktion anvisieren',
     'en-US': 'You cannot target a player in your own faction',

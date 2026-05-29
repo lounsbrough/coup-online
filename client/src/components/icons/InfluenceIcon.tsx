@@ -5,7 +5,7 @@ import Duke from "./Duke"
 import Contessa from "./Contessa"
 import Captain from "./Captain"
 import Inquisitor from "./Inquisitor"
-import { SvgIcon, SxProps } from "@mui/material"
+import { SvgIconProps } from "@mui/material"
 import { QuestionMark } from "@mui/icons-material"
 
 const iconMap = {
@@ -17,17 +17,10 @@ const iconMap = {
   [Influences.Inquisitor]: Inquisitor
 }
 
-function InfluenceIcon({ influence, sx }: { influence?: Influences | undefined, sx?: SxProps }) {
+function InfluenceIcon({ influence, ...props }: { influence?: Influences | undefined } & Omit<SvgIconProps, 'children'>) {
   const Icon = influence ? iconMap[influence] : QuestionMark
 
-  return (
-    <SvgIcon sx={{
-      verticalAlign: 'middle',
-      ...sx
-    }}>
-      <Icon />
-    </SvgIcon>
-  )
+  return <Icon {...props} sx={{ verticalAlign: 'middle', ...props.sx }} />
 }
 
 export default InfluenceIcon

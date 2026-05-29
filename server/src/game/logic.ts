@@ -35,7 +35,7 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
     delete state.pendingInfluenceLoss[player.name]
   }
 
-  if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction) {
+  if (!Object.keys(state.pendingInfluenceLoss).length && !state.pendingAction && !state.pendingExamine) {
     moveTurnToNextPlayer(state)
   }
 }
@@ -131,9 +131,11 @@ export const processPendingAction = (state: GameState) => {
     if (!targetPlayer) {
       throw new UnableToFindPlayerError()
     }
-    state.pendingExamine = {
-      examiner: actionPlayer.name,
-      targetPlayer: targetPlayer.name
+    if (targetPlayer.influences.length > 0) {
+      state.pendingExamine = {
+        examiner: actionPlayer.name,
+        targetPlayer: targetPlayer.name
+      }
     }
   }
 
@@ -277,18 +279,6 @@ const assignFactions = (gameState: GameState) => {
   })
 }
 
-export const isAllSameFaction = (gameState: GameState): boolean => {
-  const alivePlayers = gameState.players.filter((p) => p.influences.length > 0)
-  if (alivePlayers.length <= 1) return true
-  const firstFaction = alivePlayers[0].faction
-  return alivePlayers.every((p) => p.faction === firstFaction)
-}
-
-export const canTargetPlayer = (gameState: GameState, sourcePlayer: Player, targetPlayer: Player): boolean => {
-  if (!gameState.settings.enableReformation) return true
-  if (isAllSameFaction(gameState)) return true
-  return sourcePlayer.faction !== targetPlayer.faction
-}
 
 export const humanOpponentsRemain = (gameState: GameState, player: Player) =>
   gameState.players.some(({ ai, name, influences }) => !ai && name !== player.name && influences.length)

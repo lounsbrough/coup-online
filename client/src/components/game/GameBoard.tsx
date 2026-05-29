@@ -13,6 +13,7 @@ import CardDeck from "../icons/CardDeck"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import Forfeit from "./Forfeit"
 import CoupTypography from '../utilities/CoupTypography'
+import Treasury from "../icons/Treasury"
 
 interface GameBoardProps {
   leftDrawerOpen: boolean
@@ -126,7 +127,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
               fontSize='inherit'
               addTextShadow
             >
-              {t('deck')}: {gameState.deckCount}<CardDeck sx={{ fontSize: 'inherit', ml: 0.5 }} />
+              {t('deck')}: <CardDeck sx={{ mx: 1, fontSize: 'inherit' }} /> {gameState.deckCount}
             </CoupTypography>
           </Grid>
           {gameState.settings.enableReformation && (
@@ -145,7 +146,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
                 fontSize='inherit'
                 addTextShadow
               >
-                {t('treasury')}: {gameState.treasury} 🪙
+                {t('treasury')}: <Treasury sx={{ mx: 1, verticalAlign: 'text-bottom', fontSize: 'inherit' }} /> {gameState.treasury}
               </CoupTypography>
             </Grid>
           )}
