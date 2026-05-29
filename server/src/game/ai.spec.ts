@@ -645,7 +645,7 @@ describe('ai', () => {
       vi.resetAllMocks()
     })
 
-    it('should not embezzle when all players are the same faction', () => {
+    it('should allow embezzle when all players are the same faction', () => {
       const gameState = getRandomPublicGameState({
         players: [
           { name: 'bot', influenceCount: 2, deadInfluences: [], faction: Factions.Loyalist },
@@ -666,7 +666,7 @@ describe('ai', () => {
       const result = decideAction(gameState)
       vi.spyOn(Math, 'random').mockRestore()
 
-      expect(result.action).not.toBe(Actions.Embezzle)
+      expect(result.action).toBe(Actions.Embezzle)
     })
 
     it('should embezzle when reformation enabled, treasury > 0, and not all same faction', () => {

@@ -5,7 +5,7 @@ import { drawCardFromDeck, getGameState, getPublicGameState, logEvent, logForced
 import { generateRoomId } from "../utilities/identifiers"
 import { getValue } from '../utilities/storage'
 import { shuffle } from '../utilities/array'
-import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, canTargetPlayer, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isAllSameFaction, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
+import { addClaimedInfluence, addPlayerToGame, addUnclaimedInfluence, canTargetPlayer, createNewGame, grudgeSizes, holdGrudge, humanOpponentsRemain, isSpeedRoundTimerExpired, killPlayerInfluence, moveTurnToNextPlayer, processPendingAction, promptPlayerToLoseInfluence, removeClaimedInfluence, removePlayerFromGame, resetGame, revealAndReplaceInfluence, startGame } from "./logic"
 import { canInfluenceLegallyPerformAction, canPlayerChooseAction, canPlayerChooseActionChallengeResponse, canPlayerChooseActionResponse, canPlayerChooseBlockChallengeResponse, canPlayerChooseBlockResponse, getInfluenceRequiredForAction, getInfluencesForGame } from '../../../shared/game/logic'
 import { getPlayerSuggestedMove } from './ai'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
@@ -429,10 +429,6 @@ export const actionHandler = async ({ roomId, playerId, action, targetPlayer, is
   }
 
   if ((action === Actions.Convert || action === Actions.Embezzle) && !gameState.settings.enableReformation) {
-    throw new ActionNotCurrentlyAllowedError()
-  }
-
-  if ((action === Actions.Convert || action === Actions.Embezzle) && isAllSameFaction(gameState)) {
     throw new ActionNotCurrentlyAllowedError()
   }
 

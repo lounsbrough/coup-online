@@ -153,13 +153,6 @@ function ChooseAction() {
               return null
             }
 
-            if ((action === Actions.Convert || action === Actions.Embezzle) && gameState.settings.enableReformation) {
-              const alivePlayers = gameState.players.filter((p) => p.influenceCount > 0)
-              if (alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)) {
-                return null
-              }
-            }
-
             if (action === Actions.Examine && !gameState.settings.useInquisitor) {
               return null
             }

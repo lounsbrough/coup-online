@@ -1382,7 +1382,7 @@ describe('actionHandlers', () => {
       ).rejects.toThrow(ActionNotCurrentlyAllowedError)
     })
 
-    it('convert not allowed when all same faction', async () => {
+    it('should allow convert when all same faction', async () => {
       const roomId = await setupTestGame([
         { ...david, coins: 4, influences: [Influences.Duke, Influences.Captain] },
         { ...harper, influences: [Influences.Ambassador, Influences.Contessa] },
@@ -1395,14 +1395,15 @@ describe('actionHandlers', () => {
         state.players[1].faction = Factions.Loyalist
       })
 
-      await expect(
-        actionHandler({
-          roomId,
-          playerId: david.playerId,
-          action: Actions.Convert,
-          targetPlayer: harper.playerName,
-        }),
-      ).rejects.toThrow(ActionNotCurrentlyAllowedError)
+      await actionHandler({
+        roomId,
+        playerId: david.playerId,
+        action: Actions.Convert,
+        targetPlayer: harper.playerName,
+      })
+
+      const gameState = await getGameState(roomId)
+      expect(gameState.players[1].faction).toBe(Factions.Reformist)
     })
 
     it('embezzle -> pass -> takes all treasury coins', async () => {

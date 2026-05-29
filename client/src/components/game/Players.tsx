@@ -47,9 +47,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
           ] : Array.from({ length: 2 }, () => undefined)
 
           const showKickBadge = inWaitingRoom && (ai || humanPlayers.length > 1) && !!gameState.selfPlayer
-          const alivePlayers = gameState.players.filter((p) => p.influenceCount)
-          const allSameFaction = alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)
-          const showFactionBadge = !!faction && gameState.settings.enableReformation && !allSameFaction
+          const showFactionBadge = !!faction && gameState.settings.enableReformation
 
           const kickBadgeContent = (
             <Button

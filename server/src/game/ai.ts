@@ -73,11 +73,6 @@ export const getOpponents = (gameState: PublicGameState): PublicPlayer[] =>
   gameState.players.filter(({ name, influenceCount }) =>
     influenceCount && name !== gameState.selfPlayer?.name)
 
-const areAllPlayersSameFaction = (gameState: PublicGameState): boolean => {
-  const alivePlayers = gameState.players.filter((p) => p.influenceCount > 0)
-  return alivePlayers.every((p) => p.faction === alivePlayers[0].faction)
-}
-
 const getTargetableOpponents = (gameState: PublicGameState): PublicPlayer[] => {
   const opponents = getOpponents(gameState)
   if (!gameState.settings.enableReformation) {
@@ -352,7 +347,6 @@ export const decideAction = (gameState: PublicGameState): {
   if (
     gameState.settings.enableReformation
     && gameState.treasury > 0
-    && !areAllPlayersSameFaction(gameState)
     && Math.random() > 0.7
   ) {
     return { action: Actions.Embezzle }
@@ -378,7 +372,6 @@ export const decideAction = (gameState: PublicGameState): {
 
   if (
     gameState.settings.enableReformation
-    && !areAllPlayersSameFaction(gameState)
     && Math.random() > 0.5
   ) {
     const sameTeamOpponents = getOpponents(gameState).filter(({ faction }) => faction === gameState.selfPlayer?.faction)
