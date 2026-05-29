@@ -34,6 +34,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['@shared'],
+    force: true,
   },
   test: {
     globals: true,

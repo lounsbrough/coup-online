@@ -1,7 +1,7 @@
 import { Badge, Button, Grid, Paper, Tooltip, Typography, useTheme } from "@mui/material"
 import { colord } from 'colord'
 import { useGameStateContext } from "../../contexts/GameStateContext"
-import { Close, MonetizationOn, ShieldTwoTone, WhatshotTwoTone } from "@mui/icons-material"
+import { Close, MonetizationOn } from "@mui/icons-material"
 import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
@@ -9,6 +9,8 @@ import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
 import { Factions, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
+import Loyalists from "../icons/Loyalists"
+import Reformists from "../icons/Reformists"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { CARD_ICON_FILTER, CARD_TEXT_SHADOW } from "../../helpers/styles"
 
@@ -57,7 +59,8 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                 width: '28px',
                 minWidth: 'unset',
                 borderRadius: '28px',
-                background: color
+                background: color,
+                color: lightColor
               }}
               disabled={isMutating}
               variant="contained"
@@ -135,8 +138,8 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                   {showFactionBadge && (
                     <Tooltip title={<Typography variant="h6">{t(faction!)}</Typography>}>
                       {faction === Factions.Loyalist
-                        ? <ShieldTwoTone sx={{ ml: 0.25, ...cardIconStyle }} />
-                        : <WhatshotTwoTone sx={{ ml: 0.25, ...cardIconStyle }} />}
+                        ? <Loyalists sx={{ ml: 1, ...cardIconStyle }} />
+                        : <Reformists sx={{ ml: 1, ...cardIconStyle }} />}
                     </Tooltip>
                   )}
                 </Typography>

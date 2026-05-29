@@ -59,6 +59,7 @@ export type Translations = ActionMessages &
     confirm: TranslationsForString
     confirmActions: TranslationsForString
     contents: TranslationsForString
+    copiesOfEachInfluence: TranslationsForString
     convertOther: TranslationsForString
     convertSelf: TranslationsForString
     copyInviteLink: TranslationsForString
@@ -872,6 +873,15 @@ const translations: Translations = {
     'hi-IN': 'स्वयं को परिवर्तित करें',
     'it-IT': 'Converti te stesso',
     'pt-BR': 'Converter-se',
+  },
+  copiesOfEachInfluence: {
+    'de-DE': '{{count}} Kopien jedes Einflusses im Spiel',
+    'en-US': '{{count}} copies of each influence in the game',
+    'es-MX': '{{count}} copias de cada influencia en el juego',
+    'fr-FR': '{{count}} copies de chaque influence dans la partie',
+    'hi-IN': 'खेल में प्रत्येक प्रभाव की {{count}} प्रतियाँ',
+    'it-IT': '{{count}} copie di ogni influenza nella partita',
+    'pt-BR': '{{count}} cópias de cada influência no jogo',
   },
   copyInviteLink: {
     'de-DE': 'Einladungslink kopieren',

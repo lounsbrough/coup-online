@@ -1,10 +1,15 @@
-const Inquisitor = () => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        xmlSpace="preserve"
-        viewBox="0 0 16 16"
-    >
-        <path d="M6.5 1C3.5 1 1 3.5 1 6.5S3.5 12 6.5 12c1.2 0 2.3-.4 3.2-1l3.6 3.6c.4.4 1 .4 1.4 0s.4-1 0-1.4L11 9.7c.6-.9 1-2 1-3.2C12 3.5 9.5 1 6.5 1zm0 2C8.4 3 10 4.6 10 6.5S8.4 10 6.5 10 3 8.4 3 6.5 4.6 3 6.5 3zm0 1.5c-.8 0-1.5.3-2 .8-.2.2-.2.5 0 .7s.5.2.7 0c.3-.3.8-.5 1.3-.5s1 .2 1.3.5c.1.1.2.2.4.2.1 0 .3-.1.4-.2.2-.2.2-.5 0-.7-.6-.5-1.3-.8-2.1-.8z" />
-    </svg>
-)
+import { SvgIcon, SvgIconProps } from "@mui/material"
+import { ForwardedRef, forwardRef } from "react"
+
+const Inquisitor = forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => (
+  <SvgIcon
+    ref={ref}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 16 16"
+    {...props}
+  >
+    <path d="M6.5 1C3.5 1 1 3.5 1 6.5S3.5 12 6.5 12c1.2 0 2.3-.4 3.2-1l3.6 3.6c.4.4 1 .4 1.4 0s.4-1 0-1.4L11 9.7c.6-.9 1-2 1-3.2C12 3.5 9.5 1 6.5 1zm0 2C8.4 3 10 4.6 10 6.5S8.4 10 6.5 10 3 8.4 3 6.5 4.6 3 6.5 3zm0 1.5c-.8 0-1.5.3-2 .8-.2.2-.2.5 0 .7s.5.2.7 0c.3-.3.8-.5 1.3-.5s1 .2 1.3.5c.1.1.2.2.4.2.1 0 .3-.1.4-.2.2-.2.2-.5 0-.7-.6-.5-1.3-.8-2.1-.8z" />
+  </SvgIcon>
+))
+
 export default Inquisitor

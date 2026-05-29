@@ -1,14 +1,16 @@
 import { useMemo } from "react"
-import { Box, DialogContent, DialogContentText, Divider, Typography, useTheme } from "@mui/material"
-import { Group } from "@mui/icons-material"
-import { ActionAttributes, Actions, getInfluenceRequiredForAction, Influences } from '@shared'
+import { Box, Chip, DialogContent, DialogContentText, Divider, Stack, Tooltip, Typography, useTheme } from "@mui/material"
+import { CheckCircle, Group } from "@mui/icons-material"
+import { ActionAttributes, Actions, getCountOfEachInfluence, getInfluenceRequiredForAction, getInfluencesForGame, Influences } from '@shared'
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { useTranslationContext } from "../../contexts/TranslationsContext"
+import { useGameStateContext } from "../../contexts/GameStateContext"
 import './Rules.css'
 
 export default function RulesDrawerContent() {
   const { breakpoints, actionColors, influenceColors } = useTheme()
   const { t } = useTranslationContext()
+  const { gameState } = useGameStateContext()
 
   const influenceText = useMemo(() => Object.fromEntries(
     Object.values(Influences).map((influence) =>
@@ -35,10 +37,57 @@ export default function RulesDrawerContent() {
   return (
     <DialogContent sx={{
       px: 4,
+      py: 2,
       [breakpoints.up('md')]: { px: undefined },
       textAlign: 'center'
     }}>
       <DialogContentText component='div'>
+        {gameState && (
+          <>
+            <Stack spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack
+                direction="row" spacing={1} alignItems="center" justifyContent="center" flexWrap="wrap" useFlexGap
+              >
+                {getInfluencesForGame(gameState.settings).map((influence) => (
+                  <Tooltip key={influence} title={<Typography variant="h6">{t(influence)}</Typography>}>
+                    <Box sx={{ display: 'flex' }}>
+                      <InfluenceIcon
+                        influence={influence}
+                        sx={{ color: influenceColors[influence], fontSize: '2rem' }}
+                      />
+                    </Box>
+                  </Tooltip>
+                ))}
+                <Tooltip title={<Typography variant="h6">{t('copiesOfEachInfluence', { count: getCountOfEachInfluence(gameState.players.length) })}</Typography>}>
+                  <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 0.5, fontSize: '2rem' }}>
+                    ×{getCountOfEachInfluence(gameState.players.length)}
+                  </Typography>
+                </Tooltip>
+              </Stack>
+              {(gameState.settings.allowRevive || gameState.settings.enableReformation) && (
+                <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" useFlexGap>
+                  {gameState.settings.allowRevive && (
+                    <Chip
+                      icon={<CheckCircle />}
+                      label={t('reviveIsEnabled')}
+                      color="success"
+                    size="small"
+                  />
+                  )}
+                  {gameState.settings.enableReformation && (
+                    <Chip
+                      icon={<CheckCircle />}
+                      label={t('reformationIsEnabled')}
+                      color="success"
+                      size="small"
+                    />
+                  )}
+                </Stack>
+              )}
+            </Stack>
+            <Divider sx={{ my: 3 }} />
+          </>
+        )}
         <Typography
           variant="h4"
           sx={{ fontWeight: "bold" }}
