@@ -6,7 +6,7 @@ import OverflowTooltip from "../utilities/OverflowTooltip"
 import InfluenceIcon from "../icons/InfluenceIcon"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
 import { getPlayerId, getWaitingOnPlayers } from "../../helpers/players"
-import { Factions, PlayerActions } from "@shared"
+import { Factions, isAllSameFaction, PlayerActions } from "@shared"
 import useGameMutation from "../../hooks/useGameMutation"
 import Bot from "../icons/Bot"
 import Loyalists from "../icons/Loyalists"
@@ -30,10 +30,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
   const colorModeFactor = theme.palette.mode === LIGHT_COLOR_MODE ? -1 : 1
   const waitingOnPlayers = getWaitingOnPlayers(gameState)
   const humanPlayers = gameState.players.filter(({ ai }) => !ai)
-  const alivePlayers = gameState.players.filter(({ influenceCount }) => influenceCount > 0)
-  const allSameFaction = gameState.settings.enableReformation
-    && alivePlayers.length > 1
-    && alivePlayers.every(({ faction }) => faction === alivePlayers[0]?.faction)
+  const allSameFaction = isAllSameFaction(gameState)
 
   return (
     <Grid container justifyContent="center" spacing={3}>

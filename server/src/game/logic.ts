@@ -279,13 +279,6 @@ const assignFactions = (gameState: GameState) => {
   })
 }
 
-export const isAllSameFaction = (gameState: GameState): boolean => {
-  const alivePlayers = gameState.players.filter((p) => p.influences.length > 0)
-  if (alivePlayers.length <= 1) return true
-  const firstFaction = alivePlayers[0].faction
-  return alivePlayers.every((p) => p.faction === firstFaction)
-}
-
 
 export const humanOpponentsRemain = (gameState: GameState, player: Player) =>
   gameState.players.some(({ ai, name, influences }) => !ai && name !== player.name && influences.length)

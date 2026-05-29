@@ -1,5 +1,13 @@
 import { Actions, Factions, GameSettings, InfluenceAttributes, Influences, PublicGameState } from "../types/game"
 
+export const isAllSameFaction = (
+  gameState: { settings: GameSettings; players: { faction?: Factions; influenceCount?: number; influences?: unknown[] }[] }
+): boolean => {
+  if (!gameState.settings.enableReformation) return false
+  const alivePlayers = gameState.players.filter((p) => (p.influenceCount ?? p.influences?.length ?? 0) > 0)
+  return alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)
+}
+
 export const sameActiveFaction = (
   gameState: { settings: GameSettings; players: { name: string; faction?: Factions; influenceCount?: number; influences?: unknown[] }[] },
   playerAName: string,
