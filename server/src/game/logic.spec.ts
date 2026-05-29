@@ -1,7 +1,8 @@
 import { vi, describe, it, expect, afterEach } from 'vitest'
 import { Chance } from 'chance'
-import { GameState, Player } from '../../../shared/types/game'
+import { Factions, GameState, Player } from '../../../shared/types/game'
 import { moveTurnToNextPlayer, startGame } from './logic'
+import { sameActiveFaction } from '../../../shared/game/logic'
 import { MAX_PLAYER_COUNT } from '../../../shared/helpers/playerCount'
 import { createDeckForPlayerCount } from '../utilities/deck'
 
@@ -127,6 +128,80 @@ describe('logic', () => {
       expect(gameState.turnPlayer).toBe(gameState.players[2].name)
       moveTurnToNextPlayer(gameState)
       expect(gameState.turnPlayer).toBe(gameState.players[0].name)
+    })
+  })
+
+  describe('sameActiveFaction', () => {
+    const makeGameState = (players: { name: string; faction?: Factions; influenceCount?: number }[], enableReformation = true) => ({
+      settings: { enableReformation } as GameState['settings'],
+      players,
+    })
+
+    it('returns false when reformation is disabled', () => {
+      const state = makeGameState([
+        { name: 'A', faction: Factions.Loyalist, influenceCount: 2 },
+        { name: 'B', faction: Factions.Loyalist, influenceCount: 2 },
+      ], false)
+      expect(sameActiveFaction(state, 'A', 'B')).toBe(false)
+    })
+
+    it('returns false when all alive players are same faction', () => {
+      const state = makeGameState([
+        { name: 'A', faction: Factions.Loyalist, influenceCount: 2 },
+        { name: 'B', faction: Factions.Loyalist, influenceCount: 2 },
+        { name: 'C', faction: Factions.Reformist, influenceCount: 0 },
+      ])
+      expect(sameActiveFaction(state, 'A', 'B')).toBe(false)
+    })
+
+    it('returns true when two players share faction and factions are mixed', () => {
+      const state = makeGameState([
+        { name: 'A', faction: Factions.Loyalist, influenceCount: 2 },
+        { name: 'B', faction: Factions.Loyalist, influenceCount: 2 },
+        { name: 'C', faction: Factions.Reformist, influenceCount: 2 },
+      ])
+      expect(sameActiveFaction(state, 'A', 'B')).toBe(true)
+    })
+
+    it('returns false when two players have different factions', () => {
+      const state = makeGameState([
+        { name: 'A', faction: Factions.Loyalist, influenceCount: 2 },
+        { name: 'B', faction: Factions.Reformist, influenceCount: 2 },
+        { name: 'C', faction: Factions.Loyalist, influenceCount: 2 },
+      ])
+      expect(sameActiveFaction(state, 'A', 'B')).toBe(false)
+    })
+
+    it('ignores dead players when checking if all same faction', () => {
+      const state = makeGameState([
+        { name: 'A', faction: Factions.Loyalist, influenceCount: 2 },
+        { name: 'B', faction: Factions.Loyalist, influenceCount: 1 },
+        { name: 'C', faction: Factions.Reformist, influenceCount: 0 },
+      ])
+      // C is dead, only A and B alive -> all same faction -> returns false
+      expect(sameActiveFaction(state, 'A', 'B')).toBe(false)
+    })
+
+    it('returns false when player is dead', () => {
+      const state = makeGameState([
+        { name: 'A', faction: Factions.Loyalist, influenceCount: 2 },
+        { name: 'B', faction: Factions.Loyalist, influenceCount: 0 },
+        { name: 'C', faction: Factions.Reformist, influenceCount: 2 },
+      ])
+      // B is dead, not in alive players
+      expect(sameActiveFaction(state, 'A', 'B')).toBe(false)
+    })
+
+    it('works with influences array instead of influenceCount', () => {
+      const state = {
+        settings: { enableReformation: true } as GameState['settings'],
+        players: [
+          { name: 'A', faction: Factions.Loyalist, influences: ['x', 'y'] },
+          { name: 'B', faction: Factions.Loyalist, influences: ['z'] },
+          { name: 'C', faction: Factions.Reformist, influences: ['w'] },
+        ],
+      }
+      expect(sameActiveFaction(state, 'A', 'B')).toBe(true)
     })
   })
 })

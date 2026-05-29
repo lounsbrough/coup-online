@@ -89,7 +89,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                   background: playerColor,
                   borderRadius: 3,
                   p: 1,
-                  width: theme.isLargeScreen ? '7rem' : '6rem',
+                  width: theme.isLargeScreen ? '7.2rem' : '6.5rem',
                   transition: theme.transitions.create(['transform', 'box-shadow']),
                   animation: isWaitingOnPlayer ? 'pulsePlayer 1.5s infinite' : undefined,
                   "@keyframes pulsePlayer": {
@@ -148,14 +148,15 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                   flexWrap="nowrap"
                 >
                   {influences.map((influence, index) => {
+                    const influenceBoxSize = 46
                     return (
                       <Grid
                         key={index}
                         sx={{
                           justifyContent: 'center',
                           alignContent: 'center',
-                          height: '44px',
-                          width: '44px',
+                          height: `${influenceBoxSize}px`,
+                          width: `${influenceBoxSize}px`,
                           background: colord(playerColor).darken(colorModeFactor * 0.25).toHex(),
                           padding: 0.5,
                           borderRadius: 2,
@@ -171,7 +172,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                           }
                         >
                           <span>
-                            <InfluenceIcon sx={{ fontSize: '32px', ...cardIconStyle }} influence={influence} />
+                            <InfluenceIcon sx={{ fontSize: '34px', ...cardIconStyle }} influence={influence} />
                           </span>
                         </Tooltip>
                       </Grid>

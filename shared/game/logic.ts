@@ -1,4 +1,17 @@
-import { Actions, GameSettings, InfluenceAttributes, Influences, PublicGameState } from "../types/game"
+import { Actions, Factions, GameSettings, InfluenceAttributes, Influences, PublicGameState } from "../types/game"
+
+export const sameActiveFaction = (
+  gameState: { settings: GameSettings; players: { name: string; faction?: Factions; influenceCount?: number; influences?: unknown[] }[] },
+  playerAName: string,
+  playerBName: string
+): boolean => {
+  if (!gameState.settings.enableReformation) return false
+  const alivePlayers = gameState.players.filter((p) => (p.influenceCount ?? p.influences?.length ?? 0) > 0)
+  if (alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)) return false
+  const playerA = alivePlayers.find((p) => p.name === playerAName)
+  const playerB = alivePlayers.find((p) => p.name === playerBName)
+  return playerA?.faction === playerB?.faction
+}
 
 export const getInfluencesForGame = (settings: GameSettings): Influences[] => {
   const allInfluences = Object.values(Influences)

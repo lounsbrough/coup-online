@@ -1,5 +1,5 @@
 import { Box, Grid, Tooltip, Typography, useTheme } from "@mui/material"
-import { ActionAttributes, Actions, PlayerActions, EventMessages } from '@shared'
+import { ActionAttributes, Actions, sameActiveFaction, PlayerActions, EventMessages } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -19,7 +19,9 @@ function ChooseAction() {
     return null
   }
 
-  if (selectedAction && (!ActionAttributes[selectedAction].requiresTarget || selectedTargetPlayer) && selectedAction !== Actions.Convert) {
+  const readyToConfirm = selectedAction && (!ActionAttributes[selectedAction].requiresTarget || selectedTargetPlayer)
+
+  if (readyToConfirm) {
     return <PlayerActionConfirmation
       message={t(EventMessages.ActionConfirm, {
         action: selectedAction,
@@ -40,33 +42,7 @@ function ChooseAction() {
     />
   }
 
-  if (selectedAction === Actions.Convert && selectedTargetPlayer !== undefined) {
-    const targetForConvert = selectedTargetPlayer || undefined
-    return <PlayerActionConfirmation
-      message={t(EventMessages.ActionConfirm, {
-        action: selectedAction,
-        gameState,
-        secondaryPlayer: targetForConvert || gameState.selfPlayer?.name
-      })}
-      action={PlayerActions.action}
-      variables={{
-        action: selectedAction,
-        playerId: getPlayerId(),
-        roomId: gameState.roomId,
-        ...(targetForConvert && { targetPlayer: targetForConvert })
-      }}
-      onCancel={() => {
-        setSelectedAction(undefined)
-        setSelectedTargetPlayer(undefined)
-      }}
-    />
-  }
-
-  if (selectedAction && (ActionAttributes[selectedAction].requiresTarget || selectedAction === Actions.Convert)) {
-    const alivePlayers = gameState.players.filter((p) => p.influenceCount > 0)
-    const allSameFaction = gameState.settings.enableReformation
-      && alivePlayers.every((p) => p.faction === alivePlayers[0]?.faction)
-
+  if (selectedAction && ActionAttributes[selectedAction].requiresTarget) {
     return (
       <>
         <CoupTypography
@@ -82,7 +58,7 @@ function ChooseAction() {
           {selectedAction === Actions.Convert && (
             <GrowingButton
               onClick={() => {
-                setSelectedTargetPlayer('')
+                setSelectedTargetPlayer(gameState.selfPlayer!.name)
               }}
               variant="contained"
               color={Actions.Convert as Actions}
@@ -94,9 +70,7 @@ function ChooseAction() {
             }
 
             if (
-              gameState.settings.enableReformation
-              && !allSameFaction
-              && player.faction === gameState.selfPlayer?.faction
+              sameActiveFaction(gameState, gameState.selfPlayer!.name, player.name)
               && selectedAction !== Actions.Convert
             ) {
               return null

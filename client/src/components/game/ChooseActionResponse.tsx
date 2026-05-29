@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material"
-import { ActionAttributes, Actions, EventMessages, getInfluencesForGame, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
+import { ActionAttributes, Actions, sameActiveFaction, EventMessages, getInfluencesForGame, InfluenceAttributes, Influences, PlayerActions, Responses } from '@shared'
 import { useState } from "react"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
@@ -101,6 +101,11 @@ function ChooseActionResponse() {
                 (gameState.pendingAction?.targetPlayer &&
                   gameState.selfPlayer!.name !== gameState.pendingAction?.targetPlayer
                 ))) {
+              return null
+            }
+
+            if (response === Responses.Block
+              && sameActiveFaction(gameState, gameState.selfPlayer!.name, gameState.turnPlayer!)) {
               return null
             }
 

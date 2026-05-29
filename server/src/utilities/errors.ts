@@ -372,6 +372,18 @@ export class TargetPlayerIsSelfError extends GameMutationInputError {
   }
 }
 
+export class CannotBlockSameFactionError extends GameMutationInputError {
+  getMessage: (language: AvailableLanguageCode) => string
+
+  constructor() {
+    super()
+    this.getMessage = (language) => translate({
+      key: 'cannotBlockSameFaction',
+      language
+    })
+  }
+}
+
 export class CannotTargetSameFactionError extends GameMutationInputError {
   getMessage: (language: AvailableLanguageCode) => string
 

@@ -1,4 +1,4 @@
-import { MAX_PLAYER_COUNT, getCountOfEachInfluence } from "../../../shared/helpers/playerCount"
+import { getCountOfEachInfluence } from "../../../shared/helpers/playerCount"
 import { GameSettings, Influences } from "../../../shared/types/game"
 import { getInfluencesForGame } from "../../../shared/game/logic"
 import { shuffle } from "./array"

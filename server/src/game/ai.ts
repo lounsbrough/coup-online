@@ -1,5 +1,5 @@
 import { ActionAttributes, Actions, InfluenceAttributes, Influences, Player, PlayerActions, PublicGameState, PublicPlayer, Responses } from "../../../shared/types/game"
-import { getInfluenceRequiredForAction, getInfluencesForGame } from '../../../shared/game/logic'
+import { getInfluenceRequiredForAction, getInfluencesForGame, sameActiveFaction } from '../../../shared/game/logic'
 import { randomlyDecideToBluff, randomlyDecideToNotUseOwnedInfluence } from "./aiRandomness"
 import { shuffle } from "../utilities/array"
 import { getCountOfEachInfluence } from "../utilities/deck"
@@ -75,15 +75,7 @@ export const getOpponents = (gameState: PublicGameState): PublicPlayer[] =>
 
 const getTargetableOpponents = (gameState: PublicGameState): PublicPlayer[] => {
   const opponents = getOpponents(gameState)
-  if (!gameState.settings.enableReformation) {
-    return opponents
-  }
-  const alivePlayers = gameState.players.filter((p) => p.influenceCount > 0)
-  const allSameFaction = alivePlayers.length <= 1 || alivePlayers.every((p) => p.faction === alivePlayers[0].faction)
-  if (allSameFaction) {
-    return opponents
-  }
-  return opponents.filter(({ faction }) => faction !== gameState.selfPlayer?.faction)
+  return opponents.filter(({ name }) => !sameActiveFaction(gameState, gameState.selfPlayer!.name, name))
 }
 
 const checkRequiredTargetPlayer = (gameState: PublicGameState) => {
@@ -378,7 +370,7 @@ export const decideAction = (gameState: PublicGameState): {
     const differentTeamOpponents = getOpponents(gameState).filter(({ faction }) => faction !== gameState.selfPlayer?.faction)
 
     if (differentTeamOpponents.length > sameTeamOpponents.length && gameState.selfPlayer.coins >= 1) {
-      return { action: Actions.Convert }
+      return { action: Actions.Convert, targetPlayer: gameState.selfPlayer.name }
     }
 
     if (gameState.selfPlayer.coins >= 2 && differentTeamOpponents.length > 0) {
@@ -418,6 +410,7 @@ export const decideActionResponse = (gameState: PublicGameState): {
 
   const isBlockable = (
     ActionAttributes[gameState.pendingAction!.action].blockable
+    && !sameActiveFaction(gameState, gameState.selfPlayer.name, gameState.turnPlayer!)
     && (
       gameState.pendingAction?.targetPlayer === gameState.selfPlayer.name
       || gameState.pendingAction!.action === Actions.ForeignAid

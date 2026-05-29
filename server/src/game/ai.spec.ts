@@ -769,7 +769,7 @@ describe('ai', () => {
       const result = decideAction(gameState)
       vi.spyOn(Math, 'random').mockRestore()
 
-      expect(result).toEqual({ action: Actions.Convert })
+      expect(result).toEqual({ action: Actions.Convert, targetPlayer: 'bot' })
     })
 
     it('should convert an opponent when has 2+ coins and different faction opponents exist', () => {
@@ -922,6 +922,122 @@ describe('ai', () => {
           deckCount: 11,
         })
       ).toEqual({ response: Responses.Block, claimedInfluence: Influences.Contessa })
+    })
+
+    it('should not block foreign aid when same faction', () => {
+      randomlyDecideToBluffMock.mockReturnValue(true)
+
+      const result = decideActionResponse({
+        roomId: chance.string(),
+        isStarted: true,
+        turn: 3,
+        eventLogs: [],
+        chatMessages: [],
+        lastEventTimestamp: new Date(),
+        players: [
+          {
+            ...getRandomPublicPlayer(),
+            name: 'hailey',
+            influenceCount: 2,
+            deadInfluences: [],
+            faction: Factions.Loyalist,
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'david',
+            influenceCount: 2,
+            deadInfluences: [],
+            faction: Factions.Loyalist,
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'harper',
+            influenceCount: 2,
+            deadInfluences: [],
+            faction: Factions.Reformist,
+          },
+        ],
+        selfPlayer: {
+          ...getRandomPublicPlayer(),
+          id: chance.string(),
+          name: 'david',
+          coins: 2,
+          influences: [Influences.Duke, Influences.Captain],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+        pendingAction: {
+          action: Actions.ForeignAid,
+          claimConfirmed: false,
+          pendingPlayers: new Set(['david', 'harper']),
+        },
+        turnPlayer: 'hailey',
+        settings: { eventLogRetentionTurns: 3, allowRevive: true, enableReformation: true },
+        pendingInfluenceLoss: {},
+        treasury: 0,
+        deckCount: 9,
+      })
+
+      // David has Duke (can block Foreign Aid) but hailey is same faction
+      expect(result.response).toBe(Responses.Pass)
+    })
+
+    it('should block foreign aid when opposing faction', () => {
+      randomlyDecideToBluffMock.mockReturnValue(false)
+
+      const result = decideActionResponse({
+        roomId: chance.string(),
+        isStarted: true,
+        turn: 3,
+        eventLogs: [],
+        chatMessages: [],
+        lastEventTimestamp: new Date(),
+        players: [
+          {
+            ...getRandomPublicPlayer(),
+            name: 'hailey',
+            influenceCount: 2,
+            deadInfluences: [],
+            faction: Factions.Reformist,
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'david',
+            influenceCount: 2,
+            deadInfluences: [],
+            faction: Factions.Loyalist,
+          },
+          {
+            ...getRandomPublicPlayer(),
+            name: 'harper',
+            influenceCount: 2,
+            deadInfluences: [],
+            faction: Factions.Loyalist,
+          },
+        ],
+        selfPlayer: {
+          ...getRandomPublicPlayer(),
+          id: chance.string(),
+          name: 'david',
+          coins: 2,
+          influences: [Influences.Duke, Influences.Captain],
+          deadInfluences: [],
+          faction: Factions.Loyalist,
+        },
+        pendingAction: {
+          action: Actions.ForeignAid,
+          claimConfirmed: false,
+          pendingPlayers: new Set(['david', 'harper']),
+        },
+        turnPlayer: 'hailey',
+        settings: { eventLogRetentionTurns: 3, allowRevive: true, enableReformation: true },
+        pendingInfluenceLoss: {},
+        treasury: 0,
+        deckCount: 9,
+      })
+
+      // David has Duke and hailey is opposing faction -> should block
+      expect(result).toEqual({ response: Responses.Block, claimedInfluence: Influences.Duke })
     })
   })
 })

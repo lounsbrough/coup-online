@@ -78,6 +78,8 @@ export type Translations = ActionMessages &
     [EventMessages.ActionConfirm]: ActionMessages
     [EventMessages.ActionPending]: Partial<ActionMessages>
     [EventMessages.ActionProcessed]: ActionMessages
+    [EventMessages.ExamineKept]: TranslationsForString
+    [EventMessages.ExamineSwapped]: TranslationsForString
     [EventMessages.ForcedMoveProcessed]: TranslationsForString
     [EventMessages.BlockFailed]: TranslationsForString
     [EventMessages.BlockPending]: TranslationsForString
@@ -1457,6 +1459,24 @@ const translations: Translations = {
       '{{primaryPlayer}} ने {{secondaryPlayer}} को सफलतापूर्वक चुनौती दी',
     'it-IT': '{{primaryPlayer}} ha sfidato con successo {{secondaryPlayer}}',
     'pt-BR': '{{primaryPlayer}} desafiou com sucesso {{secondaryPlayer}}',
+  },
+  [EventMessages.ExamineKept]: {
+    'de-DE': '{{primaryPlayer}} ließ {{secondaryPlayer}} behalten',
+    'en-US': '{{primaryPlayer}} allowed {{secondaryPlayer}} to keep their influence',
+    'es-MX': '{{primaryPlayer}} permitió a {{secondaryPlayer}} conservar su influencia',
+    'fr-FR': '{{primaryPlayer}} a laissé {{secondaryPlayer}} garder son influence',
+    'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को अपना प्रभाव रखने दिया',
+    'it-IT': '{{primaryPlayer}} ha lasciato {{secondaryPlayer}} mantenere la sua influenza',
+    'pt-BR': '{{primaryPlayer}} permitiu que {{secondaryPlayer}} mantivesse sua influência',
+  },
+  [EventMessages.ExamineSwapped]: {
+    'de-DE': '{{primaryPlayer}} zwang {{secondaryPlayer}}, ihre Influenz zu tauschen',
+    'en-US': '{{primaryPlayer}} forced {{secondaryPlayer}} to swap their influence',
+    'es-MX': '{{primaryPlayer}} obligó a {{secondaryPlayer}} a intercambiar su influencia',
+    'fr-FR': '{{primaryPlayer}} a forcé {{secondaryPlayer}} à échanger son influence',
+    'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को अपना प्रभाव बदलने के लिए मजबूर किया',
+    'it-IT': '{{primaryPlayer}} ha costretto {{secondaryPlayer}} a scambiare la sua influenza',
+    'pt-BR': '{{primaryPlayer}} forçou {{secondaryPlayer}} a trocar sua influência',
   },
   [EventMessages.ForcedMoveProcessed]: {
     'de-DE':
