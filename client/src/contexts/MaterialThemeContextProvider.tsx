@@ -7,6 +7,7 @@ import {
   ThemeProvider,
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
+import { Check, Close } from '@mui/icons-material'
 import { activeColorModeStorageKey } from '../helpers/localStorageKeys'
 import { Actions, Influences } from '@shared'
 import { usePersistedState } from '../hooks/usePersistedState'
@@ -96,6 +97,13 @@ function MaterialThemeContextProvider({
       influenceColors,
       spacing: isLargeScreen ? 8 : 4,
       components: {
+        MuiSwitch: {
+          defaultProps: {
+            color: 'success',
+            icon: <Close sx={{ width: 20, height: 20, padding: 0.25, color: 'grey.600', backgroundColor: 'grey.300', borderRadius: '50%', strokeWidth: 1, stroke: 'currentcolor', boxShadow: 1 }} />,
+            checkedIcon: <Check sx={{ width: 20, height: 20, padding: 0.25, color: 'text.primary', backgroundColor: 'success.main', borderRadius: '50%', strokeWidth: 1, stroke: 'currentcolor', boxShadow: 1 }} />,
+          },
+        },
         MuiTooltip: {
           defaultProps: {
             enterTouchDelay: 50,

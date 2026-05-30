@@ -311,7 +311,6 @@ type DehydratedPendingBlock = Omit<PendingBlock, 'pendingPlayers'> & {
 };
 
 export type PendingExamine = {
-  examiner: string;
   targetPlayer: string;
   revealedInfluence?: Influences;
 };
@@ -336,6 +335,7 @@ export type GameState = {
   pendingInfluenceLoss: {
     [player: string]: {
       putBackInDeck: boolean;
+      revealedInfluence?: Influences;
     }[];
   };
   pendingExamine?: PendingExamine;

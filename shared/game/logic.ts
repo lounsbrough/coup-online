@@ -89,5 +89,5 @@ export const canPlayerRevealForExamine = (state: PublicGameState) =>
 export const canPlayerMakeExamineDecision = (state: PublicGameState) =>
   state.selfPlayer
   && state.pendingExamine
-  && state.pendingExamine.examiner === state.selfPlayer.name
+  && state.turnPlayer === state.selfPlayer.name
   && !!state.pendingExamine.revealedInfluence

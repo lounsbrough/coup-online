@@ -17,6 +17,8 @@ function ChooseInfluenceToLose() {
     return null
   }
 
+  const revealedInfluence = gameState.pendingInfluenceLoss[gameState.selfPlayer.name]?.[0]?.revealedInfluence
+
   if (selectedInfluence) {
     return <PlayerActionConfirmation
       message={t('loseInfluence', {
@@ -40,6 +42,14 @@ function ChooseInfluenceToLose() {
       <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t('chooseInfluenceToLose')}
       </CoupTypography>
+      {revealedInfluence && (
+        <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
+          {t('influenceWasRevealed', {
+            gameState,
+            primaryInfluence: revealedInfluence
+          })}
+        </CoupTypography>
+      )}
       <Grid container spacing={2} justifyContent="center">
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))

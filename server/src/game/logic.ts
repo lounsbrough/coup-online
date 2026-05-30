@@ -43,7 +43,8 @@ export const killPlayerInfluence = (state: GameState, playerName: string, influe
 export const promptPlayerToLoseInfluence = (
   state: GameState,
   playerName: string,
-  putBackInDeck: boolean = false
+  putBackInDeck: boolean = false,
+  revealedInfluence?: Influences
 ) => {
   const player = state.players.find(({ name }) => name === playerName)
 
@@ -64,7 +65,7 @@ export const promptPlayerToLoseInfluence = (
 
   state.pendingInfluenceLoss[playerName] = [
     ...(state.pendingInfluenceLoss[playerName] ?? []),
-    { putBackInDeck }
+    { putBackInDeck, ...(revealedInfluence && { revealedInfluence }) }
   ]
 }
 
@@ -133,7 +134,6 @@ export const processPendingAction = (state: GameState) => {
     }
     if (targetPlayer.influences.length > 0) {
       state.pendingExamine = {
-        examiner: actionPlayer.name,
         targetPlayer: targetPlayer.name
       }
     }

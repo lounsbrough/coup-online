@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { Box, Button, Grid, useTheme } from "@mui/material"
+import { Box, Button, Chip, Grid, Stack, useTheme } from "@mui/material"
 import Players from "../game/Players"
 import { QRCodeSVG } from 'qrcode.react'
-import { ContentCopy, GroupAdd, PlayArrow } from "@mui/icons-material"
+import { CheckCircle, ContentCopy, GroupAdd, PlayArrow } from "@mui/icons-material"
 import { getPlayerId } from "../../helpers/players"
 import { useGameStateContext } from "../../contexts/GameStateContext"
 import { LIGHT_COLOR_MODE } from "../../contexts/MaterialThemeContext"
@@ -109,25 +109,21 @@ function WaitingRoom() {
                   {t('startingPlayerBeginsWith1Coin')}
                 </CoupTypography>
               )}
-              {gameState.settings.allowRevive && (
-                <CoupTypography mt={2} addTextShadow>
-                  {t('reviveIsEnabled')}
-                </CoupTypography>
-              )}
-              {gameState.settings.enableReformation && (
-                <CoupTypography mt={2} addTextShadow>
-                  {t('reformationIsEnabled')}
-                </CoupTypography>
-              )}
-              {gameState.settings.useInquisitor && (
-                <CoupTypography mt={2} addTextShadow>
-                  {t('inquisitorIsEnabled')}
-                </CoupTypography>
-              )}
-              {gameState.settings.speedRoundSeconds && (
-                <CoupTypography mt={2} addTextShadow>
-                  {t('speedRoundSeconds')}: {gameState.settings.speedRoundSeconds}
-                </CoupTypography>
+              {(gameState.settings.allowRevive || gameState.settings.enableReformation || gameState.settings.useInquisitor || gameState.settings.speedRoundSeconds) && (
+                <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" useFlexGap mt={2}>
+                  {gameState.settings.allowRevive && (
+                    <Chip icon={<CheckCircle />} label={t('reviveIsEnabled')} color="success" size="small" />
+                  )}
+                  {gameState.settings.enableReformation && (
+                    <Chip icon={<CheckCircle />} label={t('reformationIsEnabled')} color="success" size="small" />
+                  )}
+                  {gameState.settings.useInquisitor && (
+                    <Chip icon={<CheckCircle />} label={t('inquisitorIsEnabled')} color="success" size="small" />
+                  )}
+                  {gameState.settings.speedRoundSeconds && (
+                    <Chip icon={<CheckCircle />} label={`${t('speedRoundSeconds')}: ${gameState.settings.speedRoundSeconds}`} color="success" size="small" />
+                  )}
+                </Stack>
               )}
             </Box>
           </Grid>

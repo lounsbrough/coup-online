@@ -1558,7 +1558,6 @@ describe('actionHandlers', () => {
       let gameState = await getGameState(roomId)
 
       expect(gameState.pendingExamine).toBeDefined()
-      expect(gameState.pendingExamine!.examiner).toBe(david.playerName)
       expect(gameState.pendingExamine!.targetPlayer).toBe(harper.playerName)
 
       await revealForExamineHandler({
@@ -1675,7 +1674,6 @@ describe('actionHandlers', () => {
       // Examine should proceed directly — no pending action response needed
       expect(gameState.pendingAction).toBeUndefined()
       expect(gameState.pendingExamine).toBeDefined()
-      expect(gameState.pendingExamine!.examiner).toBe(david.playerName)
       expect(gameState.pendingExamine!.targetPlayer).toBe(harper.playerName)
     })
 

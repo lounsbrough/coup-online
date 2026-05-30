@@ -64,7 +64,7 @@ export default function RulesDrawerContent() {
                   </Typography>
                 </Tooltip>
               </Stack>
-              {(gameState.settings.allowRevive || gameState.settings.enableReformation) && (
+              {(gameState.settings.allowRevive || gameState.settings.enableReformation || gameState.settings.useInquisitor || gameState.settings.speedRoundSeconds) && (
                 <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" useFlexGap>
                   {gameState.settings.allowRevive && (
                     <Chip
@@ -78,6 +78,22 @@ export default function RulesDrawerContent() {
                     <Chip
                       icon={<CheckCircle />}
                       label={t('reformationIsEnabled')}
+                      color="success"
+                      size="small"
+                    />
+                  )}
+                  {gameState.settings.useInquisitor && (
+                    <Chip
+                      icon={<CheckCircle />}
+                      label={t('inquisitorIsEnabled')}
+                      color="success"
+                      size="small"
+                    />
+                  )}
+                  {gameState.settings.speedRoundSeconds && (
+                    <Chip
+                      icon={<CheckCircle />}
+                      label={`${t('speedRoundSeconds')}: ${gameState.settings.speedRoundSeconds}`}
                       color="success"
                       size="small"
                     />
