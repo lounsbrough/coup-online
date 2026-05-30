@@ -41,6 +41,14 @@ export const getWaitingOnPlayers = (gameState: PublicGameState): PublicPlayer[] 
     pendingInfluenceLossPlayers.forEach(waitingOnNames.add, waitingOnNames)
   }
 
+  if (gameState.pendingExamine) {
+    if (gameState.pendingExamine.revealedInfluence) {
+      waitingOnNames.add(gameState.turnPlayer)
+    } else {
+      waitingOnNames.add(gameState.pendingExamine.targetPlayer)
+    }
+  }
+
   if (!waitingOnNames.size) {
     if (gameState.turnPlayer) {
       waitingOnNames.add(gameState.turnPlayer)

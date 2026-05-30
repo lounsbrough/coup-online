@@ -133,7 +133,6 @@ export const processPendingAction = (state: GameState) => {
     }
     if (targetPlayer.influences.length > 0) {
       state.pendingExamine = {
-        examiner: actionPlayer.name,
         targetPlayer: targetPlayer.name
       }
     }

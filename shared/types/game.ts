@@ -311,7 +311,6 @@ type DehydratedPendingBlock = Omit<PendingBlock, 'pendingPlayers'> & {
 };
 
 export type PendingExamine = {
-  examiner: string;
   targetPlayer: string;
   revealedInfluence?: Influences;
 };

@@ -1389,7 +1389,7 @@ export const examineDecisionHandler = async ({ roomId, playerId, forceSwap }: {
   const gameState = await getGameState(roomId)
   const player = getPlayerInRoom({ gameState, playerId })
 
-  if (!gameState.pendingExamine || gameState.pendingExamine.examiner !== player.name || !gameState.pendingExamine.revealedInfluence) {
+  if (!gameState.pendingExamine || gameState.turnPlayer !== player.name || !gameState.pendingExamine.revealedInfluence) {
     throw new ActionNotCurrentlyAllowedError()
   }
 
