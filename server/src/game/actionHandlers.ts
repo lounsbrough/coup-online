@@ -752,7 +752,7 @@ export const actionResponseHandler = async ({ roomId, playerId, response, claime
           recordTimelineActionChallenge(state, player.name, true)
           holdGrudge({ state, offended: state.turnPlayer!, offender: player.name, weight: grudgeSizes[Responses.Challenge] })
           delete state.pendingAction
-          promptPlayerToLoseInfluence(state, actionPlayer.name)
+          promptPlayerToLoseInfluence(state, actionPlayer.name, false, Influences.Duke)
         } else {
           logEvent(state, {
             event: EventMessages.ChallengeFailed,

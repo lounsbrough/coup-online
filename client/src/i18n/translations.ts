@@ -107,6 +107,7 @@ export type Translations = ActionMessages &
     honesty: TranslationsForString
     influence: TranslationsForString
     influenceWasClaimed: TranslationsForString
+    influenceWasRevealed: TranslationsForString
     influences: TranslationsForString
     [Influences.Ambassador]: TranslationsForString
     [Influences.Assassin]: TranslationsForString
@@ -1739,6 +1740,15 @@ const translations: Translations = {
     'hi-IN': '{{primaryInfluence}} को चुनौती दी गई थी',
     'it-IT': '{{primaryInfluence}} è stato rivendicato',
     'pt-BR': '{{primaryInfluence}} foi reivindicado',
+  },
+  influenceWasRevealed: {
+    'de-DE': '{{primaryInfluence}} wurde aufgedeckt',
+    'en-US': '{{primaryInfluence}} was revealed',
+    'es-MX': '{{primaryInfluence}} fue revelado',
+    'fr-FR': '{{primaryInfluence}} a été révélé',
+    'hi-IN': '{{primaryInfluence}} का खुलासा हुआ',
+    'it-IT': '{{primaryInfluence}} è stato rivelato',
+    'pt-BR': '{{primaryInfluence}} foi revelado',
   },
   influences: {
     'de-DE': 'Einflüsse',

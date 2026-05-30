@@ -43,7 +43,9 @@ export const getWaitingOnPlayers = (gameState: PublicGameState): PublicPlayer[] 
 
   if (gameState.pendingExamine) {
     if (gameState.pendingExamine.revealedInfluence) {
-      waitingOnNames.add(gameState.turnPlayer)
+      if (gameState.turnPlayer) {
+        waitingOnNames.add(gameState.turnPlayer)
+      }
     } else {
       waitingOnNames.add(gameState.pendingExamine.targetPlayer)
     }

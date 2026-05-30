@@ -335,6 +335,7 @@ export type GameState = {
   pendingInfluenceLoss: {
     [player: string]: {
       putBackInDeck: boolean;
+      revealedInfluence?: Influences;
     }[];
   };
   pendingExamine?: PendingExamine;
