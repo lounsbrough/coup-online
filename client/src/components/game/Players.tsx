@@ -33,7 +33,7 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
   const allSameFaction = isAllSameFaction(gameState)
 
   return (
-    <Grid container justifyContent="center" spacing={3}>
+    <Grid container sx={{ justifyContent: 'center' }} spacing={3}>
       {gameState.players
         .map(({ name, color, coins, influenceCount, deadInfluences, ai, personality, faction }, index) => {
           const playerColor = gameState.isStarted && !influenceCount ? '#777777' : color
@@ -143,10 +143,9 @@ function Players({ inWaitingRoom = false }: Readonly<{ inWaitingRoom?: boolean }
                   )}
                 </Typography>
                 <Grid
-                  container mt={0.5}
+                  container
                   spacing={1}
-                  justifyContent='center'
-                  flexWrap="nowrap"
+                  sx={{ mt: 0.5, justifyContent: 'center', flexWrap: 'nowrap' }}
                 >
                   {influences.map((influence, index) => {
                     const influenceBoxSize = 46

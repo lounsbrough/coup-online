@@ -160,14 +160,14 @@ function Leaderboard() {
                             component={RouterLink}
                             to={`/profile/${entry.uid}`}
                             underline="hover"
-                            {...(isCurrentUser ? { fontWeight: 'bold' } : {})}
+                            {...(isCurrentUser ? { sx: { fontWeight: 'bold' } } : {})}
                           >
                             {entry.displayName}
                           </Link>
                         </Box>
                       </TableCell>
                       <TableCell align="center">
-                        <Typography fontWeight="bold">
+                        <Typography sx={{ fontWeight: 'bold' }}>
                           {entry.rating}
                         </Typography>
                       </TableCell>
@@ -210,14 +210,14 @@ function Leaderboard() {
                             component={RouterLink}
                             to={`/profile/${userEntry.uid}`}
                             underline="hover"
-                            fontWeight="bold"
+                            sx={{ fontWeight: 'bold' }}
                           >
                             {userEntry.displayName}
                           </Link>
                         </Box>
                       </TableCell>
                       <TableCell align="center">
-                        <Typography fontWeight="bold">
+                        <Typography sx={{ fontWeight: 'bold' }}>
                           {userEntry.rating}
                         </Typography>
                       </TableCell>

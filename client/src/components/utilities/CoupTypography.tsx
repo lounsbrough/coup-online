@@ -25,7 +25,7 @@ function CoupTypography({
 
   if (onBack) {
     return (
-      <Grid container alignItems="center" justifyContent="center">
+      <Grid container sx={{ alignItems: 'center', justifyContent: 'center' }}>
         <IconButton
           onClick={() => { onBack() }}
           sx={backButtonSx}

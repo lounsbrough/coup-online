@@ -7,7 +7,7 @@ function LegalLinks() {
   const { t } = useTranslationContext()
 
   return (
-    <Grid container justifyContent='center' spacing={2} mt={8} mb={2}>
+    <Grid container spacing={2} sx={{ justifyContent: 'center', mt: 8, mb: 2 }}>
       <Grid>
         <Button
           color="primary"

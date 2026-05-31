@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       typescript:
-        specifier: ^6.0.2
+        specifier: ^6.0.3
         version: 6.0.3
 
 packages:

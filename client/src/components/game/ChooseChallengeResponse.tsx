@@ -60,7 +60,7 @@ function ChooseChallengeResponse() {
           })}
         </CoupTypography>
       )}
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
         {gameState.selfPlayer.influences
           .sort((a, b) => a.localeCompare(b))
           .map((influence, index) => {

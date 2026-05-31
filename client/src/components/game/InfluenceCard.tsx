@@ -24,7 +24,7 @@ function InfluenceCard({ influence }: {
       borderRadius: '0.5rem',
       p: 2
     }}>
-      <Grid container flexWrap="nowrap" spacing={1} justifyContent="center" alignItems="center">
+      <Grid container spacing={1} sx={{ flexWrap: 'nowrap', justifyContent: 'center', alignItems: 'center' }}>
         <Grid>
           <InfluenceIcon influence={influence} sx={iconStyle} />
         </Grid>

@@ -48,17 +48,17 @@ function UserSettings() {
         open={modalOpen}
         onClose={() => { setModalOpen(false) }}
       >
-        <DialogTitle mb={2}>
-          <Box display="flex" alignItems="center">
-            <Typography flexGrow={1} textAlign="center" variant='h5'>
+        <DialogTitle sx={{ mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography sx={{ flexGrow: 1, textAlign: 'center' }} variant='h5'>
               <Settings sx={{ verticalAlign: 'middle', mr: 1 }} />
               <span style={{ verticalAlign: 'middle' }}>{t('settings')}</span>
             </Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={3} direction="column">
-            <Grid height={rowHeight} alignContent="center" sx={{ whiteSpace: 'nowrap' }}>
+          <Grid container spacing={3} sx={{ flexDirection: 'column' }}>
+            <Grid sx={{ height: rowHeight, alignContent: 'center', whiteSpace: 'nowrap' }}>
               <Typography component="span" sx={{ mr: 2 }}>{t('language')}:</Typography>
               <LanguageSelector />
               <Tooltip title={t('reportIncorrectTranslation')}>
@@ -72,7 +72,7 @@ function UserSettings() {
               </Tooltip>
             </Grid>
             {roomId && (
-              <Grid height={rowHeight} alignContent="center">
+              <Grid sx={{ height: rowHeight, alignContent: 'center' }}>
                 <Typography component="span" sx={{ mr: 1 }}>
                   {t('room')}
                   :
@@ -80,14 +80,14 @@ function UserSettings() {
                 <strong>{roomId}</strong>
               </Grid>
             )}
-            {/* <Grid height={rowHeight} alignContent="center">
+            {/* <Grid sx={{ height: rowHeight, alignContent: 'center' }}>
               <Typography component="span" sx={{ mr: 2 }}>
                 {t('colorMode')}
                 :
               </Typography>
               <ColorModeToggle />
             </Grid> */}
-            <Grid height={rowHeight} alignContent="center">
+            <Grid sx={{ height: rowHeight, alignContent: 'center' }}>
               <Typography component="span">
                 {t('confirmActions')}
                 :
@@ -100,7 +100,7 @@ function UserSettings() {
                 slotProps={{ input: { 'aria-label': 'controlled' } }}
               />
             </Grid>
-            <Grid height={rowHeight} alignContent="center">
+            <Grid sx={{ height: rowHeight, alignContent: 'center' }}>
               <Typography component="span">
                 {getShowImageLabel(language)}
                 :
@@ -113,7 +113,7 @@ function UserSettings() {
                 slotProps={{ input: { 'aria-label': 'controlled' } }}
               />
             </Grid>
-            <Grid height={rowHeight} alignContent="center">
+            <Grid sx={{ height: rowHeight, alignContent: 'center' }}>
               <Typography component="span" sx={{ mr: 1 }}>
                 {t('websocketsConnection')}
                 :
@@ -122,7 +122,7 @@ function UserSettings() {
                 ? <CheckCircle color="success" sx={{ verticalAlign: 'middle' }} />
                 : <CancelOutlined color="error" sx={{ verticalAlign: 'middle' }} />}
             </Grid>
-            <Grid alignContent="center">
+            <Grid sx={{ alignContent: 'center' }}>
               <SupportMonetizationButton />
             </Grid>
           </Grid>

@@ -70,7 +70,7 @@ function JoinGame() {
           formRef.current!.reportValidity()
         }}
       >
-        <Grid container direction="column" alignItems='center' spacing={2}>
+        <Grid container sx={{ flexDirection: 'column', alignItems: 'center' }} spacing={2}>
           <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Group sx={{ color: 'action.active', mr: 1, my: 0.5 }} />

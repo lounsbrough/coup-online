@@ -15,7 +15,7 @@ function WaitingOnOtherPlayers() {
 
   return (
     <>
-      <CoupTypography variant="h6" my={1} fontWeight="bold" addTextShadow>
+      <CoupTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }} addTextShadow>
         {t('waitingOnOtherPlayers')}
       </CoupTypography>
       <Box>

@@ -43,7 +43,7 @@ function ChooseBlockResponse() {
           secondaryPlayer: gameState.turnPlayer
         })}
       </CoupTypography>
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map((response, index) => {

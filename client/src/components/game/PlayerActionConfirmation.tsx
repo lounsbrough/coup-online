@@ -57,10 +57,10 @@ function PlayerActionConfirmation({
 
   return (
     <>
-      <CoupTypography variant="h6" my={1} fontWeight="bold" addTextShadow>
+      <CoupTypography variant="h6" sx={{ my: 1, fontWeight: 'bold' }} addTextShadow>
         {message}
       </CoupTypography>
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
         <Grid>
           <Button
             startIcon={<Cancel />}

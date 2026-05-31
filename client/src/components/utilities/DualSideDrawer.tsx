@@ -106,7 +106,7 @@ const SideDrawer = ({ side, open, setOpen, desktopDrawerWidth, drawerContent, dr
         <CloseIcon fontSize="large" />
       </IconButton>
       <Box sx={{ p: theme.isLargeScreen ? 1.3 : 4, display: 'flex' }}>
-        <Typography display="flex" flexGrow={1} textAlign="center" variant='h5' justifyContent="center" alignItems="center">
+        <Typography sx={{ display: 'flex', flexGrow: 1, textAlign: 'center', justifyContent: 'center', alignItems: 'center' }} variant='h5'>
           {drawerHeader}
         </Typography>
       </Box>

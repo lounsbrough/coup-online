@@ -46,15 +46,14 @@ function ChooseAction() {
     return (
       <>
         <CoupTypography
-          my={1}
           variant="h6"
-          fontWeight="bold"
+          sx={{ my: 1, fontWeight: 'bold' }}
           onBack={() => { setSelectedAction(undefined) }}
           addTextShadow
         >
           {t('chooseATarget')}
         </CoupTypography>
-        <Grid container spacing={2} justifyContent="center">
+        <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
           {selectedAction === Actions.Convert && (
             <GrowingButton
               onClick={() => {
@@ -111,7 +110,7 @@ function ChooseAction() {
       <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t('chooseAnAction')}
       </CoupTypography>
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
         {Object.entries(ActionAttributes)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map(([action, actionAttributes], index) => {

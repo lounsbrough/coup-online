@@ -8,7 +8,7 @@ function GitHubLinks() {
   const { t } = useTranslationContext()
 
   return (
-    <Grid container justifyContent='center' spacing={2} mt={2} mb={10}>
+    <Grid container spacing={2} sx={{ justifyContent: 'center', mt: 2, mb: 10 }}>
       <Grid>
         <Button href={`${repoUrl}/issues/new?template=bug_report.md`} target="_blank" color="primary" variant="outlined" startIcon={<BugReport />}>
           {t('reportBug')}

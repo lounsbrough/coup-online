@@ -50,7 +50,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
     <Grid container className="game-board">
       <Grid size={{ xs: 12, sm: 12, md: 0, lg: drawerIsOpen ? 0 : 3 }} />
       <Grid
-        p={2}
+        sx={{ p: 2 }}
         size={{ xs: 12, sm: 12, md: 9, lg: drawerIsOpen ? 9 : 6 }}
       >
         {gameIsOver && (
@@ -74,7 +74,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
           </Grid>
         )}
         {turnPlayer && !gameIsOver && (
-          <Box my={2}>
+          <Box sx={{ my: 2 }}>
             <CoupTypography variant="h4" addTextShadow>
               {t('playerTurn', {
                 primaryPlayer: gameState.turnPlayer,
@@ -84,15 +84,15 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
           </Box>
         )}
         {!!gameState?.selfPlayer?.influences?.length && (
-          <Grid container justifyContent="center" my={4}>
+          <Grid container sx={{ justifyContent: 'center', my: 4 }}>
             <PlayerInfluences />
           </Grid>
         )}
-        <Grid container justifyContent="center" sx={{ my: 2 }}>
+        <Grid container sx={{ justifyContent: 'center', my: 2 }}>
           <Players />
         </Grid>
         {!gameIsOver && (
-          <Grid container justifyContent="center">
+          <Grid container sx={{ justifyContent: 'center' }}>
             <Grid sx={{ p: 2 }}>
               <PlayerDecision />
             </Grid>
@@ -105,9 +105,8 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
       >
         <Grid
           container
-          p={1}
           spacing={0.5}
-          sx={centeredOnSmallScreen}
+          sx={{ p: 1, ...centeredOnSmallScreen }}
         >
           <Grid size={12}>
             <EventLog />
@@ -115,17 +114,15 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
           <Grid
             container
             size={12}
-            alignItems='center'
             sx={{
+              alignItems: 'center',
               ...centeredOnSmallScreen,
               fontSize: '1.25rem'
             }}>
             <CoupTypography
-              display='flex'
-              alignItems='center'
               component='span'
-              fontSize='inherit'
               addTextShadow
+              sx={{ display: 'flex', alignItems: 'center', fontSize: 'inherit' }}
             >
               {t('deck')}: <CardDeck sx={{ mx: 1, fontSize: 'inherit' }} /> {gameState.deckCount}
             </CoupTypography>
@@ -134,17 +131,15 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
             <Grid
               container
               size={12}
-              alignItems='center'
               sx={{
+                alignItems: 'center',
                 ...centeredOnSmallScreen,
                 fontSize: '1.25rem'
               }}>
               <CoupTypography
-                display='flex'
-                alignItems='center'
                 component='span'
-                fontSize='inherit'
                 addTextShadow
+                sx={{ display: 'flex', alignItems: 'center', fontSize: 'inherit' }}
               >
                 {t('treasury')}: <Treasury sx={{ mx: 1, verticalAlign: 'text-bottom', fontSize: 'inherit' }} /> {gameState.treasury}
               </CoupTypography>
