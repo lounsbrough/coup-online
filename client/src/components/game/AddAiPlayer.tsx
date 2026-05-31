@@ -116,7 +116,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readon
               {t('random')}
             </Button>
           </Box>
-          <Box mt={4}>
+          <Box sx={{ mt: 4 }}>
             <Typography component="span">
               {t('choosePersonality')}
               :
@@ -130,8 +130,8 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readon
             />
           </Box>
           <Collapse in={choosePersonality}>
-            <Box mt={1}>
-              <Typography mt={2}>
+            <Box sx={{ mt: 1 }}>
+              <Typography sx={{ mt: 2 }}>
                 {t('vengefulness')}
                 {`: ${vengefulness}%`}
               </Typography>
@@ -143,7 +143,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readon
                 max={maxSliderValue}
                 onChange={handleVengefulnessChange}
               />
-              <Typography mt={2}>
+              <Typography sx={{ mt: 2 }}>
                 {t('honesty')}
                 {`: ${honesty}%`}
               </Typography>
@@ -155,7 +155,7 @@ function AddAiPlayer({ addAiPlayerDialogOpen, setAddAiPlayerDialogOpen }: Readon
                 max={maxSliderValue}
                 onChange={handleHonestyChange}
               />
-              <Typography mt={2}>
+              <Typography sx={{ mt: 2 }}>
                 {t('skepticism')}
                 {`: ${skepticism}%`}
               </Typography>

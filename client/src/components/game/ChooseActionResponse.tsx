@@ -46,15 +46,14 @@ function ChooseActionResponse() {
     return (
       <>
         <CoupTypography
-          my={1}
           variant="h6"
-          fontWeight="bold"
+          sx={{ my: 1, fontWeight: 'bold' }}
           onBack={() => { setSelectedResponse(undefined) }}
           addTextShadow
         >
           {t('claimAnInfluence')}
         </CoupTypography>
-        <Grid container spacing={2} justifyContent="center">
+        <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
           {Object.entries(InfluenceAttributes)
             .sort((a, b) => a[0].localeCompare(b[0]))
             .filter(([influence, { legalBlocks }]) =>
@@ -85,7 +84,7 @@ function ChooseActionResponse() {
           secondaryPlayer: gameState.pendingAction.targetPlayer
         })}
       </CoupTypography>
-      <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
         {Object.values(Responses)
           .sort((a, b) => a[0].localeCompare(b[0]))
           .map((response, index) => {

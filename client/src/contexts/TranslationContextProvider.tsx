@@ -56,9 +56,7 @@ function TranslationContextProvider({ children }: Readonly<{ children: ReactNode
               <Typography
                 key={variables.action}
                 component='span'
-                fontWeight={500}
-                fontSize='inherit'
-                sx={{ color: actionColors?.[variables.action!] }}
+                sx={{ fontWeight: 500, fontSize: 'inherit', color: actionColors?.[variables.action!] }}
               >
                 {effectiveAction}
               </Typography>,
@@ -85,9 +83,7 @@ function TranslationContextProvider({ children }: Readonly<{ children: ReactNode
                 <Typography
                   key={variables[influenceKey]}
                   component='span'
-                  fontWeight={500}
-                  fontSize='inherit'
-                  sx={{ color: influenceColors?.[variables[influenceKey]!] }}
+                  sx={{ fontWeight: 500, fontSize: 'inherit', color: influenceColors?.[variables[influenceKey]!] }}
                 >
                   {translations[variables[influenceKey]!][language]}
                 </Typography>,
@@ -115,9 +111,7 @@ function TranslationContextProvider({ children }: Readonly<{ children: ReactNode
                 <Typography
                   key={playerKey}
                   component='span'
-                  fontWeight={500}
-                  fontSize='inherit'
-                  sx={{ color: variables.gameState?.players.find(({ name }) => name === variables[playerKey])?.color }}
+                  sx={{ fontWeight: 500, fontSize: 'inherit', color: variables.gameState?.players.find(({ name }) => name === variables[playerKey])?.color }}
                 >
                   {variables[playerKey]}
                 </Typography>,

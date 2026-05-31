@@ -14,13 +14,13 @@ export default function RulesDrawerContent() {
 
   const influenceText = useMemo(() => Object.fromEntries(
     Object.values(Influences).map((influence) =>
-      ([influence, <Typography component="span" fontSize="large" fontWeight='bold' color={influence}>{t(influence)}</Typography>]))
+      ([influence, <Typography component="span" sx={{ fontSize: 'large', fontWeight: 'bold' }} color={influence}>{t(influence)}</Typography>]))
   ), [t])
 
   const actionText = useMemo(() => Object.fromEntries(
     Object.keys(ActionAttributes).map((action) => {
       const influenceRequired = getInfluenceRequiredForAction(action as Actions, {})
-      return [action, <Typography component="span" fontSize="large" fontWeight='bold' color={influenceRequired as Influences}>{t(action as Actions)}</Typography>]
+      return [action, <Typography component="span" sx={{ fontSize: 'large', fontWeight: 'bold' }} color={influenceRequired as Influences}>{t(action as Actions)}</Typography>]
     })
   ), [t])
 
@@ -46,7 +46,7 @@ export default function RulesDrawerContent() {
           <>
             <Stack spacing={1} sx={{ alignItems: 'center' }}>
               <Stack
-                direction="row" spacing={1} alignItems="center" justifyContent="center" flexWrap="wrap" useFlexGap
+                direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }} useFlexGap
               >
                 {getInfluencesForGame(gameState.settings).map((influence) => (
                   <Tooltip key={influence} title={<Typography variant="h6">{t(influence)}</Typography>}>
@@ -65,7 +65,7 @@ export default function RulesDrawerContent() {
                 </Tooltip>
               </Stack>
               {(gameState.settings.allowRevive || gameState.settings.enableReformation || gameState.settings.useInquisitor || gameState.settings.speedRoundSeconds) && (
-                <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" useFlexGap>
+                <Stack direction="row" spacing={1} sx={{ justifyContent: 'center', flexWrap: 'wrap' }} useFlexGap>
                   {gameState.settings.allowRevive && (
                     <Chip
                       icon={<CheckCircle />}

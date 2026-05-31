@@ -75,7 +75,7 @@ export default function ChatDrawerContent({
         <ChatMessages />
       </Box>
       {!!gameState.selfPlayer && (
-        <Box display="flex" p={1}>
+        <Box sx={{ display: 'flex', p: 1 }}>
           <TextField
             placeholder={t('writeNewMessage') as string}
             label={`${pendingMessageText ? ` (${maxMessageLength - pendingMessageText.length}/${maxMessageLength})` : ''}`}

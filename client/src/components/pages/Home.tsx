@@ -18,7 +18,7 @@ function Home() {
       <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('briefDescriptionOfCoup')}
       </CoupTypography>
-      <Grid container direction="column" alignItems="center" spacing={3} mt={10}>
+      <Grid container sx={{ flexDirection: 'column', alignItems: 'center', mt: 10 }} spacing={3}>
         <Button
           variant="contained"
           component={RouterLink}

@@ -40,7 +40,7 @@ export default function ChatMessages() {
     <>
       {(
         !gameState?.chatMessages?.length ? (
-          <Typography my={2} textAlign="center">
+          <Typography sx={{ my: 2, textAlign: 'center' }}>
             {t('noChatMessages')}
           </Typography>
         ) : (
@@ -72,9 +72,7 @@ export default function ChatMessages() {
                 {!isMyMessage && (
                   <Typography
                     component='span'
-                    fontWeight={500}
-                    fontSize='inherit'
-                    sx={{ color: gameState?.players.find(({ name }) => name === from)?.color }}
+                    sx={{ fontWeight: 500, fontSize: 'inherit', color: gameState?.players.find(({ name }) => name === from)?.color }}
                   >
                     {from}:
                   </Typography>
@@ -140,7 +138,8 @@ export default function ChatMessages() {
                 </Typography>
                 <Typography sx={{ mr: isMyMessage ? '-0.4rem' : undefined }}>
                   <Tooltip title={timestamp.toLocaleString()}>
-                    <Typography fontSize='smaller' component="span" sx={{
+                    <Typography component="span" sx={{
+                      fontSize: 'smaller',
                       mr: 1,
                       verticalAlign: 'middle'
                     }}>{timestamp.toLocaleTimeString()}</Typography>
@@ -207,7 +206,7 @@ export default function ChatMessages() {
                         }}
                       >
                         <Typography>{emoji}</Typography>
-                        {playerNames.size > 1 && <Typography ml={0.5} fontWeight={900}>{playerNames.size}</Typography>}
+                        {playerNames.size > 1 && <Typography sx={{ ml: 0.5, fontWeight: 900 }}>{playerNames.size}</Typography>}
                       </IconButton>
                     </Tooltip>
                   ))}

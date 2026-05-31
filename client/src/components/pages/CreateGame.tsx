@@ -83,7 +83,7 @@ function CreateGame() {
           })
         }}
       >
-        <Grid container direction="column" alignItems="center">
+        <Grid container sx={{ flexDirection: 'column', alignItems: 'center' }}>
           <Grid>
             <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 3 }}>
               <Person sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -107,8 +107,8 @@ function CreateGame() {
             </Box>
           </Grid>
           <Grid sx={{ maxWidth: '300px', width: '90%' }}>
-            <Box mt={6}>
-              <CoupTypography mt={2} addTextShadow>
+            <Box sx={{ mt: 6 }}>
+              <CoupTypography sx={{ mt: 2 }} addTextShadow>
                 {t('eventLogRetentionTurns')}
                 {`: ${eventLogRetentionTurns}`}
               </CoupTypography>
@@ -126,8 +126,8 @@ function CreateGame() {
             </Box>
           </Grid>
           <Grid sx={{ maxWidth: '300px', width: '90%' }}>
-            <Box mt={2}>
-              <CoupTypography component="span" mt={2} addTextShadow>
+            <Box sx={{ mt: 2 }}>
+              <CoupTypography component="span" sx={{ mt: 2 }} addTextShadow>
                 {t('allowRevive')}:
               </CoupTypography>
               <Switch
@@ -140,8 +140,8 @@ function CreateGame() {
             </Box>
           </Grid>
           <Grid sx={{ maxWidth: '300px', width: '90%' }}>
-            <Box mt={2}>
-              <CoupTypography component="span" mt={2} addTextShadow>
+            <Box sx={{ mt: 2 }}>
+              <CoupTypography component="span" sx={{ mt: 2 }} addTextShadow>
                 {t('speedRound')}:
               </CoupTypography>
               <Switch
@@ -155,8 +155,8 @@ function CreateGame() {
           </Grid>
           {speedRoundEnabled && (
             <Grid sx={{ maxWidth: '300px', width: '90%' }}>
-              <Box mt={2}>
-                <CoupTypography mt={2} addTextShadow>
+              <Box sx={{ mt: 2 }}>
+                <CoupTypography sx={{ mt: 2 }} addTextShadow>
                   {t('speedRoundSeconds')}
                   {`: ${speedRoundSeconds}`}
                 </CoupTypography>
@@ -175,8 +175,8 @@ function CreateGame() {
             </Grid>
           )}
           <Grid sx={{ maxWidth: '300px', width: '90%' }}>
-            <Box mt={2}>
-              <CoupTypography component="span" mt={2} addTextShadow>
+            <Box sx={{ mt: 2 }}>
+              <CoupTypography component="span" sx={{ mt: 2 }} addTextShadow>
                 {t('enableReformation')}:
               </CoupTypography>
               <Switch
@@ -189,8 +189,8 @@ function CreateGame() {
             </Box>
           </Grid>
           <Grid sx={{ maxWidth: '300px', width: '90%' }}>
-            <Box mt={2}>
-              <CoupTypography component="span" mt={2} addTextShadow>
+            <Box sx={{ mt: 2 }}>
+              <CoupTypography component="span" sx={{ mt: 2 }} addTextShadow>
                 {t('useInquisitor')}:
               </CoupTypography>
               <Switch

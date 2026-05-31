@@ -35,16 +35,16 @@ function WaitingRoom() {
 
   return (
     <>
-      <Grid container direction='column' justifyContent="center">
+      <Grid container sx={{ flexDirection: 'column', justifyContent: 'center' }}>
         <Grid sx={{ p: 2, mt: 4 }}>
           <Players inWaitingRoom />
         </Grid>
       </Grid>
-      <CoupTypography variant="h5" m={3} addTextShadow>
+      <CoupTypography variant="h5" sx={{ m: 3 }} addTextShadow>
         {t('room')}
         : <strong>{gameState.roomId}</strong>
       </CoupTypography>
-      <Grid container direction='column' spacing={2}>
+      <Grid container sx={{ flexDirection: 'column' }} spacing={2}>
         <Grid>
           <QRCodeSVG
             bgColor="transparent"
@@ -100,17 +100,17 @@ function WaitingRoom() {
             </Button>
             <Box sx={{ fontStyle: 'italic' }}>
               {gameState.players.length < 2 && (
-                <CoupTypography mt={2} addTextShadow>
+                <CoupTypography sx={{ mt: 2 }} addTextShadow>
                   {t('addPlayersToStartGame')}
                 </CoupTypography>
               )}
               {gameState.players.length === 2 && (
-                <CoupTypography mt={2} addTextShadow>
+                <CoupTypography sx={{ mt: 2 }} addTextShadow>
                   {t('startingPlayerBeginsWith1Coin')}
                 </CoupTypography>
               )}
               {(gameState.settings.allowRevive || gameState.settings.enableReformation || gameState.settings.useInquisitor || gameState.settings.speedRoundSeconds) && (
-                <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" useFlexGap mt={2}>
+                <Stack direction="row" spacing={1} useFlexGap sx={{ justifyContent: 'center', flexWrap: 'wrap', mt: 2 }}>
                   {gameState.settings.allowRevive && (
                     <Chip icon={<CheckCircle />} label={t('reviveIsEnabled')} color="success" size="small" />
                   )}

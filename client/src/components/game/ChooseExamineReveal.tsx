@@ -23,7 +23,7 @@ function ChooseExamineReveal() {
             <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
                 {t('chooseCardToReveal')}
             </CoupTypography>
-            <Grid container spacing={2} justifyContent="center">
+            <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
                 {gameState.selfPlayer.influences.map((influence, index) => (
                     <InfluenceButton
                         key={index}

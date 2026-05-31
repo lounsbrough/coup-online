@@ -12,9 +12,8 @@ function PlayerInfluences() {
   return (
     <Grid
       container
-      justifyContent="center"
       spacing={3}
-      sx={{ width: '100%', maxWidth: '30rem' }}
+      sx={{ justifyContent: 'center', width: '100%', maxWidth: '30rem' }}
     >
       {gameState.selfPlayer.influences
         .sort((a, b) => a.localeCompare(b))

@@ -44,7 +44,7 @@ function PlayerDecision() {
     return (
       <>
         {decision}
-        <Box mt={3}>
+        <Box sx={{ mt: 3 }}>
           <SpeedRoundTimer />
         </Box>
       </>

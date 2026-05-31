@@ -35,7 +35,7 @@ function RequestReset() {
 
   return (
     <>
-      <Box mt={1}>
+      <Box sx={{ mt: 1 }}>
         {(!isResetPending || isResetMine || playerIsDead) && (
           <>
             <Button
@@ -64,8 +64,9 @@ function RequestReset() {
               gameState
             })}
           </Typography>
-          <Grid mt={1} container spacing={1}
+          <Grid container spacing={1}
             sx={{
+              mt: 1,
               justifyContent: 'center',
               [theme.breakpoints.up('md')]: { justifyContent: 'flex-end' }
             }}>

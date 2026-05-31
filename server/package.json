@@ -32,7 +32,7 @@
     "iovalkey": "^0.3.3",
     "joi": "^18.2.1",
     "socket.io": "^4.8.3",
-    "stripe": "^22.1.1"
+    "stripe": "^22.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -40,11 +40,11 @@
     "@types/chance": "^1.1.8",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.9.1",
     "@types/ws": "^8.18.1",
     "@vitest/coverage-v8": "^4.1.7",
     "chance": "^1.1.13",
-    "eslint": "^10.4.0",
+    "eslint": "^10.4.1",
     "globals": "^17.6.0",
     "pre-commit": "^2.0.0",
     "socket.io-client": "^4.8.3",

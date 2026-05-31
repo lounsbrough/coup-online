@@ -40,13 +40,13 @@ function Tutorial({ setRulesWiggle }: Readonly<TutorialProps>) {
       content: t('tutorialStep2Content'),
       highlight: (
         <Paper sx={{ p: 2, mt: 1 }}>
-          <Typography color="white" fontWeight="bold">
+          <Typography color="white" sx={{ fontWeight: 'bold' }}>
             Alice: <InfluenceIcon influence={Influences.Duke} /> {t(Influences.Duke)} + <InfluenceIcon influence={Influences.Captain} /> {t(Influences.Captain)}
           </Typography>
-          <Typography color="white" fontWeight="bold">
+          <Typography color="white" sx={{ fontWeight: 'bold' }}>
             Bob: <InfluenceIcon influence={Influences.Assassin} /> {t(Influences.Assassin)} + <InfluenceIcon influence={Influences.Contessa} /> {t(Influences.Contessa)}
           </Typography>
-          <Typography color="white" fontWeight="bold">
+          <Typography color="white" sx={{ fontWeight: 'bold' }}>
             Carol: <InfluenceIcon influence={Influences.Ambassador} /> {t(Influences.Ambassador)} + <InfluenceIcon influence={Influences.Captain} /> {t(Influences.Captain)}
           </Typography>
           <Typography variant="body2" color="white" sx={{ mt: 1, display: 'block' }}>
@@ -165,7 +165,7 @@ function Tutorial({ setRulesWiggle }: Readonly<TutorialProps>) {
         {steps.map((step, index) => (
           <Step key={index} completed={index < activeStep}>
             <StepLabel onClick={() => { setActiveStep(index); setRulesWiggle(false) }} sx={{ cursor: 'pointer' }}>
-              <Typography fontWeight="bold">{step.label}</Typography>
+              <Typography sx={{ fontWeight: 'bold' }}>{step.label}</Typography>
             </StepLabel>
             <StepContent>
               <Typography sx={{ mb: 1 }}>{step.content}</Typography>

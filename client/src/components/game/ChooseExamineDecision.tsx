@@ -23,7 +23,7 @@ function ChooseExamineDecision() {
       <CoupTypography variant="h6" sx={{ fontWeight: 'bold', my: 1 }} addTextShadow>
         {t('examineDecision', { primaryInfluence: gameState.pendingExamine.revealedInfluence as Influences })}
       </CoupTypography>
-      <Grid container spacing={2} justifyContent="center" mt={2}>
+      <Grid container spacing={2} sx={{ justifyContent: 'center', mt: 2 }}>
         <GrowingButton
           disabled={isMutating}
           onClick={() => {

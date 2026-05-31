@@ -44,7 +44,7 @@ function Forfeit() {
 
   return (
     <>
-      <Box mt={1}>
+      <Box sx={{ mt: 1 }}>
         {!playerIsDead && (
           <>
             <Tooltip

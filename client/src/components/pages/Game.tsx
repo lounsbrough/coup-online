@@ -28,9 +28,9 @@ function Game({ leftDrawerOpen, rightDrawerOpen }: GameProps) {
 
   if (!gameState) {
     return (
-      <Grid mt={2} container spacing={2} direction="column">
+      <Grid sx={{ mt: 2, flexDirection: 'column' }} container spacing={2}>
         <Grid>
-          <CoupTypography variant="h6" my={3} addTextShadow>
+          <CoupTypography variant="h6" sx={{ my: 3 }} addTextShadow>
             {t('gameNotFound')}
           </CoupTypography>
         </Grid>

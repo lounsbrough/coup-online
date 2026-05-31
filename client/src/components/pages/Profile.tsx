@@ -58,7 +58,7 @@ function StatCard({ label, value, icon }: Readonly<{
     <Card variant="outlined" sx={{ height: '100%' }}>
       <CardContent sx={{ textAlign: 'center', py: 2 }}>
         {icon && <Box sx={{ mb: 1 }}>{icon}</Box>}
-        <Typography variant="h4" fontWeight="bold">
+        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           {value}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -79,7 +79,7 @@ function PercentBar({ label, value, total }: Readonly<{
     <Box sx={{ mb: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
         <CoupTypography addTextShadow variant="body2">{label}</CoupTypography>
-        <CoupTypography addTextShadow variant="body2" fontWeight="bold">
+        <CoupTypography addTextShadow variant="body2" sx={{ fontWeight: 'bold' }}>
           {pct}% ({value}/{total})
         </CoupTypography>
       </Box>
@@ -312,7 +312,7 @@ function Profile() {
               {t('playGameToTrackStats')}
             </CoupTypography>
           )}
-          <Grid container direction="column" alignItems="center" spacing={5} sx={{ mt: 5 }}>
+          <Grid container sx={{ flexDirection: 'column', alignItems: 'center', mt: 5 }} spacing={5}>
             <Grid>
               <Button
                 variant="contained"
@@ -474,15 +474,15 @@ function Profile() {
           <CardContent>
             <Typography variant="h6" gutterBottom>{t('record')}</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-              <Box textAlign="center">
-                <Typography variant="h3" color="success.main" fontWeight="bold">
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" color="success.main" sx={{ fontWeight: 'bold' }}>
                   {stats.gamesWon}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">{t('wins')}</Typography>
               </Box>
               <Divider orientation="vertical" flexItem />
-              <Box textAlign="center">
-                <Typography variant="h3" color="error.main" fontWeight="bold">
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" color="error.main" sx={{ fontWeight: 'bold' }}>
                   {stats.gamesLost}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">{t('losses')}</Typography>
@@ -511,20 +511,20 @@ function Profile() {
             <Divider sx={{ my: 2 }} />
             <Grid container spacing={2}>
               <Grid size={{ xs: 4 }}>
-                <Box textAlign="center">
-                  <Typography variant="h5" fontWeight="bold">{stats.totalAssassinations}</Typography>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{stats.totalAssassinations}</Typography>
                   <Typography variant="body2" color="text.secondary">{t('assassinations')}</Typography>
                 </Box>
               </Grid>
               <Grid size={{ xs: 4 }}>
-                <Box textAlign="center">
-                  <Typography variant="h5" fontWeight="bold">{stats.totalCoups}</Typography>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{stats.totalCoups}</Typography>
                   <Typography variant="body2" color="text.secondary">{t('coups')}</Typography>
                 </Box>
               </Grid>
               <Grid size={{ xs: 4 }}>
-                <Box textAlign="center">
-                  <Typography variant="h5" fontWeight="bold">{stats.totalSteals}</Typography>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{stats.totalSteals}</Typography>
                   <Typography variant="body2" color="text.secondary">{t('steals')}</Typography>
                 </Box>
               </Grid>

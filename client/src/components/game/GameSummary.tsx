@@ -75,7 +75,7 @@ function GameSummary() {
 
       <Collapse in={expanded}>
         {(successfulBluffs.length > 0 || soulReads.length > 0 || slowpoke || speedDemon) && (
-          <Stack direction="row" spacing={1} justifyContent="center" sx={{ my: 1.5, flexWrap: 'wrap', gap: 0.5 }}>
+          <Stack direction="row" spacing={1} sx={{ justifyContent: 'center', my: 1.5, flexWrap: 'wrap', gap: 0.5 }}>
             {successfulBluffs.length > 0 && (
               <Chip
                 size="small"

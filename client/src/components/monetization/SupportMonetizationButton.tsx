@@ -236,8 +236,8 @@ export default function SupportMonetizationButton({
 
       <Dialog open={open} onClose={() => { setOpen(false); setTab(0) }} maxWidth="sm" fullWidth>
         <DialogTitle>
-            <Box display="flex" alignItems="center">
-                <Typography flexGrow={1} textAlign="center" variant='h5'>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant='h5' sx={{ flexGrow: 1, textAlign: 'center' }}>
                     <Favorite sx={{ verticalAlign: 'middle', mr: 1 }} />
                     <span style={{ verticalAlign: 'middle' }}>{t('supportMonetizationTitle')}</span>
                 </Typography>
@@ -294,7 +294,7 @@ export default function SupportMonetizationButton({
                   label={t('supportCustomAmountLabel')}
                   value={customAmount}
                   onChange={(event) => setCustomAmount(event.target.value)}
-                  inputProps={{ min: 1, max: 500, step: 1 }}
+                  slotProps={{ htmlInput: { min: 1, max: 500, step: 1 } }}
                 />
                 <Button fullWidth variant="contained" onClick={handleCustomDonation} disabled={isSubmitting}>
                   {t('supportCustomDonateCta')}
