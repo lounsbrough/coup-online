@@ -42,7 +42,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.9.1",
     "@types/ws": "^8.18.1",
-    "@vitest/coverage-v8": "^4.1.7",
+    "@vitest/coverage-v8": "^4.1.8",
     "chance": "^1.1.13",
     "eslint": "^10.4.1",
     "globals": "^17.6.0",
@@ -50,7 +50,7 @@
     "socket.io-client": "^4.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.60.0",
-    "vitest": "^4.1.7"
+    "typescript-eslint": "^8.60.1",
+    "vitest": "^4.1.8"
   }
 }
