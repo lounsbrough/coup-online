@@ -9,6 +9,9 @@
     "build",
     "add-build"
   ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint .",
