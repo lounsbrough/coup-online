@@ -11,8 +11,8 @@ const translations = {
     'fr-FR': 'Cette action ne peut pas être contestée',
     'hi-IN': 'यह क्रिया चुनौती नहीं दी जा सकती',
     'it-IT': 'Questa azione non può essere contestata',
-    'pt-BR': 'Esta ação não pode ser contestada',
     'ar-EG': 'لا يمكن الطعن في هذا الإجراء',
+    'pt-BR': 'Esta ação não pode ser contestada',
   },
   actionNotCurrentlyAllowed: {
     'de-DE': 'Diese Aktion ist gerade nicht erlaubt',
@@ -21,8 +21,8 @@ const translations = {
     'fr-FR': 'Vous ne pouvez pas effectuer cette action pour le moment',
     'hi-IN': 'आप अभी इस क्रिया को नहीं कर सकते',
     'it-IT': 'Non puoi eseguire questa azione in questo momento',
-    'pt-BR': 'Você não pode realizar esta ação no momento',
     'ar-EG': 'لا يمكنك القيام بهذا الإجراء الآن',
+    'pt-BR': 'Você não pode realizar esta ação no momento',
   },
   blockMayNotBeBlocked: {
     'de-DE': 'Du kannst einen Block nicht blockieren',
@@ -31,8 +31,8 @@ const translations = {
     'fr-FR': 'Vous ne pouvez pas bloquer un bloc',
     'hi-IN': 'आप एक ब्लॉक को ब्लॉक नहीं कर सकते',
     'it-IT': 'Non puoi bloccare un blocco',
-    'pt-BR': 'Você não pode bloquear um bloqueio',
     'ar-EG': 'لا يمكنك منع منع',
+    'pt-BR': 'Você não pode bloquear um bloqueio',
   },
   cannotBlockSameFaction: {
     'de-DE': 'Du kannst einen Spieler der gleichen Fraktion nicht blockieren',
@@ -41,8 +41,8 @@ const translations = {
     'fr-FR': 'Vous ne pouvez pas bloquer un joueur de votre propre faction',
     'hi-IN': 'आप अपने गुट के खिलाड़ी को ब्लॉक नहीं कर सकते',
     'it-IT': 'Non puoi bloccare un giocatore della tua stessa fazione',
-    'pt-BR': 'Você não pode bloquear um jogador da sua própria facção',
     'ar-EG': 'لا يمكنك منع لاعب في فصيلك',
+    'pt-BR': 'Você não pode bloquear um jogador da sua própria facção',
   },
   cannotTargetSameFaction: {
     'de-DE': 'Du kannst keinen Spieler der gleichen Fraktion anvisieren',
@@ -51,8 +51,8 @@ const translations = {
     'fr-FR': 'Vous ne pouvez pas cibler un joueur de votre propre faction',
     'hi-IN': 'आप अपने गुट के खिलाड़ी को लक्ष्य नहीं बना सकते',
     'it-IT': 'Non puoi mirare a un giocatore della tua stessa fazione',
-    'pt-BR': 'Você não pode mirar em um jogador da sua própria facção',
     'ar-EG': 'لا يمكنك استهداف لاعب في فصيلك',
+    'pt-BR': 'Você não pode mirar em um jogador da sua própria facção',
   },
   claimedInfluenceAlreadyConfirmed: {
     'de-DE': 'Der beanspruchte Einfluss wurde bereits bestätigt',
@@ -61,8 +61,8 @@ const translations = {
     'fr-FR': 'L\'influence revendiquée a déjà été confirmée',
     'hi-IN': 'दावा की गई प्रभाव पहले ही पुष्टि हो चुकी है',
     'it-IT': 'L\'influenza rivendicata è già stata confermata',
-    'pt-BR': 'A influência reivindicada já foi confirmada',
     'ar-EG': 'تم تأكيد النفوذ المُطالب به بالفعل',
+    'pt-BR': 'A influência reivindicada já foi confirmada',
   },
   claimedInfluenceInvalid: {
     'de-DE': 'Der beanspruchte Einfluss ist ungültig',
@@ -71,8 +71,8 @@ const translations = {
     'fr-FR': 'L\'influence revendiquée est invalide',
     'hi-IN': 'दावा की गई प्रभाव अमान्य है',
     'it-IT': 'L\'influenza rivendicata è invalida',
-    'pt-BR': 'A influência reivindicada é inválida',
     'ar-EG': 'النفوذ المُطالب به غير صالح',
+    'pt-BR': 'A influência reivindicada é inválida',
   },
   claimedInfluenceRequired: {
     'de-DE': 'Der beanspruchte Einfluss ist erforderlich',
@@ -81,8 +81,8 @@ const translations = {
     'fr-FR': 'L\'influence revendiquée est requise',
     'hi-IN': 'दावा की गई प्रभाव आवश्यक है',
     'it-IT': 'L\'influenza rivendicata è necessaria',
-    'pt-BR': 'A influência reivindicada é necessária',
     'ar-EG': 'النفوذ المُطالب به مطلوب',
+    'pt-BR': 'A influência reivindicada é necessária',
   },
   deckIsEmpty: {
     'de-DE': 'Das Deck ist leer',
@@ -91,8 +91,8 @@ const translations = {
     'fr-FR': 'Le deck est vide',
     'hi-IN': 'डेक खाली है',
     'it-IT': 'Il mazzo è vuoto',
-    'pt-BR': 'O baralho está vazio',
     'ar-EG': 'المجموعة فارغة',
+    'pt-BR': 'O baralho está vazio',
   },
   everyonePassedWithPendingDecision: {
     'de-DE': 'Alle haben gepasst, aber eine Entscheidung steht noch aus',
@@ -101,8 +101,8 @@ const translations = {
     'fr-FR': 'Tout le monde a passé, mais une décision est toujours en attente',
     'hi-IN': 'सभी ने पास किया, लेकिन एक निर्णय अभी भी लंबित है',
     'it-IT': 'Tutti hanno passato, ma una decisione è ancora in sospeso',
-    'pt-BR': 'Todos passaram, mas uma decisão ainda está pendente',
     'ar-EG': 'الجميع مرروا لكن هناك قرار معلق',
+    'pt-BR': 'Todos passaram, mas uma decisão ainda está pendente',
   },
   gameInProgress: {
     'de-DE': 'Das Spiel ist im Gange',
@@ -111,8 +111,8 @@ const translations = {
     'fr-FR': 'Le jeu est en cours',
     'hi-IN': 'खेल प्रगति पर है',
     'it-IT': 'Il gioco è in corso',
-    'pt-BR': 'O jogo está em andamento',
     'ar-EG': 'اللعبة جارية',
+    'pt-BR': 'O jogo está em andamento',
   },
   gameNeedsAtLeast2PlayersToStart: {
     'de-DE': 'Das Spiel benötigt mindestens 2 Spieler, um zu starten',
@@ -121,8 +121,8 @@ const translations = {
     'fr-FR': 'Le jeu a besoin d\'au moins 2 joueurs pour commencer',
     'hi-IN': 'खेल को शुरू करने के लिए कम से कम 2 खिलाड़ियों की आवश्यकता है',
     'it-IT': 'Il gioco ha bisogno di almeno 2 giocatori per iniziare',
-    'pt-BR': 'O jogo precisa de pelo menos 2 jogadores para começar',
     'ar-EG': 'تحتاج اللعبة إلى لاعبَين على الأقل للبدء',
+    'pt-BR': 'O jogo precisa de pelo menos 2 jogadores para começar',
   },
   gameNotInProgress: {
     'de-DE': 'Das Spiel ist noch nicht im Gange',
@@ -131,8 +131,8 @@ const translations = {
     'fr-FR': 'Le jeu n\'est pas encore en cours',
     'hi-IN': 'खेल अभी प्रगति पर नहीं है',
     'it-IT': 'Il gioco non è ancora in corso',
-    'pt-BR': 'O jogo ainda não está em andamento',
     'ar-EG': 'اللعبة لم تبدأ بعد',
+    'pt-BR': 'O jogo ainda não está em andamento',
   },
   gameOver: {
     'de-DE': 'Das Spiel ist vorbei',
@@ -141,8 +141,8 @@ const translations = {
     'fr-FR': 'Le jeu est terminé',
     'hi-IN': 'खेल खत्म हो गया है',
     'it-IT': 'Il gioco è finito',
-    'pt-BR': 'O jogo acabou',
     'ar-EG': 'انتهت اللعبة',
+    'pt-BR': 'O jogo acabou',
   },
   inappropriateDisplayName: {
     'de-DE': 'Dieser Name ist nicht erlaubt',
@@ -151,8 +151,8 @@ const translations = {
     'fr-FR': 'Ce nom n\'est pas autorisé',
     'hi-IN': 'यह नाम अनुमत नहीं है',
     'it-IT': 'Questo nome non è consentito',
-    'pt-BR': 'Este nome não é permitido',
     'ar-EG': 'هذا الاسم غير مسموح به',
+    'pt-BR': 'Este nome não é permitido',
   },
   incorrectTotalCardCount: {
     'de-DE': 'Falsche Gesamtanzahl der Karten im Spiel',
@@ -161,8 +161,8 @@ const translations = {
     'fr-FR': 'Nombre total de cartes incorrect dans le jeu',
     'hi-IN': 'खेल में कुल कार्ड की संख्या गलत है',
     'it-IT': 'Conteggio totale delle carte errato nel gioco',
-    'pt-BR': 'Contagem total de cartas incorreta no jogo',
     'ar-EG': 'عدد البطاقات الإجمالي غير صحيح في اللعبة',
+    'pt-BR': 'Contagem total de cartas incorreta no jogo',
   },
   insufficientCoins: {
     'de-DE': 'Du hast nicht genug Münzen',
@@ -171,8 +171,8 @@ const translations = {
     'fr-FR': 'Vous n\'avez pas assez de pièces',
     'hi-IN': 'आपके पास पर्याप्त सिक्के नहीं हैं',
     'it-IT': 'Non hai abbastanza monete',
-    'pt-BR': 'Você não tem moedas suficientes',
     'ar-EG': 'ليس لديك عملات كافية',
+    'pt-BR': 'Você não tem moedas suficientes',
   },
   invalidActionAt10Coins: {
     'de-DE': 'Ungültige Aktion, wenn du 10 oder mehr Münzen hast',
@@ -181,8 +181,8 @@ const translations = {
     'fr-FR': 'Action invalide lorsque vous avez 10 pièces ou plus',
     'hi-IN': '10 या अधिक सिक्के होने पर अमान्य क्रिया',
     'it-IT': 'Azione non valida quando hai 10 o più monete',
-    'pt-BR': 'Ação inválida quando você tem 10 ou mais moedas',
     'ar-EG': 'إجراء غير صالح عندما يكون لديك ١٠ عملات أو أكثر',
+    'pt-BR': 'Ação inválida quando você tem 10 ou mais moedas',
   },
   invalidPlayerCount: {
     'de-DE': 'Das Spiel muss zwischen 1 und {{count}} Spielern haben',
@@ -191,8 +191,8 @@ const translations = {
     'fr-FR': 'Le jeu doit avoir entre 1 et {{count}} joueurs',
     'hi-IN': 'खेल में 1 और {{count}} खिलाड़ियों के बीच होना चाहिए',
     'it-IT': 'Il gioco deve avere tra 1 e {{count}} giocatori',
-    'pt-BR': 'O jogo deve ter entre 1 e {{count}} jogadores',
     'ar-EG': 'يجب أن يكون عدد اللاعبين بين ١ و {{count}}',
+    'pt-BR': 'O jogo deve ter entre 1 e {{count}} jogadores',
   },
   invalidTurnPlayer: {
     'de-DE': 'Ungültiger Zugspieler',
@@ -201,8 +201,8 @@ const translations = {
     'fr-FR': 'Joueur de tour invalide',
     'hi-IN': 'अमान्य टर्न खिलाड़ी',
     'it-IT': 'Giocatore di turno non valido',
-    'pt-BR': 'Jogador de turno inválido',
     'ar-EG': 'لاعب الدور غير صالح',
+    'pt-BR': 'Jogador de turno inválido',
   },
   invalidUserRequest: {
     'de-DE': 'Ungültige Benutzeranfrage',
@@ -211,8 +211,8 @@ const translations = {
     'fr-FR': 'Demande d\'utilisateur invalide',
     'hi-IN': 'अमान्य उपयोगकर्ता अनुरोध',
     'it-IT': 'Richiesta utente non valida',
-    'pt-BR': 'Solicitação de usuário inválida',
     'ar-EG': 'طلب مستخدم غير صالح',
+    'pt-BR': 'Solicitação de usuário inválida',
   },
   joinAsPlayerName: {
     'de-DE': 'Du kannst dem Spiel als "{{playerName}}" beitreten',
@@ -221,8 +221,8 @@ const translations = {
     'fr-FR': 'Vous pouvez rejoindre le jeu en tant que "{{playerName}}"',
     'hi-IN': 'आप "{{playerName}}" के रूप में खेल में शामिल हो सकते हैं',
     'it-IT': 'Puoi unirti al gioco come "{{playerName}}"',
-    'pt-BR': 'Você pode entrar no jogo como "{{playerName}}"',
     'ar-EG': 'يمكنك الانضمام إلى اللعبة باسم "{{playerName}}"',
+    'pt-BR': 'Você pode entrar no jogo como "{{playerName}}"',
   },
   messageDoesNotExist: {
     'de-DE': 'Nachricht existiert nicht',
@@ -231,8 +231,8 @@ const translations = {
     'fr-FR': 'Le message n\'existe pas',
     'hi-IN': 'संदेश मौजूद नहीं है',
     'it-IT': 'Il messaggio non esiste',
-    'pt-BR': 'A mensagem não existe',
     'ar-EG': 'الرسالة غير موجودة',
+    'pt-BR': 'A mensagem não existe',
   },
   messageIsNotYours: {
     'de-DE': 'Die Nachricht gehört dir nicht',
@@ -241,8 +241,8 @@ const translations = {
     'fr-FR': 'Le message ne vous appartient pas',
     'hi-IN': 'संदेश आपका नहीं है',
     'it-IT': 'Il messaggio non è tuo',
-    'pt-BR': 'A mensagem não é sua',
     'ar-EG': 'الرسالة ليست لك',
+    'pt-BR': 'A mensagem não é sua',
   },
   missingInfluence: {
     'de-DE': 'Du hast den erforderlichen Einfluss nicht',
@@ -251,8 +251,8 @@ const translations = {
     'fr-FR': 'Vous n\'avez pas l\'influence requise',
     'hi-IN': 'आपके पास आवश्यक प्रभाव नहीं है',
     'it-IT': 'Non hai l\'influenza richiesta',
-    'pt-BR': 'Você não tem a influência necessária',
     'ar-EG': 'ليس لديك النفوذ المطلوب',
+    'pt-BR': 'Você não tem a influência necessária',
   },
   noDeadInfluences: {
     'de-DE': 'Keine toten Einflüsse',
@@ -261,8 +261,8 @@ const translations = {
     'fr-FR': 'Pas d\'influences mortes',
     'hi-IN': 'कोई मृत प्रभाव नहीं है',
     'it-IT': 'Nessuna influenza morta',
-    'pt-BR': 'Sem influências mortas',
     'ar-EG': 'لا توجد نفوذ ميتة',
+    'pt-BR': 'Sem influências mortas',
   },
   playerNotInGame: {
     'de-DE': 'Spieler ist nicht im Spiel',
@@ -271,8 +271,8 @@ const translations = {
     'fr-FR': 'Le joueur n\'est pas dans le jeu',
     'hi-IN': 'खिलाड़ी खेल में नहीं है',
     'it-IT': 'Il giocatore non è nel gioco',
-    'pt-BR': 'O jogador não está no jogo',
     'ar-EG': 'اللاعب ليس في اللعبة',
+    'pt-BR': 'O jogador não está no jogo',
   },
   playersMustHave2Influences: {
     'de-DE': 'Spieler müssen genau 2 Einflüsse haben',
@@ -281,8 +281,8 @@ const translations = {
     'fr-FR': 'Les joueurs doivent avoir exactement 2 influences',
     'hi-IN': 'खिलाड़ियों को ठीक 2 प्रभाव होने चाहिए',
     'it-IT': 'I giocatori devono avere esattamente 2 influenze',
-    'pt-BR': 'Os jogadores devem ter exatamente 2 influências',
     'ar-EG': 'يجب أن يكون لدى اللاعبين نفوذان بالضبط',
+    'pt-BR': 'Os jogadores devem ter exatamente 2 influências',
   },
   reviveNotAllowedInGame: {
     'de-DE': 'Wiederbelebung im Spiel nicht erlaubt',
@@ -291,8 +291,8 @@ const translations = {
     'fr-FR': 'Ressusciter non autorisé dans le jeu',
     'hi-IN': 'खिलाड़ी को खेल में पुनर्जीवित करने की अनुमति नहीं है',
     'it-IT': 'Rivivere non consentito nel gioco',
-    'pt-BR': 'Reviver não permitido no jogo',
     'ar-EG': 'الإحياء غير مسموح به في اللعبة',
+    'pt-BR': 'Reviver não permitido no jogo',
   },
   roomAlreadyHasPlayer: {
     'de-DE': 'Der Raum hat bereits einen Spieler namens "{{playerName}}"',
@@ -301,8 +301,8 @@ const translations = {
     'fr-FR': 'La chambre a déjà un joueur nommé "{{playerName}}"',
     'hi-IN': 'कमरे में पहले से ही एक खिलाड़ी है जिसका नाम "{{playerName}}" है',
     'it-IT': 'La stanza ha già un giocatore di nome "{{playerName}}"',
-    'pt-BR': 'A sala já tem um jogador chamado "{{playerName}}"',
     'ar-EG': 'الغرفة بها بالفعل لاعب اسمه "{{playerName}}"',
+    'pt-BR': 'A sala já tem um jogador chamado "{{playerName}}"',
   },
   roomIdAlreadyExists: {
     'de-DE': 'Der Raum mit der ID "{{roomId}}" existiert bereits',
@@ -311,8 +311,8 @@ const translations = {
     'fr-FR': 'La chambre avec l\'ID "{{roomId}}" existe déjà',
     'hi-IN': 'ID "{{roomId}}" वाला कमरा पहले से मौजूद है',
     'it-IT': 'La stanza con ID "{{roomId}}" esiste già',
-    'pt-BR': 'A sala com ID "{{roomId}}" já existe',
     'ar-EG': 'الغرفة بالمعرف "{{roomId}}" موجودة بالفعل',
+    'pt-BR': 'A sala com ID "{{roomId}}" já existe',
   },
   roomIsFull: {
     'de-DE': 'Der Raum {{roomId}} ist voll',
@@ -321,8 +321,8 @@ const translations = {
     'fr-FR': 'La chambre {{roomId}} est pleine',
     'hi-IN': 'कमरा {{roomId}} भरा हुआ है',
     'it-IT': 'La stanza {{roomId}} è piena',
-    'pt-BR': 'A sala {{roomId}} está cheia',
     'ar-EG': 'الغرفة {{roomId}} ممتلئة',
+    'pt-BR': 'A sala {{roomId}} está cheia',
   },
   roomNotFound: {
     'de-DE': "Raum nicht gefunden",
@@ -341,8 +341,8 @@ const translations = {
     'fr-FR': 'Le minuteur du tour rapide a expiré',
     'hi-IN': 'स्पीड राउंड टाइमर समाप्त हो गया है',
     'it-IT': 'Il timer del round veloce è scaduto',
-    'pt-BR': 'O cronômetro da rodada rápida expirou',
     'ar-EG': 'انتهى مؤقت الجولة السريعة',
+    'pt-BR': 'O cronômetro da rodada rápida expirou',
   },
   stateChangedSinceValidation: {
     'de-DE': 'Der Status hat sich seit der Validierung geändert',
@@ -351,8 +351,8 @@ const translations = {
     'fr-FR': 'L\'état a changé depuis la validation',
     'hi-IN': 'स्थिति मान्यता के बाद बदल गई है',
     'it-IT': 'Lo stato è cambiato dalla convalida',
-    'pt-BR': 'O estado mudou desde a validação',
     'ar-EG': 'تغيرت الحالة منذ التحقق',
+    'pt-BR': 'O estado mudou desde a validação',
   },
   targetPlayerIsSelf: {
     'de-DE': 'Du kannst dich nicht selbst anvisieren',
@@ -361,8 +361,8 @@ const translations = {
     'fr-FR': 'Vous ne pouvez pas vous cibler vous-même',
     'hi-IN': 'आप खुद को लक्ष्य नहीं बना सकते',
     'it-IT': 'Non puoi mirare a te stesso',
-    'pt-BR': 'Você não pode se mirar',
     'ar-EG': 'لا يمكنك استهداف نفسك',
+    'pt-BR': 'Você não pode se mirar',
   },
   targetPlayerNotAllowedForAction: {
     'de-DE': 'Zielspieler für Aktion nicht erlaubt',
@@ -371,8 +371,8 @@ const translations = {
     'fr-FR': 'Joueur cible non autorisé pour l\'action',
     'hi-IN': 'लक्ष्य खिलाड़ी कार्रवाई के लिए अनुमति नहीं है',
     'it-IT': 'Giocatore target non consentito per l\'azione',
-    'pt-BR': 'Jogador alvo não permitido para a ação',
     'ar-EG': 'اللاعب المستهدف غير مسموح به لهذا الإجراء',
+    'pt-BR': 'Jogador alvo não permitido para a ação',
   },
   targetPlayerRequiredForAction: {
     'de-DE': 'Zielspieler für Aktion erforderlich',
@@ -381,8 +381,8 @@ const translations = {
     'fr-FR': 'Joueur cible requis pour l\'action',
     'hi-IN': 'लक्ष्य खिलाड़ी कार्रवाई के लिए आवश्यक है',
     'it-IT': 'Giocatore target richiesto per l\'azione',
-    'pt-BR': 'Jogador alvo necessário para a ação',
     'ar-EG': 'اللاعب المستهدف مطلوب لهذا الإجراء',
+    'pt-BR': 'Jogador alvo necessário para a ação',
   },
   unableToDetermineNextPlayerTurn: {
     'de-DE': 'Nächsten Zugspieler nicht bestimmt',
@@ -391,8 +391,8 @@ const translations = {
     'fr-FR': 'Impossible de déterminer le prochain tour du joueur',
     'hi-IN': 'अगले खिलाड़ी की बारी निर्धारित करने में असमर्थ',
     'it-IT': 'Impossibile determinare il prossimo turno del giocatore',
-    'pt-BR': 'Não foi possível determinar o próximo turno do jogador',
     'ar-EG': 'تعذر تحديد دور اللاعب التالي',
+    'pt-BR': 'Não foi possível determinar o próximo turno do jogador',
   },
   unableToFindPendingAction: {
     'de-DE': 'Ausstehende Aktion nicht gefunden',
@@ -401,8 +401,8 @@ const translations = {
     'fr-FR': 'Impossible de trouver l\'action en attente',
     'hi-IN': 'लंबित कार्रवाई नहीं मिली',
     'it-IT': 'Impossibile trovare l\'azione in sospeso',
-    'pt-BR': 'Não foi possível encontrar a ação pendente',
     'ar-EG': 'تعذر العثور على إجراء معلق',
+    'pt-BR': 'Não foi possível encontrar a ação pendente',
   },
   unableToFindPlayer: {
     'de-DE': 'Spieler nicht gefunden',
@@ -411,8 +411,8 @@ const translations = {
     'fr-FR': 'Joueur non trouvé',
     'hi-IN': 'खिलाड़ी नहीं मिला',
     'it-IT': 'Giocatore non trovato',
-    'pt-BR': 'Jogador não encontrado',
     'ar-EG': 'تعذر العثور على اللاعب',
+    'pt-BR': 'Jogador não encontrado',
   },
   unableToForfeit: {
     'de-DE': 'Du kannst das Spiel im Moment nicht aufgeben',
@@ -421,8 +421,8 @@ const translations = {
     'fr-FR': 'Vous ne pouvez pas abandonner le jeu pour le moment',
     'hi-IN': 'आप इस समय खेल को छोड़ नहीं सकते',
     'it-IT': 'Non puoi rinunciare al gioco in questo momento',
-    'pt-BR': 'Você não pode desistir do jogo neste momento',
     'ar-EG': 'لا يمكنك الانسحاب من اللعبة في هذا الوقت',
+    'pt-BR': 'Você não pode desistir do jogo neste momento',
   },
   wrongPlayerIdOnSocket: {
     'de-DE': 'Falsche Spieler-ID im Socket',
@@ -431,8 +431,8 @@ const translations = {
     'fr-FR': 'ID de joueur incorrecte sur le socket',
     'hi-IN': 'सॉकेट पर गलत खिलाड़ी आईडी',
     'it-IT': 'ID giocatore errato sul socket',
-    'pt-BR': 'ID de jogador incorreta no socket',
     'ar-EG': 'معرف لاعب خاطئ على المقبس',
+    'pt-BR': 'ID de jogador incorreta no socket',
   },
   youAreDead: {
     'de-DE': 'Du bist tot',
@@ -441,8 +441,8 @@ const translations = {
     'fr-FR': 'Vous êtes mort',
     'hi-IN': 'आप मर चुके हैं',
     'it-IT': 'Sei morto',
-    'pt-BR': 'Você está morto',
     'ar-EG': 'أنت ميت',
+    'pt-BR': 'Você está morto',
   }
 } as const satisfies AllTranslations
 
