@@ -352,6 +352,7 @@ const translations: Translations = {
     'hi-IN': 'उपलब्धियाँ',
     'it-IT': 'Obiettivi',
     'pt-BR': 'Conquistas',
+    'ar-EG': 'الإنجازات',
   },
   action: {
     'de-DE': 'Aktion',
@@ -361,6 +362,7 @@ const translations: Translations = {
     'hi-IN': 'क्रिया',
     'it-IT': 'Azione',
     'pt-BR': 'Ação',
+    'ar-EG': 'إجراء',
   },
   actions: {
     'de-DE': 'Aktionen',
@@ -370,6 +372,7 @@ const translations: Translations = {
     'hi-IN': 'क्रियाएँ',
     'it-IT': 'Azioni',
     'pt-BR': 'Ações',
+    'ar-EG': 'إجراءات',
   },
   [Actions.Assassinate]: {
     'de-DE': 'Attentat',
@@ -379,6 +382,7 @@ const translations: Translations = {
     'hi-IN': 'हत्या करना',
     'it-IT': 'Assassinare',
     'pt-BR': 'Assassinar',
+    'ar-EG': 'اغتيال',
   },
   [Actions.Convert]: {
     'de-DE': 'Konvertieren',
@@ -388,6 +392,7 @@ const translations: Translations = {
     'hi-IN': 'धर्म परिवर्तन',
     'it-IT': 'Convertire',
     'pt-BR': 'Converter',
+    'ar-EG': 'تحويل',
   },
   [Actions.Coup]: {
     'de-DE': 'Putsch',
@@ -397,6 +402,7 @@ const translations: Translations = {
     'hi-IN': 'अवधारणा',
     'it-IT': 'Colpo di Stato',
     'pt-BR': 'Golpe de Estado',
+    'ar-EG': 'انقلاب',
   },
   [Actions.Embezzle]: {
     'de-DE': 'Unterschlagen',
@@ -406,6 +412,7 @@ const translations: Translations = {
     'hi-IN': 'गबन करना',
     'it-IT': 'Appropriarsi',
     'pt-BR': 'Desviar',
+    'ar-EG': 'اختلاس',
   },
   [Actions.Examine]: {
     'de-DE': 'Untersuchen',
@@ -415,6 +422,7 @@ const translations: Translations = {
     'hi-IN': 'जाँच करना',
     'it-IT': 'Esaminare',
     'pt-BR': 'Examinar',
+    'ar-EG': 'فحص',
   },
   [Actions.Exchange]: {
     'de-DE': 'Austausch',
@@ -424,6 +432,7 @@ const translations: Translations = {
     'hi-IN': 'विनिमय',
     'it-IT': 'Scambiare',
     'pt-BR': 'Trocar',
+    'ar-EG': 'تبديل',
   },
   [Actions.ForeignAid]: {
     'de-DE': 'Auslandshilfe',
@@ -433,6 +442,7 @@ const translations: Translations = {
     'hi-IN': 'विदेशी सहायता',
     'it-IT': 'Aiuto Estero',
     'pt-BR': 'Ajuda Estrangeira',
+    'ar-EG': 'مساعدة خارجية',
   },
   [Actions.Income]: {
     'de-DE': 'Einkommen',
@@ -442,6 +452,7 @@ const translations: Translations = {
     'hi-IN': 'आय',
     'it-IT': 'Reddito',
     'pt-BR': 'Renda',
+    'ar-EG': 'دخل',
   },
   [Actions.Revive]: {
     'de-DE': 'Wiederbeleben',
@@ -451,6 +462,7 @@ const translations: Translations = {
     'hi-IN': 'पुनर्जीवित करना',
     'it-IT': 'Rivivere',
     'pt-BR': 'Reviver',
+    'ar-EG': 'إحياء',
   },
   [Actions.Steal]: {
     'de-DE': 'Stehlen',
@@ -460,6 +472,7 @@ const translations: Translations = {
     'hi-IN': 'चोरी करना',
     'it-IT': 'Rubare',
     'pt-BR': 'Roubar',
+    'ar-EG': 'سرقة',
   },
   [Actions.Tax]: {
     'de-DE': 'Steuern',
@@ -469,6 +482,7 @@ const translations: Translations = {
     'hi-IN': 'कर',
     'it-IT': 'Tassa',
     'pt-BR': 'Imposto',
+    'ar-EG': 'ضرائب',
   },
   actualHand: {
     'de-DE': 'Tatsächliche Hand',
@@ -478,6 +492,7 @@ const translations: Translations = {
     'hi-IN': 'वास्तविक हाथ',
     'it-IT': 'Mano reale',
     'pt-BR': 'Mão real',
+    'ar-EG': 'اليد',
   },
   add: {
     'de-DE': 'Hinzufügen',
@@ -487,6 +502,7 @@ const translations: Translations = {
     'hi-IN': 'जोड़ें',
     'it-IT': 'Aggiungi',
     'pt-BR': 'Adicionar',
+    'ar-EG': 'إضافة',
   },
   addAiPlayer: {
     'de-DE': 'KI-Spieler hinzufügen',
@@ -496,6 +512,7 @@ const translations: Translations = {
     'hi-IN': 'एआई प्लेयर जोड़ें',
     'it-IT': 'Aggiungi Giocatore IA',
     'pt-BR': 'Adicionar Jogador IA',
+    'ar-EG': 'إضافة لاعب ذكاء اصطناعي',
   },
   addPlayersToStartGame: {
     'de-DE':
@@ -506,6 +523,7 @@ const translations: Translations = {
     'hi-IN': 'खेल शुरू करने के लिए कम से कम एक और खिलाड़ी जोड़ें',
     'it-IT': 'Aggiungi almeno un altro giocatore per iniziare il gioco',
     'pt-BR': 'Adicione pelo menos mais um jogador para iniciar o jogo',
+    'ar-EG': 'أضف لاعبًا آخر على الأقل لبدء اللعبة',
   },
   allowKeep: {
     'de-DE': 'Behalten erlauben',
@@ -515,6 +533,7 @@ const translations: Translations = {
     'hi-IN': 'रखने दें',
     'it-IT': 'Permetti di tenere',
     'pt-BR': 'Permitir Manter',
+    'ar-EG': 'السماح بالاحتفاظ',
   },
   allowRevive: {
     'de-DE': 'Wiederbeleben erlauben',
@@ -524,6 +543,7 @@ const translations: Translations = {
     'hi-IN': 'पुनर्जीवित करने की अनुमति दें',
     'it-IT': 'Permetti Rivivere',
     'pt-BR': 'Permitir Reviver',
+    'ar-EG': 'السماح بالإحياء',
   },
   anyone: {
     'de-DE': 'Jeder',
@@ -533,6 +553,7 @@ const translations: Translations = {
     'hi-IN': 'कोई भी',
     'it-IT': 'Chiunque',
     'pt-BR': 'Qualquer um',
+    'ar-EG': 'أي شخص',
   },
   assassinations: {
     'de-DE': 'Attentate',
@@ -542,6 +563,7 @@ const translations: Translations = {
     'hi-IN': 'हत्याएँ',
     'it-IT': 'Assassinii',
     'pt-BR': 'Assassinatos',
+    'ar-EG': 'اغتيالات',
   },
   averageWaitTime: {
     'de-DE': 'Durchschnittliche Wartezeit',
@@ -551,6 +573,7 @@ const translations: Translations = {
     'hi-IN': 'औसत प्रतीक्षा समय',
     'it-IT': 'Tempo di attesa medio',
     'pt-BR': 'Tempo médio de espera',
+    'ar-EG': 'متوسط وقت الانتظار',
   },
   bestStreak: {
     'de-DE': 'Beste Serie',
@@ -560,6 +583,7 @@ const translations: Translations = {
     'hi-IN': 'सर्वश्रेष्ठ श्रृंखला',
     'it-IT': 'Miglior serie',
     'pt-BR': 'Melhor sequência',
+    'ar-EG': 'أفضل سلسلة',
   },
   block: {
     'de-DE': 'Blocken',
@@ -569,6 +593,7 @@ const translations: Translations = {
     'hi-IN': 'ब्लॉक करें',
     'it-IT': 'Bloccare',
     'pt-BR': 'Bloquear',
+    'ar-EG': 'منع',
   },
   blockAsInfluence: {
     'de-DE': 'Blocken als {{primaryInfluence}}',
@@ -578,6 +603,7 @@ const translations: Translations = {
     'hi-IN': 'ब्लॉक करें {{primaryInfluence}}',
     'it-IT': 'Blocca come {{primaryInfluence}}',
     'pt-BR': 'Bloquear como {{primaryInfluence}}',
+    'ar-EG': 'منع باستخدام {{primaryInfluence}}',
   },
   blockChallengedBy: {
     'de-DE': '⚔️ Block herausgefordert von {{player}}',
@@ -587,6 +613,7 @@ const translations: Translations = {
     'hi-IN': '⚔️ ब्लॉक को {{player}} ने चुनौती दी',
     'it-IT': '⚔️ Blocco sfidato da {{player}}',
     'pt-BR': '⚔️ Bloqueio desafiado por {{player}}',
+    'ar-EG': '⚔️ المنع تم الطعن فيه من قبل {{player}}',
   },
   blockedBy: {
     'de-DE': 'Blockiert von {{player}}',
@@ -596,6 +623,7 @@ const translations: Translations = {
     'hi-IN': '{{player}} द्वारा ब्लॉक किया गया',
     'it-IT': 'Bloccato da {{player}}',
     'pt-BR': 'Bloqueado por {{player}}',
+    'ar-EG': 'تم منعه من قبل {{player}}',
   },
   bluff: {
     'de-DE': 'Bluff',
@@ -605,6 +633,7 @@ const translations: Translations = {
     'hi-IN': 'ब्लफ़',
     'it-IT': 'Bluff',
     'pt-BR': 'Blefe',
+    'ar-EG': 'خداع',
   },
   bluffSuccessRate: {
     'de-DE': 'Bluff-Erfolgsrate',
@@ -614,6 +643,7 @@ const translations: Translations = {
     'hi-IN': 'ब्लफ सफलता दर',
     'it-IT': 'Percentuale bluff riusciti',
     'pt-BR': 'Taxa de sucesso de blefe',
+    'ar-EG': 'معدل نجاح الخداع',
   },
   briefDescriptionOfCoup: {
     'de-DE': 'Das Spiel der Täuschung, Deduktion und des Glücks.',
@@ -623,6 +653,7 @@ const translations: Translations = {
     'hi-IN': 'धोखे, अनुमान और भाग्य का खेल।',
     'it-IT': "Il gioco dell'inganno, della deduzione e della fortuna.",
     'pt-BR': 'O jogo de engano, dedução e sorte.',
+    'ar-EG': 'لعبة الخداع والاستنتاج والحظ.',
   },
   cancel: {
     'de-DE': 'Abbrechen',
@@ -632,6 +663,7 @@ const translations: Translations = {
     'hi-IN': 'रद्द करें',
     'it-IT': 'Annulla',
     'pt-BR': 'Cancelar',
+    'ar-EG': 'إلغاء',
   },
   challenge: {
     'de-DE': 'Herausfordern',
@@ -641,6 +673,7 @@ const translations: Translations = {
     'hi-IN': 'चुनौती देना',
     'it-IT': 'Sfida',
     'pt-BR': 'Desafiar',
+    'ar-EG': 'طعن',
   },
   challengeAccuracy: {
     'de-DE': 'Herausforderungsgenauigkeit',
@@ -650,6 +683,7 @@ const translations: Translations = {
     'hi-IN': 'चुनौती सटीकता',
     'it-IT': 'Precisione sfide',
     'pt-BR': 'Precisão de desafios',
+    'ar-EG': 'دقة الطعن',
   },
   challengeFailed: {
     'de-DE': '— Herausforderung fehlgeschlagen',
@@ -659,6 +693,7 @@ const translations: Translations = {
     'hi-IN': '— चुनौती विफल',
     'it-IT': '— Sfida fallita',
     'pt-BR': '— Desafio falhou',
+    'ar-EG': '— فشل الطعن',
   },
   challengedBy: {
     'de-DE': '⚔️ {{player}} hat herausgefordert',
@@ -668,6 +703,7 @@ const translations: Translations = {
     'hi-IN': '⚔️ {{player}} ने चुनौती दी',
     'it-IT': '⚔️ Sfidato da {{player}}',
     'pt-BR': '⚔️ Desafiado por {{player}}',
+    'ar-EG': '⚔️ تم الطعن فيه من قبل {{player}}',
   },
   changeAPlayersFaction: {
     'de-DE': 'Fraktion eines Spielers ändern',
@@ -677,6 +713,7 @@ const translations: Translations = {
     'hi-IN': 'एक खिलाड़ी का गुट बदलें',
     'it-IT': 'Cambia la fazione di un giocatore',
     'pt-BR': 'Mudar a facção de um jogador',
+    'ar-EG': 'تغيير فصيل لاعب',
   },
   changeDisplayName: {
     'de-DE': 'Anzeigename ändern',
@@ -686,6 +723,7 @@ const translations: Translations = {
     'hi-IN': 'प्रदर्शित नाम बदलें',
     'it-IT': 'Cambia nome',
     'pt-BR': 'Alterar nome',
+    'ar-EG': 'تغيير اسم العرض',
   },
   changeYourFaction: {
     'de-DE': 'Deine Fraktion ändern',
@@ -695,6 +733,7 @@ const translations: Translations = {
     'hi-IN': 'अपना गुट बदलें',
     'it-IT': 'Cambia la tua fazione',
     'pt-BR': 'Mude sua facção',
+    'ar-EG': 'تغيير فصيلك',
   },
   chat: {
     'de-DE': 'Chat',
@@ -704,6 +743,7 @@ const translations: Translations = {
     'hi-IN': 'चैट',
     'it-IT': 'Chat',
     'pt-BR': 'Bate-papo',
+    'ar-EG': 'محادثة',
   },
   cheatSheet: {
     'de-DE': 'Spickzettel',
@@ -713,6 +753,7 @@ const translations: Translations = {
     'hi-IN': 'धोखा पत्र',
     'it-IT': 'Foglio di Trucchi',
     'pt-BR': 'Folha de Dicas',
+    'ar-EG': 'ورقة غش',
   },
   chooseATarget: {
     'de-DE': 'Wähle ein Ziel',
@@ -722,6 +763,7 @@ const translations: Translations = {
     'hi-IN': 'एक लक्ष्य चुनें',
     'it-IT': 'Scegli un Obiettivo',
     'pt-BR': 'Escolher um Alvo',
+    'ar-EG': 'اختر هدفًا',
   },
   chooseAnAction: {
     'de-DE': 'Wähle eine Aktion',
@@ -731,6 +773,7 @@ const translations: Translations = {
     'hi-IN': 'एक क्रिया चुनें',
     'it-IT': "Scegli un'Azione",
     'pt-BR': 'Escolher uma Ação',
+    'ar-EG': 'اختر إجراءً',
   },
   chooseCardToReveal: {
     'de-DE': 'Wähle eine Karte zum Aufdecken',
@@ -740,6 +783,7 @@ const translations: Translations = {
     'hi-IN': 'प्रकट करने के लिए एक कार्ड चुनें',
     'it-IT': 'Scegli una carta da rivelare',
     'pt-BR': 'Escolha uma carta para revelar',
+    'ar-EG': 'اختر بطاقة للكشف عنها',
   },
   chooseInfluenceToLose: {
     'de-DE': 'Wähle eine Einflusskarte, die du verlieren möchtest',
@@ -749,6 +793,7 @@ const translations: Translations = {
     'hi-IN': 'खोने के लिए एक प्रभाव चुनें',
     'it-IT': "Scegli un'influenza da perdere",
     'pt-BR': 'Escolher uma influência para perder',
+    'ar-EG': 'اختر نفوذًا لتخسره',
   },
   chooseInfluenceToReveal: {
     'de-DE': 'Wähle eine Einflusskarte, die du aufdecken möchtest',
@@ -758,6 +803,7 @@ const translations: Translations = {
     'hi-IN': 'प्रकट करने के लिए एक प्रभाव चुनें',
     'it-IT': "Scegli un'influenza da rivelare",
     'pt-BR': 'Escolher uma influência para revelar',
+    'ar-EG': 'اختر نفوذًا للكشف عنه',
   },
   chooseInfluencesToKeep: {
     'de-DE':
@@ -768,6 +814,7 @@ const translations: Translations = {
     'hi-IN': 'रखने के लिए {{count}} प्रभाव चुनें',
     'it-IT': 'Scegli {{count}} influenza{{plural[[e]]}} da mantenere',
     'pt-BR': 'Escolher {{count}} influência{{plural[[s]]}} para manter',
+    'ar-EG': 'اختر {{count}} نفوذ{{plural[[ًا]]}} للاحتفاظ به',
   },
   choosePersonality: {
     'de-DE': 'Wähle eine Persönlichkeit',
@@ -777,6 +824,7 @@ const translations: Translations = {
     'hi-IN': 'एक व्यक्तित्व चुनें',
     'it-IT': 'Scegli una Personalità',
     'pt-BR': 'Escolher uma Personalidade',
+    'ar-EG': 'اختر شخصية',
   },
   claimAnInfluence: {
     'de-DE': 'Beanspruche eine Einflusskarte',
@@ -786,6 +834,7 @@ const translations: Translations = {
     'hi-IN': 'एक प्रभाव का दावा करें',
     'it-IT': "Rivendicare un'Influenza",
     'pt-BR': 'Reivindicar uma Influência',
+    'ar-EG': 'المطالبة بنفوذ',
   },
   claimedInfluence: {
     'de-DE': 'Behaupteter Einfluss',
@@ -795,6 +844,7 @@ const translations: Translations = {
     'hi-IN': 'दावा किया गया प्रभाव',
     'it-IT': 'Influenza dichiarata',
     'pt-BR': 'Influência declarada',
+    'ar-EG': 'تمت المطالبة',
   },
   close: {
     'de-DE': 'Schließen',
@@ -804,6 +854,7 @@ const translations: Translations = {
     'hi-IN': 'बंद करें',
     'it-IT': 'Chiudere',
     'pt-BR': 'Fechar',
+    'ar-EG': 'إغلاق',
   },
   collectCoins: {
     'de-DE': 'Sammle {{count}} Münze{{plural[[n]]}}',
@@ -813,6 +864,7 @@ const translations: Translations = {
     'hi-IN': '{{count}} सिक्के एकत्र करें',
     'it-IT': 'Raccogli {{count}} moneta{{plural[[e]]}}',
     'pt-BR': 'Coletar {{count}} moeda{{plural[[s]]}}',
+    'ar-EG': 'اجمع {{count}} عملة{{plural[[ات]]}}',
   },
   colorMode: {
     'de-DE': 'Farbmodus',
@@ -822,6 +874,7 @@ const translations: Translations = {
     'hi-IN': 'रंग मोड',
     'it-IT': 'Modalità Colore',
     'pt-BR': 'Modo de Cor',
+    'ar-EG': 'وضع الألوان',
   },
   comebacks: {
     'de-DE': 'Comebacks',
@@ -831,6 +884,7 @@ const translations: Translations = {
     'hi-IN': 'वापसी',
     'it-IT': 'Rimonte',
     'pt-BR': 'Viradas',
+    'ar-EG': 'عودة',
   },
   confirm: {
     'de-DE': 'Bestätigen',
@@ -840,6 +894,7 @@ const translations: Translations = {
     'hi-IN': 'पुष्टि करें',
     'it-IT': 'Conferma',
     'pt-BR': 'Confirmar',
+    'ar-EG': 'تأكيد',
   },
   confirmActions: {
     'de-DE': 'Aktionen bestätigen',
@@ -849,6 +904,7 @@ const translations: Translations = {
     'hi-IN': 'क्रियाएँ पुष्टि करें',
     'it-IT': 'Conferma Azioni',
     'pt-BR': 'Confirmar Ações',
+    'ar-EG': 'تأكيد الإجراءات',
   },
   contents: {
     'de-DE': 'Inhalt',
@@ -858,6 +914,7 @@ const translations: Translations = {
     'hi-IN': 'सामग्री',
     'it-IT': 'Contenuti',
     'pt-BR': 'Conteúdo',
+    'ar-EG': 'المحتويات',
   },
   convertOther: {
     'de-DE': 'Anderen konvertieren',
@@ -867,6 +924,7 @@ const translations: Translations = {
     'hi-IN': 'अन्य को परिवर्तित करें',
     'it-IT': 'Converti un Altro',
     'pt-BR': 'Converter Outro',
+    'ar-EG': 'تحويل آخر',
   },
   convertSelf: {
     'de-DE': 'Sich selbst konvertieren',
@@ -876,6 +934,7 @@ const translations: Translations = {
     'hi-IN': 'स्वयं को परिवर्तित करें',
     'it-IT': 'Converti te stesso',
     'pt-BR': 'Converter-se',
+    'ar-EG': 'تحويل النفس',
   },
   copiesOfEachInfluence: {
     'de-DE': '{{count}} Kopien jedes Einflusses im Spiel',
@@ -885,6 +944,7 @@ const translations: Translations = {
     'hi-IN': 'खेल में प्रत्येक प्रभाव की {{count}} प्रतियाँ',
     'it-IT': '{{count}} copie di ogni influenza nella partita',
     'pt-BR': '{{count}} cópias de cada influência no jogo',
+    'ar-EG': '{{count}} نسخة من كل نفوذ في اللعبة',
   },
   copyInviteLink: {
     'de-DE': 'Einladungslink kopieren',
@@ -894,6 +954,7 @@ const translations: Translations = {
     'hi-IN': 'आमंत्रण लिंक कॉपी करें',
     'it-IT': 'Copia Link di Invito',
     'pt-BR': 'Copiar Link de Convite',
+    'ar-EG': 'نسخ رابط الدعوة',
   },
   coups: {
     'de-DE': 'Putsche',
@@ -903,6 +964,7 @@ const translations: Translations = {
     'hi-IN': 'तख्तापलट',
     'it-IT': 'Colpi di stato',
     'pt-BR': 'Golpes',
+    'ar-EG': 'انقلابات',
   },
   createGame: {
     'de-DE': 'Spiel erstellen',
@@ -912,6 +974,7 @@ const translations: Translations = {
     'hi-IN': 'एक खेल बनाएं',
     'it-IT': 'Crea Gioco',
     'pt-BR': 'Criar Jogo',
+    'ar-EG': 'إنشاء لعبة',
   },
   createNewGame: {
     'de-DE': 'Neues Spiel erstellen',
@@ -921,6 +984,7 @@ const translations: Translations = {
     'hi-IN': 'नया खेल बनाएं',
     'it-IT': 'Crea Nuovo Gioco',
     'pt-BR': 'Criar Novo Jogo',
+    'ar-EG': 'إنشاء لعبة جديدة',
   },
   currentStreak: {
     'de-DE': 'Aktuelle Serie',
@@ -930,6 +994,7 @@ const translations: Translations = {
     'hi-IN': 'वर्तमान श्रृंखला',
     'it-IT': 'Serie attuale',
     'pt-BR': 'Sequência atual',
+    'ar-EG': 'السلسلة الحالية',
   },
   dark: {
     'de-DE': 'Dunkel',
@@ -939,6 +1004,7 @@ const translations: Translations = {
     'hi-IN': 'गहरा',
     'it-IT': 'Scuro',
     'pt-BR': 'Escuro',
+    'ar-EG': 'داكن',
   },
   deck: {
     'de-DE': 'Deck',
@@ -948,6 +1014,7 @@ const translations: Translations = {
     'hi-IN': 'डेक',
     'it-IT': 'Mazzo',
     'pt-BR': 'Baralho',
+    'ar-EG': 'المجموعة',
   },
   deleteAccount: {
     'de-DE': 'Konto löschen',
@@ -957,6 +1024,7 @@ const translations: Translations = {
     'hi-IN': 'खाता हटाएं',
     'it-IT': 'Elimina account',
     'pt-BR': 'Excluir conta',
+    'ar-EG': 'حذف الحساب',
   },
   deleteAccountConfirmMessage: {
     'de-DE': 'Diese Aktion kann nicht rückgängig gemacht werden. Dein Konto und alle Statistiken werden dauerhaft gelöscht.',
@@ -966,6 +1034,7 @@ const translations: Translations = {
     'hi-IN': 'यह पूर्ववत नहीं किया जा सकता। आपका खाता और सभी आँकड़े स्थायी रूप से हटा दिए जाएंगे।',
     'it-IT': 'Questa azione non può essere annullata. Il tuo account e tutte le statistiche verranno eliminati definitivamente.',
     'pt-BR': 'Esta ação não pode ser desfeita. Sua conta e todas as estatísticas serão excluídas permanentemente.',
+    'ar-EG': 'لا يمكن التراجع عن هذا. سيتم حذف حسابك وجميع الإحصائيات بشكل دائم.',
   },
   deleteAccountConfirmTitle: {
     'de-DE': 'Konto löschen?',
@@ -975,6 +1044,7 @@ const translations: Translations = {
     'hi-IN': 'खाता हटाएं?',
     'it-IT': 'Eliminare l\'account?',
     'pt-BR': 'Excluir conta?',
+    'ar-EG': 'حذف الحساب؟',
   },
   displayName: {
     'de-DE': 'Anzeigename',
@@ -984,6 +1054,7 @@ const translations: Translations = {
     'hi-IN': 'प्रदर्शित नाम',
     'it-IT': 'Nome visualizzato',
     'pt-BR': 'Nome de exibição',
+    'ar-EG': 'اسم العرض',
   },
   displayNameTaken: {
     'de-DE': 'Dieser Name ist bereits vergeben',
@@ -993,6 +1064,7 @@ const translations: Translations = {
     'hi-IN': 'यह नाम पहले से लिया गया है',
     'it-IT': 'Questo nome è già in uso',
     'pt-BR': 'Este nome já está em uso',
+    'ar-EG': 'هذا الاسم مستخدم بالفعل',
   },
   draw1InfluenceAndDiscard1: {
     'de-DE': 'Ziehe 1 Einflusskarte & lege 1 ab',
@@ -1002,6 +1074,7 @@ const translations: Translations = {
     'hi-IN': '1 प्रभाव खींचें और 1 को त्यागें',
     'it-IT': 'Pesca 1 influenza e scarta 1',
     'pt-BR': 'Comprar 1 influência e descartar 1',
+    'ar-EG': 'اسحب نفوذًا واحدًا وتخلص من واحد',
   },
   draw2InfluencesAndDiscard2: {
     'de-DE': 'Ziehe 2 Einflusskarten & lege 2 ab',
@@ -1011,6 +1084,7 @@ const translations: Translations = {
     'hi-IN': '2 प्रभाव खींचें और 2 को त्यागें',
     'it-IT': 'Pesca 2 influenze e scarta 2',
     'pt-BR': 'Comprar 2 influências e descartar 2',
+    'ar-EG': 'اسحب نفوذين وتخلص من اثنين',
   },
   effect: {
     'de-DE': 'Effekt',
@@ -1020,6 +1094,7 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव',
     'it-IT': 'Effetto',
     'pt-BR': 'Efeito',
+    'ar-EG': 'التأثير',
   },
   emptyTreasury: {
     'de-DE': 'Die Staatskasse ist leer',
@@ -1029,6 +1104,7 @@ const translations: Translations = {
     'hi-IN': 'खजाना खाली है',
     'it-IT': 'Il tesoro è vuoto',
     'pt-BR': 'O tesouro está vazio',
+    'ar-EG': 'الخزينة فارغة',
   },
   enableReformation: {
     'de-DE': 'Reformation aktivieren',
@@ -1038,6 +1114,7 @@ const translations: Translations = {
     'hi-IN': 'सुधार सक्षम करें',
     'it-IT': 'Abilita Riforma',
     'pt-BR': 'Ativar Reforma',
+    'ar-EG': 'تفعيل الإصلاح',
   },
   error: {
     'de-DE': 'Fehler',
@@ -1047,6 +1124,7 @@ const translations: Translations = {
     'hi-IN': 'त्रुटि',
     'it-IT': 'Errore',
     'pt-BR': 'Erro',
+    'ar-EG': 'خطأ',
   },
   eventLog: {
     'de-DE': 'Ereignisprotokoll',
@@ -1056,6 +1134,7 @@ const translations: Translations = {
     'hi-IN': 'इवेंट लॉग',
     'it-IT': 'Registro Eventi',
     'pt-BR': 'Registro de Eventos',
+    'ar-EG': 'سجل الأحداث',
   },
   eventLogRetentionTurns: {
     'de-DE': 'Aufbewahrungsdauer der Ereignisprotokolle (Züge)',
@@ -1065,6 +1144,7 @@ const translations: Translations = {
     'hi-IN': 'इवेंट लॉग रिटेंशन (टर्न)',
     'it-IT': 'Conservazione del registro eventi (turni)',
     'pt-BR': 'Retenção do registro de eventos (turnos)',
+    'ar-EG': 'الاحتفاظ بسجل الأحداث (بالأدوار)',
   },
   examineDecision: {
     'de-DE': 'Die aufgedeckte Karte ist {{primaryInfluence}}',
@@ -1074,6 +1154,7 @@ const translations: Translations = {
     'hi-IN': 'प्रकट कार्ड {{primaryInfluence}} है',
     'it-IT': 'La carta rivelata è {{primaryInfluence}}',
     'pt-BR': 'A carta revelada é {{primaryInfluence}}',
+    'ar-EG': 'البطاقة المكشوفة هي {{primaryInfluence}}',
   },
   [EventMessages.ActionConfirm]: {
     [Actions.Assassinate]: {
@@ -1084,6 +1165,7 @@ const translations: Translations = {
       'hi-IN': '{{action[[असाइन]]}} {{secondaryPlayer}}',
       'it-IT': '{{action[[Assassinare]]}} {{secondaryPlayer}}',
       'pt-BR': '{{action[[Assassinar]]}} {{secondaryPlayer}}',
+        'ar-EG': '{{action[[اغتيال]]}} {{secondaryPlayer}}',
     },
     [Actions.Coup]: {
       'de-DE': '{{action[[Putsch]]}} {{secondaryPlayer}}',
@@ -1093,6 +1175,7 @@ const translations: Translations = {
       'hi-IN': '{{action[[गद्दारी]]}} {{secondaryPlayer}}',
       'it-IT': '{{action[[Colpo di Stato]]}} {{secondaryPlayer}}',
       'pt-BR': '{{action[[Golpear]]}} {{secondaryPlayer}}',
+        'ar-EG': '{{action[[انقلاب]]}} {{secondaryPlayer}}',
     },
     [Actions.Convert]: {
       'de-DE': '{{action[[Konvertieren]]}} {{secondaryPlayer}}',
@@ -1102,6 +1185,7 @@ const translations: Translations = {
       'hi-IN': '{{action[[धर्म परिवर्तन]]}} {{secondaryPlayer}}',
       'it-IT': '{{action[[Convertire]]}} {{secondaryPlayer}}',
       'pt-BR': '{{action[[Converter]]}} {{secondaryPlayer}}',
+        'ar-EG': '{{action[[تحويل]]}} {{secondaryPlayer}}',
     },
     [Actions.Embezzle]: {
       'de-DE': '{{action[[Unterschlagen]]}} aus der Staatskasse',
@@ -1111,6 +1195,7 @@ const translations: Translations = {
       'hi-IN': '{{action[[गबन]]}} खजाने से',
       'it-IT': '{{action[[Appropriarsi]]}} dal tesoro',
       'pt-BR': '{{action[[Desviar]]}} do tesouro',
+        'ar-EG': '{{action[[اختلاس]]}} من الخزينة',
     },
     [Actions.Examine]: {
       'de-DE': '{{action[[Untersuchen]]}} {{secondaryPlayer}}',
@@ -1120,6 +1205,7 @@ const translations: Translations = {
       'hi-IN': '{{action[[जाँच]]}} {{secondaryPlayer}}',
       'it-IT': '{{action[[Esaminare]]}} {{secondaryPlayer}}',
       'pt-BR': '{{action[[Examinar]]}} {{secondaryPlayer}}',
+        'ar-EG': '{{action[[فحص]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
       'de-DE': '{{action[[Austausch]]}} von Einflusskarten',
@@ -1129,6 +1215,7 @@ const translations: Translations = {
       'hi-IN': '{{action[[विनिमय]]}} प्रभाव',
       'it-IT': '{{action[[Scambiare]]}} influenze',
       'pt-BR': '{{action[[Trocar]]}} influências',
+        'ar-EG': '{{action[[تبديل]]}} النفوذ',
     },
     [Actions.ForeignAid]: {
       'de-DE': 'Sammle {{action[[Auslandshilfe]]}}',
@@ -1138,6 +1225,7 @@ const translations: Translations = {
       'hi-IN': 'संग्रह {{action[[विदेशी सहायता]]}}',
       'it-IT': 'Raccogli {{action[[Aiuto Estero]]}}',
       'pt-BR': 'Coletar {{action[[Ajuda Estrangeira]]}}',
+        'ar-EG': 'جمع {{action[[مساعدة خارجية]]}}',
     },
     [Actions.Income]: {
       'de-DE': 'Sammle {{action[[Einkommen]]}}',
@@ -1147,6 +1235,7 @@ const translations: Translations = {
       'hi-IN': 'संग्रह {{action[[आय]]}}',
       'it-IT': 'Raccogli {{action[[Reddito]]}}',
       'pt-BR': 'Coletar {{action[[Renda]]}}',
+        'ar-EG': 'جمع {{action[[دخل]]}}',
     },
     [Actions.Revive]: {
       'de-DE': '{{action[[Wiederbeleben]]}} einer Einflusskarte',
@@ -1156,6 +1245,7 @@ const translations: Translations = {
       'hi-IN': '{{action[[पुनर्जीवित]]}} एक प्रभाव',
       'it-IT': "{{action[[Rivivere]]}} un'influenza",
       'pt-BR': '{{action[[Reviver]]}} uma influência',
+        'ar-EG': '{{action[[إحياء]]}} نفوذ',
     },
     [Actions.Steal]: {
       'de-DE': '{{action[[Stehlen]]}} von {{secondaryPlayer}}',
@@ -1165,6 +1255,7 @@ const translations: Translations = {
       'hi-IN': '{{action[[चोरी]]}} {{secondaryPlayer}} से',
       'it-IT': '{{action[[Rubare]]}} da {{secondaryPlayer}}',
       'pt-BR': '{{action[[Roubar]]}} de {{secondaryPlayer}}',
+        'ar-EG': '{{action[[سرقة]]}} من {{secondaryPlayer}}',
     },
     [Actions.Tax]: {
       'de-DE': 'Sammle {{action[[Steuern]]}}',
@@ -1174,6 +1265,7 @@ const translations: Translations = {
       'hi-IN': 'संग्रह {{action[[कर]]}}',
       'it-IT': 'Raccogli {{action[[Tassa]]}}',
       'pt-BR': 'Coletar {{action[[Imposto]]}}',
+        'ar-EG': 'جمع {{action[[ضرائب]]}}',
     },
   },
   [EventMessages.ActionPending]: {
@@ -1279,6 +1371,7 @@ const translations: Translations = {
       'it-IT':
         '{{primaryPlayer}} sta cercando di raccogliere {{action[[Tassa]]}}',
       'pt-BR': '{{primaryPlayer}} está tentando coletar {{action[[Imposto]]}}',
+        'ar-EG': '{{primaryPlayer}} يحاول جمع {{action[[ضرائب]]}}',
     },
   },
   [EventMessages.ActionProcessed]: {
@@ -1295,6 +1388,7 @@ const translations: Translations = {
       'it-IT':
         '{{primaryPlayer}} ha {{action[[Assassinato]]}} {{secondaryPlayer}}',
       'pt-BR': '{{primaryPlayer}} {{action[[Assassinou]]}} {{secondaryPlayer}}',
+        'ar-EG': '{{primaryPlayer}} يحاول جمع {{action[[ضرائب]]}}',
     },
     [Actions.Coup]: {
       'de-DE':
@@ -1306,6 +1400,7 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} {{action[[गद्दारी]]}} {{secondaryPlayer}}',
       'it-IT': '{{primaryPlayer}} ha {{action[[Colpito]]}} {{secondaryPlayer}}',
       'pt-BR': '{{primaryPlayer}} {{action[[Golpeou]]}} {{secondaryPlayer}}',
+        'ar-EG': '{{primaryPlayer}} {{action[[انقلب على]]}} {{secondaryPlayer}}',
     },
     [Actions.Convert]: {
       'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Konvertiert]]}}',
@@ -1315,6 +1410,7 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को {{action[[परिवर्तित]]}} किया',
       'it-IT': '{{primaryPlayer}} ha {{action[[Convertito]]}} {{secondaryPlayer}}',
       'pt-BR': '{{primaryPlayer}} {{action[[Converteu]]}} {{secondaryPlayer}}',
+        'ar-EG': '{{primaryPlayer}} {{action[[حوّل]]}} {{secondaryPlayer}}',
     },
     [Actions.Embezzle]: {
       'de-DE': '{{primaryPlayer}} hat aus der Staatskasse {{action[[Unterschlagen]]}}',
@@ -1324,6 +1420,7 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} ने खजाने से {{action[[गबन]]}} किया',
       'it-IT': '{{primaryPlayer}} ha {{action[[Appropriato]]}} dal tesoro',
       'pt-BR': '{{primaryPlayer}} {{action[[Desviou]]}} do tesouro',
+        'ar-EG': '{{primaryPlayer}} {{action[[اختلس]]}} من الخزينة',
     },
     [Actions.Examine]: {
       'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Untersucht]]}}',
@@ -1333,6 +1430,7 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} की {{action[[जाँच]]}} की',
       'it-IT': '{{primaryPlayer}} ha {{action[[Esaminato]]}} {{secondaryPlayer}}',
       'pt-BR': '{{primaryPlayer}} {{action[[Examinou]]}} {{secondaryPlayer}}',
+        'ar-EG': '{{primaryPlayer}} {{action[[فحص]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
       'de-DE':
@@ -1343,6 +1441,7 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} {{action[[विनिमय]]}} प्रभाव',
       'it-IT': '{{primaryPlayer}} ha {{action[[Scambiato]]}} influenze',
       'pt-BR': '{{primaryPlayer}} {{action[[Trocou]]}} influências',
+        'ar-EG': '{{primaryPlayer}} {{action[[بدّل]]}} النفوذ',
     },
     [Actions.ForeignAid]: {
       'de-DE': '{{primaryPlayer}} hat {{action[[Auslandshilfe]]}} erhalten',
@@ -1353,6 +1452,7 @@ const translations: Translations = {
         '{{primaryPlayer}} ने {{action[[विदेशी सहायता]]}} प्राप्त करने की कोशिश की',
       'it-IT': '{{primaryPlayer}} ha raccolto {{action[[Aiuto Estero]]}}',
       'pt-BR': '{{primaryPlayer}} coletou {{action[[Ajuda Estrangeira]]}}',
+        'ar-EG': '{{primaryPlayer}} جمع {{action[[مساعدة خارجية]]}}',
     },
     [Actions.Income]: {
       'de-DE': '{{primaryPlayer}} hat {{action[[Einkommen]]}} erhalten',
@@ -1362,6 +1462,7 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} ने {{action[[आय]]}} प्राप्त करने की कोशिश की',
       'it-IT': '{{primaryPlayer}} ha raccolto {{action[[Reddito]]}}',
       'pt-BR': '{{primaryPlayer}} coletou {{action[[Renda]]}}',
+        'ar-EG': '{{primaryPlayer}} جمع {{action[[دخل]]}}',
     },
     [Actions.Revive]: {
       'de-DE':
@@ -1372,6 +1473,7 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} ने {{action[[पुनर्जीवित]]}} एक प्रभाव',
       'it-IT': "{{primaryPlayer}} ha {{action[[Rivissuto]]}} un'influenza",
       'pt-BR': '{{primaryPlayer}} {{action[[Reviveu]]}} uma influência',
+        'ar-EG': '{{primaryPlayer}} {{action[[أحيا]]}} نفوذًا',
     },
     [Actions.Steal]: {
       'de-DE':
@@ -1384,6 +1486,7 @@ const translations: Translations = {
       'it-IT':
         '{{primaryPlayer}} ha {{action[[Rubato]]}} da {{secondaryPlayer}}',
       'pt-BR': '{{primaryPlayer}} {{action[[Roubou]]}} de {{secondaryPlayer}}',
+        'ar-EG': '{{primaryPlayer}} {{action[[سرق]]}} من {{secondaryPlayer}}',
     },
     [Actions.Tax]: {
       'de-DE': '{{primaryPlayer}} hat {{action[[Steuern]]}} erhalten',
@@ -1393,6 +1496,7 @@ const translations: Translations = {
       'hi-IN': '{{primaryPlayer}} ने {{action[[Tax]]}} एकत्र किया',
       'it-IT': '{{primaryPlayer}} ha raccolto {{action[[Tassa]]}}',
       'pt-BR': '{{primaryPlayer}} coletou {{action[[Imposto]]}}',
+        'ar-EG': '{{primaryPlayer}} جمع {{action[[ضرائب]]}}',
     },
   },
   [EventMessages.BlockFailed]: {
@@ -1403,6 +1507,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} {{secondaryPlayer}} को ब्लॉक करने में विफल रहा',
     'it-IT': '{{primaryPlayer}} non ha potuto bloccare {{secondaryPlayer}}',
     'pt-BR': '{{primaryPlayer}} não conseguiu bloquear {{secondaryPlayer}}',
+    'ar-EG': '{{primaryPlayer}} فشل في منع {{secondaryPlayer}}',
   },
   [EventMessages.BlockPending]: {
     'de-DE':
@@ -1429,6 +1534,7 @@ const translations: Translations = {
       '{{primaryPlayer}} ने {{secondaryPlayer}} को सफलतापूर्वक ब्लॉक किया',
     'it-IT': '{{primaryPlayer}} ha bloccato con successo {{secondaryPlayer}}',
     'pt-BR': '{{primaryPlayer}} bloqueou com sucesso {{secondaryPlayer}}',
+    'ar-EG': '{{primaryPlayer}} نجح في منع {{secondaryPlayer}}',
   },
   [EventMessages.ChallengeFailed]: {
     'de-DE': '{{primaryPlayer}} konnte {{secondaryPlayer}} nicht herausfordern',
@@ -1439,6 +1545,7 @@ const translations: Translations = {
       '{{primaryPlayer}} ने {{secondaryPlayer}} को चुनौती देने में विफल रहा',
     'it-IT': '{{primaryPlayer}} non ha potuto sfidare {{secondaryPlayer}}',
     'pt-BR': '{{primaryPlayer}} não conseguiu desafiar {{secondaryPlayer}}',
+    'ar-EG': '{{primaryPlayer}} فشل في الطعن على {{secondaryPlayer}}',
   },
   [EventMessages.ChallengePending]: {
     'de-DE': '{{primaryPlayer}} versucht, {{secondaryPlayer}} herauszufordern',
@@ -1449,6 +1556,7 @@ const translations: Translations = {
       '{{primaryPlayer}}, {{secondaryPlayer}} को चुनौती देने की कोशिश कर रहा है',
     'it-IT': '{{primaryPlayer}} sta cercando di sfidare {{secondaryPlayer}}',
     'pt-BR': '{{primaryPlayer}} está tentando desafiar {{secondaryPlayer}}',
+    'ar-EG': '{{primaryPlayer}} يحاول الطعن على {{secondaryPlayer}}',
   },
   [EventMessages.ChallengeSuccessful]: {
     'de-DE':
@@ -1460,6 +1568,7 @@ const translations: Translations = {
       '{{primaryPlayer}} ने {{secondaryPlayer}} को सफलतापूर्वक चुनौती दी',
     'it-IT': '{{primaryPlayer}} ha sfidato con successo {{secondaryPlayer}}',
     'pt-BR': '{{primaryPlayer}} desafiou com sucesso {{secondaryPlayer}}',
+    'ar-EG': '{{primaryPlayer}} نجح في الطعن على {{secondaryPlayer}}',
   },
   [EventMessages.ExamineKept]: {
     'de-DE': '{{primaryPlayer}} ließ {{secondaryPlayer}} behalten',
@@ -1469,6 +1578,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को अपना प्रभाव रखने दिया',
     'it-IT': '{{primaryPlayer}} ha lasciato {{secondaryPlayer}} mantenere la sua influenza',
     'pt-BR': '{{primaryPlayer}} permitiu que {{secondaryPlayer}} mantivesse sua influência',
+    'ar-EG': '{{primaryPlayer}} سمح لـ {{secondaryPlayer}} بالاحتفاظ بنفوذه',
   },
   [EventMessages.ExamineSwapped]: {
     'de-DE': '{{primaryPlayer}} zwang {{secondaryPlayer}}, ihre Influenz zu tauschen',
@@ -1478,6 +1588,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} ने {{secondaryPlayer}} को अपना प्रभाव बदलने के लिए मजबूर किया',
     'it-IT': '{{primaryPlayer}} ha costretto {{secondaryPlayer}} a scambiare la sua influenza',
     'pt-BR': '{{primaryPlayer}} forçou {{secondaryPlayer}} a trocar sua influência',
+    'ar-EG': '{{primaryPlayer}} أجبر {{secondaryPlayer}} على تبديل نفوذه',
   },
   [EventMessages.ForcedMoveProcessed]: {
     'de-DE':
@@ -1503,6 +1614,7 @@ const translations: Translations = {
     'hi-IN': 'खेल शुरू हो गया है!',
     'it-IT': 'Il gioco è iniziato!',
     'pt-BR': 'O jogo começou!',
+    'ar-EG': 'بدأت اللعبة!',
   },
   [EventMessages.PlayerDied]: {
     'de-DE': '{{primaryPlayer}} ist gestorben!',
@@ -1512,6 +1624,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} की मृत्यु हो गई!',
     'it-IT': '{{primaryPlayer}} è morto!',
     'pt-BR': '{{primaryPlayer}} morreu!',
+    'ar-EG': '{{primaryPlayer}} مات!',
   },
   [EventMessages.PlayerForfeited]: {
     'de-DE': '{{primaryPlayer}} hat aufgegeben',
@@ -1521,6 +1634,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} ने हार मान ली',
     'it-IT': '{{primaryPlayer}} ha rinunciato',
     'pt-BR': '{{primaryPlayer}} desistiu',
+    'ar-EG': '{{primaryPlayer}} انسحب',
   },
   [EventMessages.PlayerLostInfluence]: {
     'de-DE': '{{primaryPlayer}} hat ihre {{primaryInfluence}} verloren',
@@ -1530,6 +1644,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} ने अपना {{primaryInfluence}} खो दिया',
     'it-IT': '{{primaryPlayer}} ha perso il suo {{primaryInfluence}}',
     'pt-BR': '{{primaryPlayer}} perdeu sua {{primaryInfluence}}',
+    'ar-EG': '{{primaryPlayer}} خسر {{primaryInfluence}}',
   },
   [EventMessages.PlayerReplacedInfluence]: {
     'de-DE':
@@ -1543,6 +1658,7 @@ const translations: Translations = {
     'it-IT':
       '{{primaryPlayer}} ha rivelato e sostituito il suo {{primaryInfluence}}',
     'pt-BR': '{{primaryPlayer}} revelou e substituiu sua {{primaryInfluence}}',
+    'ar-EG': '{{primaryPlayer}} خسر {{primaryInfluence}}',
   },
   [EventMessages.PlayerReplacedWithAi]: {
     'de-DE': '{{primaryPlayer}} wurde durch einen KI-Spieler ersetzt',
@@ -1553,6 +1669,7 @@ const translations: Translations = {
       '{{primaryPlayer}} को एक एआई खिलाड़ी द्वारा प्रतिस्थापित किया गया है',
     'it-IT': '{{primaryPlayer}} è stato sostituito da un giocatore IA',
     'pt-BR': '{{primaryPlayer}} foi substituído por um jogador de IA',
+    'ar-EG': 'تم استبدال {{primaryPlayer}} بلاعب ذكاء اصطناعي',
   },
   fastestWin: {
     'de-DE': 'Schnellster Sieg',
@@ -1562,6 +1679,7 @@ const translations: Translations = {
     'hi-IN': 'सबसे तेज़ जीत',
     'it-IT': 'Vittoria più rapida',
     'pt-BR': 'Vitória mais rápida',
+    'ar-EG': 'أسرع فوز',
   },
   forceSwap: {
     'de-DE': 'Tausch erzwingen',
@@ -1571,6 +1689,7 @@ const translations: Translations = {
     'hi-IN': 'जबरन अदला-बदली',
     'it-IT': 'Forza scambio',
     'pt-BR': 'Forçar Troca',
+    'ar-EG': 'تبديل إجباري',
   },
   forfeit: {
     'de-DE': 'Aufgeben',
@@ -1580,6 +1699,7 @@ const translations: Translations = {
     'hi-IN': 'हार मान लेना',
     'it-IT': 'Rinuncia',
     'pt-BR': 'Desistir',
+    'ar-EG': 'انسحاب',
   },
   forfeitConfirmationMessage: {
     'de-DE':
@@ -1605,6 +1725,7 @@ const translations: Translations = {
     'hi-IN': 'खेल छोड़ना',
     'it-IT': 'Rinunciare al Gioco',
     'pt-BR': 'Desistir do Jogo',
+    'ar-EG': 'الانسحاب من اللعبة',
   },
   forfeitKillInfluences: {
     'de-DE': 'Einflüsse töten',
@@ -1614,6 +1735,7 @@ const translations: Translations = {
     'hi-IN': 'प्रभावों को मारना',
     'it-IT': 'Uccidere le Influenze',
     'pt-BR': 'Matar Influências',
+    'ar-EG': 'قتل النفوذ',
   },
   forfeitNotPossible: {
     'de-DE': 'Du kannst das Spiel derzeit nicht aufgeben',
@@ -1623,6 +1745,7 @@ const translations: Translations = {
     'hi-IN': 'आप वर्तमान में खेल छोड़ नहीं सकते',
     'it-IT': 'Non puoi attualmente rinunciare al gioco',
     'pt-BR': 'Você não pode desistir do jogo no momento',
+    'ar-EG': 'لا يمكنك الانسحاب من اللعبة حاليًا',
   },
   forfeitReplaceWithAi: {
     'de-DE': 'Durch KI ersetzen',
@@ -1632,6 +1755,7 @@ const translations: Translations = {
     'hi-IN': 'एआई के साथ प्रतिस्थापित करें',
     'it-IT': 'Sostituire con IA',
     'pt-BR': 'Substituir por IA',
+    'ar-EG': 'استبدال بالذكاء الاصطناعي',
   },
   fullRules: {
     'de-DE': 'Vollständige Regeln',
@@ -1641,6 +1765,7 @@ const translations: Translations = {
     'hi-IN': 'पूर्ण नियम',
     'it-IT': 'Regole Complete',
     'pt-BR': 'Regras Completas',
+    'ar-EG': 'القواعد الكاملة',
   },
   gameNotFound: {
     'de-DE': 'Spiel nicht gefunden',
@@ -1650,6 +1775,7 @@ const translations: Translations = {
     'hi-IN': 'खेल नहीं मिला',
     'it-IT': 'Gioco non trovato',
     'pt-BR': 'Jogo não encontrado',
+    'ar-EG': 'اللعبة غير موجودة',
   },
   gameSummary: {
     'de-DE': 'Spielübersicht',
@@ -1659,6 +1785,7 @@ const translations: Translations = {
     'hi-IN': 'खेल सारांश',
     'it-IT': 'Riepilogo Partita',
     'pt-BR': 'Resumo do Jogo',
+    'ar-EG': 'ملخص اللعبة',
   },
   gamesPlayed: {
     'de-DE': 'Gespielte Spiele',
@@ -1668,6 +1795,7 @@ const translations: Translations = {
     'hi-IN': 'खेले गए खेल',
     'it-IT': 'Partite giocate',
     'pt-BR': 'Jogos disputados',
+    'ar-EG': 'الألعاب الملعوبة',
   },
   goal: {
     'de-DE': 'Ziel',
@@ -1677,6 +1805,7 @@ const translations: Translations = {
     'hi-IN': 'लक्ष्य',
     'it-IT': 'Obiettivo',
     'pt-BR': 'Objetivo',
+    'ar-EG': 'الهدف',
   },
   headToHead: {
     'de-DE': 'Direktvergleich',
@@ -1686,6 +1815,7 @@ const translations: Translations = {
     'hi-IN': 'आमने-सामने',
     'it-IT': 'Testa a testa',
     'pt-BR': 'Confronto direto',
+    'ar-EG': 'مواجهة مباشرة',
   },
   home: {
     'de-DE': 'Startseite',
@@ -1695,6 +1825,7 @@ const translations: Translations = {
     'hi-IN': 'मुख्य पृष्ठ',
     'it-IT': 'Home',
     'pt-BR': 'Início',
+    'ar-EG': 'الرئيسية',
   },
   honestVictories: {
     'de-DE': 'Ehrliche Siege',
@@ -1704,6 +1835,7 @@ const translations: Translations = {
     'hi-IN': 'ईमानदार जीत',
     'it-IT': 'Vittorie oneste',
     'pt-BR': 'Vitórias honestas',
+    'ar-EG': 'انتصارات شريفة',
   },
   honesty: {
     'de-DE': 'Ehrlichkeit',
@@ -1713,6 +1845,7 @@ const translations: Translations = {
     'hi-IN': 'ईमानदारी',
     'it-IT': 'Onestà',
     'pt-BR': 'Honestidade',
+    'ar-EG': 'أمانة',
   },
   inappropriateDisplayName: {
     'de-DE': 'Dieser Name ist nicht erlaubt',
@@ -1722,6 +1855,7 @@ const translations: Translations = {
     'hi-IN': 'यह नाम अनुमत नहीं है',
     'it-IT': 'Questo nome non è consentito',
     'pt-BR': 'Este nome não é permitido',
+    'ar-EG': 'هذا الاسم غير مسموح به',
   },
   influence: {
     'de-DE': 'Einfluss',
@@ -1731,6 +1865,7 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव',
     'it-IT': 'Influenza',
     'pt-BR': 'Influência',
+    'ar-EG': 'نفوذ',
   },
   influenceWasClaimed: {
     'de-DE': '{{primaryInfluence}} wurde beansprucht',
@@ -1740,6 +1875,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryInfluence}} को चुनौती दी गई थी',
     'it-IT': '{{primaryInfluence}} è stato rivendicato',
     'pt-BR': '{{primaryInfluence}} foi reivindicado',
+    'ar-EG': 'تمت المطالبة بـ {{primaryInfluence}}',
   },
   influenceWasRevealed: {
     'de-DE': '{{primaryInfluence}} wurde aufgedeckt',
@@ -1749,6 +1885,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryInfluence}} का खुलासा हुआ',
     'it-IT': '{{primaryInfluence}} è stato rivelato',
     'pt-BR': '{{primaryInfluence}} foi revelado',
+    'ar-EG': 'تم الكشف عن {{primaryInfluence}}',
   },
   influences: {
     'de-DE': 'Einflüsse',
@@ -1758,6 +1895,7 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव',
     'it-IT': 'Influenze',
     'pt-BR': 'Influências',
+    'ar-EG': 'نفوذ',
   },
   [Influences.Ambassador]: {
     'de-DE': 'Botschafter',
@@ -1767,6 +1905,7 @@ const translations: Translations = {
     'hi-IN': 'राजदूत',
     'it-IT': 'Ambasciatore',
     'pt-BR': 'Embaixador',
+    'ar-EG': 'سفير',
   },
   [Influences.Assassin]: {
     'de-DE': 'Attentäter',
@@ -1776,6 +1915,7 @@ const translations: Translations = {
     'hi-IN': 'हत्यारा',
     'it-IT': 'Assassino',
     'pt-BR': 'Assassino',
+    'ar-EG': 'قاتل',
   },
   [Influences.Captain]: {
     'de-DE': 'Kapitän',
@@ -1785,6 +1925,7 @@ const translations: Translations = {
     'hi-IN': 'कप्तान',
     'it-IT': 'Capitano',
     'pt-BR': 'Capitão',
+    'ar-EG': 'قبطان',
   },
   [Influences.Contessa]: {
     'de-DE': 'Contessa',
@@ -1794,6 +1935,7 @@ const translations: Translations = {
     'hi-IN': 'कॉन्टेसा',
     'it-IT': 'Contessa',
     'pt-BR': 'Condessa',
+    'ar-EG': 'كونتيسة',
   },
   [Influences.Duke]: {
     'de-DE': 'Herzog',
@@ -1803,6 +1945,7 @@ const translations: Translations = {
     'hi-IN': 'ड्यूक',
     'it-IT': 'Duca',
     'pt-BR': 'Duque',
+    'ar-EG': 'دوق',
   },
   [Influences.Inquisitor]: {
     'de-DE': 'Inquisitor',
@@ -1812,6 +1955,7 @@ const translations: Translations = {
     'hi-IN': 'जाँचकर्ता',
     'it-IT': 'Inquisitore',
     'pt-BR': 'Inquisidor',
+    'ar-EG': 'محقق',
   },
   info: {
     'de-DE': 'Info',
@@ -1821,6 +1965,7 @@ const translations: Translations = {
     'hi-IN': 'जानकारी',
     'it-IT': 'Info',
     'pt-BR': 'Info',
+    'ar-EG': 'معلومات',
   },
   inquisitorIsEnabled: {
     'de-DE': 'Inquisitor ist aktiviert',
@@ -1830,6 +1975,7 @@ const translations: Translations = {
     'hi-IN': 'इन्क्विज़िटर सक्षम है',
     'it-IT': "L'Inquisitore è abilitato",
     'pt-BR': 'Inquisidor está habilitado',
+    'ar-EG': 'المحقق مفعل',
   },
   inviteLinkCopied: {
     'de-DE': 'Einladungslink kopiert',
@@ -1839,6 +1985,7 @@ const translations: Translations = {
     'hi-IN': 'निमंत्रण लिंक कॉपी किया गया',
     'it-IT': 'Link di invito copiato',
     'pt-BR': 'Link de convite copiado',
+    'ar-EG': 'تم نسخ رابط الدعوة',
   },
   joinExistingGame: {
     'de-DE': 'Bestehendes Spiel beitreten',
@@ -1848,6 +1995,7 @@ const translations: Translations = {
     'hi-IN': 'मौजूदा खेल में शामिल हों',
     'it-IT': 'Unisciti a un Gioco Esistente',
     'pt-BR': 'Entrar em um Jogo Existente',
+    'ar-EG': 'الانضمام إلى لعبة قائمة',
   },
   joinGame: {
     'de-DE': 'Spiel beitreten',
@@ -1857,6 +2005,7 @@ const translations: Translations = {
     'hi-IN': 'खेल में शामिल हों',
     'it-IT': 'Unisciti al Gioco',
     'pt-BR': 'Entrar no Jogo',
+    'ar-EG': 'الانضمام إلى لعبة',
   },
   keepInfluences: {
     'de-DE':
@@ -1882,6 +2031,7 @@ const translations: Translations = {
     'hi-IN': 'एक प्रभाव को मारें',
     'it-IT': "Uccidere un'Influenza",
     'pt-BR': 'Matar uma Influência',
+    'ar-EG': 'قتل نفوذ',
   },
   language: {
     'de-DE': 'Sprache',
@@ -1891,6 +2041,7 @@ const translations: Translations = {
     'hi-IN': 'भाषा',
     'it-IT': 'Lingua',
     'pt-BR': 'Idioma',
+    'ar-EG': 'اللغة',
   },
   lastPlayed: {
     'de-DE': 'Zuletzt gespielt',
@@ -1900,6 +2051,7 @@ const translations: Translations = {
     'hi-IN': 'अंतिम बार खेला',
     'it-IT': 'Ultima partita',
     'pt-BR': 'Última partida',
+    'ar-EG': 'آخر مرة لعبت',
   },
   leaderboard: {
     'de-DE': 'Bestenliste',
@@ -1909,6 +2061,7 @@ const translations: Translations = {
     'hi-IN': 'लीडरबोर्ड',
     'it-IT': 'Classifica',
     'pt-BR': 'Classificação',
+    'ar-EG': 'لوحة المتصدرين',
   },
   learnToPlay: {
     'de-DE': 'Lerne zu spielen',
@@ -1918,6 +2071,7 @@ const translations: Translations = {
     'hi-IN': 'खेलना सीखें',
     'it-IT': 'Impara a Giocare',
     'pt-BR': 'Aprenda a Jogar',
+    'ar-EG': 'تعلم اللعب',
   },
   [Factions.Loyalist]: {
     'de-DE': 'Loyalist',
@@ -1927,6 +2081,7 @@ const translations: Translations = {
     'hi-IN': 'वफादार',
     'it-IT': 'Lealista',
     'pt-BR': 'Lealista',
+    'ar-EG': 'موالي',
   },
   light: {
     'de-DE': 'Hell',
@@ -1936,6 +2091,7 @@ const translations: Translations = {
     'hi-IN': 'हल्का',
     'it-IT': 'Chiaro',
     'pt-BR': 'Claro',
+    'ar-EG': 'فاتح',
   },
   longestBluffStreak: {
     'de-DE': '{{player}}: {{count}} Bluffs in Folge',
@@ -1945,6 +2101,7 @@ const translations: Translations = {
     'hi-IN': '{{player}}: लगातार {{count}} ब्लफ़',
     'it-IT': '{{player}}: {{count}} bluff di fila',
     'pt-BR': '{{player}}: {{count}} blefes seguidos',
+    'ar-EG': '{{player}}: {{count}} خدعة متتالية',
   },
   longestWinStreak: {
     'de-DE': 'Längste Siegesserie',
@@ -1954,6 +2111,7 @@ const translations: Translations = {
     'hi-IN': 'सबसे लंबी जीत की श्रृंखला',
     'it-IT': 'Serie vittorie più lunga',
     'pt-BR': 'Maior sequência de vitórias',
+    'ar-EG': 'أطول سلسلة انتصارات',
   },
   lookAtAPlayersCard: {
     'de-DE': 'Karte eines Spielers ansehen',
@@ -1963,6 +2121,7 @@ const translations: Translations = {
     'hi-IN': 'एक खिलाड़ी का कार्ड देखें',
     'it-IT': 'Guarda la carta di un giocatore',
     'pt-BR': 'Ver a carta de um jogador',
+    'ar-EG': 'انظر إلى بطاقة لاعب',
   },
   loseInfluence: {
     'de-DE': 'Verliere {{primaryInfluence}}',
@@ -1972,6 +2131,7 @@ const translations: Translations = {
     'hi-IN': 'खोना {{primaryInfluence}}',
     'it-IT': 'Perdere {{primaryInfluence}}',
     'pt-BR': 'Perder {{primaryInfluence}}',
+    'ar-EG': 'خسارة {{primaryInfluence}}',
   },
   losingAChallenge: {
     'de-DE': 'Herausforderung verlieren',
@@ -1981,6 +2141,7 @@ const translations: Translations = {
     'hi-IN': 'एक चुनौती हारना',
     'it-IT': 'Perdere una Sfida',
     'pt-BR': 'Perder um Desafio',
+    'ar-EG': 'خسارة طعن',
   },
   losingInfluence: {
     'de-DE': 'Einfluss verlieren',
@@ -1990,6 +2151,7 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव खोना',
     'it-IT': 'Perdere Influenza',
     'pt-BR': 'Perder Influência',
+    'ar-EG': 'خسارة النفوذ',
   },
   losses: {
     'de-DE': 'Niederlagen',
@@ -1999,6 +2161,7 @@ const translations: Translations = {
     'hi-IN': 'हार',
     'it-IT': 'Sconfitte',
     'pt-BR': 'Derrotas',
+    'ar-EG': 'خسائر',
   },
   messageWasDeleted: {
     'de-DE': 'Nachricht wurde gelöscht',
@@ -2008,6 +2171,7 @@ const translations: Translations = {
     'hi-IN': 'संदेश हटा दिया गया था',
     'it-IT': 'Il messaggio è stato eliminato',
     'pt-BR': 'Mensagem foi excluída',
+    'ar-EG': 'تم حذف الرسالة',
   },
   nameFromProfile: {
     'de-DE': 'Aus deinem Profil',
@@ -2017,6 +2181,7 @@ const translations: Translations = {
     'hi-IN': 'आपकी प्रोफ़ाइल से',
     'it-IT': 'Dal tuo profilo',
     'pt-BR': 'Do seu perfil',
+    'ar-EG': 'من ملفك الشخصي',
   },
   noAchievementsYet: {
     'de-DE': 'Noch keine Erfolge',
@@ -2026,6 +2191,7 @@ const translations: Translations = {
     'hi-IN': 'अभी तक कोई उपलब्धि नहीं',
     'it-IT': 'Nessun obiettivo raggiunto',
     'pt-BR': 'Nenhuma conquista ainda',
+    'ar-EG': 'لا توجد إنجازات بعد',
   },
   noChatMessages: {
     'de-DE': 'Keine Chat-Nachrichten',
@@ -2035,6 +2201,7 @@ const translations: Translations = {
     'hi-IN': 'कोई चैट संदेश नहीं',
     'it-IT': 'Nessun messaggio di chat',
     'pt-BR': 'Sem mensagens de chat',
+    'ar-EG': 'لا توجد رسائل',
   },
   noDeadInfluences: {
     'de-DE': 'Keine toten Einflüsse',
@@ -2044,6 +2211,7 @@ const translations: Translations = {
     'hi-IN': 'कोई मृत प्रभाव नहीं',
     'it-IT': 'Nessuna influenza morta',
     'pt-BR': 'Sem influências mortas',
+    'ar-EG': 'لا توجد نفوذ ميتة',
   },
   noLeaderboardData: {
     'de-DE': 'Noch keine Daten vorhanden',
@@ -2053,6 +2221,7 @@ const translations: Translations = {
     'hi-IN': 'अभी तक कोई डेटा नहीं',
     'it-IT': 'Nessun dato disponibile',
     'pt-BR': 'Nenhum dado disponível ainda',
+    'ar-EG': 'لا توجد بيانات للمتصدرين بعد',
   },
   noStatsYet: {
     'de-DE': 'Noch keine Statistiken',
@@ -2062,6 +2231,7 @@ const translations: Translations = {
     'hi-IN': 'अभी तक कोई आँकड़े नहीं',
     'it-IT': 'Nessuna statistica ancora',
     'pt-BR': 'Nenhuma estatística ainda',
+    'ar-EG': 'لا توجد إحصائيات بعد',
   },
   not: {
     'de-DE': 'NICHT',
@@ -2071,6 +2241,7 @@ const translations: Translations = {
     'hi-IN': 'नहीं',
     'it-IT': 'NON',
     'pt-BR': 'NÃO',
+    'ar-EG': 'ليس',
   },
   notEnoughCoins: {
     'de-DE': 'Nicht genug Münzen ({{count}})',
@@ -2080,6 +2251,7 @@ const translations: Translations = {
     'hi-IN': 'पर्याप्त सिक्के नहीं हैं ({{count}})',
     'it-IT': 'Non ci sono abbastanza monete ({{count}})',
     'pt-BR': 'Moedas insuficientes ({{count}})',
+    'ar-EG': 'عملات غير كافية ({{count}})',
   },
   notEnoughGames: {
     'de-DE': 'Spiele mehr Spiele, um in der Rangliste zu erscheinen',
@@ -2089,6 +2261,7 @@ const translations: Translations = {
     'hi-IN': 'लीडरबोर्ड पर दिखने के लिए और खेल खेलें',
     'it-IT': 'Gioca più partite per apparire nella classifica',
     'pt-BR': 'Jogue mais partidas para aparecer na classificação',
+    'ar-EG': 'العب المزيد من الألعاب لتظهر في لوحة المتصدرين',
   },
   numberOfPlayers: {
     'de-DE': 'Anzahl der Spieler',
@@ -2098,6 +2271,7 @@ const translations: Translations = {
     'hi-IN': 'खिलाड़ियों की संख्या',
     'it-IT': 'Numero di Giocatori',
     'pt-BR': 'Número de Jogadores',
+    'ar-EG': 'عدد اللاعبين',
   },
   opponent: {
     'de-DE': 'Gegner',
@@ -2107,6 +2281,7 @@ const translations: Translations = {
     'hi-IN': 'प्रतिद्वंद्वी',
     'it-IT': 'Avversario',
     'pt-BR': 'Adversário',
+    'ar-EG': 'خصم',
   },
   pageNotFound: {
     'de-DE': 'Seite nicht gefunden',
@@ -2116,6 +2291,7 @@ const translations: Translations = {
     'hi-IN': 'पृष्ठ नहीं मिला',
     'it-IT': 'Pagina non trovata',
     'pt-BR': 'Página não encontrada',
+    'ar-EG': 'الصفحة غير موجودة',
   },
   payCoins: {
     'de-DE': 'Zahle {{count}} Münze{{plural[[n]]}}',
@@ -2125,6 +2301,7 @@ const translations: Translations = {
     'hi-IN': 'भुगतान करें {{count}} सिक्का',
     'it-IT': 'Paga {{count}} moneta{{plural[[e]]}}',
     'pt-BR': 'Pagar {{count}} moeda{{plural[[s]]}}',
+    'ar-EG': 'ادفع {{count}} عملة{{plural[[ات]]}}',
   },
   personalityIsHidden: {
     'de-DE': 'Persönlichkeit ist versteckt',
@@ -2134,6 +2311,7 @@ const translations: Translations = {
     'hi-IN': 'व्यक्तित्व छिपा हुआ है',
     'it-IT': 'La personalità è nascosta',
     'pt-BR': 'Personalidade está oculta',
+    'ar-EG': 'الشخصية مخفية',
   },
   playAgain: {
     'de-DE': 'Nochmal spielen',
@@ -2143,6 +2321,7 @@ const translations: Translations = {
     'hi-IN': 'फिर से खेलें',
     'it-IT': 'Gioca di Nuovo',
     'pt-BR': 'Jogar Novamente',
+    'ar-EG': 'العب مرة أخرى',
   },
   playGameToTrackStats: {
     'de-DE': 'Spiele ein Spiel mit mindestens 2 angemeldeten Spielern, um Statistiken zu verfolgen',
@@ -2152,6 +2331,7 @@ const translations: Translations = {
     'hi-IN': 'आँकड़े ट्रैक करने के लिए कम से कम 2 लॉग-इन खिलाड़ियों के साथ एक गेम खेलें',
     'it-IT': 'Gioca una partita con almeno 2 giocatori connessi per tracciare le statistiche',
     'pt-BR': 'Jogue uma partida com pelo menos 2 jogadores logados para rastrear estatísticas',
+    'ar-EG': 'العب لعبة مع لاعبَين مسجلَين على الأقل لتتبع الإحصائيات',
   },
   player: {
     'de-DE': 'Spieler',
@@ -2161,6 +2341,7 @@ const translations: Translations = {
     'hi-IN': 'खिलाड़ी',
     'it-IT': 'Giocatore',
     'pt-BR': 'Jogador',
+    'ar-EG': 'لاعب',
   },
   playerTurn: {
     'de-DE': "{{primaryPlayer}}'s Zug",
@@ -2170,6 +2351,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} की बारी',
     'it-IT': 'Turno di {{primaryPlayer}}',
     'pt-BR': 'Vez de {{primaryPlayer}}',
+    'ar-EG': 'دور {{primaryPlayer}}',
   },
   playerWantToReset: {
     'de-DE': '{{primaryPlayer}} möchte das Spiel zurücksetzen',
@@ -2179,6 +2361,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} खेल को रीसेट करना चाहता है',
     'it-IT': '{{primaryPlayer}} vuole resettare il gioco',
     'pt-BR': '{{primaryPlayer}} quer reiniciar o jogo',
+    'ar-EG': '{{primaryPlayer}} يريد إعادة ضبط اللعبة',
   },
   playerWins: {
     'de-DE': '{{primaryPlayer}} gewinnt!',
@@ -2188,6 +2371,7 @@ const translations: Translations = {
     'hi-IN': '{{primaryPlayer}} जीत गया!',
     'it-IT': '{{primaryPlayer}} Vince!',
     'pt-BR': '{{primaryPlayer}} Vence!',
+    'ar-EG': '{{primaryPlayer}} يفوز!',
   },
   [Factions.Reformist]: {
     'de-DE': 'Reformist',
@@ -2197,6 +2381,7 @@ const translations: Translations = {
     'hi-IN': 'सुधारवादी',
     'it-IT': 'Riformista',
     'pt-BR': 'Reformista',
+    'ar-EG': 'إصلاحي',
   },
   playstyle: {
     'de-DE': 'Spielstil',
@@ -2206,6 +2391,7 @@ const translations: Translations = {
     'hi-IN': 'खेल शैली',
     'it-IT': 'Stile di gioco',
     'pt-BR': 'Estilo de jogo',
+    'ar-EG': 'أسلوب اللعب',
   },
   privacyPolicy: {
     'de-DE': 'Datenschutzerklaerung',
@@ -2215,6 +2401,7 @@ const translations: Translations = {
     'hi-IN': 'गोपनीयता नीति',
     'it-IT': 'Informativa sulla Privacy',
     'pt-BR': 'Politica de Privacidade',
+    'ar-EG': 'سياسة الخصوصية',
   },
   privacyPolicyContent: {
     'de-DE': 'Anmeldung mit Google ist optional.\n\nWenn Sie sich anmelden, verarbeiten wir Kontodaten wie Name, E-Mail, Avatar und Benutzer-ID, um Profil, Statistiken und Bestenliste bereitzustellen.\n\nWir nutzen Google/Firebase-Dienste fuer Anmeldung, Datenbank, Hosting, Analyse von Zuverlaessigkeit und Missbrauchspraevention.\n\nBei wettbewerbsorientierten Funktionen koennen andere Spieler Anzeigename, Avatar, Rang sowie Sieg/Niederlage-Werte sehen.\n\nWir zeigen Werbung ueber Google AdSense. Google und Partner koennen Cookies oder Geraete-IDs verwenden, um personalisierte oder nicht personalisierte Anzeigen zu liefern (abhaengig von Region und Einwilligung).\n\nSie koennen Einwilligungen verwalten oder widerrufen, soweit gesetzlich vorgeschrieben. Sie koennen auch Google-Anzeigeneinstellungen nutzen.\n\nSie koennen die Loeschung Ihres Kontos oder Ihrer Daten ueber den Kontakt unten anfragen.\n\nKontakt fuer Datenschutzanfragen: {{contactEmail}}',
@@ -2224,6 +2411,7 @@ const translations: Translations = {
     'hi-IN': 'Google साइन-इन वैकल्पिक है।\n\nयदि आप साइन-इन करते हैं, तो हम प्रोफाइल, आंकड़े और लीडरबोर्ड दिखाने के लिए नाम, ईमेल, अवतार और यूजर आईडी जैसे खाता डेटा को प्रोसेस करते हैं।\n\nहम प्रमाणीकरण, डेटाबेस/स्टोरेज, होस्टिंग, विश्वसनीयता मॉनिटरिंग और दुरुपयोग रोकने के लिए Google/Firebase सेवाओं का उपयोग करते हैं।\n\nप्रतिस्पर्धी सुविधाओं में अन्य खिलाड़ी कुछ जानकारी देख सकते हैं, जैसे प्रदर्शित नाम, अवतार, रैंक और जीत/हार के आंकड़े।\n\nहम Google AdSense के जरिए विज्ञापन दिखाते हैं। Google और उसके पार्टनर क्षेत्र और सहमति के आधार पर व्यक्तिगत या गैर-व्यक्तिगत विज्ञापनों के लिए कुकी या डिवाइस पहचानकर्ताओं का उपयोग कर सकते हैं।\n\nजहां कानून लागू होता है, वहां आप विज्ञापन-संबंधित प्रोसेसिंग के लिए सहमति दे सकते हैं, मना कर सकते हैं या वापस ले सकते हैं। आप Google Ad Settings में भी विकल्प प्रबंधित कर सकते हैं।\n\nआप नीचे दिए गए संपर्क के माध्यम से खाता या डेटा हटाने का अनुरोध कर सकते हैं।\n\nगोपनीयता संपर्क: {{contactEmail}}',
     'it-IT': 'L\'accesso con Google e facoltativo.\n\nSe accedi, trattiamo dati dell\'account come nome visualizzato, email, avatar e ID utente per fornire profilo, statistiche e classifica.\n\nUsiamo servizi Google/Firebase per autenticazione, database/archiviazione, hosting, monitoraggio affidabilita e prevenzione abusi.\n\nNelle funzioni competitive, altri giocatori possono vedere alcuni dati come nome visualizzato, avatar, rango e statistiche vittorie/sconfitte.\n\nMostriamo annunci tramite Google AdSense. Google e i suoi partner possono usare cookie o identificatori del dispositivo per annunci personalizzati o non personalizzati (in base a regione e consenso).\n\nQuando richiesto dalla legge, puoi fornire, negare o revocare il consenso al trattamento legato agli annunci. Puoi anche gestire gli annunci in Google Ad Settings.\n\nPuoi richiedere la cancellazione dell\'account o dei dati usando il contatto sotto.\n\nContatto privacy: {{contactEmail}}',
     'pt-BR': 'O login com Google e opcional.\n\nSe voce entrar, processamos dados da conta como nome de exibicao, email, avatar e ID de usuario para fornecer perfil, estatisticas e ranking.\n\nUsamos servicos Google/Firebase para autenticacao, banco de dados/armazenamento, hospedagem, monitoramento de confiabilidade e prevencao de abuso.\n\nNos recursos competitivos, outros jogadores podem ver alguns dados como nome de exibicao, avatar, posicao e estatisticas de vitorias/derrotas.\n\nExibimos anuncios com Google AdSense. O Google e seus parceiros podem usar cookies ou identificadores do dispositivo para anuncios personalizados ou nao personalizados (dependendo da regiao e do consentimento).\n\nQuando exigido por lei, voce pode conceder, negar ou retirar consentimento para processamento relacionado a anuncios. Voce tambem pode gerenciar anuncios no Google Ad Settings.\n\nVoce pode solicitar exclusao da conta ou dos dados pelo contato abaixo.\n\nContato de privacidade: {{contactEmail}}',
+    'ar-EG': 'تسجيل الدخول عبر Google اختياري.\\n\\nإذا قمت بتسجيل الدخول، نعالج بيانات الحساب مثل اسم العرض والبريد الإلكتروني والصورة الرمزية ومعرف المستخدم لتوفير ملفك الشخصي وإحصائياتك ولوحة المتصدرين.\\n\\nنستخدم خدمات Google/Firebase للمصادقة وقاعدة البيانات والتخزين والاستضافة ومراقبة الموثوقية ومنع الإساءة.\\n\\nبالنسبة للميزات التنافسية، قد يرى اللاعبون الآخرون بعض البيانات مثل اسم العرض والصورة الرمزية والترتيب وإحصائيات الفوز والخسارة.\\n\\nنعرض إعلانات عبر Google AdSense. قد تستخدم Google وشركاؤها ملفات تعريف الارتباط أو معرفات الجهاز لتقديم إعلانات مخصصة أو غير مخصصة (حسب المنطقة والموافقة).\\n\\nحيثما يقتضي القانون، يمكنك منح أو رفض أو سحب الموافقة على المعالجة المتعلقة بالإعلانات. يمكنك أيضًا إدارة الإعلانات في إعدادات Google.\\n\\nيمكنك طلب حذف الحساب أو البيانات باستخدام جهة الاتصال أدناه.\\n\\nجهة اتصال الخصوصية: {{contactEmail}}',
   },
   profile: {
     'de-DE': 'Profil',
@@ -2233,6 +2421,7 @@ const translations: Translations = {
     'hi-IN': 'प्रोफ़ाइल',
     'it-IT': 'Profilo',
     'pt-BR': 'Perfil',
+    'ar-EG': 'الملف الشخصي',
   },
   profileNotFound: {
     'de-DE': 'Profil nicht gefunden',
@@ -2242,6 +2431,7 @@ const translations: Translations = {
     'hi-IN': 'प्रोफ़ाइल नहीं मिली',
     'it-IT': 'Profilo non trovato',
     'pt-BR': 'Perfil não encontrado',
+    'ar-EG': 'الملف الشخصي غير موجود',
   },
   random: {
     'de-DE': 'Zufällig',
@@ -2251,6 +2441,7 @@ const translations: Translations = {
     'hi-IN': 'यादृच्छिक',
     'it-IT': 'Casuale',
     'pt-BR': 'Aleatório',
+    'ar-EG': 'عشوائي',
   },
   rating: {
     'de-DE': 'Bewertung',
@@ -2260,6 +2451,7 @@ const translations: Translations = {
     'hi-IN': 'रेटिंग',
     'it-IT': 'Punteggio',
     'pt-BR': 'Pontuação',
+    'ar-EG': 'التقييم',
   },
   ratingExplanation: {
     'de-DE': 'Die Bewertung basiert auf dem Wilson-Score: der unteren Grenze eines 95%-Konfidenzintervalls deiner Siegquote. Mehr Spiele ergeben eine zuverlässigere und höhere Bewertung.',
@@ -2269,6 +2461,7 @@ const translations: Translations = {
     'hi-IN': 'रेटिंग विल्सन स्कोर पर आधारित है: आपकी जीत दर के 95% विश्वास अंतराल की निचली सीमा। अधिक खेल खेलने से अधिक विश्वसनीय और उच्च रेटिंग मिलती है।',
     'it-IT': 'Il punteggio si basa sul Wilson score: il limite inferiore di un intervallo di confidenza al 95% della percentuale di vittorie. Giocare più partite produce un punteggio più affidabile e alto.',
     'pt-BR': 'A pontuação é baseada no score de Wilson: o limite inferior de um intervalo de confiança de 95% da sua taxa de vitória. Jogar mais partidas resulta em uma pontuação mais confiável e alta.',
+    'ar-EG': 'يعتمد التقييم على درجة Wilson: الحد الأدنى لفاصل ثقة 95% لمعدل فوزك. لعب المزيد من الألعاب يعطي تقييمًا أكثر موثوقية وأعلى.',
   },
   record: {
     'de-DE': 'Bilanz',
@@ -2278,6 +2471,7 @@ const translations: Translations = {
     'hi-IN': 'रिकॉर्ड',
     'it-IT': 'Record',
     'pt-BR': 'Histórico',
+    'ar-EG': 'سجل',
   },
   reformationIsEnabled: {
     'de-DE': 'Reformation ist aktiviert',
@@ -2287,6 +2481,7 @@ const translations: Translations = {
     'hi-IN': 'सुधार सक्षम है',
     'it-IT': 'La Riforma è abilitata',
     'pt-BR': 'Reforma está habilitada',
+    'ar-EG': 'الإصلاح مفعل',
   },
   reportBug: {
     'de-DE': 'Fehler melden',
@@ -2296,6 +2491,7 @@ const translations: Translations = {
     'hi-IN': 'बग की रिपोर्ट करें',
     'it-IT': 'Segnala Bug',
     'pt-BR': 'Reportar Bug',
+    'ar-EG': 'الإبلاغ عن خطأ',
   },
   reportIncorrectTranslation: {
     'de-DE': 'Falsche Übersetzung melden',
@@ -2305,6 +2501,7 @@ const translations: Translations = {
     'hi-IN': 'गलत अनुवाद की रिपोर्ट करें',
     'it-IT': 'Segnala Traduzione Errata',
     'pt-BR': 'Reportar Tradução Incorreta',
+    'ar-EG': 'الإبلاغ عن ترجمة غير صحيحة',
   },
   requestFeature: {
     'de-DE': 'Funktion anfordern',
@@ -2314,6 +2511,7 @@ const translations: Translations = {
     'hi-IN': 'विशेषता का अनुरोध करें',
     'it-IT': 'Richiedi Funzionalità',
     'pt-BR': 'Solicitar Funcionalidade',
+    'ar-EG': 'طلب ميزة',
   },
   resetGame: {
     'de-DE': 'Spiel zurücksetzen',
@@ -2323,6 +2521,7 @@ const translations: Translations = {
     'hi-IN': 'खेल रीसेट करें',
     'it-IT': 'Reimpostare il Gioco',
     'pt-BR': 'Reiniciar Jogo',
+    'ar-EG': 'إعادة ضبط اللعبة',
   },
   [Responses.Block]: {
     'de-DE': 'Blockieren',
@@ -2332,6 +2531,7 @@ const translations: Translations = {
     'hi-IN': 'ब्लॉक करें',
     'it-IT': 'Blocca',
     'pt-BR': 'Bloquear',
+    'ar-EG': 'منع',
   },
   [Responses.Challenge]: {
     'de-DE': 'Herausforderung',
@@ -2341,6 +2541,7 @@ const translations: Translations = {
     'hi-IN': 'चुनौती',
     'it-IT': 'Sfida',
     'pt-BR': 'Desafio',
+    'ar-EG': 'طعن',
   },
   [Responses.Pass]: {
     'de-DE': 'Passieren',
@@ -2350,6 +2551,7 @@ const translations: Translations = {
     'hi-IN': 'पास',
     'it-IT': 'Passa',
     'pt-BR': 'Passar',
+    'ar-EG': 'تمرير',
   },
   revealInfluence: {
     'de-DE': 'Enthülle {{primaryInfluence}}',
@@ -2359,6 +2561,7 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव प्रकट करें {{primaryInfluence}}',
     'it-IT': 'Rivelare {{primaryInfluence}}',
     'pt-BR': 'Revelar {{primaryInfluence}}',
+    'ar-EG': 'كشف {{primaryInfluence}}',
   },
   reviveAnInfluence: {
     'de-DE': 'Belebe einen Einfluss wieder',
@@ -2368,6 +2571,7 @@ const translations: Translations = {
     'hi-IN': 'एक प्रभाव को पुनर्जीवित करें',
     'it-IT': "Rivivere un'influenza",
     'pt-BR': 'Reviver uma influência',
+    'ar-EG': 'إحياء نفوذ',
   },
   reviveIsEnabled: {
     'de-DE': 'Wiederbelebung ist aktiviert',
@@ -2377,6 +2581,7 @@ const translations: Translations = {
     'hi-IN': 'पुनरुद्धार सक्षम है',
     'it-IT': 'La resurrezione è abilitata',
     'pt-BR': 'Reviver está habilitado',
+    'ar-EG': 'الإحياء مفعل',
   },
   room: {
     'de-DE': 'Raum',
@@ -2386,6 +2591,7 @@ const translations: Translations = {
     'hi-IN': 'कमरा',
     'it-IT': 'Stanza',
     'pt-BR': 'Sala',
+    'ar-EG': 'غرفة',
   },
   rules: {
     'de-DE': 'Regeln',
@@ -2395,6 +2601,7 @@ const translations: Translations = {
     'hi-IN': 'नियम',
     'it-IT': 'Regole',
     'pt-BR': 'Regras',
+    'ar-EG': 'القواعد',
   },
   rulesActions: {
     'de-DE':
@@ -2435,6 +2642,7 @@ const translations: Translations = {
     'it-IT':
       'Può costringere un giocatore a rinunciare a una carta di influenza.',
     'pt-BR': 'Pode forçar um jogador a desistir de uma carta de influência.',
+    'ar-EG': 'يمكنه إجبار لاعب على التخلي عن بطاقة نفوذ.',
   },
   rulesAssassinate: {
     'de-DE':
@@ -2508,6 +2716,7 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव कार्ड का डेक, सिक्कों का बैंक।',
     'it-IT': "Mazzo di carte d'influenza, banca di monete.",
     'pt-BR': 'Baralho de cartas de influência, banco de moedas.',
+    'ar-EG': 'مجموعة بطاقات نفوذ، بنك عملات.',
   },
   rulesContessa: {
     'de-DE': 'Kann Attentate blockieren.',
@@ -2517,6 +2726,7 @@ const translations: Translations = {
     'hi-IN': 'हत्या के प्रयासों को रोक सकता है।',
     'it-IT': 'Può bloccare i tentativi di assassinio.',
     'pt-BR': 'Pode bloquear tentativas de assassinato.',
+    'ar-EG': 'يمكنها منع محاولات الاغتيال.',
   },
   rulesConvert: {
     'de-DE':
@@ -2558,6 +2768,7 @@ const translations: Translations = {
     'hi-IN': 'करों की वसूली और विदेशी सहायता को अवरुद्ध कर सकता है।',
     'it-IT': "Può tassare e bloccare l'Aiuto Estero.",
     'pt-BR': 'Pode cobrar impostos e bloquear Ajuda Estrangeira.',
+    'ar-EG': 'يمكنه تحصيل الضرائب ومنع المساعدة الخارجية.',
   },
   rulesEmbezzle: {
     'de-DE':
@@ -2631,6 +2842,7 @@ const translations: Translations = {
     'hi-IN': 'कोई भी खिलाड़ी जिसके पास कोई प्रभाव कार्ड बचा हो।',
     'it-IT': "Essere l'unico giocatore con carte di influenza rimaste.",
     'pt-BR': 'Ser o único jogador com cartas de influência restantes.',
+    'ar-EG': 'أن تكون اللاعب الوحيد المتبقي مع بطاقات نفوذ.',
   },
   rulesIncome: {
     'de-DE':
@@ -2644,6 +2856,7 @@ const translations: Translations = {
     'it-IT':
       'Prendi una moneta dalla banca. Non può essere sfidato o bloccato.',
     'pt-BR': 'Pegue uma moeda do banco. Não pode ser desafiado ou bloqueado.',
+    'ar-EG': 'خذ عملة واحدة من البنك. لا يمكن الطعن فيه أو منعه.',
   },
   rulesInfluences: {
     'de-DE': 'Es gibt fünf verschiedene Charaktere im Einflussdeck.',
@@ -2653,6 +2866,7 @@ const translations: Translations = {
     'hi-IN': 'प्रभाव डेक में पांच अलग-अलग पात्र हैं।',
     'it-IT': 'Ci sono cinque personaggi diversi nel mazzo di influenza.',
     'pt-BR': 'Existem cinco personagens diferentes no baralho de influência.',
+    'ar-EG': 'هناك خمس شخصيات مختلفة في مجموعة النفوذ.',
   },
   rulesInquisitor: {
     'de-DE':
@@ -2790,6 +3004,7 @@ const translations: Translations = {
     'hi-IN': 'सहेजें',
     'it-IT': 'Salva',
     'pt-BR': 'Salvar',
+    'ar-EG': 'حفظ',
   },
   send: {
     'de-DE': 'Senden',
@@ -2799,6 +3014,7 @@ const translations: Translations = {
     'hi-IN': 'भेजें',
     'it-IT': 'Invia',
     'pt-BR': 'Enviar',
+    'ar-EG': 'إرسال',
   },
   setDisplayName: {
     'de-DE': 'Anzeigename festlegen',
@@ -2808,6 +3024,7 @@ const translations: Translations = {
     'hi-IN': 'प्रदर्शित नाम सेट करें',
     'it-IT': 'Imposta nome',
     'pt-BR': 'Definir nome',
+    'ar-EG': 'تعيين اسم العرض',
   },
   settings: {
     'de-DE': 'Einstellungen',
@@ -2817,6 +3034,7 @@ const translations: Translations = {
     'hi-IN': 'सेटिंग्स',
     'it-IT': 'Impostazioni',
     'pt-BR': 'Configurações',
+    'ar-EG': 'الإعدادات',
   },
   setup: {
     'de-DE': 'Einrichten',
@@ -2826,6 +3044,7 @@ const translations: Translations = {
     'hi-IN': 'सेटअप',
     'it-IT': 'Impostazione',
     'pt-BR': 'Configuração',
+    'ar-EG': 'الإعداد',
   },
   showChickens: {
     'de-DE': 'Hühner anzeigen',
@@ -2835,6 +3054,7 @@ const translations: Translations = {
     'hi-IN': 'मुर्गियों को दिखाएं',
     'it-IT': 'Mostra Polli',
     'pt-BR': 'Mostrar Galinhas',
+    'ar-EG': 'إظهار الدجاج',
   },
   showFireworks: {
     'de-DE': 'Feuerwerk anzeigen',
@@ -2844,6 +3064,7 @@ const translations: Translations = {
     'hi-IN': 'आतिशबाज़ी दिखाएं',
     'it-IT': "Mostra Fuochi d'Artificio",
     'pt-BR': 'Mostrar Fogos de Artifício',
+    'ar-EG': 'إظهار الألعاب النارية',
   },
   showSnowmen: {
     'de-DE': 'Schneemänner anzeigen',
@@ -2853,6 +3074,7 @@ const translations: Translations = {
     'hi-IN': 'स्नोमेन दिखाएं',
     'it-IT': 'Mostra Pupazzi di Neve',
     'pt-BR': 'Mostrar Bonecos de Neve',
+    'ar-EG': 'إظهار رجال الثلج',
   },
   showTurkeys: {
     'de-DE': 'Truthähne anzeigen',
@@ -2862,6 +3084,7 @@ const translations: Translations = {
     'hi-IN': 'टर्की दिखाएं',
     'it-IT': 'Mostra Tacchini',
     'pt-BR': 'Mostrar Perus',
+    'ar-EG': 'إظهار الديوك الرومية',
   },
   signIn: {
     'de-DE': 'Anmelden',
@@ -2871,6 +3094,7 @@ const translations: Translations = {
     'hi-IN': 'साइन इन',
     'it-IT': 'Accedi',
     'pt-BR': 'Entrar',
+    'ar-EG': 'تسجيل الدخول',
   },
   signInToTrackStats: {
     'de-DE': 'Melde dich an, um deine Statistiken zu verfolgen',
@@ -2880,6 +3104,7 @@ const translations: Translations = {
     'hi-IN': 'अपने आँकड़े ट्रैक करने के लिए साइन इन करें',
     'it-IT': 'Accedi per monitorare le tue statistiche',
     'pt-BR': 'Entre para acompanhar suas estatísticas',
+    'ar-EG': 'سجل الدخول لتتبع إحصائياتك',
   },
   signOut: {
     'de-DE': 'Abmelden',
@@ -2889,6 +3114,7 @@ const translations: Translations = {
     'hi-IN': 'साइन आउट',
     'it-IT': 'Esci',
     'pt-BR': 'Sair',
+    'ar-EG': 'تسجيل الخروج',
   },
   skepticism: {
     'de-DE': 'Skepsis',
@@ -2898,6 +3124,7 @@ const translations: Translations = {
     'hi-IN': 'संदेहवाद',
     'it-IT': 'Scetticismo',
     'pt-BR': 'Ceticismo',
+    'ar-EG': 'تشكك',
   },
   somethingWentWrong: {
     'de-DE': 'Etwas ist schiefgelaufen',
@@ -2907,6 +3134,7 @@ const translations: Translations = {
     'hi-IN': 'कुछ गलत हो गया',
     'it-IT': 'Qualcosa è andato storto',
     'pt-BR': 'Algo deu errado',
+    'ar-EG': 'حدث خطأ ما',
   },
   soulRead: {
     'de-DE': '{{player}} hat den Bluff durchschaut!',
@@ -2916,6 +3144,7 @@ const translations: Translations = {
     'hi-IN': '{{player}} ने ब्लफ़ पकड़ा!',
     'it-IT': '{{player}} ha smascherato il bluff!',
     'pt-BR': '{{player}} descobriu o blefe!',
+    'ar-EG': '{{player}} كشف الخدعة!',
   },
   soulReads: {
     'de-DE': '{{count}} Durchschaut',
@@ -2925,6 +3154,7 @@ const translations: Translations = {
     'hi-IN': '{{count}} सोल रीड',
     'it-IT': '{{count}} Letture perfette',
     'pt-BR': '{{count}} Leituras certeiras',
+    'ar-EG': '{{count}} كشف خدع',
   },
   spectateGame: {
     'de-DE': 'Spiel beobachten',
@@ -2934,6 +3164,7 @@ const translations: Translations = {
     'hi-IN': 'खेल का अवलोकन करें',
     'it-IT': 'Osserva il Gioco',
     'pt-BR': 'Assistir Jogo',
+    'ar-EG': 'مشاهدة اللعبة',
   },
   speedRound: {
     'de-DE': 'Schnelle Runde',
@@ -2943,6 +3174,7 @@ const translations: Translations = {
     'hi-IN': 'स्पीड राउंड',
     'it-IT': 'Round Veloce',
     'pt-BR': 'Rodada Rápida',
+    'ar-EG': 'جولة سريعة',
   },
   speedRoundSeconds: {
     'de-DE': 'Sekunden für schnelle Runde',
@@ -2952,6 +3184,7 @@ const translations: Translations = {
     'hi-IN': 'स्पीड राउंड के लिए सेकंड',
     'it-IT': 'Secondi per Round Veloce',
     'pt-BR': 'Segundos para Rodada Rápida',
+    'ar-EG': 'ثواني الجولة السريعة',
   },
   startGame: {
     'de-DE': 'Spiel starten',
@@ -2961,6 +3194,7 @@ const translations: Translations = {
     'hi-IN': 'खेल शुरू करें',
     'it-IT': 'Inizia Gioco',
     'pt-BR': 'Iniciar Jogo',
+    'ar-EG': 'بدء اللعبة',
   },
   startingPlayerBeginsWith1Coin: {
     'de-DE': '2-Spieler-Spiel, der Startspieler beginnt mit 1 Münze',
@@ -2971,6 +3205,7 @@ const translations: Translations = {
     'it-IT':
       'Partita a 2 giocatori, il giocatore iniziale inizierà con 1 moneta',
     'pt-BR': 'Jogo de 2 jogadores, o jogador inicial começará com 1 moeda',
+    'ar-EG': 'لعبة بلاعبَين، يبدأ اللاعب الأول بعملة واحدة',
   },
   steal2CoinsFromSomeone: {
     'de-DE': 'Stehle 2 Münzen von jemandem',
@@ -2980,6 +3215,7 @@ const translations: Translations = {
     'hi-IN': 'किसी से 2 सिक्के चुराएं',
     'it-IT': 'Ruba 2 monete a qualcuno',
     'pt-BR': 'Roubar 2 moedas de alguém',
+    'ar-EG': 'اسرق عملتين من شخص ما',
   },
   steals: {
     'de-DE': 'Diebstähle',
@@ -2989,6 +3225,7 @@ const translations: Translations = {
     'hi-IN': 'चोरी',
     'it-IT': 'Furti',
     'pt-BR': 'Roubos',
+    'ar-EG': 'سرقات',
   },
   success: {
     'de-DE': 'Erfolg',
@@ -2998,6 +3235,7 @@ const translations: Translations = {
     'hi-IN': 'सफलता',
     'it-IT': 'Successo',
     'pt-BR': 'Sucesso',
+    'ar-EG': 'نجاح',
   },
   successfulBluffs: {
     'de-DE': '{{count}} erfolgreiche Bluffs',
@@ -3007,6 +3245,7 @@ const translations: Translations = {
     'hi-IN': '{{count}} सफल ब्लफ़',
     'it-IT': '{{count}} Bluff riusciti',
     'pt-BR': '{{count}} Blefes bem-sucedidos',
+    'ar-EG': '{{count}} خدعة ناجحة',
   },
   supportAdFree: {
     'de-DE': 'werbefrei',
@@ -3016,6 +3255,7 @@ const translations: Translations = {
     'hi-IN': 'बिना विज्ञापन',
     'it-IT': 'senza pubblicita',
     'pt-BR': 'sem anuncios',
+    'ar-EG': 'بدون إعلانات',
   },
   supportCheckoutError: {
     'de-DE': 'Checkout kann gerade nicht gestartet werden.',
@@ -3025,6 +3265,7 @@ const translations: Translations = {
     'hi-IN': 'अभी चेकआउट शुरू नहीं किया जा सकता।',
     'it-IT': 'Impossibile avviare il checkout in questo momento.',
     'pt-BR': 'Nao foi possivel iniciar o checkout agora.',
+    'ar-EG': 'تعذر بدء الدفع الآن.',
   },
   supportCustomAmountLabel: {
     'de-DE': 'Benutzerdefinierter Betrag (USD)',
@@ -3034,6 +3275,7 @@ const translations: Translations = {
     'hi-IN': 'कस्टम राशि (USD)',
     'it-IT': 'Importo personalizzato (USD)',
     'pt-BR': 'Valor personalizado (USD)',
+    'ar-EG': 'مبلغ مخصص (دولار أمريكي)',
   },
   supportCustomAmountValidation: {
     'de-DE': 'Gib einen gueltigen Betrag zwischen $1 und $500 ein',
@@ -3043,6 +3285,7 @@ const translations: Translations = {
     'hi-IN': '$1 और $500 के बीच मान्य राशि दर्ज करें',
     'it-IT': 'Inserisci un importo valido tra $1 e $500',
     'pt-BR': 'Digite um valor valido entre $1 e $500',
+    'ar-EG': 'أدخل مبلغًا صالحًا بين ١ و ٥٠٠ دولار',
   },
   supportCustomDonateCta: {
     'de-DE': 'Benutzerdefiniert spenden',
@@ -3052,6 +3295,7 @@ const translations: Translations = {
     'hi-IN': 'कस्टम दान करें',
     'it-IT': 'Dona importo personalizzato',
     'pt-BR': 'Doar valor personalizado',
+    'ar-EG': 'تبرع مخصص',
   },
   supportDurationDay: {
     'de-DE': '{{count}} Tag{{plural[[e]]}}',
@@ -3061,6 +3305,7 @@ const translations: Translations = {
     'hi-IN': '{{count}} दिन',
     'it-IT': '{{count}} giorno{{plural[[i]]}}',
     'pt-BR': '{{count}} dia{{plural[[s]]}}',
+    'ar-EG': '{{count}} يوم{{plural[[ًا]]}}',
   },
   supportGoAdFreeButton: {
     'de-DE': 'Unterstuetzen / Werbefrei',
@@ -3070,6 +3315,7 @@ const translations: Translations = {
     'hi-IN': 'सपोर्ट / बिना विज्ञापन',
     'it-IT': 'Supporta / Senza pubblicita',
     'pt-BR': 'Apoiar / Sem anuncios',
+    'ar-EG': 'دعم / بدون إعلانات',
   },
   supportHistoryActiveUntil: {
     'de-DE': 'Aktiv bis',
@@ -3079,6 +3325,7 @@ const translations: Translations = {
     'hi-IN': 'सक्रिय रहेगा',
     'it-IT': 'Attivo fino al',
     'pt-BR': 'Ativo ate',
+    'ar-EG': 'نشط حتى',
   },
   supportHistoryEmpty: {
     'de-DE': 'Noch keine Zahlungen oder Spenden.',
@@ -3088,6 +3335,7 @@ const translations: Translations = {
     'hi-IN': 'अभी तक कोई भुगतान या दान नहीं है।',
     'it-IT': 'Nessun pagamento o donazione ancora.',
     'pt-BR': 'Ainda nao ha pagamentos ou doacoes.',
+    'ar-EG': 'لا توجد مدفوعات أو تبرعات بعد.',
   },
   supportHistoryLoading: {
     'de-DE': 'Zahlungsverlauf wird geladen...',
@@ -3097,6 +3345,7 @@ const translations: Translations = {
     'hi-IN': 'भुगतान इतिहास लोड हो रहा है...',
     'it-IT': 'Caricamento cronologia pagamenti...',
     'pt-BR': 'Carregando historico de pagamentos...',
+    'ar-EG': 'جارٍ تحميل سجل المدفوعات...',
   },
   supportHistoryTitle: {
     'de-DE': 'Dein Zahlungsverlauf',
@@ -3106,6 +3355,7 @@ const translations: Translations = {
     'hi-IN': 'आपका भुगतान इतिहास',
     'it-IT': 'La tua cronologia pagamenti',
     'pt-BR': 'Seu historico de pagamentos',
+    'ar-EG': 'سجل مدفوعاتك',
   },
   supportLoginRequired: {
     'de-DE': 'Bitte melde dich an, bevor du das Spiel unterstuetzt.',
@@ -3115,6 +3365,7 @@ const translations: Translations = {
     'hi-IN': 'गेम को सपोर्ट करने से पहले साइन इन करें।',
     'it-IT': 'Accedi prima di supportare il gioco.',
     'pt-BR': 'Faca login antes de apoiar o jogo.',
+    'ar-EG': 'يرجى تسجيل الدخول قبل دعم اللعبة.',
   },
   supportMonetizationDescription: {
     'de-DE': 'Halte das Spiel am Laufen und waehle die Option, die am besten zu dir passt.',
@@ -3124,6 +3375,7 @@ const translations: Translations = {
     'hi-IN': 'गेम को चलाए रखने में मदद करें और आपके लिए सही विकल्प चुनें।',
     'it-IT': 'Aiuta a mantenere vivo il gioco e scegli l opzione migliore per te.',
     'pt-BR': 'Ajude a manter o jogo no ar e escolha a opcao ideal para voce.',
+    'ar-EG': 'حافظ على استمرار اللعبة واختر الخيار الذي يناسبك.',
   },
   supportMonetizationTitle: {
     'de-DE': 'Coup Online unterstuetzen',
@@ -3133,6 +3385,7 @@ const translations: Translations = {
     'hi-IN': 'Coup Online को सपोर्ट करें',
     'it-IT': 'Supporta Coup Online',
     'pt-BR': 'Apoiar Coup Online',
+    'ar-EG': 'ادعم Coup Online',
   },
   supportMonetizationTooltip: {
     'de-DE': 'Unterstuetze die Entwicklung und schalte werbefreie Optionen frei',
@@ -3142,6 +3395,7 @@ const translations: Translations = {
     'hi-IN': 'डेवलपमेंट को सपोर्ट करें और बिना विज्ञापन विकल्प अनलॉक करें',
     'it-IT': 'Supporta lo sviluppo e sblocca opzioni senza pubblicita',
     'pt-BR': 'Apoie o desenvolvimento e desbloqueie opcoes sem anuncios',
+    'ar-EG': 'ادعم التطوير وافتح خيارات بدون إعلانات',
   },
   supportPaymentReturnPending: {
     'de-DE': 'Danke! Deine Zahlung wurde abgeschlossen. Werbefreier Status sollte in Kuerze aktiv werden.',
@@ -3151,6 +3405,7 @@ const translations: Translations = {
     'hi-IN': 'धन्यवाद! आपका भुगतान पूरा हो गया। बिना विज्ञापन स्थिति जल्द सक्रिय होनी चाहिए।',
     'it-IT': 'Grazie! Il pagamento e stato completato. Lo stato senza pubblicita dovrebbe attivarsi a breve.',
     'pt-BR': 'Obrigado! Seu pagamento foi concluido. O status sem anuncios deve ativar em breve.',
+    'ar-EG': 'شكرًا! اكتمل الدفع. يجب تفعيل حالة بدون إعلانات قريبًا.',
   },
   supportPaymentReturnSuccess: {
     'de-DE': 'Danke fuer deine Unterstuetzung. Werbefreier Status ist jetzt aktiv.',
@@ -3160,6 +3415,7 @@ const translations: Translations = {
     'hi-IN': 'आपके समर्थन के लिए धन्यवाद। बिना विज्ञापन स्थिति अब सक्रिय है।',
     'it-IT': 'Grazie per il supporto. Lo stato senza pubblicita e ora attivo.',
     'pt-BR': 'Obrigado pelo apoio. O status sem anuncios agora esta ativo.',
+    'ar-EG': 'شكرًا لدعمك. حالة بدون إعلانات نشطة الآن.',
   },
   supportPremiumMonthlyCta: {
     'de-DE': '$1.99 / Monat · Werbefrei fuer',
@@ -3169,6 +3425,7 @@ const translations: Translations = {
     'hi-IN': '$1.99 / माह · बिना विज्ञापन',
     'it-IT': '$1.99 / mese · Senza pubblicita',
     'pt-BR': '$1.99 / mes · Sem anuncios',
+    'ar-EG': '١.٩٩ دولار / شهر · بدون إعلانات',
   },
   supportStartingCheckout: {
     'de-DE': 'Checkout wird gestartet...',
@@ -3178,6 +3435,7 @@ const translations: Translations = {
     'hi-IN': 'चेकआउट शुरू हो रहा है...',
     'it-IT': 'Avvio checkout...',
     'pt-BR': 'Iniciando checkout...',
+    'ar-EG': 'جارٍ بدء الدفع...',
   },
   supportTabHistory: {
     'de-DE': 'Verlauf',
@@ -3187,6 +3445,7 @@ const translations: Translations = {
     'hi-IN': 'इतिहास',
     'it-IT': 'Storico',
     'pt-BR': 'Historico',
+    'ar-EG': 'السجل',
   },
   supportTabSupport: {
     'de-DE': 'Support',
@@ -3196,6 +3455,7 @@ const translations: Translations = {
     'hi-IN': 'सपोर्ट',
     'it-IT': 'Supporto',
     'pt-BR': 'Apoio',
+    'ar-EG': 'الدعم',
   },
   system: {
     'de-DE': 'System',
@@ -3205,6 +3465,7 @@ const translations: Translations = {
     'hi-IN': 'सिस्टम',
     'it-IT': 'Sistema',
     'pt-BR': 'Sistema',
+    'ar-EG': 'النظام',
   },
   takeAllTreasuryCoins: {
     'de-DE': 'Alle Münzen aus der Staatskasse nehmen',
@@ -3214,6 +3475,7 @@ const translations: Translations = {
     'hi-IN': 'खजाने से सभी सिक्के लें',
     'it-IT': 'Prendi tutte le monete dal tesoro',
     'pt-BR': 'Pegar todas as moedas do tesouro',
+    'ar-EG': 'خذ كل العملات من الخزينة',
   },
   termsOfService: {
     'de-DE': 'Nutzungsbedingungen',
@@ -3223,6 +3485,7 @@ const translations: Translations = {
     'hi-IN': 'सेवा की शर्तें',
     'it-IT': 'Termini di Servizio',
     'pt-BR': 'Termos de Servico',
+    'ar-EG': 'شروط الخدمة',
   },
   termsOfServiceContent: {
     'de-DE': 'Durch die Nutzung von Coup Online stimmen Sie diesen Bedingungen zu.\n\nDie Anmeldung ist optional, aber Kontofunktionen koennen fuer persistente Statistiken und Bestenlisten erforderlich sein.\n\nSie sind fuer Ihre Kontosicherheit und fuer Aktivitaeten ueber Ihr Konto verantwortlich.\n\nCheating, Missbrauch, Belaestigung, Bot-Nutzung und unbefugter Zugriff sind verboten und koennen zu Sperrung oder Kontokuendigung fuehren.\n\nDer Dienst kann aktualisiert, eingeschraenkt oder eingestellt werden. Der Dienst wird ohne Gewaehr bereitgestellt, soweit gesetzlich zulaessig.\n\nWenn Werbung angezeigt wird, gelten zusaetzlich die Richtlinien und Technologien von Google AdSense.\n\nKontakt fuer rechtliche Anfragen: {{contactEmail}}',
@@ -3232,6 +3495,7 @@ const translations: Translations = {
     'hi-IN': 'Coup Online का उपयोग करके, आप इन शर्तों से सहमत होते हैं।\n\nसाइन-इन वैकल्पिक है, लेकिन स्थायी आँकड़ों और लीडरबोर्ड पहचान के लिए खाता सुविधाएं आवश्यक हो सकती हैं।\n\nआप अपने खाते की सुरक्षा और अपने खाते के अंतर्गत होने वाली गतिविधियों के लिए जिम्मेदार हैं।\n\nचीटिंग, दुरुपयोग, उत्पीड़न, बॉट का उपयोग और अनधिकृत पहुंच निषिद्ध है और निलंबन या खाता समाप्ति का कारण बन सकता है।\n\nसेवा को किसी भी समय अपडेट, सीमित या बंद किया जा सकता है। कानून द्वारा अनुमत सीमा तक सेवा जैसी है वैसी प्रदान की जाती है।\n\nयदि विज्ञापन दिखाए जाते हैं, तो Google AdSense की नीतियां और तकनीकें भी लागू होती हैं।\n\nकानूनी संपर्क: {{contactEmail}}',
     'it-IT': 'Usando Coup Online, accetti questi termini.\n\nL\'accesso e facoltativo, ma alcune funzioni account possono essere necessarie per statistiche persistenti e identita in classifica.\n\nSei responsabile della sicurezza dell\'account e delle attivita svolte tramite il tuo account.\n\nCheat, abusi, molestie, uso di bot e accessi non autorizzati sono vietati e possono causare sospensione o chiusura dell\'account.\n\nIl servizio puo essere aggiornato, limitato o interrotto in qualsiasi momento. Il servizio e fornito cosi com\'e nei limiti consentiti dalla legge.\n\nSe vengono mostrati annunci, si applicano anche politiche e tecnologie Google AdSense.\n\nContatto legale: {{contactEmail}}',
     'pt-BR': 'Ao usar o Coup Online, voce concorda com estes termos.\n\nO login e opcional, mas recursos de conta podem ser necessarios para estatisticas persistentes e identidade no ranking.\n\nVoce e responsavel por manter a seguranca da conta e pela atividade realizada nela.\n\nTrapaca, abuso, assedio, uso de bots e acesso nao autorizado sao proibidos e podem resultar em suspensao ou encerramento da conta.\n\nO servico pode ser atualizado, limitado ou descontinuado a qualquer momento. Ele e fornecido no estado em que se encontra, na medida permitida por lei.\n\nSe anuncios forem exibidos, politicas e tecnologias do Google AdSense tambem se aplicam.\n\nContato legal: {{contactEmail}}',
+    'ar-EG': 'باستخدام Coup Online، أنت توافق على هذه الشروط.\\n\\nتسجيل الدخول اختياري، لكن ميزات الحساب قد تكون مطلوبة للإحصائيات المستمرة وهوية لوحة المتصدرين.\\n\\nأنت مسؤول عن الحفاظ على أمان الحساب والنشاط تحت حسابك.\\n\\nالغش والإساءة والتحرش والبرمجات الآلية والوصول غير المصرح به ممنوعة وقد تؤدي إلى تعليق أو إنهاء الحساب.\\n\\nقد يتم تحديث الخدمة أو تقييدها أو إيقافها في أي وقت. تُقدم الخدمة كما هي إلى الحد الذي يسمح به القانون.\\n\\nإذا تم عرض الإعلانات، تنطبق سياسات وتقنيات Google AdSense أيضًا.\\n\\nجهة اتصال قانونية: {{contactEmail}}',
   },
   title: {
     'de-DE': 'Coup',
@@ -3241,6 +3505,7 @@ const translations: Translations = {
     'hi-IN': 'Coup',
     'it-IT': 'Coup',
     'pt-BR': 'Coup',
+    'ar-EG': 'انقلاب',
   },
   treasury: {
     'de-DE': 'Staatskasse',
@@ -3250,6 +3515,7 @@ const translations: Translations = {
     'hi-IN': 'खजाना',
     'it-IT': 'Tesoro',
     'pt-BR': 'Tesouro',
+    'ar-EG': 'خزينة',
   },
   truth: {
     'de-DE': 'Wahrheit',
@@ -3259,6 +3525,7 @@ const translations: Translations = {
     'hi-IN': 'सच',
     'it-IT': 'Verità',
     'pt-BR': 'Verdade',
+    'ar-EG': 'حقيقة',
   },
   tryAgain: {
     'de-DE': 'Erneut versuchen',
@@ -3268,6 +3535,7 @@ const translations: Translations = {
     'hi-IN': 'पुनः प्रयास करें',
     'it-IT': 'Riprova',
     'pt-BR': 'Tentar novamente',
+    'ar-EG': 'حاول مرة أخرى',
   },
   turns: {
     'de-DE': 'Runden',
@@ -3277,6 +3545,7 @@ const translations: Translations = {
     'hi-IN': 'मोड़',
     'it-IT': 'turni',
     'pt-BR': 'turnos',
+    'ar-EG': 'أدوار',
   },
   tutorial: {
     'de-DE': 'Tutorial',
@@ -3286,6 +3555,7 @@ const translations: Translations = {
     'hi-IN': 'ट्यूटोरियल',
     'it-IT': 'Tutorial',
     'pt-BR': 'Tutorial',
+    'ar-EG': 'تعليمي',
   },
   tutorialBack: {
     'de-DE': 'Zurück',
@@ -3295,6 +3565,7 @@ const translations: Translations = {
     'hi-IN': 'पीछे',
     'it-IT': 'Indietro',
     'pt-BR': 'Voltar',
+    'ar-EG': 'رجوع',
   },
   tutorialComplete: {
     'de-DE': 'Du bist bereit zu spielen! 🎉',
@@ -3304,6 +3575,7 @@ const translations: Translations = {
     'hi-IN': 'आप खेलने के लिए तैयार हैं! 🎉',
     'it-IT': 'Sei pronto per giocare! 🎉',
     'pt-BR': 'Você está pronto para jogar! 🎉',
+    'ar-EG': 'أنت جاهز للعب! 🎉',
   },
   tutorialFinish: {
     'de-DE': 'Fertig',
@@ -3313,6 +3585,7 @@ const translations: Translations = {
     'hi-IN': 'समाप्त',
     'it-IT': 'Fine',
     'pt-BR': 'Finalizar',
+    'ar-EG': 'إنهاء',
   },
   tutorialIntro: {
     'de-DE': 'Folge diesem Beispielspiel mit drei Spielern, um die Grundlagen von Coup zu lernen.',
@@ -3322,6 +3595,7 @@ const translations: Translations = {
     'hi-IN': 'Coup की मूल बातें सीखने के लिए तीन खिलाड़ियों के साथ इस उदाहरण खेल का अनुसरण करें।',
     'it-IT': 'Segui questa partita di esempio con tre giocatori per imparare le basi di Coup.',
     'pt-BR': 'Siga este jogo de exemplo com três jogadores para aprender o básico de Coup.',
+    'ar-EG': 'اتبع هذه اللعبة النموذجية مع ثلاثة لاعبين لتعلم أساسيات Coup.',
   },
   tutorialNext: {
     'de-DE': 'Weiter',
@@ -3331,6 +3605,7 @@ const translations: Translations = {
     'hi-IN': 'अगला',
     'it-IT': 'Avanti',
     'pt-BR': 'Próximo',
+    'ar-EG': 'التالي',
   },
   tutorialRestart: {
     'de-DE': 'Tutorial neu starten',
@@ -3340,6 +3615,7 @@ const translations: Translations = {
     'hi-IN': 'ट्यूटोरियल पुनः आरंभ करें',
     'it-IT': 'Ricomincia il Tutorial',
     'pt-BR': 'Reiniciar Tutorial',
+    'ar-EG': 'إعادة التشغيل',
   },
   tutorialRulesHint: {
     'de-DE': 'Verwende die Regel-Schaltfläche unten links, um jederzeit die vollständigen Regeln und den Spickzettel anzuzeigen.',
@@ -3349,6 +3625,7 @@ const translations: Translations = {
     'hi-IN': 'पूर्ण नियम और चीट शीट किसी भी समय देखने के लिए नीचे बाएँ कोने में नियम बटन का उपयोग करें।',
     'it-IT': 'Usa il pulsante delle regole in basso a sinistra per visualizzare le regole complete e il foglio riassuntivo in qualsiasi momento.',
     'pt-BR': 'Use o botão de regras no canto inferior esquerdo para ver as regras completas e a folha de referência a qualquer momento.',
+    'ar-EG': 'استخدم زر القواعد في الزاوية السفلية اليسرى لعرض القواعد الكاملة وورقة الغش في أي وقت.',
   },
   tutorialStartingCoins: {
     'de-DE': 'Jeder Spieler startet mit 2 Münzen',
@@ -3358,6 +3635,7 @@ const translations: Translations = {
     'hi-IN': 'प्रत्येक खिलाड़ी 2 सिक्कों से शुरू करता है',
     'it-IT': 'Ogni giocatore inizia con 2 monete',
     'pt-BR': 'Cada jogador começa com 2 moedas',
+    'ar-EG': 'يبدأ كل لاعب بعملتين',
   },
   tutorialStep10Content: {
     'de-DE': 'Das Spiel geht weiter, bis nur noch ein Spieler Einflusskarten hat. Denke daran: Du kannst JEDE Aktion beanspruchen, unabhängig von deinen Karten — aber wenn du herausgefordert wirst und bluffst, verlierst du eine Einflusskarte! Das ist das Herz von Coup: Täuschung, Risiko und Timing.',
@@ -3367,6 +3645,7 @@ const translations: Translations = {
     'hi-IN': 'खेल तब तक जारी रहता है जब तक केवल एक खिलाड़ी के पास प्रभाव कार्ड बचे हों। याद रखें: आप अपने कार्ड की परवाह किए बिना कोई भी क्रिया का दावा कर सकते हैं — लेकिन अगर आपको चुनौती दी जाती है और आप झांसा दे रहे हैं, तो आप एक प्रभाव खो देते हैं! यही Coup का दिल है: धोखा, जोखिम और समय।',
     'it-IT': "Il gioco continua finché solo un giocatore ha carte di influenza. Ricorda: puoi rivendicare QUALSIASI azione indipendentemente dalle tue carte — ma se vieni sfidato e stai bluffando, perdi un'influenza! Questo è il cuore di Coup: inganno, rischio e tempismo.",
     'pt-BR': 'O jogo continua até que apenas um jogador tenha cartas de influência. Lembre-se: você pode reivindicar QUALQUER ação independentemente de suas cartas — mas se for desafiado e estiver blefando, perde uma influência! Esse é o coração de Coup: engano, risco e oportunidade.',
+    'ar-EG': 'تستمر اللعبة حتى يتبقى لاعب واحد فقط مع بطاقات نفوذ. تذكر: يمكنك المطالبة بأي إجراء بغض النظر عن بطاقاتك — ولكن إذا تم الطعن عليك وكنت تخادع، تخسر نفوذًا! هذا هو جوهر Coup: الخداع والمخاطرة والتوقيت.',
   },
   tutorialStep10Title: {
     'de-DE': 'Das Spiel geht weiter...',
@@ -3376,6 +3655,7 @@ const translations: Translations = {
     'hi-IN': 'खेल जारी है...',
     'it-IT': 'Il Gioco Continua...',
     'pt-BR': 'O Jogo Continua...',
+    'ar-EG': 'اللعبة مستمرة...',
   },
   tutorialStep1Content: {
     'de-DE': 'In Coup beginnt jeder Spieler mit 2 Einflusskarten (geheim) und 2 Münzen. Dein Ziel ist es, der letzte Spieler mit Einflusskarten zu sein. Du verlierst eine Karte, wenn du erfolgreich herausgefordert wirst, jemand einen Putsch gegen dich durchführt oder jemand dich meuchelt.',
@@ -3385,6 +3665,7 @@ const translations: Translations = {
     'hi-IN': 'Coup में, प्रत्येक खिलाड़ी 2 प्रभाव कार्ड (गुप्त) और 2 सिक्कों से शुरू करता है। आपका लक्ष्य प्रभाव कार्ड वाला अंतिम खिलाड़ी बनना है। जब आपको सफलतापूर्वक चुनौती दी जाती है, कोई आप पर तख्तापलट करता है, या कोई आपकी हत्या करता है तो आप एक कार्ड खो देते हैं।',
     'it-IT': "In Coup, ogni giocatore inizia con 2 carte di influenza (segrete) e 2 monete. Il tuo obiettivo è essere l'ultimo giocatore con carte di influenza. Perdi una carta quando vieni sfidato con successo, qualcuno ti fa un colpo di stato o qualcuno ti assassina.",
     'pt-BR': 'Em Coup, cada jogador começa com 2 cartas de influência (secretas) e 2 moedas. Seu objetivo é ser o último jogador com cartas de influência. Você perde uma carta quando é desafiado com sucesso, alguém dá um golpe em você ou alguém te assassina.',
+    'ar-EG': 'في Coup، يبدأ كل لاعب ببطاقتي نفوذ (سريتين) وعملتين. هدفك هو أن تكون آخر لاعب مع بطاقات نفوذ. تخسر بطاقة عندما يتم الطعن عليك بنجاح، أو عندما يقوم شخص بانقلاب عليك، أو عندما يغتالك أحد.',
   },
   tutorialStep1Title: {
     'de-DE': 'Die Grundlagen',
@@ -3394,6 +3675,7 @@ const translations: Translations = {
     'hi-IN': 'मूल बातें',
     'it-IT': 'Le Basi',
     'pt-BR': 'O Básico',
+    'ar-EG': 'الأساسيات',
   },
   tutorialStep2Content: {
     'de-DE': 'Lass uns ein 3-Spieler-Spiel zwischen Alice, Bob und Carol anschauen. Jeder bekommt 2 zufällige Einflusskarten, die nur sie sehen können:',
@@ -3403,6 +3685,7 @@ const translations: Translations = {
     'hi-IN': 'आइए Alice, Bob और Carol के बीच 3-खिलाड़ी खेल देखें। प्रत्येक को 2 यादृच्छिक प्रभाव कार्ड मिलते हैं जो केवल वे देख सकते हैं:',
     'it-IT': 'Guardiamo una partita a 3 giocatori tra Alice, Bob e Carol. Ognuno riceve 2 carte di influenza casuali che solo loro possono vedere:',
     'pt-BR': 'Vamos assistir um jogo de 3 jogadores entre Alice, Bob e Carol. Cada um recebe 2 cartas de influência aleatórias que só eles podem ver:',
+    'ar-EG': 'لنشاهد لعبة ثلاثية بين أليس وبوب وكارول. يحصل كل منهم على بطاقتي نفوذ عشوائيتين لا يمكن رؤيتهما إلا من قبلهم:',
   },
   tutorialStep2Title: {
     'de-DE': 'Spielaufbau',
@@ -3412,6 +3695,7 @@ const translations: Translations = {
     'hi-IN': 'खेल की तैयारी',
     'it-IT': 'Preparazione del Gioco',
     'pt-BR': 'Preparação do Jogo',
+    'ar-EG': 'إعداد اللعبة',
   },
   tutorialStep3Content: {
     'de-DE': 'Alice ist am Zug. Sie hat den Herzog, also beansprucht sie Steuern (nimm 3 Münzen). Niemand fordert sie heraus, also bekommt sie die Münzen. Merke: Sie hätte Tax auch OHNE den Herzog beanspruchen können — es ist ein Bluff-Spiel!',
@@ -3421,6 +3705,7 @@ const translations: Translations = {
     'hi-IN': 'Alice पहले जाती है। उसके पास Duke है, इसलिए वह Tax का दावा करती है (3 सिक्के लें)। कोई उसे चुनौती नहीं देता, इसलिए उसे सिक्के मिलते हैं। ध्यान दें: वह Duke के बिना भी Tax का दावा कर सकती थी — यह एक ब्लफ़ गेम है!',
     'it-IT': "Alice va per prima. Ha il Duca, quindi rivendica la Tassa (prendere 3 monete). Nessuno la sfida, quindi ottiene le monete. Nota: avrebbe potuto rivendicare la Tassa anche SENZA il Duca — è un gioco di bluff!",
     'pt-BR': 'Alice vai primeiro. Ela tem o Duque, então reivindica Imposto (pegar 3 moedas). Ninguém a desafia, então ela fica com as moedas. Nota: ela poderia ter reivindicado Imposto mesmo SEM o Duque — é um jogo de blefe!',
+    'ar-EG': 'أليس تبدأ أولاً. لديها الدوق، لذا تطالب بالضرائب (خذ ٣ عملات). لا أحد يطعن فيها، لذا تحصل على العملات. ملاحظة: كان بإمكانها المطالبة بالضرائب حتى بدون الدوق — إنها لعبة خداع!',
   },
   tutorialStep3Title: {
     'de-DE': 'Runde 1: Aktion beanspruchen',
@@ -3430,6 +3715,7 @@ const translations: Translations = {
     'hi-IN': 'मोड़ 1: एक क्रिया का दावा',
     'it-IT': 'Turno 1: Rivendicare un\'Azione',
     'pt-BR': 'Turno 1: Reivindicar uma Ação',
+    'ar-EG': 'الدور ١: المطالبة بإجراء',
   },
   tutorialStep4Content: {
     'de-DE': 'Bob ist dran. Er hat NICHT den Kapitän, aber er behauptet trotzdem, er wolle von Alice stehlen! Im echten Spiel könnte er damit durchkommen, wenn niemand herausfordert...',
@@ -3439,6 +3725,7 @@ const translations: Translations = {
     'hi-IN': 'Bob की बारी। उसके पास Captain नहीं है, लेकिन वह फिर भी Alice से चोरी करने का दावा करता है! असली खेल में, अगर कोई चुनौती नहीं देता तो वह बच सकता है...',
     'it-IT': "Turno di Bob. NON ha il Capitano, ma dichiara di voler Rubare ad Alice comunque! In una partita vera, potrebbe farla franca se nessuno lo sfida...",
     'pt-BR': 'Turno do Bob. Ele NÃO tem o Capitão, mas reivindica que quer Roubar de Alice mesmo assim! Em um jogo real, ele pode se safar se ninguém desafiar...',
+    'ar-EG': 'دور بوب. ليس لديه القبطان، لكنه يدعي أنه يريد السرقة من أليس على أي حال! في لعبة حقيقية، قد ينجو بفعلته إذا لم يطعن فيه أحد...',
   },
   tutorialStep4Dialogue: {
     'de-DE': 'von Alice stehlen',
@@ -3448,6 +3735,7 @@ const translations: Translations = {
     'hi-IN': 'Alice से',
     'it-IT': 'da Alice',
     'pt-BR': 'de Alice',
+    'ar-EG': 'من أليس',
   },
   tutorialStep4Title: {
     'de-DE': 'Runde 2: Bluffen!',
@@ -3457,6 +3745,7 @@ const translations: Translations = {
     'hi-IN': 'मोड़ 2: ब्लफ़!',
     'it-IT': 'Turno 2: Bluffare!',
     'pt-BR': 'Turno 2: Blefando!',
+    'ar-EG': 'الدور ٢: الخداع!',
   },
   tutorialStep5Block: {
     'de-DE': 'Ich habe den',
@@ -3466,6 +3755,7 @@ const translations: Translations = {
     'hi-IN': 'मेरे पास है',
     'it-IT': 'Ho il',
     'pt-BR': 'Eu tenho o',
+    'ar-EG': 'لدي',
   },
   tutorialStep5Content: {
     'de-DE': 'Alice blockiert den Diebstahl und behauptet, sie habe den Kapitän (den sie tatsächlich hat). Bob könnte ihre Blockade herausfordern, aber er entscheidet sich dagegen. Der Diebstahl wird verhindert!',
@@ -3475,6 +3765,7 @@ const translations: Translations = {
     'hi-IN': 'Alice चोरी को रोकती है, दावा करती है कि उसके पास Captain है (जो वास्तव में है)। Bob उसके ब्लॉक को चुनौती दे सकता था, लेकिन उसने नहीं दी। चोरी रोक दी गई!',
     'it-IT': "Alice blocca il furto, sostenendo di avere il Capitano (che ha davvero). Bob potrebbe sfidare il suo blocco, ma decide di non farlo. Il furto è impedito!",
     'pt-BR': 'Alice bloqueia o roubo, afirmando que tem o Capitão (o que ela realmente tem). Bob poderia desafiar seu bloqueio, mas decide não fazê-lo. O roubo é impedido!',
+    'ar-EG': 'أليس تمنع السرقة، مدعية أن لديها القبطان (وهو ما تملكه بالفعل). يمكن لبوب الطعن في منعها، لكنه يقرر عدم القيام بذلك. تم منع السرقة!',
   },
   tutorialStep5Ok: {
     'de-DE': '...OK.',
@@ -3484,6 +3775,7 @@ const translations: Translations = {
     'hi-IN': '...ठीक है।',
     'it-IT': '...OK.',
     'pt-BR': '...OK.',
+    'ar-EG': '...حسنًا.',
   },
   tutorialStep5Title: {
     'de-DE': 'Blockieren',
@@ -3493,6 +3785,7 @@ const translations: Translations = {
     'hi-IN': 'अवरोधन',
     'it-IT': 'Bloccare',
     'pt-BR': 'Bloquear',
+    'ar-EG': 'المنع',
   },
   tutorialStep6Content: {
     'de-DE': 'Bob will meuchelmorden (kostet 3 Münzen), hat aber nur 2. Er kann sich das nicht leisten! Stattdessen nimmt er Einkommen (1 Münze, kann nie blockiert oder herausgefordert werden).',
@@ -3502,6 +3795,7 @@ const translations: Translations = {
     'hi-IN': 'Bob Assassinate करना चाहता है (3 सिक्के लगते हैं) लेकिन उसके पास केवल 2 हैं। वह इसे वहन नहीं कर सकता! इसके बजाय, वह Income लेता है (1 सिक्का, कभी ब्लॉक या चुनौती नहीं दी जा सकती)।',
     'it-IT': "Bob vuole Assassinare (costa 3 monete) ma ne ha solo 2. Non può permetterselo! Invece, prende un Reddito (1 moneta, non può mai essere bloccato o sfidato).",
     'pt-BR': 'Bob quer Assassinar (custa 3 moedas) mas só tem 2. Não pode pagar! Em vez disso, ele pega Renda (1 moeda, nunca pode ser bloqueada ou desafiada).',
+    'ar-EG': 'بوب يريد الاغتيال (يكلف ٣ عملات) لكن لديه فقط ٢. لا يستطيع تحمل التكلفة! بدلاً من ذلك، يأخذ دخل (عملة واحدة، لا يمكن منعه أو الطعن فيه أبدًا).',
   },
   tutorialStep6Title: {
     'de-DE': 'Runde 3: Aktionskosten',
@@ -3511,6 +3805,7 @@ const translations: Translations = {
     'hi-IN': 'मोड़ 3: क्रिया लागत',
     'it-IT': 'Turno 3: Costi delle Azioni',
     'pt-BR': 'Turno 3: Custos de Ação',
+    'ar-EG': 'الدور ٣: تكاليف الإجراءات',
   },
   tutorialStep7Content: {
     'de-DE': 'Carol nutzt die Fähigkeit ihres Botschafters. Sie zieht 2 Karten vom Stapel, schaut sich alle 4 an und wählt 2 zum Behalten. Der Rest geht zurück in den Stapel.',
@@ -3520,6 +3815,7 @@ const translations: Translations = {
     'hi-IN': 'Carol अपने Ambassador की क्षमता का उपयोग करती है। वह डेक से 2 कार्ड निकालती है, सभी 4 को देखती है, और 2 रखने के लिए चुनती है। बाकी वापस डेक में जाते हैं।',
     'it-IT': "Carol usa l'abilità del suo Ambasciatore. Pesca 2 carte dal mazzo, guarda tutte e 4, e sceglie 2 da tenere. Il resto torna nel mazzo.",
     'pt-BR': 'Carol usa a habilidade do seu Embaixador. Ela compra 2 cartas do baralho, olha todas as 4 e escolhe 2 para manter. O resto volta para o baralho.',
+    'ar-EG': 'كارول تستخدم قدرة سفيرها. تسحب بطاقتين من المجموعة، تنظر إلى الأربع، وتختار ٢ للاحتفاظ بهما. الباقي يعود إلى المجموعة.',
   },
   tutorialStep7Detail: {
     'de-DE': 'Schaut 4 Karten an, behält 2',
@@ -3529,6 +3825,7 @@ const translations: Translations = {
     'hi-IN': '4 कार्ड देखती है, 2 रखती है',
     'it-IT': 'Guarda 4 carte, ne tiene 2',
     'pt-BR': 'Olha 4 cartas, fica com 2',
+    'ar-EG': 'تنظر إلى ٤ بطاقات، تحتفظ باثنتين',
   },
   tutorialStep7Title: {
     'de-DE': 'Runde 4: Austausch',
@@ -3538,6 +3835,7 @@ const translations: Translations = {
     'hi-IN': 'मोड़ 4: विनिमय',
     'it-IT': 'Turno 4: Scambio',
     'pt-BR': 'Turno 4: Troca',
+    'ar-EG': 'الدور ٤: التبديل',
   },
   tutorialStep8Challenge: {
     'de-DE': 'Du hast nicht den',
@@ -3547,6 +3845,7 @@ const translations: Translations = {
     'hi-IN': '\u0924\u0941\u092e\u094d\u0939\u093e\u0930\u0947 \u092a\u093e\u0938 \u0928\u0939\u0940\u0902 \u0939\u0948',
     'it-IT': 'Non hai il',
     'pt-BR': 'Voc\u00ea n\u00e3o tem o',
+    'ar-EG': 'ليس لديك',
   },
   tutorialStep8Content: {
     'de-DE': 'Alice beansprucht erneut Steuern. Diesmal fordert Carol sie heraus! Alice muss ihren Herzog zeigen...',
@@ -3556,6 +3855,7 @@ const translations: Translations = {
     'hi-IN': 'Alice फिर से Tax का दावा करती है। इस बार, Carol उसे चुनौती देती है! Alice को अपना Duke दिखाना होगा...',
     'it-IT': 'Alice rivendica di nuovo la Tassa. Questa volta, Carol la sfida! Alice deve rivelare il suo Duca...',
     'pt-BR': 'Alice reivindica Imposto novamente. Desta vez, Carol a desafia! Alice deve revelar seu Duque...',
+    'ar-EG': 'تطالب أليس بالضرائب مرة أخرى. هذه المرة، كارول تطعن فيها! يجب على أليس الكشف عن دوقها...',
   },
   tutorialStep8Result: {
     'de-DE': 'Carol VERLIERT die Herausforderung und muss eine Einflusskarte aufgeben!',
@@ -3565,6 +3865,7 @@ const translations: Translations = {
     'hi-IN': 'Carol चुनौती हार जाती है और उसे एक प्रभाव कार्ड छोड़ना होगा!',
     'it-IT': "Carol PERDE la sfida e deve rinunciare a una carta d'influenza!",
     'pt-BR': 'Carol PERDE o desafio e deve desistir de uma carta de influência!',
+    'ar-EG': 'كارول تخسر الطعن ويجب أن تتخلى عن بطاقة نفوذ!',
   },
   tutorialStep8Reveal: {
     'de-DE': 'Zeigt den Herzog',
@@ -3574,6 +3875,7 @@ const translations: Translations = {
     'hi-IN': 'Duke दिखाती है',
     'it-IT': 'Rivela il Duca',
     'pt-BR': 'Revela o Duque',
+    'ar-EG': 'تكشف عن الدوق',
   },
   tutorialStep8Title: {
     'de-DE': 'Herausforderung fehlgeschlagen!',
@@ -3583,6 +3885,7 @@ const translations: Translations = {
     'hi-IN': 'चुनौती विफल!',
     'it-IT': 'Sfida Fallita!',
     'pt-BR': 'Desafio Falhou!',
+    'ar-EG': 'فشل الطعن!',
   },
   tutorialStep9Content: {
     'de-DE': 'Bob hat jetzt 4 Münzen (nach mehreren Einkommens-Runden). Er beansprucht ein Attentat auf Carol! Carol hat nur noch eine Karte — wenn sie keine Contessa hat, um zu blockieren, ist sie raus!',
@@ -3592,6 +3895,7 @@ const translations: Translations = {
     'hi-IN': 'Bob के पास अब 4 सिक्के हैं (कई Income मोड़ों के बाद)। वह Carol पर Assassinate का दावा करता है! Carol के पास केवल 1 कार्ड बचा है — अगर उसके पास ब्लॉक करने के लिए Contessa नहीं है, तो वह बाहर है!',
     'it-IT': "Bob ora ha 4 monete (dopo diversi turni di Reddito). Rivendica l'Assassinio di Carol! Carol ha solo 1 carta rimasta — se non ha la Contessa per bloccare, è fuori!",
     'pt-BR': 'Bob agora tem 4 moedas (após várias rodadas de Renda). Ele reivindica Assassinar Carol! Carol só tem 1 carta — se não tiver a Condessa para bloquear, está fora!',
+    'ar-EG': 'بوب لديه الآن ٤ عملات (بعد عدة أدوار دخل). يطالب باغتيال كارول! كارول لديها بطاقة واحدة فقط — إذا لم يكن لديها الكونتيسة للمنع، ستخرج!',
   },
   tutorialStep9Detail: {
     'de-DE': 'Carol verliert ihre letzte Einflusskarte und ist aus dem Spiel!',
@@ -3601,6 +3905,7 @@ const translations: Translations = {
     'hi-IN': 'Carol अपना आखिरी प्रभाव कार्ड खो देती है और खेल से बाहर है!',
     'it-IT': "Carol perde la sua ultima carta d'influenza ed è fuori dal gioco!",
     'pt-BR': 'Carol perde sua última carta de influência e está fora do jogo!',
+    'ar-EG': 'كارول تخسر آخر بطاقة نفوذ وتخرج من اللعبة!',
   },
   tutorialStep9Title: {
     'de-DE': 'Meuchelmord!',
@@ -3610,6 +3915,7 @@ const translations: Translations = {
     'hi-IN': 'हत्या!',
     'it-IT': 'Assassinio!',
     'pt-BR': 'Assassinato!',
+    'ar-EG': 'اغتيال!',
   },
   unchallenged: {
     'de-DE': 'Nicht herausgefordert',
@@ -3619,6 +3925,7 @@ const translations: Translations = {
     'hi-IN': 'बिना चुनौती',
     'it-IT': 'Non sfidato',
     'pt-BR': 'Sem desafio',
+    'ar-EG': 'بدون طعن',
   },
   useInquisitor: {
     'de-DE': 'Inquisitor verwenden',
@@ -3628,6 +3935,7 @@ const translations: Translations = {
     'hi-IN': 'जाँचकर्ता का उपयोग करें',
     'it-IT': 'Usa Inquisitore',
     'pt-BR': 'Usar Inquisidor',
+    'ar-EG': 'استخدام المحقق',
   },
   vengefulness: {
     'de-DE': 'Rachsucht',
@@ -3637,6 +3945,7 @@ const translations: Translations = {
     'hi-IN': 'प्रतिशोध',
     'it-IT': 'Vendetta',
     'pt-BR': 'Vingança',
+    'ar-EG': 'انتقامية',
   },
   viewLeaderboard: {
     'de-DE': 'Bestenliste anzeigen',
@@ -3646,6 +3955,7 @@ const translations: Translations = {
     'hi-IN': 'लीडरबोर्ड देखें',
     'it-IT': 'Vedi classifica',
     'pt-BR': 'Ver classificação',
+    'ar-EG': 'عرض لوحة المتصدرين',
   },
   waitingOnOtherPlayers: {
     'de-DE': 'Warte auf andere Spieler',
@@ -3655,6 +3965,7 @@ const translations: Translations = {
     'hi-IN': 'अन्य खिलाड़ियों का इंतज़ार कर रहा है',
     'it-IT': 'In attesa di altri giocatori',
     'pt-BR': 'Aguardando outros jogadores',
+    'ar-EG': 'في انتظار اللاعبين الآخرين',
   },
   warning: {
     'de-DE': 'Warnung',
@@ -3664,6 +3975,7 @@ const translations: Translations = {
     'hi-IN': 'चेतावनी',
     'it-IT': 'Avviso',
     'pt-BR': 'Aviso',
+    'ar-EG': 'تحذير',
   },
   websocketsConnection: {
     'de-DE': 'WebSockets-Verbindung',
@@ -3673,6 +3985,7 @@ const translations: Translations = {
     'hi-IN': 'WebSockets कनेक्शन',
     'it-IT': 'Connessione WebSockets',
     'pt-BR': 'Conexão WebSockets',
+    'ar-EG': 'اتصال WebSockets',
   },
   welcomeToCoup: {
     'de-DE': 'Willkommen zu Coup!',
@@ -3682,6 +3995,7 @@ const translations: Translations = {
     'hi-IN': 'Coup में आपका स्वागत है!',
     'it-IT': 'Benvenuto in Coup!',
     'pt-BR': 'Bem-vindo ao Coup!',
+    'ar-EG': 'مرحبًا بك في Coup!',
   },
   whatIsBotsName: {
     'de-DE': 'Wie heißt der Bot?',
@@ -3691,6 +4005,7 @@ const translations: Translations = {
     'hi-IN': 'बॉट का नाम क्या है?',
     'it-IT': 'Qual è il suo nome?',
     'pt-BR': 'Qual é o nome dele?',
+    'ar-EG': 'ما اسمه؟',
   },
   whatIsYourName: {
     'de-DE': 'Wie heißt du?',
@@ -3700,6 +4015,7 @@ const translations: Translations = {
     'hi-IN': 'आपका नाम क्या है?',
     'it-IT': 'Qual è il tuo nome?',
     'pt-BR': 'Qual é o seu nome?',
+    'ar-EG': 'ما اسمك؟',
   },
   winRate: {
     'de-DE': 'Siegquote',
@@ -3709,6 +4025,7 @@ const translations: Translations = {
     'hi-IN': 'जीत दर',
     'it-IT': 'Percentuale vittorie',
     'pt-BR': 'Taxa de vitória',
+    'ar-EG': 'معدل الفوز',
   },
   wins: {
     'de-DE': 'Siege',
@@ -3718,6 +4035,7 @@ const translations: Translations = {
     'hi-IN': 'जीत',
     'it-IT': 'Vittorie',
     'pt-BR': 'Vitórias',
+    'ar-EG': 'انتصارات',
   },
   writeNewMessage: {
     'de-DE': 'Neue Nachricht schreiben',
@@ -3727,6 +4045,7 @@ const translations: Translations = {
     'hi-IN': 'नया संदेश लिखें',
     'it-IT': 'Scrivi Nuovo Messaggio',
     'pt-BR': 'Escrever nova mensagem',
+    'ar-EG': 'اكتب رسالة جديدة',
   },
   youAreSpectating: {
     'de-DE': 'Du beobachtest das Spiel',
@@ -3736,6 +4055,7 @@ const translations: Translations = {
     'hi-IN': 'आप खेल का अवलोकन कर रहे हैं',
     'it-IT': 'Stai assistendo',
     'pt-BR': 'Você está assistindo',
+    'ar-EG': 'أنت تشاهد',
   },
   yourRanking: {
     'de-DE': 'Deine Platzierung',
@@ -3745,6 +4065,7 @@ const translations: Translations = {
     'hi-IN': 'आपकी रैंकिंग',
     'it-IT': 'La tua classifica',
     'pt-BR': 'Sua classificação',
+    'ar-EG': 'ترتيبك',
   },
 }
 
