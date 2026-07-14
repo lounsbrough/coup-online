@@ -1,4 +1,5 @@
 export enum AvailableLanguageCode {
+  "ar-EG" = "ar-EG",
   "de-DE" = "de-DE",
   "en-US" = "en-US",
   "es-MX" = "es-MX",
@@ -15,6 +16,11 @@ export type AvailableLanguage = {
 }
 
 export const availableLanguages: AvailableLanguage[] = [
+  {
+    code: AvailableLanguageCode["ar-EG"],
+    flag: "🇪🇬",
+    name: "العربية",
+  },
   {
     code: AvailableLanguageCode["de-DE"],
     flag: "🇩🇪",

@@ -345,6 +345,7 @@ export type Translations = ActionMessages &
 
 const translations: Translations = {
   achievements: {
+    'ar-EG': 'الإنجازات',
     'de-DE': 'Erfolge',
     'en-US': 'Achievements',
     'es-MX': 'Logros',
@@ -354,6 +355,7 @@ const translations: Translations = {
     'pt-BR': 'Conquistas',
   },
   action: {
+    'ar-EG': 'إجراء',
     'de-DE': 'Aktion',
     'en-US': 'Action',
     'es-MX': 'Acción',
@@ -363,6 +365,7 @@ const translations: Translations = {
     'pt-BR': 'Ação',
   },
   actions: {
+    'ar-EG': 'إجراءات',
     'de-DE': 'Aktionen',
     'en-US': 'Actions',
     'es-MX': 'Acciones',
@@ -372,6 +375,7 @@ const translations: Translations = {
     'pt-BR': 'Ações',
   },
   [Actions.Assassinate]: {
+    'ar-EG': 'اغتيال',
     'de-DE': 'Attentat',
     'en-US': 'Assassinate',
     'es-MX': 'Asesinar',
@@ -381,6 +385,7 @@ const translations: Translations = {
     'pt-BR': 'Assassinar',
   },
   [Actions.Convert]: {
+    'ar-EG': 'تحويل',
     'de-DE': 'Konvertieren',
     'en-US': 'Convert',
     'es-MX': 'Convertir',
@@ -390,6 +395,7 @@ const translations: Translations = {
     'pt-BR': 'Converter',
   },
   [Actions.Coup]: {
+    'ar-EG': 'انقلاب',
     'de-DE': 'Putsch',
     'en-US': 'Coup',
     'es-MX': 'Golpe de Estado',
@@ -399,6 +405,7 @@ const translations: Translations = {
     'pt-BR': 'Golpe de Estado',
   },
   [Actions.Embezzle]: {
+    'ar-EG': 'اختلاس',
     'de-DE': 'Unterschlagen',
     'en-US': 'Embezzle',
     'es-MX': 'Malversar',
@@ -408,6 +415,7 @@ const translations: Translations = {
     'pt-BR': 'Desviar',
   },
   [Actions.Examine]: {
+    'ar-EG': 'فحص',
     'de-DE': 'Untersuchen',
     'en-US': 'Examine',
     'es-MX': 'Examinar',
@@ -417,6 +425,7 @@ const translations: Translations = {
     'pt-BR': 'Examinar',
   },
   [Actions.Exchange]: {
+    'ar-EG': 'تبديل',
     'de-DE': 'Austausch',
     'en-US': 'Exchange',
     'es-MX': 'Intercambiar',
@@ -426,6 +435,7 @@ const translations: Translations = {
     'pt-BR': 'Trocar',
   },
   [Actions.ForeignAid]: {
+    'ar-EG': 'مساعدة خارجية',
     'de-DE': 'Auslandshilfe',
     'en-US': 'Foreign Aid',
     'es-MX': 'Ayuda Extranjera',
@@ -435,6 +445,7 @@ const translations: Translations = {
     'pt-BR': 'Ajuda Estrangeira',
   },
   [Actions.Income]: {
+    'ar-EG': 'دخل',
     'de-DE': 'Einkommen',
     'en-US': 'Income',
     'es-MX': 'Ingreso',
@@ -444,6 +455,7 @@ const translations: Translations = {
     'pt-BR': 'Renda',
   },
   [Actions.Revive]: {
+    'ar-EG': 'إحياء',
     'de-DE': 'Wiederbeleben',
     'en-US': 'Revive',
     'es-MX': 'Revivir',
@@ -453,6 +465,7 @@ const translations: Translations = {
     'pt-BR': 'Reviver',
   },
   [Actions.Steal]: {
+    'ar-EG': 'سرقة',
     'de-DE': 'Stehlen',
     'en-US': 'Steal',
     'es-MX': 'Robar',
@@ -462,6 +475,7 @@ const translations: Translations = {
     'pt-BR': 'Roubar',
   },
   [Actions.Tax]: {
+    'ar-EG': 'ضرائب',
     'de-DE': 'Steuern',
     'en-US': 'Tax',
     'es-MX': 'Impuesto',
@@ -471,6 +485,7 @@ const translations: Translations = {
     'pt-BR': 'Imposto',
   },
   actualHand: {
+    'ar-EG': 'اليد',
     'de-DE': 'Tatsächliche Hand',
     'en-US': 'Hand',
     'es-MX': 'Mano real',
@@ -480,6 +495,7 @@ const translations: Translations = {
     'pt-BR': 'Mão real',
   },
   add: {
+    'ar-EG': 'إضافة',
     'de-DE': 'Hinzufügen',
     'en-US': 'Add',
     'es-MX': 'Agregar',
@@ -489,6 +505,7 @@ const translations: Translations = {
     'pt-BR': 'Adicionar',
   },
   addAiPlayer: {
+    'ar-EG': 'إضافة لاعب ذكاء اصطناعي',
     'de-DE': 'KI-Spieler hinzufügen',
     'en-US': 'Add AI Player',
     'es-MX': 'Agregar Jugador IA',
@@ -498,6 +515,7 @@ const translations: Translations = {
     'pt-BR': 'Adicionar Jogador IA',
   },
   addPlayersToStartGame: {
+    'ar-EG': 'أضف لاعبًا آخر على الأقل لبدء اللعبة',
     'de-DE':
       'Füge mindestens einen weiteren Spieler hinzu, um das Spiel zu starten',
     'en-US': 'Add at least one more player to start game',
@@ -508,6 +526,7 @@ const translations: Translations = {
     'pt-BR': 'Adicione pelo menos mais um jogador para iniciar o jogo',
   },
   allowKeep: {
+    'ar-EG': 'السماح بالاحتفاظ',
     'de-DE': 'Behalten erlauben',
     'en-US': 'Allow Keep',
     'es-MX': 'Permitir Conservar',
@@ -517,6 +536,7 @@ const translations: Translations = {
     'pt-BR': 'Permitir Manter',
   },
   allowRevive: {
+    'ar-EG': 'السماح بالإحياء',
     'de-DE': 'Wiederbeleben erlauben',
     'en-US': 'Allow Revive',
     'es-MX': 'Permitir Revivir',
@@ -526,6 +546,7 @@ const translations: Translations = {
     'pt-BR': 'Permitir Reviver',
   },
   anyone: {
+    'ar-EG': 'أي شخص',
     'de-DE': 'Jeder',
     'en-US': 'Anyone',
     'es-MX': 'Cualquiera',
@@ -535,6 +556,7 @@ const translations: Translations = {
     'pt-BR': 'Qualquer um',
   },
   assassinations: {
+    'ar-EG': 'اغتيالات',
     'de-DE': 'Attentate',
     'en-US': 'Assassinations',
     'es-MX': 'Asesinatos',
@@ -544,6 +566,7 @@ const translations: Translations = {
     'pt-BR': 'Assassinatos',
   },
   averageWaitTime: {
+    'ar-EG': 'متوسط وقت الانتظار',
     'de-DE': 'Durchschnittliche Wartezeit',
     'en-US': 'Average Wait Time',
     'es-MX': 'Tiempo de espera promedio',
@@ -553,6 +576,7 @@ const translations: Translations = {
     'pt-BR': 'Tempo médio de espera',
   },
   bestStreak: {
+    'ar-EG': 'أفضل سلسلة',
     'de-DE': 'Beste Serie',
     'en-US': 'Best Streak',
     'es-MX': 'Mejor racha',
@@ -562,6 +586,7 @@ const translations: Translations = {
     'pt-BR': 'Melhor sequência',
   },
   block: {
+    'ar-EG': 'منع',
     'de-DE': 'Blocken',
     'en-US': 'Block',
     'es-MX': 'Bloquear',
@@ -571,6 +596,7 @@ const translations: Translations = {
     'pt-BR': 'Bloquear',
   },
   blockAsInfluence: {
+    'ar-EG': 'منع باستخدام {{primaryInfluence}}',
     'de-DE': 'Blocken als {{primaryInfluence}}',
     'en-US': 'Block as {{primaryInfluence}}',
     'es-MX': 'Bloquear como {{primaryInfluence}}',
@@ -580,6 +606,7 @@ const translations: Translations = {
     'pt-BR': 'Bloquear como {{primaryInfluence}}',
   },
   blockChallengedBy: {
+    'ar-EG': '⚔️ المنع تم الطعن فيه من قبل {{player}}',
     'de-DE': '⚔️ Block herausgefordert von {{player}}',
     'en-US': '⚔️ Block challenged by {{player}}',
     'es-MX': '⚔️ Bloqueo desafiado por {{player}}',
@@ -589,6 +616,7 @@ const translations: Translations = {
     'pt-BR': '⚔️ Bloqueio desafiado por {{player}}',
   },
   blockedBy: {
+    'ar-EG': 'تم منعه من قبل {{player}}',
     'de-DE': 'Blockiert von {{player}}',
     'en-US': 'Blocked by {{player}}',
     'es-MX': 'Bloqueado por {{player}}',
@@ -598,6 +626,7 @@ const translations: Translations = {
     'pt-BR': 'Bloqueado por {{player}}',
   },
   bluff: {
+    'ar-EG': 'خداع',
     'de-DE': 'Bluff',
     'en-US': 'Bluff',
     'es-MX': 'Farol',
@@ -607,6 +636,7 @@ const translations: Translations = {
     'pt-BR': 'Blefe',
   },
   bluffSuccessRate: {
+    'ar-EG': 'معدل نجاح الخداع',
     'de-DE': 'Bluff-Erfolgsrate',
     'en-US': 'Bluff Success Rate',
     'es-MX': 'Tasa de éxito de faroles',
@@ -616,6 +646,7 @@ const translations: Translations = {
     'pt-BR': 'Taxa de sucesso de blefe',
   },
   briefDescriptionOfCoup: {
+    'ar-EG': 'لعبة الخداع والاستنتاج والحظ.',
     'de-DE': 'Das Spiel der Täuschung, Deduktion und des Glücks.',
     'en-US': 'The game of deception, deduction, and luck.',
     'es-MX': 'El juego de engaño, deducción y suerte.',
@@ -625,6 +656,7 @@ const translations: Translations = {
     'pt-BR': 'O jogo de engano, dedução e sorte.',
   },
   cancel: {
+    'ar-EG': 'إلغاء',
     'de-DE': 'Abbrechen',
     'en-US': 'Cancel',
     'es-MX': 'Cancelar',
@@ -634,6 +666,7 @@ const translations: Translations = {
     'pt-BR': 'Cancelar',
   },
   challenge: {
+    'ar-EG': 'طعن',
     'de-DE': 'Herausfordern',
     'en-US': 'Challenge',
     'es-MX': 'Desafiar',
@@ -643,6 +676,7 @@ const translations: Translations = {
     'pt-BR': 'Desafiar',
   },
   challengeAccuracy: {
+    'ar-EG': 'دقة الطعن',
     'de-DE': 'Herausforderungsgenauigkeit',
     'en-US': 'Challenge Accuracy',
     'es-MX': 'Precisión de desafíos',
@@ -652,6 +686,7 @@ const translations: Translations = {
     'pt-BR': 'Precisão de desafios',
   },
   challengeFailed: {
+    'ar-EG': '— فشل الطعن',
     'de-DE': '— Herausforderung fehlgeschlagen',
     'en-US': '— Challenge failed',
     'es-MX': '— Desafío fallido',
@@ -661,6 +696,7 @@ const translations: Translations = {
     'pt-BR': '— Desafio falhou',
   },
   challengedBy: {
+    'ar-EG': '⚔️ تم الطعن فيه من قبل {{player}}',
     'de-DE': '⚔️ {{player}} hat herausgefordert',
     'en-US': '⚔️ Challenged by {{player}}',
     'es-MX': '⚔️ Desafiado por {{player}}',
@@ -670,6 +706,7 @@ const translations: Translations = {
     'pt-BR': '⚔️ Desafiado por {{player}}',
   },
   changeAPlayersFaction: {
+    'ar-EG': 'تغيير فصيل لاعب',
     'de-DE': 'Fraktion eines Spielers ändern',
     'en-US': "Change a player's faction",
     'es-MX': 'Cambiar la facción de un jugador',
@@ -679,6 +716,7 @@ const translations: Translations = {
     'pt-BR': 'Mudar a facção de um jogador',
   },
   changeDisplayName: {
+    'ar-EG': 'تغيير اسم العرض',
     'de-DE': 'Anzeigename ändern',
     'en-US': 'Change Display Name',
     'es-MX': 'Cambiar nombre',
@@ -688,6 +726,7 @@ const translations: Translations = {
     'pt-BR': 'Alterar nome',
   },
   changeYourFaction: {
+    'ar-EG': 'تغيير فصيلك',
     'de-DE': 'Deine Fraktion ändern',
     'en-US': 'Change your faction',
     'es-MX': 'Cambiar tu facción',
@@ -697,6 +736,7 @@ const translations: Translations = {
     'pt-BR': 'Mude sua facção',
   },
   chat: {
+    'ar-EG': 'محادثة',
     'de-DE': 'Chat',
     'en-US': 'Chat',
     'es-MX': 'Chat',
@@ -706,6 +746,7 @@ const translations: Translations = {
     'pt-BR': 'Bate-papo',
   },
   cheatSheet: {
+    'ar-EG': 'ورقة غش',
     'de-DE': 'Spickzettel',
     'en-US': 'Cheat Sheet',
     'es-MX': 'Hoja de Trucos',
@@ -715,6 +756,7 @@ const translations: Translations = {
     'pt-BR': 'Folha de Dicas',
   },
   chooseATarget: {
+    'ar-EG': 'اختر هدفًا',
     'de-DE': 'Wähle ein Ziel',
     'en-US': 'Choose a Target',
     'es-MX': 'Elegir un Objetivo',
@@ -724,6 +766,7 @@ const translations: Translations = {
     'pt-BR': 'Escolher um Alvo',
   },
   chooseAnAction: {
+    'ar-EG': 'اختر إجراءً',
     'de-DE': 'Wähle eine Aktion',
     'en-US': 'Choose an Action',
     'es-MX': 'Elegir una Acción',
@@ -733,6 +776,7 @@ const translations: Translations = {
     'pt-BR': 'Escolher uma Ação',
   },
   chooseCardToReveal: {
+    'ar-EG': 'اختر بطاقة للكشف عنها',
     'de-DE': 'Wähle eine Karte zum Aufdecken',
     'en-US': 'Choose a card to reveal',
     'es-MX': 'Elige una carta para revelar',
@@ -742,6 +786,7 @@ const translations: Translations = {
     'pt-BR': 'Escolha uma carta para revelar',
   },
   chooseInfluenceToLose: {
+    'ar-EG': 'اختر نفوذًا لتخسره',
     'de-DE': 'Wähle eine Einflusskarte, die du verlieren möchtest',
     'en-US': 'Choose an influence to lose',
     'es-MX': 'Elegir una influencia para perder',
@@ -751,6 +796,7 @@ const translations: Translations = {
     'pt-BR': 'Escolher uma influência para perder',
   },
   chooseInfluenceToReveal: {
+    'ar-EG': 'اختر نفوذًا للكشف عنه',
     'de-DE': 'Wähle eine Einflusskarte, die du aufdecken möchtest',
     'en-US': 'Choose an influence to reveal',
     'es-MX': 'Elegir una influencia para revelar',
@@ -760,6 +806,7 @@ const translations: Translations = {
     'pt-BR': 'Escolher uma influência para revelar',
   },
   chooseInfluencesToKeep: {
+    'ar-EG': 'اختر {{count}} نفوذ{{plural[[ًا]]}} للاحتفاظ به',
     'de-DE':
       'Wähle {{count}} Einflusskarte{{plural[[n]]}}, die du behalten möchtest',
     'en-US': 'Choose {{count}} influence{{plural[[s]]}} to keep',
@@ -770,6 +817,7 @@ const translations: Translations = {
     'pt-BR': 'Escolher {{count}} influência{{plural[[s]]}} para manter',
   },
   choosePersonality: {
+    'ar-EG': 'اختر شخصية',
     'de-DE': 'Wähle eine Persönlichkeit',
     'en-US': 'Choose a Personality',
     'es-MX': 'Elegir una Personalidad',
@@ -779,6 +827,7 @@ const translations: Translations = {
     'pt-BR': 'Escolher uma Personalidade',
   },
   claimAnInfluence: {
+    'ar-EG': 'المطالبة بنفوذ',
     'de-DE': 'Beanspruche eine Einflusskarte',
     'en-US': 'Claim an Influence',
     'es-MX': 'Reclamar una Influencia',
@@ -788,6 +837,7 @@ const translations: Translations = {
     'pt-BR': 'Reivindicar uma Influência',
   },
   claimedInfluence: {
+    'ar-EG': 'تمت المطالبة',
     'de-DE': 'Behaupteter Einfluss',
     'en-US': 'Claimed',
     'es-MX': 'Influencia declarada',
@@ -797,6 +847,7 @@ const translations: Translations = {
     'pt-BR': 'Influência declarada',
   },
   close: {
+    'ar-EG': 'إغلاق',
     'de-DE': 'Schließen',
     'en-US': 'Close',
     'es-MX': 'Cerrar',
@@ -806,6 +857,7 @@ const translations: Translations = {
     'pt-BR': 'Fechar',
   },
   collectCoins: {
+    'ar-EG': 'اجمع {{count}} عملة{{plural[[ات]]}}',
     'de-DE': 'Sammle {{count}} Münze{{plural[[n]]}}',
     'en-US': 'Collect {{count}} coin{{plural[[s]]}}',
     'es-MX': 'Recoger {{count}} moneda{{plural[[s]]}}',
@@ -815,6 +867,7 @@ const translations: Translations = {
     'pt-BR': 'Coletar {{count}} moeda{{plural[[s]]}}',
   },
   colorMode: {
+    'ar-EG': 'وضع الألوان',
     'de-DE': 'Farbmodus',
     'en-US': 'Color Mode',
     'es-MX': 'Modo de Color',
@@ -824,6 +877,7 @@ const translations: Translations = {
     'pt-BR': 'Modo de Cor',
   },
   comebacks: {
+    'ar-EG': 'عودة',
     'de-DE': 'Comebacks',
     'en-US': 'Comebacks',
     'es-MX': 'Remontadas',
@@ -833,6 +887,7 @@ const translations: Translations = {
     'pt-BR': 'Viradas',
   },
   confirm: {
+    'ar-EG': 'تأكيد',
     'de-DE': 'Bestätigen',
     'en-US': 'Confirm',
     'es-MX': 'Confirmar',
@@ -842,6 +897,7 @@ const translations: Translations = {
     'pt-BR': 'Confirmar',
   },
   confirmActions: {
+    'ar-EG': 'تأكيد الإجراءات',
     'de-DE': 'Aktionen bestätigen',
     'en-US': 'Confirm Actions',
     'es-MX': 'Confirmar Acciones',
@@ -851,6 +907,7 @@ const translations: Translations = {
     'pt-BR': 'Confirmar Ações',
   },
   contents: {
+    'ar-EG': 'المحتويات',
     'de-DE': 'Inhalt',
     'en-US': 'Contents',
     'es-MX': 'Contenido',
@@ -860,6 +917,7 @@ const translations: Translations = {
     'pt-BR': 'Conteúdo',
   },
   convertOther: {
+    'ar-EG': 'تحويل آخر',
     'de-DE': 'Anderen konvertieren',
     'en-US': 'Convert Other',
     'es-MX': 'Convertir a Otro',
@@ -869,6 +927,7 @@ const translations: Translations = {
     'pt-BR': 'Converter Outro',
   },
   convertSelf: {
+    'ar-EG': 'تحويل النفس',
     'de-DE': 'Sich selbst konvertieren',
     'en-US': 'Convert Self',
     'es-MX': 'Convertirse',
@@ -878,6 +937,7 @@ const translations: Translations = {
     'pt-BR': 'Converter-se',
   },
   copiesOfEachInfluence: {
+    'ar-EG': '{{count}} نسخة من كل نفوذ في اللعبة',
     'de-DE': '{{count}} Kopien jedes Einflusses im Spiel',
     'en-US': '{{count}} copies of each influence in the game',
     'es-MX': '{{count}} copias de cada influencia en el juego',
@@ -887,6 +947,7 @@ const translations: Translations = {
     'pt-BR': '{{count}} cópias de cada influência no jogo',
   },
   copyInviteLink: {
+    'ar-EG': 'نسخ رابط الدعوة',
     'de-DE': 'Einladungslink kopieren',
     'en-US': 'Copy Invite Link',
     'es-MX': 'Copiar Enlace de Invitación',
@@ -896,6 +957,7 @@ const translations: Translations = {
     'pt-BR': 'Copiar Link de Convite',
   },
   coups: {
+    'ar-EG': 'انقلابات',
     'de-DE': 'Putsche',
     'en-US': 'Coups',
     'es-MX': 'Golpes',
@@ -905,6 +967,7 @@ const translations: Translations = {
     'pt-BR': 'Golpes',
   },
   createGame: {
+    'ar-EG': 'إنشاء لعبة',
     'de-DE': 'Spiel erstellen',
     'en-US': 'Create Game',
     'es-MX': 'Crear Juego',
@@ -914,6 +977,7 @@ const translations: Translations = {
     'pt-BR': 'Criar Jogo',
   },
   createNewGame: {
+    'ar-EG': 'إنشاء لعبة جديدة',
     'de-DE': 'Neues Spiel erstellen',
     'en-US': 'Create New Game',
     'es-MX': 'Crear Nuevo Juego',
@@ -923,6 +987,7 @@ const translations: Translations = {
     'pt-BR': 'Criar Novo Jogo',
   },
   currentStreak: {
+    'ar-EG': 'السلسلة الحالية',
     'de-DE': 'Aktuelle Serie',
     'en-US': 'Current Streak',
     'es-MX': 'Racha actual',
@@ -932,6 +997,7 @@ const translations: Translations = {
     'pt-BR': 'Sequência atual',
   },
   dark: {
+    'ar-EG': 'داكن',
     'de-DE': 'Dunkel',
     'en-US': 'Dark',
     'es-MX': 'Oscuro',
@@ -941,6 +1007,7 @@ const translations: Translations = {
     'pt-BR': 'Escuro',
   },
   deck: {
+    'ar-EG': 'المجموعة',
     'de-DE': 'Deck',
     'en-US': 'Deck',
     'es-MX': 'Mazo',
@@ -950,6 +1017,7 @@ const translations: Translations = {
     'pt-BR': 'Baralho',
   },
   deleteAccount: {
+    'ar-EG': 'حذف الحساب',
     'de-DE': 'Konto löschen',
     'en-US': 'Delete Account',
     'es-MX': 'Eliminar cuenta',
@@ -959,6 +1027,7 @@ const translations: Translations = {
     'pt-BR': 'Excluir conta',
   },
   deleteAccountConfirmMessage: {
+    'ar-EG': 'لا يمكن التراجع عن هذا. سيتم حذف حسابك وجميع الإحصائيات بشكل دائم.',
     'de-DE': 'Diese Aktion kann nicht rückgängig gemacht werden. Dein Konto und alle Statistiken werden dauerhaft gelöscht.',
     'en-US': 'This cannot be undone. Your account and all stats will be permanently deleted.',
     'es-MX': 'Esta acción no se puede deshacer. Tu cuenta y todas las estadísticas se eliminarán permanentemente.',
@@ -968,6 +1037,7 @@ const translations: Translations = {
     'pt-BR': 'Esta ação não pode ser desfeita. Sua conta e todas as estatísticas serão excluídas permanentemente.',
   },
   deleteAccountConfirmTitle: {
+    'ar-EG': 'حذف الحساب؟',
     'de-DE': 'Konto löschen?',
     'en-US': 'Delete account?',
     'es-MX': '¿Eliminar cuenta?',
@@ -977,6 +1047,7 @@ const translations: Translations = {
     'pt-BR': 'Excluir conta?',
   },
   displayName: {
+    'ar-EG': 'اسم العرض',
     'de-DE': 'Anzeigename',
     'en-US': 'Display Name',
     'es-MX': 'Nombre para mostrar',
@@ -986,6 +1057,7 @@ const translations: Translations = {
     'pt-BR': 'Nome de exibição',
   },
   displayNameTaken: {
+    'ar-EG': 'هذا الاسم مستخدم بالفعل',
     'de-DE': 'Dieser Name ist bereits vergeben',
     'en-US': 'This name is already taken',
     'es-MX': 'Este nombre ya está en uso',
@@ -995,6 +1067,7 @@ const translations: Translations = {
     'pt-BR': 'Este nome já está em uso',
   },
   draw1InfluenceAndDiscard1: {
+    'ar-EG': 'اسحب نفوذًا واحدًا وتخلص من واحد',
     'de-DE': 'Ziehe 1 Einflusskarte & lege 1 ab',
     'en-US': 'Draw 1 influence and discard 1',
     'es-MX': 'Robar 1 influencia y descartar 1',
@@ -1004,6 +1077,7 @@ const translations: Translations = {
     'pt-BR': 'Comprar 1 influência e descartar 1',
   },
   draw2InfluencesAndDiscard2: {
+    'ar-EG': 'اسحب نفوذين وتخلص من اثنين',
     'de-DE': 'Ziehe 2 Einflusskarten & lege 2 ab',
     'en-US': 'Draw 2 influences and discard 2',
     'es-MX': 'Robar 2 influencias y descartar 2',
@@ -1013,6 +1087,7 @@ const translations: Translations = {
     'pt-BR': 'Comprar 2 influências e descartar 2',
   },
   effect: {
+    'ar-EG': 'التأثير',
     'de-DE': 'Effekt',
     'en-US': 'Effect',
     'es-MX': 'Efecto',
@@ -1022,6 +1097,7 @@ const translations: Translations = {
     'pt-BR': 'Efeito',
   },
   emptyTreasury: {
+    'ar-EG': 'الخزينة فارغة',
     'de-DE': 'Die Staatskasse ist leer',
     'en-US': 'The treasury is empty',
     'es-MX': 'El tesoro está vacío',
@@ -1031,6 +1107,7 @@ const translations: Translations = {
     'pt-BR': 'O tesouro está vazio',
   },
   enableReformation: {
+    'ar-EG': 'تفعيل الإصلاح',
     'de-DE': 'Reformation aktivieren',
     'en-US': 'Enable Reformation',
     'es-MX': 'Habilitar Reforma',
@@ -1040,6 +1117,7 @@ const translations: Translations = {
     'pt-BR': 'Ativar Reforma',
   },
   error: {
+    'ar-EG': 'خطأ',
     'de-DE': 'Fehler',
     'en-US': 'Error',
     'es-MX': 'Error',
@@ -1049,6 +1127,7 @@ const translations: Translations = {
     'pt-BR': 'Erro',
   },
   eventLog: {
+    'ar-EG': 'سجل الأحداث',
     'de-DE': 'Ereignisprotokoll',
     'en-US': 'Event Log',
     'es-MX': 'Registro de Eventos',
@@ -1058,6 +1137,7 @@ const translations: Translations = {
     'pt-BR': 'Registro de Eventos',
   },
   eventLogRetentionTurns: {
+    'ar-EG': 'الاحتفاظ بسجل الأحداث (بالأدوار)',
     'de-DE': 'Aufbewahrungsdauer der Ereignisprotokolle (Züge)',
     'en-US': 'Event log retention (turns)',
     'es-MX': 'Retención del registro de eventos (turnos)',
@@ -1067,6 +1147,7 @@ const translations: Translations = {
     'pt-BR': 'Retenção do registro de eventos (turnos)',
   },
   examineDecision: {
+    'ar-EG': 'البطاقة المكشوفة هي {{primaryInfluence}}',
     'de-DE': 'Die aufgedeckte Karte ist {{primaryInfluence}}',
     'en-US': 'The revealed card is {{primaryInfluence}}',
     'es-MX': 'La carta revelada es {{primaryInfluence}}',
@@ -1077,6 +1158,7 @@ const translations: Translations = {
   },
   [EventMessages.ActionConfirm]: {
     [Actions.Assassinate]: {
+      'ar-EG': '{{action[[اغتيال]]}} {{secondaryPlayer}}',
       'de-DE': '{{action[[Attentat]]}} {{secondaryPlayer}}',
       'en-US': '{{action[[Assassinate]]}} {{secondaryPlayer}}',
       'es-MX': '{{action[[Asesinar]]}} {{secondaryPlayer}}',
@@ -1086,6 +1168,7 @@ const translations: Translations = {
       'pt-BR': '{{action[[Assassinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Coup]: {
+      'ar-EG': '{{action[[انقلاب]]}} {{secondaryPlayer}}',
       'de-DE': '{{action[[Putsch]]}} {{secondaryPlayer}}',
       'en-US': '{{action[[Coup]]}} {{secondaryPlayer}}',
       'es-MX': '{{action[[Golpe de Estado]]}} {{secondaryPlayer}}',
@@ -1095,6 +1178,7 @@ const translations: Translations = {
       'pt-BR': '{{action[[Golpear]]}} {{secondaryPlayer}}',
     },
     [Actions.Convert]: {
+      'ar-EG': '{{action[[تحويل]]}} {{secondaryPlayer}}',
       'de-DE': '{{action[[Konvertieren]]}} {{secondaryPlayer}}',
       'en-US': '{{action[[Convert]]}} {{secondaryPlayer}}',
       'es-MX': '{{action[[Convertir]]}} {{secondaryPlayer}}',
@@ -1104,6 +1188,7 @@ const translations: Translations = {
       'pt-BR': '{{action[[Converter]]}} {{secondaryPlayer}}',
     },
     [Actions.Embezzle]: {
+      'ar-EG': '{{action[[اختلاس]]}} من الخزينة',
       'de-DE': '{{action[[Unterschlagen]]}} aus der Staatskasse',
       'en-US': '{{action[[Embezzle]]}} from treasury',
       'es-MX': '{{action[[Malversar]]}} del tesoro',
@@ -1113,6 +1198,7 @@ const translations: Translations = {
       'pt-BR': '{{action[[Desviar]]}} do tesouro',
     },
     [Actions.Examine]: {
+      'ar-EG': '{{action[[فحص]]}} {{secondaryPlayer}}',
       'de-DE': '{{action[[Untersuchen]]}} {{secondaryPlayer}}',
       'en-US': '{{action[[Examine]]}} {{secondaryPlayer}}',
       'es-MX': '{{action[[Examinar]]}} {{secondaryPlayer}}',
@@ -1122,6 +1208,7 @@ const translations: Translations = {
       'pt-BR': '{{action[[Examinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
+      'ar-EG': '{{action[[تبديل]]}} النفوذ',
       'de-DE': '{{action[[Austausch]]}} von Einflusskarten',
       'en-US': '{{action[[Exchange]]}} influences',
       'es-MX': '{{action[[Intercambiar]]}} influencias',
@@ -1131,6 +1218,7 @@ const translations: Translations = {
       'pt-BR': '{{action[[Trocar]]}} influências',
     },
     [Actions.ForeignAid]: {
+      'ar-EG': 'جمع {{action[[مساعدة خارجية]]}}',
       'de-DE': 'Sammle {{action[[Auslandshilfe]]}}',
       'en-US': 'Collect {{action[[Foreign Aid]]}}',
       'es-MX': 'Recoger {{action[[Ayuda Extranjera]]}}',
@@ -1140,6 +1228,7 @@ const translations: Translations = {
       'pt-BR': 'Coletar {{action[[Ajuda Estrangeira]]}}',
     },
     [Actions.Income]: {
+      'ar-EG': 'جمع {{action[[دخل]]}}',
       'de-DE': 'Sammle {{action[[Einkommen]]}}',
       'en-US': 'Collect {{action[[Income]]}}',
       'es-MX': 'Recoger {{action[[Ingreso]]}}',
@@ -1149,6 +1238,7 @@ const translations: Translations = {
       'pt-BR': 'Coletar {{action[[Renda]]}}',
     },
     [Actions.Revive]: {
+      'ar-EG': '{{action[[إحياء]]}} نفوذ',
       'de-DE': '{{action[[Wiederbeleben]]}} einer Einflusskarte',
       'en-US': '{{action[[Revive]]}} an influence',
       'es-MX': '{{action[[Revivir]]}} una influencia',
@@ -1158,6 +1248,7 @@ const translations: Translations = {
       'pt-BR': '{{action[[Reviver]]}} uma influência',
     },
     [Actions.Steal]: {
+      'ar-EG': '{{action[[سرقة]]}} من {{secondaryPlayer}}',
       'de-DE': '{{action[[Stehlen]]}} von {{secondaryPlayer}}',
       'en-US': '{{action[[Steal]]}} from {{secondaryPlayer}}',
       'es-MX': '{{action[[Robar]]}} de {{secondaryPlayer}}',
@@ -1167,6 +1258,7 @@ const translations: Translations = {
       'pt-BR': '{{action[[Roubar]]}} de {{secondaryPlayer}}',
     },
     [Actions.Tax]: {
+      'ar-EG': 'جمع {{action[[ضرائب]]}}',
       'de-DE': 'Sammle {{action[[Steuern]]}}',
       'en-US': 'Collect {{action[[Tax]]}}',
       'es-MX': 'Recoger {{action[[Impuesto]]}}',
@@ -1178,6 +1270,8 @@ const translations: Translations = {
   },
   [EventMessages.ActionPending]: {
     [Actions.Assassinate]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[اغتيال]]}} {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} versucht, {{secondaryPlayer}} zu {{action[[Attentat]]}}',
       'en-US':
@@ -1193,6 +1287,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Assassinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Embezzle]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[اختلاس]]}} من الخزينة',
       'de-DE':
         '{{primaryPlayer}} versucht, aus der Staatskasse zu {{action[[Unterschlagen]]}}',
       'en-US':
@@ -1208,6 +1304,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Desviar]]}} do tesouro',
     },
     [Actions.Examine]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[فحص]]}} {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} versucht, {{secondaryPlayer}} zu {{action[[Untersuchen]]}}',
       'en-US':
@@ -1223,6 +1321,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Examinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[تبديل]]}} النفوذ',
       'de-DE':
         '{{primaryPlayer}} versucht, Einflusskarten {{action[[Austausch]]}}',
       'en-US':
@@ -1238,6 +1338,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Trocar]]}} influências',
     },
     [Actions.ForeignAid]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول جمع {{action[[مساعدة خارجية]]}}',
       'de-DE':
         '{{primaryPlayer}} versucht, {{action[[Auslandshilfe]]}} zu erhalten',
       'en-US':
@@ -1254,6 +1356,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando coletar {{action[[Ajuda Estrangeira]]}}',
     },
     [Actions.Steal]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[سرقة]]}} من {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} versucht, von {{secondaryPlayer}} zu {{action[[Stehlen]]}}',
       'en-US':
@@ -1269,6 +1373,7 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Roubar]]}} de {{secondaryPlayer}}',
     },
     [Actions.Tax]: {
+      'ar-EG': '{{primaryPlayer}} يحاول جمع {{action[[ضرائب]]}}',
       'de-DE': '{{primaryPlayer}} versucht, {{action[[Steuern]]}} zu erhalten',
       'en-US': '{{primaryPlayer}} is trying to collect {{action[[Tax]]}}',
       'es-MX':
@@ -1283,6 +1388,7 @@ const translations: Translations = {
   },
   [EventMessages.ActionProcessed]: {
     [Actions.Assassinate]: {
+      'ar-EG': '{{primaryPlayer}} {{action[[اغتال]]}} {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Attentat]]}}',
       'en-US':
@@ -1297,6 +1403,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} {{action[[Assassinou]]}} {{secondaryPlayer}}',
     },
     [Actions.Coup]: {
+      'ar-EG': '{{primaryPlayer}} {{action[[انقلب على]]}} {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Geputscht]]}}',
       'en-US': '{{primaryPlayer}} {{action[[Couped]]}} {{secondaryPlayer}}',
@@ -1308,6 +1415,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} {{action[[Golpeou]]}} {{secondaryPlayer}}',
     },
     [Actions.Convert]: {
+      'ar-EG': '{{primaryPlayer}} {{action[[حوّل]]}} {{secondaryPlayer}}',
       'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Konvertiert]]}}',
       'en-US': '{{primaryPlayer}} {{action[[Converted]]}} {{secondaryPlayer}}',
       'es-MX': '{{primaryPlayer}} ha {{action[[Convertido]]}} a {{secondaryPlayer}}',
@@ -1317,6 +1425,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} {{action[[Converteu]]}} {{secondaryPlayer}}',
     },
     [Actions.Embezzle]: {
+      'ar-EG': '{{primaryPlayer}} {{action[[اختلس]]}} من الخزينة',
       'de-DE': '{{primaryPlayer}} hat aus der Staatskasse {{action[[Unterschlagen]]}}',
       'en-US': '{{primaryPlayer}} {{action[[Embezzled]]}} from treasury',
       'es-MX': '{{primaryPlayer}} ha {{action[[Malversado]]}} del tesoro',
@@ -1326,6 +1435,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} {{action[[Desviou]]}} do tesouro',
     },
     [Actions.Examine]: {
+      'ar-EG': '{{primaryPlayer}} {{action[[فحص]]}} {{secondaryPlayer}}',
       'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} {{action[[Untersucht]]}}',
       'en-US': '{{primaryPlayer}} {{action[[Examined]]}} {{secondaryPlayer}}',
       'es-MX': '{{primaryPlayer}} ha {{action[[Examinado]]}} a {{secondaryPlayer}}',
@@ -1335,6 +1445,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} {{action[[Examinou]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
+      'ar-EG': '{{primaryPlayer}} {{action[[بدّل]]}} النفوذ',
       'de-DE':
         '{{primaryPlayer}} hat Einflusskarten {{action[[Ausgetauscht]]}}',
       'en-US': '{{primaryPlayer}} {{action[[Exchanged]]}} influences',
@@ -1345,6 +1456,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} {{action[[Trocou]]}} influências',
     },
     [Actions.ForeignAid]: {
+      'ar-EG': '{{primaryPlayer}} جمع {{action[[مساعدة خارجية]]}}',
       'de-DE': '{{primaryPlayer}} hat {{action[[Auslandshilfe]]}} erhalten',
       'en-US': '{{primaryPlayer}} collected {{action[[Foreign Aid]]}}',
       'es-MX': '{{primaryPlayer}} ha recogido {{action[[Ayuda Extranjera]]}}',
@@ -1355,6 +1467,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} coletou {{action[[Ajuda Estrangeira]]}}',
     },
     [Actions.Income]: {
+      'ar-EG': '{{primaryPlayer}} جمع {{action[[دخل]]}}',
       'de-DE': '{{primaryPlayer}} hat {{action[[Einkommen]]}} erhalten',
       'en-US': '{{primaryPlayer}} collected {{action[[Income]]}}',
       'es-MX': '{{primaryPlayer}} ha recogido {{action[[Ingreso]]}}',
@@ -1364,6 +1477,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} coletou {{action[[Renda]]}}',
     },
     [Actions.Revive]: {
+      'ar-EG': '{{primaryPlayer}} {{action[[أحيا]]}} نفوذًا',
       'de-DE':
         '{{primaryPlayer}} hat eine Einflusskarte {{action[[Wiederbelebt]]}}',
       'en-US': '{{primaryPlayer}} {{action[[Revived]]}} an influence',
@@ -1374,6 +1488,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} {{action[[Reviveu]]}} uma influência',
     },
     [Actions.Steal]: {
+      'ar-EG': '{{primaryPlayer}} {{action[[سرق]]}} من {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} hat von {{secondaryPlayer}} {{action[[Gestohlen]]}}',
       'en-US': '{{primaryPlayer}} {{action[[Stole]]}} from {{secondaryPlayer}}',
@@ -1386,6 +1501,7 @@ const translations: Translations = {
       'pt-BR': '{{primaryPlayer}} {{action[[Roubou]]}} de {{secondaryPlayer}}',
     },
     [Actions.Tax]: {
+      'ar-EG': '{{primaryPlayer}} جمع {{action[[ضرائب]]}}',
       'de-DE': '{{primaryPlayer}} hat {{action[[Steuern]]}} erhalten',
       'en-US': '{{primaryPlayer}} collected {{action[[Tax]]}}',
       'es-MX': '{{primaryPlayer}} ha recogido {{action[[Impuesto]]}}',
@@ -1396,6 +1512,7 @@ const translations: Translations = {
     },
   },
   [EventMessages.BlockFailed]: {
+    'ar-EG': '{{primaryPlayer}} فشل في منع {{secondaryPlayer}}',
     'de-DE': '{{primaryPlayer}} konnte {{secondaryPlayer}} nicht blocken',
     'en-US': '{{primaryPlayer}} failed to block {{secondaryPlayer}}',
     'es-MX': '{{primaryPlayer}} no pudo bloquear a {{secondaryPlayer}}',
@@ -1405,6 +1522,8 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} não conseguiu bloquear {{secondaryPlayer}}',
   },
   [EventMessages.BlockPending]: {
+    'ar-EG':
+      '{{primaryPlayer}} يحاول منع {{secondaryPlayer}} بصفته {{primaryInfluence}}',
     'de-DE':
       '{{primaryPlayer}} versucht, {{secondaryPlayer}} als {{primaryInfluence}} zu blocken',
     'en-US':
@@ -1421,6 +1540,7 @@ const translations: Translations = {
       '{{primaryPlayer}} está tentando bloquear {{secondaryPlayer}} como {{primaryInfluence}}',
   },
   [EventMessages.BlockSuccessful]: {
+    'ar-EG': '{{primaryPlayer}} نجح في منع {{secondaryPlayer}}',
     'de-DE': '{{primaryPlayer}} hat {{secondaryPlayer}} erfolgreich geblockt',
     'en-US': '{{primaryPlayer}} successfully blocked {{secondaryPlayer}}',
     'es-MX': '{{primaryPlayer}} bloqueó exitosamente a {{secondaryPlayer}}',
@@ -1431,6 +1551,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} bloqueou com sucesso {{secondaryPlayer}}',
   },
   [EventMessages.ChallengeFailed]: {
+    'ar-EG': '{{primaryPlayer}} فشل في الطعن على {{secondaryPlayer}}',
     'de-DE': '{{primaryPlayer}} konnte {{secondaryPlayer}} nicht herausfordern',
     'en-US': '{{primaryPlayer}} failed to challenge {{secondaryPlayer}}',
     'es-MX': '{{primaryPlayer}} no pudo desafiar a {{secondaryPlayer}}',
@@ -1441,6 +1562,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} não conseguiu desafiar {{secondaryPlayer}}',
   },
   [EventMessages.ChallengePending]: {
+    'ar-EG': '{{primaryPlayer}} يحاول الطعن على {{secondaryPlayer}}',
     'de-DE': '{{primaryPlayer}} versucht, {{secondaryPlayer}} herauszufordern',
     'en-US': '{{primaryPlayer}} is trying to challenge {{secondaryPlayer}}',
     'es-MX': '{{primaryPlayer}} está intentando desafiar a {{secondaryPlayer}}',
@@ -1451,6 +1573,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} está tentando desafiar {{secondaryPlayer}}',
   },
   [EventMessages.ChallengeSuccessful]: {
+    'ar-EG': '{{primaryPlayer}} نجح في الطعن على {{secondaryPlayer}}',
     'de-DE':
       '{{primaryPlayer}} hat {{secondaryPlayer}} erfolgreich herausgefordert',
     'en-US': '{{primaryPlayer}} successfully challenged {{secondaryPlayer}}',
@@ -1462,6 +1585,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} desafiou com sucesso {{secondaryPlayer}}',
   },
   [EventMessages.ExamineKept]: {
+    'ar-EG': '{{primaryPlayer}} سمح لـ {{secondaryPlayer}} بالاحتفاظ بنفوذه',
     'de-DE': '{{primaryPlayer}} ließ {{secondaryPlayer}} behalten',
     'en-US': '{{primaryPlayer}} allowed {{secondaryPlayer}} to keep their influence',
     'es-MX': '{{primaryPlayer}} permitió a {{secondaryPlayer}} conservar su influencia',
@@ -1471,6 +1595,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} permitiu que {{secondaryPlayer}} mantivesse sua influência',
   },
   [EventMessages.ExamineSwapped]: {
+    'ar-EG': '{{primaryPlayer}} أجبر {{secondaryPlayer}} على تبديل نفوذه',
     'de-DE': '{{primaryPlayer}} zwang {{secondaryPlayer}}, ihre Influenz zu tauschen',
     'en-US': '{{primaryPlayer}} forced {{secondaryPlayer}} to swap their influence',
     'es-MX': '{{primaryPlayer}} obligó a {{secondaryPlayer}} a intercambiar su influencia',
@@ -1480,6 +1605,8 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} forçou {{secondaryPlayer}} a trocar sua influência',
   },
   [EventMessages.ForcedMoveProcessed]: {
+    'ar-EG':
+      '⏱️ {{primaryPlayer}} استغرق وقتًا طويلاً!',
     'de-DE':
       '⏱️ {{primaryPlayer}} hat zu lange gebraucht!',
     'en-US':
@@ -1496,6 +1623,7 @@ const translations: Translations = {
       '⏱️ {{primaryPlayer}} demorou muito tempo!',
   },
   [EventMessages.GameStarted]: {
+    'ar-EG': 'بدأت اللعبة!',
     'de-DE': 'Das Spiel hat begonnen!',
     'en-US': 'The game has started!',
     'es-MX': '¡El juego ha comenzado!',
@@ -1505,6 +1633,7 @@ const translations: Translations = {
     'pt-BR': 'O jogo começou!',
   },
   [EventMessages.PlayerDied]: {
+    'ar-EG': '{{primaryPlayer}} مات!',
     'de-DE': '{{primaryPlayer}} ist gestorben!',
     'en-US': '{{primaryPlayer}} has died!',
     'es-MX': '{{primaryPlayer}} ha muerto!',
@@ -1514,6 +1643,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} morreu!',
   },
   [EventMessages.PlayerForfeited]: {
+    'ar-EG': '{{primaryPlayer}} انسحب',
     'de-DE': '{{primaryPlayer}} hat aufgegeben',
     'en-US': '{{primaryPlayer}} has forfeited',
     'es-MX': '{{primaryPlayer}} ha renunciado',
@@ -1523,6 +1653,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} desistiu',
   },
   [EventMessages.PlayerLostInfluence]: {
+    'ar-EG': '{{primaryPlayer}} خسر {{primaryInfluence}}',
     'de-DE': '{{primaryPlayer}} hat ihre {{primaryInfluence}} verloren',
     'en-US': '{{primaryPlayer}} lost their {{primaryInfluence}}',
     'es-MX': '{{primaryPlayer}} perdió su {{primaryInfluence}}',
@@ -1532,6 +1663,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} perdeu sua {{primaryInfluence}}',
   },
   [EventMessages.PlayerReplacedInfluence]: {
+    'ar-EG': '{{primaryPlayer}} كشف {{primaryInfluence}} واستبدله',
     'de-DE':
       '{{primaryPlayer}} hat ihre {{primaryInfluence}} aufgedeckt und ersetzt',
     'en-US':
@@ -1545,6 +1677,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} revelou e substituiu sua {{primaryInfluence}}',
   },
   [EventMessages.PlayerReplacedWithAi]: {
+    'ar-EG': 'تم استبدال {{primaryPlayer}} بلاعب ذكاء اصطناعي',
     'de-DE': '{{primaryPlayer}} wurde durch einen KI-Spieler ersetzt',
     'en-US': '{{primaryPlayer}} has been replaced by an AI player',
     'es-MX': '{{primaryPlayer}} ha sido reemplazado por un jugador de IA',
@@ -1555,6 +1688,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} foi substituído por um jogador de IA',
   },
   fastestWin: {
+    'ar-EG': 'أسرع فوز',
     'de-DE': 'Schnellster Sieg',
     'en-US': 'Fastest Win',
     'es-MX': 'Victoria más rápida',
@@ -1564,6 +1698,7 @@ const translations: Translations = {
     'pt-BR': 'Vitória mais rápida',
   },
   forceSwap: {
+    'ar-EG': 'تبديل إجباري',
     'de-DE': 'Tausch erzwingen',
     'en-US': 'Force Swap',
     'es-MX': 'Forzar Intercambio',
@@ -1573,6 +1708,7 @@ const translations: Translations = {
     'pt-BR': 'Forçar Troca',
   },
   forfeit: {
+    'ar-EG': 'انسحاب',
     'de-DE': 'Aufgeben',
     'en-US': 'Forfeit',
     'es-MX': 'Renunciar',
@@ -1582,6 +1718,8 @@ const translations: Translations = {
     'pt-BR': 'Desistir',
   },
   forfeitConfirmationMessage: {
+    'ar-EG':
+      'هل تريد قتل نفوذك أو استبدال نفسك بلاعب ذكاء اصطناعي؟',
     'de-DE':
       'Möchtest du deine Einflüsse töten oder dich durch einen KI-Spieler ersetzen?',
     'en-US':
@@ -1598,6 +1736,7 @@ const translations: Translations = {
       'Você quer matar suas influências ou se substituir por um jogador de IA?',
   },
   forfeitConfirmationTitle: {
+    'ar-EG': 'الانسحاب من اللعبة',
     'de-DE': 'Spiel aufgeben',
     'en-US': 'Forfeit Game',
     'es-MX': 'Renunciar al Juego',
@@ -1607,6 +1746,7 @@ const translations: Translations = {
     'pt-BR': 'Desistir do Jogo',
   },
   forfeitKillInfluences: {
+    'ar-EG': 'قتل النفوذ',
     'de-DE': 'Einflüsse töten',
     'en-US': 'Kill Influences',
     'es-MX': 'Matar Influencias',
@@ -1616,6 +1756,7 @@ const translations: Translations = {
     'pt-BR': 'Matar Influências',
   },
   forfeitNotPossible: {
+    'ar-EG': 'لا يمكنك الانسحاب من اللعبة حاليًا',
     'de-DE': 'Du kannst das Spiel derzeit nicht aufgeben',
     'en-US': "You can't currently forfeit the game",
     'es-MX': 'Actualmente no puedes renunciar al juego',
@@ -1625,6 +1766,7 @@ const translations: Translations = {
     'pt-BR': 'Você não pode desistir do jogo no momento',
   },
   forfeitReplaceWithAi: {
+    'ar-EG': 'استبدال بالذكاء الاصطناعي',
     'de-DE': 'Durch KI ersetzen',
     'en-US': 'Replace with AI',
     'es-MX': 'Reemplazar con IA',
@@ -1634,6 +1776,7 @@ const translations: Translations = {
     'pt-BR': 'Substituir por IA',
   },
   fullRules: {
+    'ar-EG': 'القواعد الكاملة',
     'de-DE': 'Vollständige Regeln',
     'en-US': 'Full Rules',
     'es-MX': 'Reglas Completas',
@@ -1643,6 +1786,7 @@ const translations: Translations = {
     'pt-BR': 'Regras Completas',
   },
   gameNotFound: {
+    'ar-EG': 'اللعبة غير موجودة',
     'de-DE': 'Spiel nicht gefunden',
     'en-US': 'Game not found',
     'es-MX': 'Juego no encontrado',
@@ -1652,6 +1796,7 @@ const translations: Translations = {
     'pt-BR': 'Jogo não encontrado',
   },
   gameSummary: {
+    'ar-EG': 'ملخص اللعبة',
     'de-DE': 'Spielübersicht',
     'en-US': 'Game Summary',
     'es-MX': 'Resumen del Juego',
@@ -1661,6 +1806,7 @@ const translations: Translations = {
     'pt-BR': 'Resumo do Jogo',
   },
   gamesPlayed: {
+    'ar-EG': 'الألعاب الملعوبة',
     'de-DE': 'Gespielte Spiele',
     'en-US': 'Games Played',
     'es-MX': 'Partidas jugadas',
@@ -1670,6 +1816,7 @@ const translations: Translations = {
     'pt-BR': 'Jogos disputados',
   },
   goal: {
+    'ar-EG': 'الهدف',
     'de-DE': 'Ziel',
     'en-US': 'Goal',
     'es-MX': 'Objetivo',
@@ -1679,6 +1826,7 @@ const translations: Translations = {
     'pt-BR': 'Objetivo',
   },
   headToHead: {
+    'ar-EG': 'مواجهة مباشرة',
     'de-DE': 'Direktvergleich',
     'en-US': 'Head-to-Head',
     'es-MX': 'Cara a cara',
@@ -1688,6 +1836,7 @@ const translations: Translations = {
     'pt-BR': 'Confronto direto',
   },
   home: {
+    'ar-EG': 'الرئيسية',
     'de-DE': 'Startseite',
     'en-US': 'Home',
     'es-MX': 'Inicio',
@@ -1697,6 +1846,7 @@ const translations: Translations = {
     'pt-BR': 'Início',
   },
   honestVictories: {
+    'ar-EG': 'انتصارات شريفة',
     'de-DE': 'Ehrliche Siege',
     'en-US': 'Honest Victories',
     'es-MX': 'Victorias honestas',
@@ -1706,6 +1856,7 @@ const translations: Translations = {
     'pt-BR': 'Vitórias honestas',
   },
   honesty: {
+    'ar-EG': 'أمانة',
     'de-DE': 'Ehrlichkeit',
     'en-US': 'Honesty',
     'es-MX': 'Honestidad',
@@ -1715,6 +1866,7 @@ const translations: Translations = {
     'pt-BR': 'Honestidade',
   },
   inappropriateDisplayName: {
+    'ar-EG': 'هذا الاسم غير مسموح به',
     'de-DE': 'Dieser Name ist nicht erlaubt',
     'en-US': 'This name is not allowed',
     'es-MX': 'Este nombre no está permitido',
@@ -1724,6 +1876,7 @@ const translations: Translations = {
     'pt-BR': 'Este nome não é permitido',
   },
   influence: {
+    'ar-EG': 'نفوذ',
     'de-DE': 'Einfluss',
     'en-US': 'Influence',
     'es-MX': 'Influencia',
@@ -1733,6 +1886,7 @@ const translations: Translations = {
     'pt-BR': 'Influência',
   },
   influenceWasClaimed: {
+    'ar-EG': 'تمت المطالبة بـ {{primaryInfluence}}',
     'de-DE': '{{primaryInfluence}} wurde beansprucht',
     'en-US': '{{primaryInfluence}} was claimed',
     'es-MX': '{{primaryInfluence}} fue reclamado',
@@ -1742,6 +1896,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryInfluence}} foi reivindicado',
   },
   influenceWasRevealed: {
+    'ar-EG': 'تم الكشف عن {{primaryInfluence}}',
     'de-DE': '{{primaryInfluence}} wurde aufgedeckt',
     'en-US': '{{primaryInfluence}} was revealed',
     'es-MX': '{{primaryInfluence}} fue revelado',
@@ -1751,6 +1906,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryInfluence}} foi revelado',
   },
   influences: {
+    'ar-EG': 'نفوذ',
     'de-DE': 'Einflüsse',
     'en-US': 'Influences',
     'es-MX': 'Influencias',
@@ -1760,6 +1916,7 @@ const translations: Translations = {
     'pt-BR': 'Influências',
   },
   [Influences.Ambassador]: {
+    'ar-EG': 'سفير',
     'de-DE': 'Botschafter',
     'en-US': 'Ambassador',
     'es-MX': 'Embajador',
@@ -1769,6 +1926,7 @@ const translations: Translations = {
     'pt-BR': 'Embaixador',
   },
   [Influences.Assassin]: {
+    'ar-EG': 'قاتل',
     'de-DE': 'Attentäter',
     'en-US': 'Assassin',
     'es-MX': 'Asesino',
@@ -1778,6 +1936,7 @@ const translations: Translations = {
     'pt-BR': 'Assassino',
   },
   [Influences.Captain]: {
+    'ar-EG': 'قبطان',
     'de-DE': 'Kapitän',
     'en-US': 'Captain',
     'es-MX': 'Capitán',
@@ -1787,6 +1946,7 @@ const translations: Translations = {
     'pt-BR': 'Capitão',
   },
   [Influences.Contessa]: {
+    'ar-EG': 'كونتيسة',
     'de-DE': 'Contessa',
     'en-US': 'Contessa',
     'es-MX': 'Condesa',
@@ -1796,6 +1956,7 @@ const translations: Translations = {
     'pt-BR': 'Condessa',
   },
   [Influences.Duke]: {
+    'ar-EG': 'دوق',
     'de-DE': 'Herzog',
     'en-US': 'Duke',
     'es-MX': 'Duque',
@@ -1805,6 +1966,7 @@ const translations: Translations = {
     'pt-BR': 'Duque',
   },
   [Influences.Inquisitor]: {
+    'ar-EG': 'محقق',
     'de-DE': 'Inquisitor',
     'en-US': 'Inquisitor',
     'es-MX': 'Inquisidor',
@@ -1814,6 +1976,7 @@ const translations: Translations = {
     'pt-BR': 'Inquisidor',
   },
   info: {
+    'ar-EG': 'معلومات',
     'de-DE': 'Info',
     'en-US': 'Info',
     'es-MX': 'Info',
@@ -1823,6 +1986,7 @@ const translations: Translations = {
     'pt-BR': 'Info',
   },
   inquisitorIsEnabled: {
+    'ar-EG': 'المحقق مفعل',
     'de-DE': 'Inquisitor ist aktiviert',
     'en-US': 'Inquisitor is enabled',
     'es-MX': 'El Inquisidor está habilitado',
@@ -1832,6 +1996,7 @@ const translations: Translations = {
     'pt-BR': 'Inquisidor está habilitado',
   },
   inviteLinkCopied: {
+    'ar-EG': 'تم نسخ رابط الدعوة',
     'de-DE': 'Einladungslink kopiert',
     'en-US': 'Invite link copied',
     'es-MX': 'Enlace de invitación copiado',
@@ -1841,6 +2006,7 @@ const translations: Translations = {
     'pt-BR': 'Link de convite copiado',
   },
   joinExistingGame: {
+    'ar-EG': 'الانضمام إلى لعبة قائمة',
     'de-DE': 'Bestehendes Spiel beitreten',
     'en-US': 'Join Existing Game',
     'es-MX': 'Unirse a un Juego Existente',
@@ -1850,6 +2016,7 @@ const translations: Translations = {
     'pt-BR': 'Entrar em um Jogo Existente',
   },
   joinGame: {
+    'ar-EG': 'الانضمام إلى لعبة',
     'de-DE': 'Spiel beitreten',
     'en-US': 'Join Game',
     'es-MX': 'Unirse al Juego',
@@ -1859,6 +2026,8 @@ const translations: Translations = {
     'pt-BR': 'Entrar no Jogo',
   },
   keepInfluences: {
+    'ar-EG':
+      'احتفظ بـ {{primaryInfluence}}{{plural[[ و {{secondaryInfluence}}]]}}',
     'de-DE':
       'Behalte {{primaryInfluence}}{{plural[[ und {{secondaryInfluence}}]]}}',
     'en-US':
@@ -1875,6 +2044,7 @@ const translations: Translations = {
       'Manter {{primaryInfluence}}{{plural[[ e {{secondaryInfluence}}]]}}',
   },
   killAnInfluence: {
+    'ar-EG': 'قتل نفوذ',
     'de-DE': 'Töte einen Einfluss',
     'en-US': 'Kill an Influence',
     'es-MX': 'Matar una Influencia',
@@ -1884,6 +2054,7 @@ const translations: Translations = {
     'pt-BR': 'Matar uma Influência',
   },
   language: {
+    'ar-EG': 'اللغة',
     'de-DE': 'Sprache',
     'en-US': 'Language',
     'es-MX': 'Idioma',
@@ -1893,6 +2064,7 @@ const translations: Translations = {
     'pt-BR': 'Idioma',
   },
   lastPlayed: {
+    'ar-EG': 'آخر مرة لعبت',
     'de-DE': 'Zuletzt gespielt',
     'en-US': 'Last played',
     'es-MX': 'Última partida',
@@ -1902,6 +2074,7 @@ const translations: Translations = {
     'pt-BR': 'Última partida',
   },
   leaderboard: {
+    'ar-EG': 'لوحة المتصدرين',
     'de-DE': 'Bestenliste',
     'en-US': 'Leaderboard',
     'es-MX': 'Tabla de clasificación',
@@ -1911,6 +2084,7 @@ const translations: Translations = {
     'pt-BR': 'Classificação',
   },
   learnToPlay: {
+    'ar-EG': 'تعلم اللعب',
     'de-DE': 'Lerne zu spielen',
     'en-US': 'Learn to Play',
     'es-MX': 'Aprende a Jugar',
@@ -1920,6 +2094,7 @@ const translations: Translations = {
     'pt-BR': 'Aprenda a Jogar',
   },
   [Factions.Loyalist]: {
+    'ar-EG': 'موالي',
     'de-DE': 'Loyalist',
     'en-US': 'Loyalist',
     'es-MX': 'Lealista',
@@ -1929,6 +2104,7 @@ const translations: Translations = {
     'pt-BR': 'Lealista',
   },
   light: {
+    'ar-EG': 'فاتح',
     'de-DE': 'Hell',
     'en-US': 'Light',
     'es-MX': 'Claro',
@@ -1938,6 +2114,7 @@ const translations: Translations = {
     'pt-BR': 'Claro',
   },
   longestBluffStreak: {
+    'ar-EG': '{{player}}: {{count}} خدعة متتالية',
     'de-DE': '{{player}}: {{count}} Bluffs in Folge',
     'en-US': '{{player}}: {{count}} bluffs in a row',
     'es-MX': '{{player}}: {{count}} faroles seguidos',
@@ -1947,6 +2124,7 @@ const translations: Translations = {
     'pt-BR': '{{player}}: {{count}} blefes seguidos',
   },
   longestWinStreak: {
+    'ar-EG': 'أطول سلسلة انتصارات',
     'de-DE': 'Längste Siegesserie',
     'en-US': 'Longest Win Streak',
     'es-MX': 'Racha más larga',
@@ -1956,6 +2134,7 @@ const translations: Translations = {
     'pt-BR': 'Maior sequência de vitórias',
   },
   lookAtAPlayersCard: {
+    'ar-EG': 'انظر إلى بطاقة لاعب',
     'de-DE': 'Karte eines Spielers ansehen',
     'en-US': "Look at a player's card",
     'es-MX': 'Mirar la carta de un jugador',
@@ -1965,6 +2144,7 @@ const translations: Translations = {
     'pt-BR': 'Ver a carta de um jogador',
   },
   loseInfluence: {
+    'ar-EG': 'خسارة {{primaryInfluence}}',
     'de-DE': 'Verliere {{primaryInfluence}}',
     'en-US': 'Lose {{primaryInfluence}}',
     'es-MX': 'Perder {{primaryInfluence}}',
@@ -1974,6 +2154,7 @@ const translations: Translations = {
     'pt-BR': 'Perder {{primaryInfluence}}',
   },
   losingAChallenge: {
+    'ar-EG': 'خسارة طعن',
     'de-DE': 'Herausforderung verlieren',
     'en-US': 'Losing a Challenge',
     'es-MX': 'Perder un Desafío',
@@ -1983,6 +2164,7 @@ const translations: Translations = {
     'pt-BR': 'Perder um Desafio',
   },
   losingInfluence: {
+    'ar-EG': 'خسارة النفوذ',
     'de-DE': 'Einfluss verlieren',
     'en-US': 'Losing Influence',
     'es-MX': 'Perder Influencia',
@@ -1992,6 +2174,7 @@ const translations: Translations = {
     'pt-BR': 'Perder Influência',
   },
   losses: {
+    'ar-EG': 'خسائر',
     'de-DE': 'Niederlagen',
     'en-US': 'Losses',
     'es-MX': 'Derrotas',
@@ -2001,6 +2184,7 @@ const translations: Translations = {
     'pt-BR': 'Derrotas',
   },
   messageWasDeleted: {
+    'ar-EG': 'تم حذف الرسالة',
     'de-DE': 'Nachricht wurde gelöscht',
     'en-US': 'Message was deleted',
     'es-MX': 'Mensaje eliminado',
@@ -2010,6 +2194,7 @@ const translations: Translations = {
     'pt-BR': 'Mensagem foi excluída',
   },
   nameFromProfile: {
+    'ar-EG': 'من ملفك الشخصي',
     'de-DE': 'Aus deinem Profil',
     'en-US': 'From your profile',
     'es-MX': 'De tu perfil',
@@ -2019,6 +2204,7 @@ const translations: Translations = {
     'pt-BR': 'Do seu perfil',
   },
   noAchievementsYet: {
+    'ar-EG': 'لا توجد إنجازات بعد',
     'de-DE': 'Noch keine Erfolge',
     'en-US': 'No achievements yet',
     'es-MX': 'Aún no hay logros',
@@ -2028,6 +2214,7 @@ const translations: Translations = {
     'pt-BR': 'Nenhuma conquista ainda',
   },
   noChatMessages: {
+    'ar-EG': 'لا توجد رسائل',
     'de-DE': 'Keine Chat-Nachrichten',
     'en-US': 'No chat messages',
     'es-MX': 'No hay mensajes de chat',
@@ -2037,6 +2224,7 @@ const translations: Translations = {
     'pt-BR': 'Sem mensagens de chat',
   },
   noDeadInfluences: {
+    'ar-EG': 'لا توجد نفوذ ميتة',
     'de-DE': 'Keine toten Einflüsse',
     'en-US': 'No dead influences',
     'es-MX': 'No hay influencias muertas',
@@ -2046,6 +2234,7 @@ const translations: Translations = {
     'pt-BR': 'Sem influências mortas',
   },
   noLeaderboardData: {
+    'ar-EG': 'لا توجد بيانات للمتصدرين بعد',
     'de-DE': 'Noch keine Daten vorhanden',
     'en-US': 'No leaderboard data yet',
     'es-MX': 'Aún no hay datos',
@@ -2055,6 +2244,7 @@ const translations: Translations = {
     'pt-BR': 'Nenhum dado disponível ainda',
   },
   noStatsYet: {
+    'ar-EG': 'لا توجد إحصائيات بعد',
     'de-DE': 'Noch keine Statistiken',
     'en-US': 'No stats yet',
     'es-MX': 'Aún no hay estadísticas',
@@ -2064,6 +2254,7 @@ const translations: Translations = {
     'pt-BR': 'Nenhuma estatística ainda',
   },
   not: {
+    'ar-EG': 'ليس',
     'de-DE': 'NICHT',
     'en-US': 'NOT',
     'es-MX': 'NO',
@@ -2073,6 +2264,7 @@ const translations: Translations = {
     'pt-BR': 'NÃO',
   },
   notEnoughCoins: {
+    'ar-EG': 'عملات غير كافية ({{count}})',
     'de-DE': 'Nicht genug Münzen ({{count}})',
     'en-US': 'Not enough coins ({{count}})',
     'es-MX': 'No hay suficientes monedas ({{count}})',
@@ -2082,6 +2274,7 @@ const translations: Translations = {
     'pt-BR': 'Moedas insuficientes ({{count}})',
   },
   notEnoughGames: {
+    'ar-EG': 'العب المزيد من الألعاب لتظهر في لوحة المتصدرين',
     'de-DE': 'Spiele mehr Spiele, um in der Rangliste zu erscheinen',
     'en-US': 'Play more games to appear on the leaderboard',
     'es-MX': 'Juega más partidas para aparecer en la clasificación',
@@ -2091,6 +2284,7 @@ const translations: Translations = {
     'pt-BR': 'Jogue mais partidas para aparecer na classificação',
   },
   numberOfPlayers: {
+    'ar-EG': 'عدد اللاعبين',
     'de-DE': 'Anzahl der Spieler',
     'en-US': 'Number of Players',
     'es-MX': 'Número de Jugadores',
@@ -2100,6 +2294,7 @@ const translations: Translations = {
     'pt-BR': 'Número de Jogadores',
   },
   opponent: {
+    'ar-EG': 'خصم',
     'de-DE': 'Gegner',
     'en-US': 'Opponent',
     'es-MX': 'Oponente',
@@ -2109,6 +2304,7 @@ const translations: Translations = {
     'pt-BR': 'Adversário',
   },
   pageNotFound: {
+    'ar-EG': 'الصفحة غير موجودة',
     'de-DE': 'Seite nicht gefunden',
     'en-US': 'Page not found',
     'es-MX': 'Página no encontrada',
@@ -2118,6 +2314,7 @@ const translations: Translations = {
     'pt-BR': 'Página não encontrada',
   },
   payCoins: {
+    'ar-EG': 'ادفع {{count}} عملة{{plural[[ات]]}}',
     'de-DE': 'Zahle {{count}} Münze{{plural[[n]]}}',
     'en-US': 'Pay {{count}} coin{{plural[[s]]}}',
     'es-MX': 'Pagar {{count}} moneda{{plural[[s]]}}',
@@ -2127,6 +2324,7 @@ const translations: Translations = {
     'pt-BR': 'Pagar {{count}} moeda{{plural[[s]]}}',
   },
   personalityIsHidden: {
+    'ar-EG': 'الشخصية مخفية',
     'de-DE': 'Persönlichkeit ist versteckt',
     'en-US': 'Personality is hidden',
     'es-MX': 'La personalidad está oculta',
@@ -2136,6 +2334,7 @@ const translations: Translations = {
     'pt-BR': 'Personalidade está oculta',
   },
   playAgain: {
+    'ar-EG': 'العب مرة أخرى',
     'de-DE': 'Nochmal spielen',
     'en-US': 'Play Again',
     'es-MX': 'Jugar de Nuevo',
@@ -2145,6 +2344,7 @@ const translations: Translations = {
     'pt-BR': 'Jogar Novamente',
   },
   playGameToTrackStats: {
+    'ar-EG': 'العب لعبة مع لاعبَين مسجلَين على الأقل لتتبع الإحصائيات',
     'de-DE': 'Spiele ein Spiel mit mindestens 2 angemeldeten Spielern, um Statistiken zu verfolgen',
     'en-US': 'Play a game with at least 2 logged-in players to track stats',
     'es-MX': 'Juega un juego con al menos 2 jugadores registrados para rastrear estadísticas',
@@ -2154,6 +2354,7 @@ const translations: Translations = {
     'pt-BR': 'Jogue uma partida com pelo menos 2 jogadores logados para rastrear estatísticas',
   },
   player: {
+    'ar-EG': 'لاعب',
     'de-DE': 'Spieler',
     'en-US': 'Player',
     'es-MX': 'Jugador',
@@ -2163,6 +2364,7 @@ const translations: Translations = {
     'pt-BR': 'Jogador',
   },
   playerTurn: {
+    'ar-EG': 'دور {{primaryPlayer}}',
     'de-DE': "{{primaryPlayer}}'s Zug",
     'en-US': "{{primaryPlayer}}'s Turn",
     'es-MX': 'Turno de {{primaryPlayer}}',
@@ -2172,6 +2374,7 @@ const translations: Translations = {
     'pt-BR': 'Vez de {{primaryPlayer}}',
   },
   playerWantToReset: {
+    'ar-EG': '{{primaryPlayer}} يريد إعادة ضبط اللعبة',
     'de-DE': '{{primaryPlayer}} möchte das Spiel zurücksetzen',
     'en-US': '{{primaryPlayer}} wants to reset the game',
     'es-MX': '{{primaryPlayer}} quiere reiniciar el juego',
@@ -2181,6 +2384,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} quer reiniciar o jogo',
   },
   playerWins: {
+    'ar-EG': '{{primaryPlayer}} يفوز!',
     'de-DE': '{{primaryPlayer}} gewinnt!',
     'en-US': '{{primaryPlayer}} Wins!',
     'es-MX': '{{primaryPlayer}} ¡Gana!',
@@ -2190,6 +2394,7 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} Vence!',
   },
   [Factions.Reformist]: {
+    'ar-EG': 'إصلاحي',
     'de-DE': 'Reformist',
     'en-US': 'Reformist',
     'es-MX': 'Reformista',
@@ -2199,6 +2404,7 @@ const translations: Translations = {
     'pt-BR': 'Reformista',
   },
   playstyle: {
+    'ar-EG': 'أسلوب اللعب',
     'de-DE': 'Spielstil',
     'en-US': 'Playstyle',
     'es-MX': 'Estilo de juego',
@@ -2208,6 +2414,7 @@ const translations: Translations = {
     'pt-BR': 'Estilo de jogo',
   },
   privacyPolicy: {
+    'ar-EG': 'سياسة الخصوصية',
     'de-DE': 'Datenschutzerklaerung',
     'en-US': 'Privacy Policy',
     'es-MX': 'Politica de Privacidad',
@@ -2217,6 +2424,7 @@ const translations: Translations = {
     'pt-BR': 'Politica de Privacidade',
   },
   privacyPolicyContent: {
+    'ar-EG': 'تسجيل الدخول عبر Google اختياري.\n\nإذا قمت بتسجيل الدخول، نعالج بيانات الحساب مثل اسم العرض والبريد الإلكتروني والصورة الرمزية ومعرف المستخدم لتوفير ملفك الشخصي وإحصائياتك ولوحة المتصدرين.\n\nنستخدم خدمات Google/Firebase للمصادقة وقاعدة البيانات والتخزين والاستضافة ومراقبة الموثوقية ومنع الإساءة.\n\nبالنسبة للميزات التنافسية، قد يرى اللاعبون الآخرون بعض البيانات مثل اسم العرض والصورة الرمزية والترتيب وإحصائيات الفوز والخسارة.\n\nنعرض إعلانات عبر Google AdSense. قد تستخدم Google وشركاؤها ملفات تعريف الارتباط أو معرفات الجهاز لتقديم إعلانات مخصصة أو غير مخصصة (حسب المنطقة والموافقة).\n\nحيثما يقتضي القانون، يمكنك منح أو رفض أو سحب الموافقة على المعالجة المتعلقة بالإعلانات. يمكنك أيضًا إدارة الإعلانات في إعدادات Google.\n\nيمكنك طلب حذف الحساب أو البيانات باستخدام جهة الاتصال أدناه.\n\nجهة اتصال الخصوصية: {{contactEmail}}',
     'de-DE': 'Anmeldung mit Google ist optional.\n\nWenn Sie sich anmelden, verarbeiten wir Kontodaten wie Name, E-Mail, Avatar und Benutzer-ID, um Profil, Statistiken und Bestenliste bereitzustellen.\n\nWir nutzen Google/Firebase-Dienste fuer Anmeldung, Datenbank, Hosting, Analyse von Zuverlaessigkeit und Missbrauchspraevention.\n\nBei wettbewerbsorientierten Funktionen koennen andere Spieler Anzeigename, Avatar, Rang sowie Sieg/Niederlage-Werte sehen.\n\nWir zeigen Werbung ueber Google AdSense. Google und Partner koennen Cookies oder Geraete-IDs verwenden, um personalisierte oder nicht personalisierte Anzeigen zu liefern (abhaengig von Region und Einwilligung).\n\nSie koennen Einwilligungen verwalten oder widerrufen, soweit gesetzlich vorgeschrieben. Sie koennen auch Google-Anzeigeneinstellungen nutzen.\n\nSie koennen die Loeschung Ihres Kontos oder Ihrer Daten ueber den Kontakt unten anfragen.\n\nKontakt fuer Datenschutzanfragen: {{contactEmail}}',
     'en-US': 'Google sign-in is optional.\n\nIf you sign in, we process account data like display name, email, avatar, and user ID to provide your profile, stats, and leaderboard.\n\nWe use Google/Firebase services for authentication, database/storage, hosting, reliability monitoring, and abuse prevention.\n\nFor competitive features, other players may see some data such as display name, avatar, rank, and win/loss stats.\n\nWe show ads through Google AdSense. Google and its partners may use cookies or device identifiers to provide personalized or non-personalized ads (depending on region and consent).\n\nWhere required by law, you can grant, deny, or withdraw consent for ad-related processing. You can also manage ads in Google Ad Settings.\n\nYou can request account or data deletion using the contact below.\n\nPrivacy contact: {{contactEmail}}',
     'es-MX': 'Iniciar sesion con Google es opcional.\n\nSi inicias sesion, procesamos datos de cuenta como nombre visible, correo, avatar e identificador para mostrar tu perfil, estadisticas y clasificacion.\n\nUsamos servicios de Google/Firebase para autenticacion, base de datos/almacenamiento, hosting, monitoreo de confiabilidad y prevencion de abuso.\n\nEn funciones competitivas, otros jugadores pueden ver algunos datos como nombre visible, avatar, rango y estadisticas de victorias/derrotas.\n\nMostramos anuncios con Google AdSense. Google y sus socios pueden usar cookies o identificadores del dispositivo para anuncios personalizados o no personalizados (segun la region y el consentimiento).\n\nCuando la ley lo exige, puedes otorgar, negar o retirar tu consentimiento para el procesamiento relacionado con anuncios. Tambien puedes gestionar anuncios en Google Ad Settings.\n\nPuedes solicitar la eliminacion de tu cuenta o datos con el contacto de abajo.\n\nContacto de privacidad: {{contactEmail}}',
@@ -2226,6 +2434,7 @@ const translations: Translations = {
     'pt-BR': 'O login com Google e opcional.\n\nSe voce entrar, processamos dados da conta como nome de exibicao, email, avatar e ID de usuario para fornecer perfil, estatisticas e ranking.\n\nUsamos servicos Google/Firebase para autenticacao, banco de dados/armazenamento, hospedagem, monitoramento de confiabilidade e prevencao de abuso.\n\nNos recursos competitivos, outros jogadores podem ver alguns dados como nome de exibicao, avatar, posicao e estatisticas de vitorias/derrotas.\n\nExibimos anuncios com Google AdSense. O Google e seus parceiros podem usar cookies ou identificadores do dispositivo para anuncios personalizados ou nao personalizados (dependendo da regiao e do consentimento).\n\nQuando exigido por lei, voce pode conceder, negar ou retirar consentimento para processamento relacionado a anuncios. Voce tambem pode gerenciar anuncios no Google Ad Settings.\n\nVoce pode solicitar exclusao da conta ou dos dados pelo contato abaixo.\n\nContato de privacidade: {{contactEmail}}',
   },
   profile: {
+    'ar-EG': 'الملف الشخصي',
     'de-DE': 'Profil',
     'en-US': 'Profile',
     'es-MX': 'Perfil',
@@ -2235,6 +2444,7 @@ const translations: Translations = {
     'pt-BR': 'Perfil',
   },
   profileNotFound: {
+    'ar-EG': 'الملف الشخصي غير موجود',
     'de-DE': 'Profil nicht gefunden',
     'en-US': 'Profile not found',
     'es-MX': 'Perfil no encontrado',
@@ -2244,6 +2454,7 @@ const translations: Translations = {
     'pt-BR': 'Perfil não encontrado',
   },
   random: {
+    'ar-EG': 'عشوائي',
     'de-DE': 'Zufällig',
     'en-US': 'Random',
     'es-MX': 'Aleatorio',
@@ -2253,6 +2464,7 @@ const translations: Translations = {
     'pt-BR': 'Aleatório',
   },
   rating: {
+    'ar-EG': 'التقييم',
     'de-DE': 'Bewertung',
     'en-US': 'Rating',
     'es-MX': 'Puntuación',
@@ -2262,6 +2474,7 @@ const translations: Translations = {
     'pt-BR': 'Pontuação',
   },
   ratingExplanation: {
+    'ar-EG': 'يعتمد التقييم على درجة Wilson: الحد الأدنى لفاصل ثقة 95% لمعدل فوزك. لعب المزيد من الألعاب يعطي تقييمًا أكثر موثوقية وأعلى.',
     'de-DE': 'Die Bewertung basiert auf dem Wilson-Score: der unteren Grenze eines 95%-Konfidenzintervalls deiner Siegquote. Mehr Spiele ergeben eine zuverlässigere und höhere Bewertung.',
     'en-US': 'Rating is based on the Wilson score: the lower bound of a 95% confidence interval of your win rate. Playing more games yields a more reliable and higher rating.',
     'es-MX': 'La puntuación se basa en el puntaje de Wilson: el límite inferior de un intervalo de confianza del 95% de tu tasa de victorias. Jugar más partidas produce una puntuación más confiable y alta.',
@@ -2271,6 +2484,7 @@ const translations: Translations = {
     'pt-BR': 'A pontuação é baseada no score de Wilson: o limite inferior de um intervalo de confiança de 95% da sua taxa de vitória. Jogar mais partidas resulta em uma pontuação mais confiável e alta.',
   },
   record: {
+    'ar-EG': 'سجل',
     'de-DE': 'Bilanz',
     'en-US': 'Record',
     'es-MX': 'Récord',
@@ -2280,6 +2494,7 @@ const translations: Translations = {
     'pt-BR': 'Histórico',
   },
   reformationIsEnabled: {
+    'ar-EG': 'الإصلاح مفعل',
     'de-DE': 'Reformation ist aktiviert',
     'en-US': 'Reformation is enabled',
     'es-MX': 'La Reforma está habilitada',
@@ -2289,6 +2504,7 @@ const translations: Translations = {
     'pt-BR': 'Reforma está habilitada',
   },
   reportBug: {
+    'ar-EG': 'الإبلاغ عن خطأ',
     'de-DE': 'Fehler melden',
     'en-US': 'Report Bug',
     'es-MX': 'Reportar Error',
@@ -2298,6 +2514,7 @@ const translations: Translations = {
     'pt-BR': 'Reportar Bug',
   },
   reportIncorrectTranslation: {
+    'ar-EG': 'الإبلاغ عن ترجمة غير صحيحة',
     'de-DE': 'Falsche Übersetzung melden',
     'en-US': 'Report Incorrect Translation',
     'es-MX': 'Reportar Traducción Incorrecta',
@@ -2307,6 +2524,7 @@ const translations: Translations = {
     'pt-BR': 'Reportar Tradução Incorreta',
   },
   requestFeature: {
+    'ar-EG': 'طلب ميزة',
     'de-DE': 'Funktion anfordern',
     'en-US': 'Request Feature',
     'es-MX': 'Solicitar Función',
@@ -2316,6 +2534,7 @@ const translations: Translations = {
     'pt-BR': 'Solicitar Funcionalidade',
   },
   resetGame: {
+    'ar-EG': 'إعادة ضبط اللعبة',
     'de-DE': 'Spiel zurücksetzen',
     'en-US': 'Reset Game',
     'es-MX': 'Reiniciar Juego',
@@ -2325,6 +2544,7 @@ const translations: Translations = {
     'pt-BR': 'Reiniciar Jogo',
   },
   [Responses.Block]: {
+    'ar-EG': 'منع',
     'de-DE': 'Blockieren',
     'en-US': 'Block',
     'es-MX': 'Bloquear',
@@ -2334,6 +2554,7 @@ const translations: Translations = {
     'pt-BR': 'Bloquear',
   },
   [Responses.Challenge]: {
+    'ar-EG': 'طعن',
     'de-DE': 'Herausforderung',
     'en-US': 'Challenge',
     'es-MX': 'Desafío',
@@ -2343,6 +2564,7 @@ const translations: Translations = {
     'pt-BR': 'Desafio',
   },
   [Responses.Pass]: {
+    'ar-EG': 'تمرير',
     'de-DE': 'Passieren',
     'en-US': 'Pass',
     'es-MX': 'Pasar',
@@ -2352,6 +2574,7 @@ const translations: Translations = {
     'pt-BR': 'Passar',
   },
   revealInfluence: {
+    'ar-EG': 'كشف {{primaryInfluence}}',
     'de-DE': 'Enthülle {{primaryInfluence}}',
     'en-US': 'Reveal {{primaryInfluence}}',
     'es-MX': 'Revelar {{primaryInfluence}}',
@@ -2361,6 +2584,7 @@ const translations: Translations = {
     'pt-BR': 'Revelar {{primaryInfluence}}',
   },
   reviveAnInfluence: {
+    'ar-EG': 'إحياء نفوذ',
     'de-DE': 'Belebe einen Einfluss wieder',
     'en-US': 'Revive an influence',
     'es-MX': 'Revivir una influencia',
@@ -2370,6 +2594,7 @@ const translations: Translations = {
     'pt-BR': 'Reviver uma influência',
   },
   reviveIsEnabled: {
+    'ar-EG': 'الإحياء مفعل',
     'de-DE': 'Wiederbelebung ist aktiviert',
     'en-US': 'Revive is enabled',
     'es-MX': 'La reanimación está habilitada',
@@ -2379,6 +2604,7 @@ const translations: Translations = {
     'pt-BR': 'Reviver está habilitado',
   },
   room: {
+    'ar-EG': 'غرفة',
     'de-DE': 'Raum',
     'en-US': 'Room',
     'es-MX': 'Sala',
@@ -2388,6 +2614,7 @@ const translations: Translations = {
     'pt-BR': 'Sala',
   },
   rules: {
+    'ar-EG': 'القواعد',
     'de-DE': 'Regeln',
     'en-US': 'Rules',
     'es-MX': 'Reglas',
@@ -2397,6 +2624,8 @@ const translations: Translations = {
     'pt-BR': 'Regras',
   },
   rulesActions: {
+    'ar-EG':
+      'يتناوب اللاعبون على تنفيذ أحد هذه الإجراءات المتاحة:',
     'de-DE':
       'Die Spieler führen abwechselnd eine der folgenden verfügbaren Aktionen aus:',
     'en-US': 'Players take turns performing one of these available actions:',
@@ -2411,6 +2640,8 @@ const translations: Translations = {
       'Os jogadores se revezam realizando uma das seguintes ações disponíveis:',
   },
   rulesAmbassador: {
+    'ar-EG':
+      'يمكنه تبديل بطاقات النفوذ الخاصة بك بأخرى جديدة من المجموعة ومنع محاولات السرقة.',
     'de-DE':
       'Kann zwei Münzen von einem anderen Spieler stehlen und Blockieren von Diebstahlversuchen.',
     'en-US':
@@ -2427,6 +2658,7 @@ const translations: Translations = {
       'Pode trocar suas cartas de influência por novas do baralho e bloquear tentativas de roubo.',
   },
   rulesAssassin: {
+    'ar-EG': 'يمكنه إجبار لاعب على التخلي عن بطاقة نفوذ.',
     'de-DE': 'Kann einen Spieler zwingen, eine Einflusskarte aufzugeben.',
     'en-US': 'Can Force one player to give up an Influence card.',
     'es-MX': 'Puede forzar a un jugador a renunciar a una carta de influencia.',
@@ -2437,6 +2669,8 @@ const translations: Translations = {
     'pt-BR': 'Pode forçar um jogador a desistir de uma carta de influência.',
   },
   rulesAssassinate: {
+    'ar-EG':
+      'يكلف ثلاث عملات. يجبر لاعبًا واحدًا على التخلي عن بطاقة نفوذ من اختياره. يمكن الطعن فيه. يمكن منعه من قبل الكونتيسا.',
     'de-DE':
       'Kostet drei Münzen. Zwingt einen Spieler, eine Einflusskarte ihrer Wahl aufzugeben. Kann herausgefordert werden. Kann von der Contessa blockiert werden.',
     'en-US':
@@ -2453,6 +2687,8 @@ const translations: Translations = {
       'Custa três moedas. Força um jogador a desistir de uma carta de influência de sua escolha. Pode ser desafiado. Pode ser bloqueado pela Condessa.',
   },
   rulesBlock: {
+    'ar-EG':
+      'إذا قام لاعب آخر بإجراء يمكن منعه، يمكن للاعب المستهدف، أو أي شخص في حالة المساعدة الخارجية، منعه بادعاء امتلاك الشخصية المناسبة على إحدى بطاقات النفوذ الخاصة به. لا يمكن للاعب المنفذ تنفيذ الإجراء ولا يتخذ أي إجراء آخر في هذا الدور. يمكن لأي لاعب اختيار الطعن في اللاعب المانع. إذا فازوا بالطعن، يتم تنفيذ الإجراء بشكل طبيعي.',
     'de-DE':
       'Wenn ein anderer Spieler eine Aktion ausführt, die blockiert werden kann, kann der betroffene Spieler oder jeder im Falle von Auswärtshilfe es blockieren, indem er vorgibt, die richtige Figur auf einer seiner Einflusskarten zu haben. Der ausführende Spieler kann die Aktion nicht ausführen und unternimmt in dieser Runde keine weiteren Aktionen. Jeder Spieler kann sich entscheiden, den blockierenden Spieler herauszufordern. Wenn sie die Herausforderung gewinnen, wird die Aktion wie gewohnt durchgeführt.',
     'en-US':
@@ -2469,6 +2705,8 @@ const translations: Translations = {
       'Se outro jogador realizar uma ação que pode ser bloqueada, o jogador alvo, ou qualquer um no caso de Ajuda Estrangeira, pode bloqueá-la afirmando ter o personagem adequado em uma de suas cartas de influência. O jogador atuante não pode realizar a ação e não realiza nenhuma outra ação neste turno. Qualquer jogador pode optar por desafiar o jogador que bloqueia. Se vencerm o desafio, a ação prossegue normalmente.',
   },
   rulesCaptain: {
+    'ar-EG':
+      'يمكنه سرقة عملتين من لاعب آخر ومنع محاولات السرقة.',
     'de-DE':
       'Kann zwei Münzen von einem anderen Spieler stehlen und Blockieren von Diebstahlversuchen.',
     'en-US':
@@ -2485,6 +2723,8 @@ const translations: Translations = {
       'Pode roubar duas moedas de outro jogador e bloquear tentativas de roubo.',
   },
   rulesChallenge: {
+    'ar-EG':
+      'عندما يعلن اللاعب المنفذ عن إجرائه، يمكن لأي لاعب آخر الطعن في حقه في تنفيذ الإجراء. إنهم يقولون "لا أعتقد أن لديك الشخصية المناسبة للقيام بذلك." يجب على اللاعب المنفذ الآن إثبات أن لديه القوة لتنفيذ الإجراء أو خسارة الطعن. إذا كان لديه الشخصية الصحيحة، يكشف عنها ويعيد البطاقة المكشوفة إلى المجموعة. ثم يخلط المجموعة ويسحب بطاقة جديدة. اللاعب الطاعن قد خسر الطعن. إذا لم يكن لديه الشخصية المناسبة، يخسر الطعن.',
     'de-DE':
       'Wenn der ausführende Spieler seine Aktion erklärt, kann jeder andere Spieler die Herausforderung annehmen, indem er sagt: "Ich glaube nicht, dass du die richtige Figur dafür hast." Der ausführende Spieler muss nun beweisen, dass er die Macht hat, die Aktion auszuführen, oder die Herausforderung verlieren. Wenn sie die richtige Figur haben, decken sie sie auf und legen die aufgedeckte Karte zurück in den Stapel. Sie mischen dann den Stapel und ziehen eine neue Karte. Der herausfordernde Spieler hat die Herausforderung verloren. Wenn sie nicht die richtige Figur haben, verlieren sie die Herausforderung.',
     'en-US':
@@ -2501,6 +2741,7 @@ const translations: Translations = {
       'Quando o jogador atuante declara sua ação, qualquer outro jogador pode desafiar seu direito de realizar a ação. Eles estão dizendo "Eu não acredito que você tenha o personagem adequado para fazer isso." O jogador atuante agora deve provar que tem o poder de realizar a ação ou perder o desafio. Se eles tiverem o personagem certo, eles o revelam e colocam a carta revelada de volta no baralho. Em seguida, eles embaralham o baralho e compram uma nova carta. O jogador desafiador perdeu o desafio. Se eles não tiverem o personagem adequado, eles perdem o desafio.',
   },
   rulesContents: {
+    'ar-EG': 'مجموعة بطاقات نفوذ، بنك عملات.',
     'de-DE': 'Deck von Einflusskarten, Bank von Münzen.',
     'en-US': 'Deck of influence cards, bank of coins.',
     'es-MX': 'Mazo de cartas de influencia, banco de monedas.',
@@ -2510,6 +2751,7 @@ const translations: Translations = {
     'pt-BR': 'Baralho de cartas de influência, banco de moedas.',
   },
   rulesContessa: {
+    'ar-EG': 'يمكنها منع محاولات الاغتيال.',
     'de-DE': 'Kann Attentate blockieren.',
     'en-US': 'Can Block assassination attempts.',
     'es-MX': 'Puede bloquear intentos de asesinato.',
@@ -2519,6 +2761,8 @@ const translations: Translations = {
     'pt-BR': 'Pode bloquear tentativas de assassinato.',
   },
   rulesConvert: {
+    'ar-EG':
+      'يكلف عملة إلى عملتين (تدفع للخزينة). تغيير فصيل لاعب—إما نفسك (عملة واحدة) أو لاعب آخر (عملتان). لا يمكن الطعن فيه أو منعه. متاح فقط عند تفعيل الإصلاح.',
     'de-DE':
       'Kostet ein bis zwei Münzen (werden in die Staatskasse gezahlt). Ändert die Fraktion eines Spielers, entweder deine eigene oder die eines anderen. Kann nicht herausgefordert oder blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
     'en-US':
@@ -2535,6 +2779,8 @@ const translations: Translations = {
       'Custa uma a duas moedas (pagas ao tesouro). Mude a facção de um jogador—a sua (uma moeda) ou a de outro jogador (duas moedas). Não pode ser desafiado ou bloqueado. Disponível apenas quando a Reforma está habilitada.',
   },
   rulesCoup: {
+    'ar-EG':
+      'يكلف سبع عملات. يجبر لاعبًا على التخلي عن بطاقة نفوذ. لا يمكن الطعن فيه أو منعه. إذا بدأت دورك بعشر عملات أو أكثر، يجب عليك القيام بالانقلاب (أو الإحياء إذا كان مفعلاً).',
     'de-DE':
       'Kostet sieben Münzen. Zwingt einen Spieler, eine Einflusskarte aufzugeben. Kann nicht herausgefordert oder blockiert werden. Wenn du deinen Zug mit zehn oder mehr Münzen beginnst, musst du einen Putsch durchführen (oder wiederbeleben, wenn aktiviert).',
     'en-US':
@@ -2551,6 +2797,7 @@ const translations: Translations = {
       'Custa sete moedas. Faz com que um jogador desista de uma carta de influência. Não pode ser desafiado ou bloqueado. Se você começar seu turno com dez ou mais moedas, deve realizar um golpe (ou reviver se ativado).',
   },
   rulesDuke: {
+    'ar-EG': 'يمكنه تحصيل الضرائب ومنع المساعدة الخارجية.',
     'de-DE': 'Kann Steuern erheben und Auswärtshilfe blockieren.',
     'en-US': 'Can Tax and Block Foreign Aid.',
     'es-MX': 'Puede cobrar impuestos y bloquear Ayuda Extranjera.',
@@ -2560,6 +2807,8 @@ const translations: Translations = {
     'pt-BR': 'Pode cobrar impostos e bloquear Ajuda Estrangeira.',
   },
   rulesEmbezzle: {
+    'ar-EG':
+      'خذ جميع العملات من الخزينة. يمكن الطعن فيه (يدعي اللاعبون الآخرون أنك لست دوقًا). لا يمكن منعه. متاح فقط عند تفعيل الإصلاح.',
     'de-DE':
       'Nimm alle Münzen aus der Staatskasse. Kann herausgefordert werden (andere Spieler behaupten, dass du KEIN Herzog bist). Kann nicht blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
     'en-US':
@@ -2576,6 +2825,8 @@ const translations: Translations = {
       'Pegue todas as moedas do tesouro. Pode ser desafiado (outros jogadores afirmam que você NÃO é um Duque). Não pode ser bloqueado. Disponível apenas quando a Reforma está habilitada.',
   },
   rulesExamine: {
+    'ar-EG':
+      'انظر إلى بطاقة نفوذ واحدة للاعب آخر. ثم قرر ما إذا كنت ستجبره على تبديلها أم تتركه يحتفظ بها. يمكن الطعن فيه. لا يمكن منعه. متاح فقط عند تفعيل المحقق.',
     'de-DE':
       'Schau dir eine Einflusskarte eines anderen Spielers an. Dann entscheide, ob du ihn zwingst die Karte zu tauschen oder sie zu behalten. Kann herausgefordert werden. Kann nicht blockiert werden. Nur verfügbar, wenn Inquisitor aktiviert ist.',
     'en-US':
@@ -2592,6 +2843,8 @@ const translations: Translations = {
       'Olhe uma carta de influência de outro jogador. Depois decida se força a troca ou permite que ele a mantenha. Pode ser desafiado. Não pode ser bloqueado. Disponível apenas quando o Inquisidor está habilitado.',
   },
   rulesExchange: {
+    'ar-EG':
+      'اسحب بطاقتي نفوذ من المجموعة، وانظر إليهما واخلطهما مع بطاقات النفوذ الحالية لديك. أعد بطاقتين إلى المجموعة واخلط المجموعة. يمكن الطعن فيه. لا يمكن منعه.',
     'de-DE':
       'Ziehe zwei Karten vom Deck, schaue sie dir an und mische sie mit deinen aktuellen Einflusskarten. Lege zwei Karten zurück in den Stapel und mische den Stapel. Kann herausgefordert werden. Kann nicht blockiert werden.',
     'en-US':
@@ -2608,6 +2861,8 @@ const translations: Translations = {
       'Puxe duas cartas de influência do baralho, olhe para elas e misture-as com suas cartas de influência atuais. Coloque duas cartas de volta no baralho e embaralhe o baralho. Pode ser desafiado. Não pode ser bloqueado.',
   },
   rulesForeignAid: {
+    'ar-EG':
+      'خذ عملتين من البنك. لا يمكن الطعن فيه. يمكن منعه من قبل الدوق.',
     'de-DE':
       'Nimm zwei Münzen aus der Bank. Kann nicht herausgefordert werden. Kann vom Herzog blockiert werden.',
     'en-US':
@@ -2624,6 +2879,7 @@ const translations: Translations = {
       'Pegue duas moedas do banco. Não pode ser desafiado. Pode ser bloqueado pelo Duque.',
   },
   rulesGoal: {
+    'ar-EG': 'أن تكون اللاعب الوحيد المتبقي مع بطاقات نفوذ.',
     'de-DE': 'Der einzige Spieler zu sein, der noch Einflusskarten hat.',
     'en-US': 'To be the only player with any influence cards left.',
     'es-MX': 'Ser el único jugador con cartas de influencia restantes.',
@@ -2633,6 +2889,7 @@ const translations: Translations = {
     'pt-BR': 'Ser o único jogador com cartas de influência restantes.',
   },
   rulesIncome: {
+    'ar-EG': 'خذ عملة واحدة من البنك. لا يمكن الطعن فيه أو منعه.',
     'de-DE':
       'Nimm eine Münze aus der Bank. Kann nicht herausgefordert oder blockiert werden.',
     'en-US': 'Take one coin from the bank. Cannot be Challenged or Blocked.',
@@ -2646,6 +2903,7 @@ const translations: Translations = {
     'pt-BR': 'Pegue uma moeda do banco. Não pode ser desafiado ou bloqueado.',
   },
   rulesInfluences: {
+    'ar-EG': 'هناك خمس شخصيات مختلفة في مجموعة النفوذ.',
     'de-DE': 'Es gibt fünf verschiedene Charaktere im Einflussdeck.',
     'en-US': 'There are five different characters in the influence deck.',
     'es-MX': 'Hay cinco personajes diferentes en el mazo de influencia.',
@@ -2655,6 +2913,8 @@ const translations: Translations = {
     'pt-BR': 'Existem cinco personagens diferentes no baralho de influência.',
   },
   rulesInquisitor: {
+    'ar-EG':
+      'يمكنه فحص بطاقة نفوذ لاعب آخر وفرض تبديل. يمكنه تبديل بطاقة نفوذ واحدة (اسحب واحدة، واحتفظ بواحدة). يمكنه منع محاولات السرقة. يحل محل السفير عند التفعيل.',
     'de-DE':
       'Kann die Einflusskarte eines anderen Spielers untersuchen und einen Tausch erzwingen. Kann eine Einflusskarte austauschen (ziehe eine, behalte eine). Kann Diebstahlversuche blockieren. Ersetzt den Botschafter, wenn aktiviert.',
     'en-US':
@@ -2671,6 +2931,8 @@ const translations: Translations = {
       'Pode examinar a carta de influência de outro jogador e forçar uma troca. Pode trocar uma carta de influência (comprar uma, manter uma). Pode bloquear tentativas de roubo. Substitui o Embaixador quando habilitado.',
   },
   rulesLosingAChallenge: {
+    'ar-EG':
+      'أي لاعب يخسر الطعن يجب أن يكشف إحدى بطاقات النفوذ الخاصة به ليراها الجميع. إذا كانت هذه آخر بطاقة نفوذ لديه، يخرج من اللعبة.',
     'de-DE':
       'Jeder Spieler, der eine Herausforderung verliert, muss eine ihrer Einflusskarten aufdecken, damit alle sie sehen können. Wenn das ihre letzte Einflusskarte ist, scheiden sie aus dem Spiel aus.',
     'en-US':
@@ -2687,6 +2949,8 @@ const translations: Translations = {
       'Qualquer jogador que perder um desafio deve virar uma de suas cartas de influência virada para cima para que todos vejam. Se essa for sua última carta de influência, ele está fora do jogo.',
   },
   rulesLosingInfluence: {
+    'ar-EG':
+      'في أي وقت يفقد فيه اللاعب بطاقة نفوذ، يختار أي من بطاقاته سيكشف.',
     'de-DE':
       'Jedes Mal, wenn ein Spieler eine Einflusskarte verliert, wählt er aus, welche seiner Karten aufgedeckt wird.',
     'en-US':
@@ -2703,6 +2967,8 @@ const translations: Translations = {
       'Sempre que um jogador perder uma carta de influência, ele escolhe qual de suas cartas revelar.',
   },
   rulesReformation: {
+    'ar-EG':
+      'تضيف توسعة الإصلاح فصائل (الموالون والإصلاحيون)، وخزينة، وإجراءات جديدة. يمكن للاعبين استهداف لاعبي الفصيل المعارض فقط ما لم يكن جميع اللاعبين في نفس الفصيل. التحويل يغير الفصائل، والاختلاس يأخذ عملات من الخزينة، والفحص يكشف بطاقات الخصوم.',
     'de-DE':
       'Die Reformations-Erweiterung fügt Fraktionen (Loyalisten und Reformisten), eine Staatskasse und neue Aktionen hinzu. Spieler können nur Spieler der gegnerischen Fraktion angreifen, es sei denn alle Spieler gehören derselben Fraktion an. Konvertieren ändert Fraktionen, Unterschlagen nimmt Münzen aus der Staatskasse und Untersuchen enthüllt Karten von Gegnern.',
     'en-US':
@@ -2719,6 +2985,8 @@ const translations: Translations = {
       'A expansão Reforma adiciona facções (Lealistas e Reformistas), um tesouro e novas ações. Os jogadores só podem atacar jogadores da facção oposta, a menos que todos compartilhem a mesma facção. Converter muda facções, Desviar pega moedas do tesouro e Examinar revela as cartas dos oponentes.',
   },
   rulesRevive: {
+    'ar-EG':
+      'غير متاح في اللعبة القياسية ولكن يمكن تفعيله عند إنشاء لعبة جديدة. يكلف عشر عملات. إحياء بطاقة نفوذ من كومة النفايات. لا يمكن الطعن فيه أو منعه.',
     'de-DE':
       'Nicht im Standardspiel verfügbar, kann aber beim Erstellen eines neuen Spiels aktiviert werden. Kostet zehn Münzen. Belebt eine Einflusskarte aus dem Ablagestapel wieder. Kann nicht herausgefordert oder blockiert werden.',
     'en-US':
@@ -2735,6 +3003,8 @@ const translations: Translations = {
       'Não disponível no jogo padrão, mas pode ser ativado ao criar um novo jogo. Custa dez moedas. Revive uma carta de influência da pilha de descarte. Não pode ser desafiado ou bloqueado.',
   },
   rulesSetup: {
+    'ar-EG':
+      'اخلط البطاقات ووزع اثنتين لكل لاعب. يجب على اللاعبين النظر إلى بطاقاتهم ولكن إبقائها مخفية عن الآخرين. يأخذ كل لاعب عملتين من البنك كثروة بداية. في لعبة بها لاعبان فقط، يبدأ اللاعب الأول اللعبة بعملة واحدة بدلاً من اثنتين.',
     'de-DE':
       'Mische die Karten und verteile zwei an jeden Spieler. Die Spieler sollten ihre Karten ansehen, aber sie vor allen anderen verstecken. Jeder Spieler nimmt zwei Münzen aus der Bank als Startvermögen. In einem Spiel mit nur zwei Spielern beginnt der Startspieler mit einer Münze anstelle von zwei.',
     'en-US':
@@ -2751,6 +3021,8 @@ const translations: Translations = {
       'Embaralhe as cartas e distribua duas para cada jogador. Os jogadores devem olhar suas cartas, mas mantê-las escondidas dos outros. Cada jogador pega duas moedas do banco como sua riqueza inicial. Em um jogo com apenas dois jogadores, o jogador inicial começa o jogo com uma moeda em vez de duas.',
   },
   rulesSteal: {
+    'ar-EG':
+      'خذ عملتين من لاعب آخر. يمكن الطعن فيه. يمكن منعه من قبل القبطان أو السفير.',
     'de-DE':
       'Nimm zwei Münzen von einem anderen Spieler. Kann herausgefordert werden. Kann von Kapitän oder Botschafter blockiert werden.',
     'en-US':
@@ -2767,6 +3039,8 @@ const translations: Translations = {
       'Pegue duas moedas de outro jogador. Pode ser desafiado. Pode ser bloqueado pelo Capitão ou pelo Embaixador.',
   },
   rulesTax: {
+    'ar-EG':
+      'خذ ثلاث عملات من البنك. يمكن الطعن فيه. لا يمكن منعه.',
     'de-DE':
       'Nimm drei Münzen aus der Bank. Kann herausgefordert werden. Kann nicht blockiert werden.',
     'en-US':
@@ -2783,6 +3057,7 @@ const translations: Translations = {
       'Pegue três moedas do banco. Pode ser desafiado. Não pode ser bloqueado.',
   },
   save: {
+    'ar-EG': 'حفظ',
     'de-DE': 'Speichern',
     'en-US': 'Save',
     'es-MX': 'Guardar',
@@ -2792,6 +3067,7 @@ const translations: Translations = {
     'pt-BR': 'Salvar',
   },
   send: {
+    'ar-EG': 'إرسال',
     'de-DE': 'Senden',
     'en-US': 'Send',
     'es-MX': 'Enviar',
@@ -2801,6 +3077,7 @@ const translations: Translations = {
     'pt-BR': 'Enviar',
   },
   setDisplayName: {
+    'ar-EG': 'تعيين اسم العرض',
     'de-DE': 'Anzeigename festlegen',
     'en-US': 'Set Display Name',
     'es-MX': 'Establecer nombre',
@@ -2810,6 +3087,7 @@ const translations: Translations = {
     'pt-BR': 'Definir nome',
   },
   settings: {
+    'ar-EG': 'الإعدادات',
     'de-DE': 'Einstellungen',
     'en-US': 'Settings',
     'es-MX': 'Configuraciones',
@@ -2819,6 +3097,7 @@ const translations: Translations = {
     'pt-BR': 'Configurações',
   },
   setup: {
+    'ar-EG': 'الإعداد',
     'de-DE': 'Einrichten',
     'en-US': 'Setup',
     'es-MX': 'Configuración',
@@ -2828,6 +3107,7 @@ const translations: Translations = {
     'pt-BR': 'Configuração',
   },
   showChickens: {
+    'ar-EG': 'إظهار الدجاج',
     'de-DE': 'Hühner anzeigen',
     'en-US': 'Show Chickens',
     'es-MX': 'Mostrar Pollos',
@@ -2837,6 +3117,7 @@ const translations: Translations = {
     'pt-BR': 'Mostrar Galinhas',
   },
   showFireworks: {
+    'ar-EG': 'إظهار الألعاب النارية',
     'de-DE': 'Feuerwerk anzeigen',
     'en-US': 'Show Fireworks',
     'es-MX': 'Mostrar Fuegos Artificiales',
@@ -2846,6 +3127,7 @@ const translations: Translations = {
     'pt-BR': 'Mostrar Fogos de Artifício',
   },
   showSnowmen: {
+    'ar-EG': 'إظهار رجال الثلج',
     'de-DE': 'Schneemänner anzeigen',
     'en-US': 'Show Snowmen',
     'es-MX': 'Mostrar Muñecos de Nieve',
@@ -2855,6 +3137,7 @@ const translations: Translations = {
     'pt-BR': 'Mostrar Bonecos de Neve',
   },
   showTurkeys: {
+    'ar-EG': 'إظهار الديوك الرومية',
     'de-DE': 'Truthähne anzeigen',
     'en-US': 'Show Turkeys',
     'es-MX': 'Mostrar Pavos',
@@ -2864,6 +3147,7 @@ const translations: Translations = {
     'pt-BR': 'Mostrar Perus',
   },
   signIn: {
+    'ar-EG': 'تسجيل الدخول',
     'de-DE': 'Anmelden',
     'en-US': 'Sign In',
     'es-MX': 'Iniciar sesión',
@@ -2873,6 +3157,7 @@ const translations: Translations = {
     'pt-BR': 'Entrar',
   },
   signInToTrackStats: {
+    'ar-EG': 'سجل الدخول لتتبع إحصائياتك',
     'de-DE': 'Melde dich an, um deine Statistiken zu verfolgen',
     'en-US': 'Sign in to track your stats',
     'es-MX': 'Inicia sesión para seguir tus estadísticas',
@@ -2882,6 +3167,7 @@ const translations: Translations = {
     'pt-BR': 'Entre para acompanhar suas estatísticas',
   },
   signOut: {
+    'ar-EG': 'تسجيل الخروج',
     'de-DE': 'Abmelden',
     'en-US': 'Sign Out',
     'es-MX': 'Cerrar sesión',
@@ -2891,6 +3177,7 @@ const translations: Translations = {
     'pt-BR': 'Sair',
   },
   skepticism: {
+    'ar-EG': 'تشكك',
     'de-DE': 'Skepsis',
     'en-US': 'Skepticism',
     'es-MX': 'Escepticismo',
@@ -2900,6 +3187,7 @@ const translations: Translations = {
     'pt-BR': 'Ceticismo',
   },
   somethingWentWrong: {
+    'ar-EG': 'حدث خطأ ما',
     'de-DE': 'Etwas ist schiefgelaufen',
     'en-US': 'Something went wrong',
     'es-MX': 'Algo salió mal',
@@ -2909,6 +3197,7 @@ const translations: Translations = {
     'pt-BR': 'Algo deu errado',
   },
   soulRead: {
+    'ar-EG': '{{player}} كشف الخدعة!',
     'de-DE': '{{player}} hat den Bluff durchschaut!',
     'en-US': '{{player}} called the bluff!',
     'es-MX': '¡{{player}} descubrió el farol!',
@@ -2918,6 +3207,7 @@ const translations: Translations = {
     'pt-BR': '{{player}} descobriu o blefe!',
   },
   soulReads: {
+    'ar-EG': '{{count}} كشف خدع',
     'de-DE': '{{count}} Durchschaut',
     'en-US': '{{count}} Soul Reads',
     'es-MX': '{{count}} Lecturas certeras',
@@ -2927,6 +3217,7 @@ const translations: Translations = {
     'pt-BR': '{{count}} Leituras certeiras',
   },
   spectateGame: {
+    'ar-EG': 'مشاهدة اللعبة',
     'de-DE': 'Spiel beobachten',
     'en-US': 'Spectate Game',
     'es-MX': 'Observar Juego',
@@ -2936,6 +3227,7 @@ const translations: Translations = {
     'pt-BR': 'Assistir Jogo',
   },
   speedRound: {
+    'ar-EG': 'جولة سريعة',
     'de-DE': 'Schnelle Runde',
     'en-US': 'Speed Round',
     'es-MX': 'Ronda Rápida',
@@ -2945,6 +3237,7 @@ const translations: Translations = {
     'pt-BR': 'Rodada Rápida',
   },
   speedRoundSeconds: {
+    'ar-EG': 'ثواني الجولة السريعة',
     'de-DE': 'Sekunden für schnelle Runde',
     'en-US': 'Seconds for Speed Round',
     'es-MX': 'Segundos para Ronda Rápida',
@@ -2954,6 +3247,7 @@ const translations: Translations = {
     'pt-BR': 'Segundos para Rodada Rápida',
   },
   startGame: {
+    'ar-EG': 'بدء اللعبة',
     'de-DE': 'Spiel starten',
     'en-US': 'Start Game',
     'es-MX': 'Iniciar Juego',
@@ -2963,6 +3257,7 @@ const translations: Translations = {
     'pt-BR': 'Iniciar Jogo',
   },
   startingPlayerBeginsWith1Coin: {
+    'ar-EG': 'لعبة بلاعبَين، يبدأ اللاعب الأول بعملة واحدة',
     'de-DE': '2-Spieler-Spiel, der Startspieler beginnt mit 1 Münze',
     'en-US': '2 player game, starting player will begin with 1 coin',
     'es-MX': 'Juego de 2 jugadores, el jugador inicial comenzará con 1 moneda',
@@ -2973,6 +3268,7 @@ const translations: Translations = {
     'pt-BR': 'Jogo de 2 jogadores, o jogador inicial começará com 1 moeda',
   },
   steal2CoinsFromSomeone: {
+    'ar-EG': 'اسرق عملتين من شخص ما',
     'de-DE': 'Stehle 2 Münzen von jemandem',
     'en-US': 'Steal 2 coins from someone',
     'es-MX': 'Robar 2 monedas de alguien',
@@ -2982,6 +3278,7 @@ const translations: Translations = {
     'pt-BR': 'Roubar 2 moedas de alguém',
   },
   steals: {
+    'ar-EG': 'سرقات',
     'de-DE': 'Diebstähle',
     'en-US': 'Steals',
     'es-MX': 'Robos',
@@ -2991,6 +3288,7 @@ const translations: Translations = {
     'pt-BR': 'Roubos',
   },
   success: {
+    'ar-EG': 'نجاح',
     'de-DE': 'Erfolg',
     'en-US': 'Success',
     'es-MX': 'Éxito',
@@ -3000,6 +3298,7 @@ const translations: Translations = {
     'pt-BR': 'Sucesso',
   },
   successfulBluffs: {
+    'ar-EG': '{{count}} خدعة ناجحة',
     'de-DE': '{{count}} erfolgreiche Bluffs',
     'en-US': '{{count}} Successful Bluffs',
     'es-MX': '{{count}} Faroles exitosos',
@@ -3009,6 +3308,7 @@ const translations: Translations = {
     'pt-BR': '{{count}} Blefes bem-sucedidos',
   },
   supportAdFree: {
+    'ar-EG': 'بدون إعلانات',
     'de-DE': 'werbefrei',
     'en-US': 'ad-free',
     'es-MX': 'sin anuncios',
@@ -3018,6 +3318,7 @@ const translations: Translations = {
     'pt-BR': 'sem anuncios',
   },
   supportCheckoutError: {
+    'ar-EG': 'تعذر بدء الدفع الآن.',
     'de-DE': 'Checkout kann gerade nicht gestartet werden.',
     'en-US': 'Unable to start checkout right now.',
     'es-MX': 'No se puede iniciar el pago en este momento.',
@@ -3027,6 +3328,7 @@ const translations: Translations = {
     'pt-BR': 'Nao foi possivel iniciar o checkout agora.',
   },
   supportCustomAmountLabel: {
+    'ar-EG': 'مبلغ مخصص (دولار أمريكي)',
     'de-DE': 'Benutzerdefinierter Betrag (USD)',
     'en-US': 'Custom amount (USD)',
     'es-MX': 'Monto personalizado (USD)',
@@ -3036,6 +3338,7 @@ const translations: Translations = {
     'pt-BR': 'Valor personalizado (USD)',
   },
   supportCustomAmountValidation: {
+    'ar-EG': 'أدخل مبلغًا صالحًا بين ١ و ٥٠٠ دولار',
     'de-DE': 'Gib einen gueltigen Betrag zwischen $1 und $500 ein',
     'en-US': 'Enter a valid amount between $1 and $500',
     'es-MX': 'Ingresa un monto valido entre $1 y $500',
@@ -3045,6 +3348,7 @@ const translations: Translations = {
     'pt-BR': 'Digite um valor valido entre $1 e $500',
   },
   supportCustomDonateCta: {
+    'ar-EG': 'تبرع مخصص',
     'de-DE': 'Benutzerdefiniert spenden',
     'en-US': 'Donate Custom',
     'es-MX': 'Donar monto personalizado',
@@ -3054,6 +3358,7 @@ const translations: Translations = {
     'pt-BR': 'Doar valor personalizado',
   },
   supportDurationDay: {
+    'ar-EG': '{{count}} يوم{{plural[[ًا]]}}',
     'de-DE': '{{count}} Tag{{plural[[e]]}}',
     'en-US': '{{count}} day{{plural[[s]]}}',
     'es-MX': '{{count}} dia{{plural[[s]]}}',
@@ -3063,6 +3368,7 @@ const translations: Translations = {
     'pt-BR': '{{count}} dia{{plural[[s]]}}',
   },
   supportGoAdFreeButton: {
+    'ar-EG': 'دعم / بدون إعلانات',
     'de-DE': 'Unterstuetzen / Werbefrei',
     'en-US': 'Support / Go Ad-Free',
     'es-MX': 'Apoyar / Sin anuncios',
@@ -3072,6 +3378,7 @@ const translations: Translations = {
     'pt-BR': 'Apoiar / Sem anuncios',
   },
   supportHistoryActiveUntil: {
+    'ar-EG': 'نشط حتى',
     'de-DE': 'Aktiv bis',
     'en-US': 'Active until',
     'es-MX': 'Activo hasta',
@@ -3081,6 +3388,7 @@ const translations: Translations = {
     'pt-BR': 'Ativo ate',
   },
   supportHistoryEmpty: {
+    'ar-EG': 'لا توجد مدفوعات أو تبرعات بعد.',
     'de-DE': 'Noch keine Zahlungen oder Spenden.',
     'en-US': 'No payments or donations yet.',
     'es-MX': 'Aun no hay pagos ni donaciones.',
@@ -3090,6 +3398,7 @@ const translations: Translations = {
     'pt-BR': 'Ainda nao ha pagamentos ou doacoes.',
   },
   supportHistoryLoading: {
+    'ar-EG': 'جارٍ تحميل سجل المدفوعات...',
     'de-DE': 'Zahlungsverlauf wird geladen...',
     'en-US': 'Loading payment history...',
     'es-MX': 'Cargando historial de pagos...',
@@ -3099,6 +3408,7 @@ const translations: Translations = {
     'pt-BR': 'Carregando historico de pagamentos...',
   },
   supportHistoryTitle: {
+    'ar-EG': 'سجل مدفوعاتك',
     'de-DE': 'Dein Zahlungsverlauf',
     'en-US': 'Your payment history',
     'es-MX': 'Tu historial de pagos',
@@ -3108,6 +3418,7 @@ const translations: Translations = {
     'pt-BR': 'Seu historico de pagamentos',
   },
   supportLoginRequired: {
+    'ar-EG': 'يرجى تسجيل الدخول قبل دعم اللعبة.',
     'de-DE': 'Bitte melde dich an, bevor du das Spiel unterstuetzt.',
     'en-US': 'Please sign in before supporting the game.',
     'es-MX': 'Inicia sesion antes de apoyar el juego.',
@@ -3117,6 +3428,7 @@ const translations: Translations = {
     'pt-BR': 'Faca login antes de apoiar o jogo.',
   },
   supportMonetizationDescription: {
+    'ar-EG': 'حافظ على استمرار اللعبة واختر الخيار الذي يناسبك.',
     'de-DE': 'Halte das Spiel am Laufen und waehle die Option, die am besten zu dir passt.',
     'en-US': 'Keep the game running and choose the option that fits you best.',
     'es-MX': 'Ayuda a mantener el juego y elige la opcion que mejor te funcione.',
@@ -3126,6 +3438,7 @@ const translations: Translations = {
     'pt-BR': 'Ajude a manter o jogo no ar e escolha a opcao ideal para voce.',
   },
   supportMonetizationTitle: {
+    'ar-EG': 'ادعم Coup Online',
     'de-DE': 'Coup Online unterstuetzen',
     'en-US': 'Support Coup Online',
     'es-MX': 'Apoyar Coup Online',
@@ -3135,6 +3448,7 @@ const translations: Translations = {
     'pt-BR': 'Apoiar Coup Online',
   },
   supportMonetizationTooltip: {
+    'ar-EG': 'ادعم التطوير وافتح خيارات بدون إعلانات',
     'de-DE': 'Unterstuetze die Entwicklung und schalte werbefreie Optionen frei',
     'en-US': 'Support development and unlock ad-free options',
     'es-MX': 'Apoya el desarrollo y desbloquea opciones sin anuncios',
@@ -3144,6 +3458,7 @@ const translations: Translations = {
     'pt-BR': 'Apoie o desenvolvimento e desbloqueie opcoes sem anuncios',
   },
   supportPaymentReturnPending: {
+    'ar-EG': 'شكرًا! اكتمل الدفع. يجب تفعيل حالة بدون إعلانات قريبًا.',
     'de-DE': 'Danke! Deine Zahlung wurde abgeschlossen. Werbefreier Status sollte in Kuerze aktiv werden.',
     'en-US': 'Thanks! Your payment completed. Ad-free status should activate shortly.',
     'es-MX': 'Gracias. Tu pago se completo. El estado sin anuncios deberia activarse pronto.',
@@ -3153,6 +3468,7 @@ const translations: Translations = {
     'pt-BR': 'Obrigado! Seu pagamento foi concluido. O status sem anuncios deve ativar em breve.',
   },
   supportPaymentReturnSuccess: {
+    'ar-EG': 'شكرًا لدعمك. حالة بدون إعلانات نشطة الآن.',
     'de-DE': 'Danke fuer deine Unterstuetzung. Werbefreier Status ist jetzt aktiv.',
     'en-US': 'Thanks for your support. Ad-free status is now active.',
     'es-MX': 'Gracias por tu apoyo. El estado sin anuncios ya esta activo.',
@@ -3162,6 +3478,7 @@ const translations: Translations = {
     'pt-BR': 'Obrigado pelo apoio. O status sem anuncios agora esta ativo.',
   },
   supportPremiumMonthlyCta: {
+    'ar-EG': '١.٩٩ دولار / شهر · بدون إعلانات',
     'de-DE': '$1.99 / Monat · Werbefrei fuer',
     'en-US': '$1.99 / month · Go Ad-Free',
     'es-MX': '$1.99 / mes · Sin anuncios',
@@ -3171,6 +3488,7 @@ const translations: Translations = {
     'pt-BR': '$1.99 / mes · Sem anuncios',
   },
   supportStartingCheckout: {
+    'ar-EG': 'جارٍ بدء الدفع...',
     'de-DE': 'Checkout wird gestartet...',
     'en-US': 'Starting checkout...',
     'es-MX': 'Iniciando pago...',
@@ -3180,6 +3498,7 @@ const translations: Translations = {
     'pt-BR': 'Iniciando checkout...',
   },
   supportTabHistory: {
+    'ar-EG': 'السجل',
     'de-DE': 'Verlauf',
     'en-US': 'History',
     'es-MX': 'Historial',
@@ -3189,6 +3508,7 @@ const translations: Translations = {
     'pt-BR': 'Historico',
   },
   supportTabSupport: {
+    'ar-EG': 'الدعم',
     'de-DE': 'Support',
     'en-US': 'Support',
     'es-MX': 'Apoyo',
@@ -3198,6 +3518,7 @@ const translations: Translations = {
     'pt-BR': 'Apoio',
   },
   system: {
+    'ar-EG': 'النظام',
     'de-DE': 'System',
     'en-US': 'System',
     'es-MX': 'Sistema',
@@ -3207,6 +3528,7 @@ const translations: Translations = {
     'pt-BR': 'Sistema',
   },
   takeAllTreasuryCoins: {
+    'ar-EG': 'خذ كل العملات من الخزينة',
     'de-DE': 'Alle Münzen aus der Staatskasse nehmen',
     'en-US': 'Take all coins from the treasury',
     'es-MX': 'Tomar todas las monedas del tesoro',
@@ -3216,6 +3538,7 @@ const translations: Translations = {
     'pt-BR': 'Pegar todas as moedas do tesouro',
   },
   termsOfService: {
+    'ar-EG': 'شروط الخدمة',
     'de-DE': 'Nutzungsbedingungen',
     'en-US': 'Terms of Service',
     'es-MX': 'Terminos de Servicio',
@@ -3225,6 +3548,7 @@ const translations: Translations = {
     'pt-BR': 'Termos de Servico',
   },
   termsOfServiceContent: {
+    'ar-EG': 'باستخدام Coup Online، أنت توافق على هذه الشروط.\n\nتسجيل الدخول اختياري، لكن ميزات الحساب قد تكون مطلوبة للإحصائيات المستمرة وهوية لوحة المتصدرين.\n\nأنت مسؤول عن الحفاظ على أمان الحساب والنشاط تحت حسابك.\n\nالغش والإساءة والتحرش والبرمجات الآلية والوصول غير المصرح به ممنوعة وقد تؤدي إلى تعليق أو إنهاء الحساب.\n\nقد يتم تحديث الخدمة أو تقييدها أو إيقافها في أي وقت. تُقدم الخدمة كما هي إلى الحد الذي يسمح به القانون.\n\nإذا تم عرض الإعلانات، تنطبق سياسات وتقنيات Google AdSense أيضًا.\n\nجهة اتصال قانونية: {{contactEmail}}',
     'de-DE': 'Durch die Nutzung von Coup Online stimmen Sie diesen Bedingungen zu.\n\nDie Anmeldung ist optional, aber Kontofunktionen koennen fuer persistente Statistiken und Bestenlisten erforderlich sein.\n\nSie sind fuer Ihre Kontosicherheit und fuer Aktivitaeten ueber Ihr Konto verantwortlich.\n\nCheating, Missbrauch, Belaestigung, Bot-Nutzung und unbefugter Zugriff sind verboten und koennen zu Sperrung oder Kontokuendigung fuehren.\n\nDer Dienst kann aktualisiert, eingeschraenkt oder eingestellt werden. Der Dienst wird ohne Gewaehr bereitgestellt, soweit gesetzlich zulaessig.\n\nWenn Werbung angezeigt wird, gelten zusaetzlich die Richtlinien und Technologien von Google AdSense.\n\nKontakt fuer rechtliche Anfragen: {{contactEmail}}',
     'en-US': 'By using Coup Online, you agree to these terms.\n\nSign-in is optional, but account features may be required for persistent stats and leaderboard identity.\n\nYou are responsible for maintaining account security and activity under your account.\n\nCheating, abuse, harassment, botting, and unauthorized access are prohibited and may result in suspension or termination.\n\nThe service may be updated, limited, or discontinued at any time. The service is provided as-is to the extent permitted by law.\n\nIf ads are shown, Google AdSense policies and technologies also apply.\n\nLegal contact: {{contactEmail}}',
     'es-MX': 'Al usar Coup Online, aceptas estos terminos.\n\nEl inicio de sesion es opcional, pero algunas funciones de cuenta pueden ser necesarias para estadisticas persistentes e identidad en la clasificacion.\n\nEres responsable de mantener la seguridad de tu cuenta y de la actividad realizada con ella.\n\nHacer trampa, abusar, acosar, usar bots o intentar acceso no autorizado esta prohibido y puede causar suspension o cancelacion.\n\nEl servicio puede actualizarse, limitarse o descontinuarse en cualquier momento. Se ofrece tal cual, en la medida permitida por la ley.\n\nSi se muestran anuncios, tambien aplican las politicas y tecnologias de Google AdSense.\n\nContacto legal: {{contactEmail}}',
@@ -3234,6 +3558,7 @@ const translations: Translations = {
     'pt-BR': 'Ao usar o Coup Online, voce concorda com estes termos.\n\nO login e opcional, mas recursos de conta podem ser necessarios para estatisticas persistentes e identidade no ranking.\n\nVoce e responsavel por manter a seguranca da conta e pela atividade realizada nela.\n\nTrapaca, abuso, assedio, uso de bots e acesso nao autorizado sao proibidos e podem resultar em suspensao ou encerramento da conta.\n\nO servico pode ser atualizado, limitado ou descontinuado a qualquer momento. Ele e fornecido no estado em que se encontra, na medida permitida por lei.\n\nSe anuncios forem exibidos, politicas e tecnologias do Google AdSense tambem se aplicam.\n\nContato legal: {{contactEmail}}',
   },
   title: {
+    'ar-EG': 'انقلاب',
     'de-DE': 'Coup',
     'en-US': 'Coup',
     'es-MX': 'Coup',
@@ -3243,6 +3568,7 @@ const translations: Translations = {
     'pt-BR': 'Coup',
   },
   treasury: {
+    'ar-EG': 'خزينة',
     'de-DE': 'Staatskasse',
     'en-US': 'Treasury',
     'es-MX': 'Tesoro',
@@ -3252,6 +3578,7 @@ const translations: Translations = {
     'pt-BR': 'Tesouro',
   },
   truth: {
+    'ar-EG': 'حقيقة',
     'de-DE': 'Wahrheit',
     'en-US': 'Truth',
     'es-MX': 'Verdad',
@@ -3261,6 +3588,7 @@ const translations: Translations = {
     'pt-BR': 'Verdade',
   },
   tryAgain: {
+    'ar-EG': 'حاول مرة أخرى',
     'de-DE': 'Erneut versuchen',
     'en-US': 'Try Again',
     'es-MX': 'Intentar de nuevo',
@@ -3270,6 +3598,7 @@ const translations: Translations = {
     'pt-BR': 'Tentar novamente',
   },
   turns: {
+    'ar-EG': 'أدوار',
     'de-DE': 'Runden',
     'en-US': 'turns',
     'es-MX': 'turnos',
@@ -3279,6 +3608,7 @@ const translations: Translations = {
     'pt-BR': 'turnos',
   },
   tutorial: {
+    'ar-EG': 'تعليمي',
     'de-DE': 'Tutorial',
     'en-US': 'Tutorial',
     'es-MX': 'Tutorial',
@@ -3288,6 +3618,7 @@ const translations: Translations = {
     'pt-BR': 'Tutorial',
   },
   tutorialBack: {
+    'ar-EG': 'رجوع',
     'de-DE': 'Zurück',
     'en-US': 'Back',
     'es-MX': 'Atrás',
@@ -3297,6 +3628,7 @@ const translations: Translations = {
     'pt-BR': 'Voltar',
   },
   tutorialComplete: {
+    'ar-EG': 'أنت جاهز للعب! 🎉',
     'de-DE': 'Du bist bereit zu spielen! 🎉',
     'en-US': "You're ready to play! 🎉",
     'es-MX': '¡Estás listo para jugar! 🎉',
@@ -3306,6 +3638,7 @@ const translations: Translations = {
     'pt-BR': 'Você está pronto para jogar! 🎉',
   },
   tutorialFinish: {
+    'ar-EG': 'إنهاء',
     'de-DE': 'Fertig',
     'en-US': 'Finish',
     'es-MX': 'Terminar',
@@ -3315,6 +3648,7 @@ const translations: Translations = {
     'pt-BR': 'Finalizar',
   },
   tutorialIntro: {
+    'ar-EG': 'اتبع هذه اللعبة النموذجية مع ثلاثة لاعبين لتعلم أساسيات Coup.',
     'de-DE': 'Folge diesem Beispielspiel mit drei Spielern, um die Grundlagen von Coup zu lernen.',
     'en-US': 'Follow this example game with three players to learn the basics of Coup.',
     'es-MX': 'Sigue este juego de ejemplo con tres jugadores para aprender los conceptos básicos de Coup.',
@@ -3324,6 +3658,7 @@ const translations: Translations = {
     'pt-BR': 'Siga este jogo de exemplo com três jogadores para aprender o básico de Coup.',
   },
   tutorialNext: {
+    'ar-EG': 'التالي',
     'de-DE': 'Weiter',
     'en-US': 'Next',
     'es-MX': 'Siguiente',
@@ -3333,6 +3668,7 @@ const translations: Translations = {
     'pt-BR': 'Próximo',
   },
   tutorialRestart: {
+    'ar-EG': 'إعادة التشغيل',
     'de-DE': 'Tutorial neu starten',
     'en-US': 'Restart Tutorial',
     'es-MX': 'Reiniciar Tutorial',
@@ -3342,6 +3678,7 @@ const translations: Translations = {
     'pt-BR': 'Reiniciar Tutorial',
   },
   tutorialRulesHint: {
+    'ar-EG': 'استخدم زر القواعد في الزاوية السفلية اليسرى لعرض القواعد الكاملة وورقة الغش في أي وقت.',
     'de-DE': 'Verwende die Regel-Schaltfläche unten links, um jederzeit die vollständigen Regeln und den Spickzettel anzuzeigen.',
     'en-US': 'Use the rules button in the bottom left corner to view the full rules and cheat sheet at any time.',
     'es-MX': 'Usa el botón de reglas en la esquina inferior izquierda para ver las reglas completas y la hoja de referencia en cualquier momento.',
@@ -3351,6 +3688,7 @@ const translations: Translations = {
     'pt-BR': 'Use o botão de regras no canto inferior esquerdo para ver as regras completas e a folha de referência a qualquer momento.',
   },
   tutorialStartingCoins: {
+    'ar-EG': 'يبدأ كل لاعب بعملتين',
     'de-DE': 'Jeder Spieler startet mit 2 Münzen',
     'en-US': 'Each player starts with 2 coins',
     'es-MX': 'Cada jugador comienza con 2 monedas',
@@ -3360,6 +3698,7 @@ const translations: Translations = {
     'pt-BR': 'Cada jogador começa com 2 moedas',
   },
   tutorialStep10Content: {
+    'ar-EG': 'تستمر اللعبة حتى يتبقى لاعب واحد فقط مع بطاقات نفوذ. تذكر: يمكنك المطالبة بأي إجراء بغض النظر عن بطاقاتك — ولكن إذا تم الطعن عليك وكنت تخادع، تخسر نفوذًا! هذا هو جوهر Coup: الخداع والمخاطرة والتوقيت.',
     'de-DE': 'Das Spiel geht weiter, bis nur noch ein Spieler Einflusskarten hat. Denke daran: Du kannst JEDE Aktion beanspruchen, unabhängig von deinen Karten — aber wenn du herausgefordert wirst und bluffst, verlierst du eine Einflusskarte! Das ist das Herz von Coup: Täuschung, Risiko und Timing.',
     'en-US': "The game continues until only one player has influence cards remaining. Remember: you can claim ANY action regardless of your cards — but if you're challenged and you're bluffing, you lose an influence! That's the heart of Coup: deception, risk, and timing.",
     'es-MX': 'El juego continúa hasta que solo un jugador tenga cartas de influencia. Recuerda: puedes reclamar CUALQUIER acción independientemente de tus cartas — ¡pero si te desafían y estás mintiendo, pierdes una influencia! Ese es el corazón de Coup: engaño, riesgo y oportunidad.',
@@ -3369,6 +3708,7 @@ const translations: Translations = {
     'pt-BR': 'O jogo continua até que apenas um jogador tenha cartas de influência. Lembre-se: você pode reivindicar QUALQUER ação independentemente de suas cartas — mas se for desafiado e estiver blefando, perde uma influência! Esse é o coração de Coup: engano, risco e oportunidade.',
   },
   tutorialStep10Title: {
+    'ar-EG': 'اللعبة مستمرة...',
     'de-DE': 'Das Spiel geht weiter...',
     'en-US': 'The Game Continues...',
     'es-MX': 'El Juego Continúa...',
@@ -3378,6 +3718,7 @@ const translations: Translations = {
     'pt-BR': 'O Jogo Continua...',
   },
   tutorialStep1Content: {
+    'ar-EG': 'في Coup، يبدأ كل لاعب ببطاقتي نفوذ (سريتين) وعملتين. هدفك هو أن تكون آخر لاعب مع بطاقات نفوذ. تخسر بطاقة عندما يتم الطعن عليك بنجاح، أو عندما يقوم شخص بانقلاب عليك، أو عندما يغتالك أحد.',
     'de-DE': 'In Coup beginnt jeder Spieler mit 2 Einflusskarten (geheim) und 2 Münzen. Dein Ziel ist es, der letzte Spieler mit Einflusskarten zu sein. Du verlierst eine Karte, wenn du erfolgreich herausgefordert wirst, jemand einen Putsch gegen dich durchführt oder jemand dich meuchelt.',
     'en-US': 'In Coup, each player starts with 2 influence cards (kept secret) and 2 coins. Your goal is to be the last player with influence cards. You lose a card when you are successfully challenged, someone coups you, or someone assassinates you.',
     'es-MX': 'En Coup, cada jugador comienza con 2 cartas de influencia (secretas) y 2 monedas. Tu objetivo es ser el último jugador con cartas de influencia. Pierdes una carta cuando te desafían exitosamente, alguien te hace un golpe o alguien te asesina.',
@@ -3387,6 +3728,7 @@ const translations: Translations = {
     'pt-BR': 'Em Coup, cada jogador começa com 2 cartas de influência (secretas) e 2 moedas. Seu objetivo é ser o último jogador com cartas de influência. Você perde uma carta quando é desafiado com sucesso, alguém dá um golpe em você ou alguém te assassina.',
   },
   tutorialStep1Title: {
+    'ar-EG': 'الأساسيات',
     'de-DE': 'Die Grundlagen',
     'en-US': 'The Basics',
     'es-MX': 'Lo Básico',
@@ -3396,6 +3738,7 @@ const translations: Translations = {
     'pt-BR': 'O Básico',
   },
   tutorialStep2Content: {
+    'ar-EG': 'لنشاهد لعبة ثلاثية بين أليس وبوب وكارول. يحصل كل منهم على بطاقتي نفوذ عشوائيتين لا يمكن رؤيتهما إلا من قبلهم:',
     'de-DE': 'Lass uns ein 3-Spieler-Spiel zwischen Alice, Bob und Carol anschauen. Jeder bekommt 2 zufällige Einflusskarten, die nur sie sehen können:',
     'en-US': "Let's watch a 3-player game between Alice, Bob, and Carol. Each gets 2 random influence cards that only they can see:",
     'es-MX': 'Veamos un juego de 3 jugadores entre Alice, Bob y Carol. Cada uno recibe 2 cartas de influencia aleatorias que solo ellos pueden ver:',
@@ -3405,6 +3748,7 @@ const translations: Translations = {
     'pt-BR': 'Vamos assistir um jogo de 3 jogadores entre Alice, Bob e Carol. Cada um recebe 2 cartas de influência aleatórias que só eles podem ver:',
   },
   tutorialStep2Title: {
+    'ar-EG': 'إعداد اللعبة',
     'de-DE': 'Spielaufbau',
     'en-US': 'Game Setup',
     'es-MX': 'Preparación del Juego',
@@ -3414,6 +3758,7 @@ const translations: Translations = {
     'pt-BR': 'Preparação do Jogo',
   },
   tutorialStep3Content: {
+    'ar-EG': 'أليس تبدأ أولاً. لديها الدوق، لذا تطالب بالضرائب (خذ ٣ عملات). لا أحد يطعن فيها، لذا تحصل على العملات. ملاحظة: كان بإمكانها المطالبة بالضرائب حتى بدون الدوق — إنها لعبة خداع!',
     'de-DE': 'Alice ist am Zug. Sie hat den Herzog, also beansprucht sie Steuern (nimm 3 Münzen). Niemand fordert sie heraus, also bekommt sie die Münzen. Merke: Sie hätte Tax auch OHNE den Herzog beanspruchen können — es ist ein Bluff-Spiel!',
     'en-US': "Alice goes first. She has the Duke, so she claims Tax (take 3 coins). Nobody challenges her, so she gets the coins. Note: she could have claimed Tax even WITHOUT the Duke — it's a bluffing game!",
     'es-MX': 'Alice va primero. Tiene al Duque, así que reclama Impuesto (tomar 3 monedas). Nadie la desafía, así que obtiene las monedas. Nota: ¡podría haber reclamado Impuesto incluso SIN el Duque — es un juego de engaño!',
@@ -3423,6 +3768,7 @@ const translations: Translations = {
     'pt-BR': 'Alice vai primeiro. Ela tem o Duque, então reivindica Imposto (pegar 3 moedas). Ninguém a desafia, então ela fica com as moedas. Nota: ela poderia ter reivindicado Imposto mesmo SEM o Duque — é um jogo de blefe!',
   },
   tutorialStep3Title: {
+    'ar-EG': 'الدور ١: المطالبة بإجراء',
     'de-DE': 'Runde 1: Aktion beanspruchen',
     'en-US': 'Turn 1: Claiming an Action',
     'es-MX': 'Turno 1: Reclamar una Acción',
@@ -3432,6 +3778,7 @@ const translations: Translations = {
     'pt-BR': 'Turno 1: Reivindicar uma Ação',
   },
   tutorialStep4Content: {
+    'ar-EG': 'دور بوب. ليس لديه القبطان، لكنه يدعي أنه يريد السرقة من أليس على أي حال! في لعبة حقيقية، قد ينجو بفعلته إذا لم يطعن فيه أحد...',
     'de-DE': 'Bob ist dran. Er hat NICHT den Kapitän, aber er behauptet trotzdem, er wolle von Alice stehlen! Im echten Spiel könnte er damit durchkommen, wenn niemand herausfordert...',
     'en-US': "Bob's turn. He does NOT have the Captain, but he claims he wants to Steal from Alice anyway! In a real game, he might get away with it if nobody challenges...",
     'es-MX': 'Turno de Bob. NO tiene al Capitán, ¡pero reclama que quiere Robar a Alice de todos modos! En un juego real, podría salirse con la suya si nadie desafía...',
@@ -3441,6 +3788,7 @@ const translations: Translations = {
     'pt-BR': 'Turno do Bob. Ele NÃO tem o Capitão, mas reivindica que quer Roubar de Alice mesmo assim! Em um jogo real, ele pode se safar se ninguém desafiar...',
   },
   tutorialStep4Dialogue: {
+    'ar-EG': 'من أليس',
     'de-DE': 'von Alice stehlen',
     'en-US': 'from Alice',
     'es-MX': 'de Alice',
@@ -3450,6 +3798,7 @@ const translations: Translations = {
     'pt-BR': 'de Alice',
   },
   tutorialStep4Title: {
+    'ar-EG': 'الدور ٢: الخداع!',
     'de-DE': 'Runde 2: Bluffen!',
     'en-US': 'Turn 2: Bluffing!',
     'es-MX': 'Turno 2: ¡Engañando!',
@@ -3459,6 +3808,7 @@ const translations: Translations = {
     'pt-BR': 'Turno 2: Blefando!',
   },
   tutorialStep5Block: {
+    'ar-EG': 'لدي',
     'de-DE': 'Ich habe den',
     'en-US': 'I have the',
     'es-MX': 'Tengo al',
@@ -3468,6 +3818,7 @@ const translations: Translations = {
     'pt-BR': 'Eu tenho o',
   },
   tutorialStep5Content: {
+    'ar-EG': 'أليس تمنع السرقة، مدعية أن لديها القبطان (وهو ما تملكه بالفعل). يمكن لبوب الطعن في منعها، لكنه يقرر عدم القيام بذلك. تم منع السرقة!',
     'de-DE': 'Alice blockiert den Diebstahl und behauptet, sie habe den Kapitän (den sie tatsächlich hat). Bob könnte ihre Blockade herausfordern, aber er entscheidet sich dagegen. Der Diebstahl wird verhindert!',
     'en-US': "Alice blocks the steal, claiming she has the Captain (which she actually does). Bob could challenge her block, but he decides not to. The steal is prevented!",
     'es-MX': 'Alice bloquea el robo, afirmando que tiene al Capitán (lo cual es cierto). Bob podría desafiar su bloqueo, pero decide no hacerlo. ¡El robo es prevenido!',
@@ -3477,6 +3828,7 @@ const translations: Translations = {
     'pt-BR': 'Alice bloqueia o roubo, afirmando que tem o Capitão (o que ela realmente tem). Bob poderia desafiar seu bloqueio, mas decide não fazê-lo. O roubo é impedido!',
   },
   tutorialStep5Ok: {
+    'ar-EG': '...حسنًا.',
     'de-DE': '...OK.',
     'en-US': '...OK.',
     'es-MX': '...OK.',
@@ -3486,6 +3838,7 @@ const translations: Translations = {
     'pt-BR': '...OK.',
   },
   tutorialStep5Title: {
+    'ar-EG': 'المنع',
     'de-DE': 'Blockieren',
     'en-US': 'Blocking',
     'es-MX': 'Bloquear',
@@ -3495,6 +3848,7 @@ const translations: Translations = {
     'pt-BR': 'Bloquear',
   },
   tutorialStep6Content: {
+    'ar-EG': 'بوب يريد الاغتيال (يكلف ٣ عملات) لكن لديه فقط ٢. لا يستطيع تحمل التكلفة! بدلاً من ذلك، يأخذ دخل (عملة واحدة، لا يمكن منعه أو الطعن فيه أبدًا).',
     'de-DE': 'Bob will meuchelmorden (kostet 3 Münzen), hat aber nur 2. Er kann sich das nicht leisten! Stattdessen nimmt er Einkommen (1 Münze, kann nie blockiert oder herausgefordert werden).',
     'en-US': "Bob wants to Assassinate (costs 3 coins) but only has 2. He can't afford it! Instead, he takes Income (1 coin, can never be blocked or challenged).",
     'es-MX': 'Bob quiere Asesinar (cuesta 3 monedas) pero solo tiene 2. ¡No puede pagarlo! En su lugar, toma Ingreso (1 moneda, nunca puede ser bloqueado ni desafiado).',
@@ -3504,6 +3858,7 @@ const translations: Translations = {
     'pt-BR': 'Bob quer Assassinar (custa 3 moedas) mas só tem 2. Não pode pagar! Em vez disso, ele pega Renda (1 moeda, nunca pode ser bloqueada ou desafiada).',
   },
   tutorialStep6Title: {
+    'ar-EG': 'الدور ٣: تكاليف الإجراءات',
     'de-DE': 'Runde 3: Aktionskosten',
     'en-US': 'Turn 3: Action Costs',
     'es-MX': 'Turno 3: Costos de Acción',
@@ -3513,6 +3868,7 @@ const translations: Translations = {
     'pt-BR': 'Turno 3: Custos de Ação',
   },
   tutorialStep7Content: {
+    'ar-EG': 'كارول تستخدم قدرة سفيرها. تسحب بطاقتين من المجموعة، تنظر إلى الأربع، وتختار ٢ للاحتفاظ بهما. الباقي يعود إلى المجموعة.',
     'de-DE': 'Carol nutzt die Fähigkeit ihres Botschafters. Sie zieht 2 Karten vom Stapel, schaut sich alle 4 an und wählt 2 zum Behalten. Der Rest geht zurück in den Stapel.',
     'en-US': "Carol uses her Ambassador's ability. She draws 2 cards from the deck, looks at all 4, and chooses 2 to keep. The rest go back into the deck.",
     'es-MX': 'Carol usa la habilidad de su Embajador. Roba 2 cartas del mazo, mira las 4 y elige 2 para quedarse. El resto vuelve al mazo.',
@@ -3522,6 +3878,7 @@ const translations: Translations = {
     'pt-BR': 'Carol usa a habilidade do seu Embaixador. Ela compra 2 cartas do baralho, olha todas as 4 e escolhe 2 para manter. O resto volta para o baralho.',
   },
   tutorialStep7Detail: {
+    'ar-EG': 'تنظر إلى ٤ بطاقات، تحتفظ باثنتين',
     'de-DE': 'Schaut 4 Karten an, behält 2',
     'en-US': 'Looks at 4 cards, keeps 2',
     'es-MX': 'Mira 4 cartas, se queda con 2',
@@ -3531,6 +3888,7 @@ const translations: Translations = {
     'pt-BR': 'Olha 4 cartas, fica com 2',
   },
   tutorialStep7Title: {
+    'ar-EG': 'الدور ٤: التبديل',
     'de-DE': 'Runde 4: Austausch',
     'en-US': 'Turn 4: Exchange',
     'es-MX': 'Turno 4: Intercambio',
@@ -3540,6 +3898,7 @@ const translations: Translations = {
     'pt-BR': 'Turno 4: Troca',
   },
   tutorialStep8Challenge: {
+    'ar-EG': 'ليس لديك',
     'de-DE': 'Du hast nicht den',
     'en-US': "You don't have the",
     'es-MX': '\u00a1No tienes al',
@@ -3549,6 +3908,7 @@ const translations: Translations = {
     'pt-BR': 'Voc\u00ea n\u00e3o tem o',
   },
   tutorialStep8Content: {
+    'ar-EG': 'تطالب أليس بالضرائب مرة أخرى. هذه المرة، كارول تطعن فيها! يجب على أليس الكشف عن دوقها...',
     'de-DE': 'Alice beansprucht erneut Steuern. Diesmal fordert Carol sie heraus! Alice muss ihren Herzog zeigen...',
     'en-US': 'Alice claims Tax again. This time, Carol challenges her! Alice must reveal her Duke...',
     'es-MX': 'Alice reclama Impuesto de nuevo. ¡Esta vez, Carol la desafía! Alice debe revelar su Duque...',
@@ -3558,6 +3918,7 @@ const translations: Translations = {
     'pt-BR': 'Alice reivindica Imposto novamente. Desta vez, Carol a desafia! Alice deve revelar seu Duque...',
   },
   tutorialStep8Result: {
+    'ar-EG': 'كارول تخسر الطعن ويجب أن تتخلى عن بطاقة نفوذ!',
     'de-DE': 'Carol VERLIERT die Herausforderung und muss eine Einflusskarte aufgeben!',
     'en-US': 'Carol LOSES the challenge and must give up an influence card!',
     'es-MX': '¡Carol PIERDE el desafío y debe renunciar a una carta de influencia!',
@@ -3567,6 +3928,7 @@ const translations: Translations = {
     'pt-BR': 'Carol PERDE o desafio e deve desistir de uma carta de influência!',
   },
   tutorialStep8Reveal: {
+    'ar-EG': 'تكشف عن الدوق',
     'de-DE': 'Zeigt den Herzog',
     'en-US': 'Reveals Duke',
     'es-MX': 'Revela al Duque',
@@ -3576,6 +3938,7 @@ const translations: Translations = {
     'pt-BR': 'Revela o Duque',
   },
   tutorialStep8Title: {
+    'ar-EG': 'فشل الطعن!',
     'de-DE': 'Herausforderung fehlgeschlagen!',
     'en-US': 'Challenge Failed!',
     'es-MX': '¡Desafío Fallido!',
@@ -3585,6 +3948,7 @@ const translations: Translations = {
     'pt-BR': 'Desafio Falhou!',
   },
   tutorialStep9Content: {
+    'ar-EG': 'بوب لديه الآن ٤ عملات (بعد عدة أدوار دخل). يطالب باغتيال كارول! كارول لديها بطاقة واحدة فقط — إذا لم يكن لديها الكونتيسة للمنع، ستخرج!',
     'de-DE': 'Bob hat jetzt 4 Münzen (nach mehreren Einkommens-Runden). Er beansprucht ein Attentat auf Carol! Carol hat nur noch eine Karte — wenn sie keine Contessa hat, um zu blockieren, ist sie raus!',
     'en-US': "Bob now has 4 coins (after several Income turns). He claims Assassinate on Carol! Carol only has 1 card left — if she doesn't have the Contessa to block, she's out!",
     'es-MX': 'Bob ahora tiene 4 monedas (después de varios turnos de Ingreso). ¡Reclama Asesinar a Carol! Carol solo tiene 1 carta — ¡si no tiene la Condesa para bloquear, está fuera!',
@@ -3594,6 +3958,7 @@ const translations: Translations = {
     'pt-BR': 'Bob agora tem 4 moedas (após várias rodadas de Renda). Ele reivindica Assassinar Carol! Carol só tem 1 carta — se não tiver a Condessa para bloquear, está fora!',
   },
   tutorialStep9Detail: {
+    'ar-EG': 'كارول تخسر آخر بطاقة نفوذ وتخرج من اللعبة!',
     'de-DE': 'Carol verliert ihre letzte Einflusskarte und ist aus dem Spiel!',
     'en-US': 'Carol loses her last influence card and is out of the game!',
     'es-MX': '¡Carol pierde su última carta de influencia y está fuera del juego!',
@@ -3603,6 +3968,7 @@ const translations: Translations = {
     'pt-BR': 'Carol perde sua última carta de influência e está fora do jogo!',
   },
   tutorialStep9Title: {
+    'ar-EG': 'اغتيال!',
     'de-DE': 'Meuchelmord!',
     'en-US': 'Assassination!',
     'es-MX': '¡Asesinato!',
@@ -3612,6 +3978,7 @@ const translations: Translations = {
     'pt-BR': 'Assassinato!',
   },
   unchallenged: {
+    'ar-EG': 'بدون طعن',
     'de-DE': 'Nicht herausgefordert',
     'en-US': 'Unchallenged',
     'es-MX': 'Sin desafío',
@@ -3621,6 +3988,7 @@ const translations: Translations = {
     'pt-BR': 'Sem desafio',
   },
   useInquisitor: {
+    'ar-EG': 'استخدام المحقق',
     'de-DE': 'Inquisitor verwenden',
     'en-US': 'Use Inquisitor',
     'es-MX': 'Usar Inquisidor',
@@ -3630,6 +3998,7 @@ const translations: Translations = {
     'pt-BR': 'Usar Inquisidor',
   },
   vengefulness: {
+    'ar-EG': 'انتقامية',
     'de-DE': 'Rachsucht',
     'en-US': 'Vengefulness',
     'es-MX': 'Venganza',
@@ -3639,6 +4008,7 @@ const translations: Translations = {
     'pt-BR': 'Vingança',
   },
   viewLeaderboard: {
+    'ar-EG': 'عرض لوحة المتصدرين',
     'de-DE': 'Bestenliste anzeigen',
     'en-US': 'View Leaderboard',
     'es-MX': 'Ver tabla de clasificación',
@@ -3648,6 +4018,7 @@ const translations: Translations = {
     'pt-BR': 'Ver classificação',
   },
   waitingOnOtherPlayers: {
+    'ar-EG': 'في انتظار اللاعبين الآخرين',
     'de-DE': 'Warte auf andere Spieler',
     'en-US': 'Waiting on Other Players',
     'es-MX': 'Esperando a otros jugadores',
@@ -3657,6 +4028,7 @@ const translations: Translations = {
     'pt-BR': 'Aguardando outros jogadores',
   },
   warning: {
+    'ar-EG': 'تحذير',
     'de-DE': 'Warnung',
     'en-US': 'Warning',
     'es-MX': 'Advertencia',
@@ -3666,6 +4038,7 @@ const translations: Translations = {
     'pt-BR': 'Aviso',
   },
   websocketsConnection: {
+    'ar-EG': 'اتصال WebSockets',
     'de-DE': 'WebSockets-Verbindung',
     'en-US': 'WebSockets Connection',
     'es-MX': 'Conexión WebSockets',
@@ -3675,6 +4048,7 @@ const translations: Translations = {
     'pt-BR': 'Conexão WebSockets',
   },
   welcomeToCoup: {
+    'ar-EG': 'مرحبًا بك في Coup!',
     'de-DE': 'Willkommen zu Coup!',
     'en-US': 'Welcome To Coup!',
     'es-MX': '¡Bienvenido a Coup!',
@@ -3684,6 +4058,7 @@ const translations: Translations = {
     'pt-BR': 'Bem-vindo ao Coup!',
   },
   whatIsBotsName: {
+    'ar-EG': 'ما اسمه؟',
     'de-DE': 'Wie heißt der Bot?',
     'en-US': 'What is its name?',
     'es-MX': '¿Cuál es su nombre?',
@@ -3693,6 +4068,7 @@ const translations: Translations = {
     'pt-BR': 'Qual é o nome dele?',
   },
   whatIsYourName: {
+    'ar-EG': 'ما اسمك؟',
     'de-DE': 'Wie heißt du?',
     'en-US': 'What is your name?',
     'es-MX': '¿Cuál es tu nombre?',
@@ -3702,6 +4078,7 @@ const translations: Translations = {
     'pt-BR': 'Qual é o seu nome?',
   },
   winRate: {
+    'ar-EG': 'معدل الفوز',
     'de-DE': 'Siegquote',
     'en-US': 'Win Rate',
     'es-MX': 'Tasa de victorias',
@@ -3711,6 +4088,7 @@ const translations: Translations = {
     'pt-BR': 'Taxa de vitória',
   },
   wins: {
+    'ar-EG': 'انتصارات',
     'de-DE': 'Siege',
     'en-US': 'Wins',
     'es-MX': 'Victorias',
@@ -3720,6 +4098,7 @@ const translations: Translations = {
     'pt-BR': 'Vitórias',
   },
   writeNewMessage: {
+    'ar-EG': 'اكتب رسالة جديدة',
     'de-DE': 'Neue Nachricht schreiben',
     'en-US': 'Write New Message',
     'es-MX': 'Escribir nuevo mensaje',
@@ -3729,6 +4108,7 @@ const translations: Translations = {
     'pt-BR': 'Escrever nova mensagem',
   },
   youAreSpectating: {
+    'ar-EG': 'أنت تشاهد',
     'de-DE': 'Du beobachtest das Spiel',
     'en-US': 'You are Spectating',
     'es-MX': 'Estás observando el juego',
@@ -3738,6 +4118,7 @@ const translations: Translations = {
     'pt-BR': 'Você está assistindo',
   },
   yourRanking: {
+    'ar-EG': 'ترتيبك',
     'de-DE': 'Deine Platzierung',
     'en-US': 'Your Ranking',
     'es-MX': 'Tu clasificación',
@@ -3750,6 +4131,26 @@ const translations: Translations = {
 
 export const snarkyDeadComments: { [key in AvailableLanguageCode]: string[] } =
 {
+  'ar-EG': [
+    `كل خسارة هي فرصة للتعلم.`,
+    `لقد بذلت قصارى جهدك.`,
+    `لا تدع هذا يهزمك.`,
+    `لا تقلق، إنه ليس خطأك.`,
+    `أنت موهوب بالفطرة في الخسارة.`,
+    `ربما يجب أن تجرب لعبة مختلفة.`,
+    `لقد بدأت أعتقد أنك تحاول الخسارة بالفعل.`,
+    `لقد أتقنت مهارة القدوم في المركز الأخير.`,
+    `أنت بطل حقيقي في الفشل.`,
+    `لقد تمكنت من جعل الخسارة تبدو سهلة.`,
+    `أنت سيء جدًا لدرجة أنك تكاد تكون جيدًا.`,
+    `أعتقد أنه سيتعين عليك لعب السوليتير من الآن فصاعدًا.`,
+    `أنت خاسر بالفطرة.`,
+    `أنت جيد جدًا في الخسارة، يجب أن تحصل على كأس.`,
+    `أنت الأفضل في كونك الأسوأ.`,
+    `لقد أتقنت فن الخسارة.`,
+    `أنت آلة خسارة تمشي وتتكلم.`,
+    `أنت أسوأ لاعب رأيته في حياتي.`,
+  ],
   'de-DE': [
     `Jede Niederlage ist eine Lernmöglichkeit.`,
     `Du hast dein Bestes gegeben.`,
