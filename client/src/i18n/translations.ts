@@ -1270,6 +1270,8 @@ const translations: Translations = {
   },
   [EventMessages.ActionPending]: {
     [Actions.Assassinate]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[اغتيال]]}} {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} versucht, {{secondaryPlayer}} zu {{action[[Attentat]]}}',
       'en-US':
@@ -1285,6 +1287,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Assassinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Embezzle]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[اختلاس]]}} من الخزينة',
       'de-DE':
         '{{primaryPlayer}} versucht, aus der Staatskasse zu {{action[[Unterschlagen]]}}',
       'en-US':
@@ -1300,6 +1304,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Desviar]]}} do tesouro',
     },
     [Actions.Examine]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[فحص]]}} {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} versucht, {{secondaryPlayer}} zu {{action[[Untersuchen]]}}',
       'en-US':
@@ -1315,6 +1321,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Examinar]]}} {{secondaryPlayer}}',
     },
     [Actions.Exchange]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[تبديل]]}} النفوذ',
       'de-DE':
         '{{primaryPlayer}} versucht, Einflusskarten {{action[[Austausch]]}}',
       'en-US':
@@ -1330,6 +1338,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando {{action[[Trocar]]}} influências',
     },
     [Actions.ForeignAid]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول جمع {{action[[مساعدة خارجية]]}}',
       'de-DE':
         '{{primaryPlayer}} versucht, {{action[[Auslandshilfe]]}} zu erhalten',
       'en-US':
@@ -1346,6 +1356,8 @@ const translations: Translations = {
         '{{primaryPlayer}} está tentando coletar {{action[[Ajuda Estrangeira]]}}',
     },
     [Actions.Steal]: {
+      'ar-EG':
+        '{{primaryPlayer}} يحاول {{action[[سرقة]]}} من {{secondaryPlayer}}',
       'de-DE':
         '{{primaryPlayer}} versucht, von {{secondaryPlayer}} zu {{action[[Stehlen]]}}',
       'en-US':
@@ -1510,6 +1522,8 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} não conseguiu bloquear {{secondaryPlayer}}',
   },
   [EventMessages.BlockPending]: {
+    'ar-EG':
+      '{{primaryPlayer}} يحاول منع {{secondaryPlayer}} بصفته {{primaryInfluence}}',
     'de-DE':
       '{{primaryPlayer}} versucht, {{secondaryPlayer}} als {{primaryInfluence}} zu blocken',
     'en-US':
@@ -1591,6 +1605,8 @@ const translations: Translations = {
     'pt-BR': '{{primaryPlayer}} forçou {{secondaryPlayer}} a trocar sua influência',
   },
   [EventMessages.ForcedMoveProcessed]: {
+    'ar-EG':
+      '⏱️ {{primaryPlayer}} استغرق وقتًا طويلاً!',
     'de-DE':
       '⏱️ {{primaryPlayer}} hat zu lange gebraucht!',
     'en-US':
@@ -1702,6 +1718,8 @@ const translations: Translations = {
     'pt-BR': 'Desistir',
   },
   forfeitConfirmationMessage: {
+    'ar-EG':
+      'هل تريد قتل نفوذك أو استبدال نفسك بلاعب ذكاء اصطناعي؟',
     'de-DE':
       'Möchtest du deine Einflüsse töten oder dich durch einen KI-Spieler ersetzen?',
     'en-US':
@@ -2008,6 +2026,8 @@ const translations: Translations = {
     'pt-BR': 'Entrar no Jogo',
   },
   keepInfluences: {
+    'ar-EG':
+      'احتفظ بـ {{primaryInfluence}}{{plural[[ و {{secondaryInfluence}}]]}}',
     'de-DE':
       'Behalte {{primaryInfluence}}{{plural[[ und {{secondaryInfluence}}]]}}',
     'en-US':
@@ -2604,6 +2624,8 @@ const translations: Translations = {
     'pt-BR': 'Regras',
   },
   rulesActions: {
+    'ar-EG':
+      'يتناوب اللاعبون على تنفيذ أحد هذه الإجراءات المتاحة:',
     'de-DE':
       'Die Spieler führen abwechselnd eine der folgenden verfügbaren Aktionen aus:',
     'en-US': 'Players take turns performing one of these available actions:',
@@ -2618,6 +2640,8 @@ const translations: Translations = {
       'Os jogadores se revezam realizando uma das seguintes ações disponíveis:',
   },
   rulesAmbassador: {
+    'ar-EG':
+      'يمكنه تبديل بطاقات النفوذ الخاصة بك بأخرى جديدة من المجموعة ومنع محاولات السرقة.',
     'de-DE':
       'Kann zwei Münzen von einem anderen Spieler stehlen und Blockieren von Diebstahlversuchen.',
     'en-US':
@@ -2645,6 +2669,8 @@ const translations: Translations = {
     'pt-BR': 'Pode forçar um jogador a desistir de uma carta de influência.',
   },
   rulesAssassinate: {
+    'ar-EG':
+      'يكلف ثلاث عملات. يجبر لاعبًا واحدًا على التخلي عن بطاقة نفوذ من اختياره. يمكن الطعن فيه. يمكن منعه من قبل الكونتيسا.',
     'de-DE':
       'Kostet drei Münzen. Zwingt einen Spieler, eine Einflusskarte ihrer Wahl aufzugeben. Kann herausgefordert werden. Kann von der Contessa blockiert werden.',
     'en-US':
@@ -2661,6 +2687,8 @@ const translations: Translations = {
       'Custa três moedas. Força um jogador a desistir de uma carta de influência de sua escolha. Pode ser desafiado. Pode ser bloqueado pela Condessa.',
   },
   rulesBlock: {
+    'ar-EG':
+      'إذا قام لاعب آخر بإجراء يمكن منعه، يمكن للاعب المستهدف، أو أي شخص في حالة المساعدة الخارجية، منعه بادعاء امتلاك الشخصية المناسبة على إحدى بطاقات النفوذ الخاصة به. لا يمكن للاعب المنفذ تنفيذ الإجراء ولا يتخذ أي إجراء آخر في هذا الدور. يمكن لأي لاعب اختيار الطعن في اللاعب المانع. إذا فازوا بالطعن، يتم تنفيذ الإجراء بشكل طبيعي.',
     'de-DE':
       'Wenn ein anderer Spieler eine Aktion ausführt, die blockiert werden kann, kann der betroffene Spieler oder jeder im Falle von Auswärtshilfe es blockieren, indem er vorgibt, die richtige Figur auf einer seiner Einflusskarten zu haben. Der ausführende Spieler kann die Aktion nicht ausführen und unternimmt in dieser Runde keine weiteren Aktionen. Jeder Spieler kann sich entscheiden, den blockierenden Spieler herauszufordern. Wenn sie die Herausforderung gewinnen, wird die Aktion wie gewohnt durchgeführt.',
     'en-US':
@@ -2677,6 +2705,8 @@ const translations: Translations = {
       'Se outro jogador realizar uma ação que pode ser bloqueada, o jogador alvo, ou qualquer um no caso de Ajuda Estrangeira, pode bloqueá-la afirmando ter o personagem adequado em uma de suas cartas de influência. O jogador atuante não pode realizar a ação e não realiza nenhuma outra ação neste turno. Qualquer jogador pode optar por desafiar o jogador que bloqueia. Se vencerm o desafio, a ação prossegue normalmente.',
   },
   rulesCaptain: {
+    'ar-EG':
+      'يمكنه سرقة عملتين من لاعب آخر ومنع محاولات السرقة.',
     'de-DE':
       'Kann zwei Münzen von einem anderen Spieler stehlen und Blockieren von Diebstahlversuchen.',
     'en-US':
@@ -2693,6 +2723,8 @@ const translations: Translations = {
       'Pode roubar duas moedas de outro jogador e bloquear tentativas de roubo.',
   },
   rulesChallenge: {
+    'ar-EG':
+      'عندما يعلن اللاعب المنفذ عن إجرائه، يمكن لأي لاعب آخر الطعن في حقه في تنفيذ الإجراء. إنهم يقولون "لا أعتقد أن لديك الشخصية المناسبة للقيام بذلك." يجب على اللاعب المنفذ الآن إثبات أن لديه القوة لتنفيذ الإجراء أو خسارة الطعن. إذا كان لديه الشخصية الصحيحة، يكشف عنها ويعيد البطاقة المكشوفة إلى المجموعة. ثم يخلط المجموعة ويسحب بطاقة جديدة. اللاعب الطاعن قد خسر الطعن. إذا لم يكن لديه الشخصية المناسبة، يخسر الطعن.',
     'de-DE':
       'Wenn der ausführende Spieler seine Aktion erklärt, kann jeder andere Spieler die Herausforderung annehmen, indem er sagt: "Ich glaube nicht, dass du die richtige Figur dafür hast." Der ausführende Spieler muss nun beweisen, dass er die Macht hat, die Aktion auszuführen, oder die Herausforderung verlieren. Wenn sie die richtige Figur haben, decken sie sie auf und legen die aufgedeckte Karte zurück in den Stapel. Sie mischen dann den Stapel und ziehen eine neue Karte. Der herausfordernde Spieler hat die Herausforderung verloren. Wenn sie nicht die richtige Figur haben, verlieren sie die Herausforderung.',
     'en-US':
@@ -2729,6 +2761,8 @@ const translations: Translations = {
     'pt-BR': 'Pode bloquear tentativas de assassinato.',
   },
   rulesConvert: {
+    'ar-EG':
+      'يكلف عملة إلى عملتين (تدفع للخزينة). تغيير فصيل لاعب—إما نفسك (عملة واحدة) أو لاعب آخر (عملتان). لا يمكن الطعن فيه أو منعه. متاح فقط عند تفعيل الإصلاح.',
     'de-DE':
       'Kostet ein bis zwei Münzen (werden in die Staatskasse gezahlt). Ändert die Fraktion eines Spielers, entweder deine eigene oder die eines anderen. Kann nicht herausgefordert oder blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
     'en-US':
@@ -2745,6 +2779,8 @@ const translations: Translations = {
       'Custa uma a duas moedas (pagas ao tesouro). Mude a facção de um jogador—a sua (uma moeda) ou a de outro jogador (duas moedas). Não pode ser desafiado ou bloqueado. Disponível apenas quando a Reforma está habilitada.',
   },
   rulesCoup: {
+    'ar-EG':
+      'يكلف سبع عملات. يجبر لاعبًا على التخلي عن بطاقة نفوذ. لا يمكن الطعن فيه أو منعه. إذا بدأت دورك بعشر عملات أو أكثر، يجب عليك القيام بالانقلاب (أو الإحياء إذا كان مفعلاً).',
     'de-DE':
       'Kostet sieben Münzen. Zwingt einen Spieler, eine Einflusskarte aufzugeben. Kann nicht herausgefordert oder blockiert werden. Wenn du deinen Zug mit zehn oder mehr Münzen beginnst, musst du einen Putsch durchführen (oder wiederbeleben, wenn aktiviert).',
     'en-US':
@@ -2771,6 +2807,8 @@ const translations: Translations = {
     'pt-BR': 'Pode cobrar impostos e bloquear Ajuda Estrangeira.',
   },
   rulesEmbezzle: {
+    'ar-EG':
+      'خذ جميع العملات من الخزينة. يمكن الطعن فيه (يدعي اللاعبون الآخرون أنك لست دوقًا). لا يمكن منعه. متاح فقط عند تفعيل الإصلاح.',
     'de-DE':
       'Nimm alle Münzen aus der Staatskasse. Kann herausgefordert werden (andere Spieler behaupten, dass du KEIN Herzog bist). Kann nicht blockiert werden. Nur verfügbar, wenn Reformation aktiviert ist.',
     'en-US':
@@ -2787,6 +2825,8 @@ const translations: Translations = {
       'Pegue todas as moedas do tesouro. Pode ser desafiado (outros jogadores afirmam que você NÃO é um Duque). Não pode ser bloqueado. Disponível apenas quando a Reforma está habilitada.',
   },
   rulesExamine: {
+    'ar-EG':
+      'انظر إلى بطاقة نفوذ واحدة للاعب آخر. ثم قرر ما إذا كنت ستجبره على تبديلها أم تتركه يحتفظ بها. يمكن الطعن فيه. لا يمكن منعه. متاح فقط عند تفعيل المحقق.',
     'de-DE':
       'Schau dir eine Einflusskarte eines anderen Spielers an. Dann entscheide, ob du ihn zwingst die Karte zu tauschen oder sie zu behalten. Kann herausgefordert werden. Kann nicht blockiert werden. Nur verfügbar, wenn Inquisitor aktiviert ist.',
     'en-US':
@@ -2803,6 +2843,8 @@ const translations: Translations = {
       'Olhe uma carta de influência de outro jogador. Depois decida se força a troca ou permite que ele a mantenha. Pode ser desafiado. Não pode ser bloqueado. Disponível apenas quando o Inquisidor está habilitado.',
   },
   rulesExchange: {
+    'ar-EG':
+      'اسحب بطاقتي نفوذ من المجموعة، وانظر إليهما واخلطهما مع بطاقات النفوذ الحالية لديك. أعد بطاقتين إلى المجموعة واخلط المجموعة. يمكن الطعن فيه. لا يمكن منعه.',
     'de-DE':
       'Ziehe zwei Karten vom Deck, schaue sie dir an und mische sie mit deinen aktuellen Einflusskarten. Lege zwei Karten zurück in den Stapel und mische den Stapel. Kann herausgefordert werden. Kann nicht blockiert werden.',
     'en-US':
@@ -2819,6 +2861,8 @@ const translations: Translations = {
       'Puxe duas cartas de influência do baralho, olhe para elas e misture-as com suas cartas de influência atuais. Coloque duas cartas de volta no baralho e embaralhe o baralho. Pode ser desafiado. Não pode ser bloqueado.',
   },
   rulesForeignAid: {
+    'ar-EG':
+      'خذ عملتين من البنك. لا يمكن الطعن فيه. يمكن منعه من قبل الدوق.',
     'de-DE':
       'Nimm zwei Münzen aus der Bank. Kann nicht herausgefordert werden. Kann vom Herzog blockiert werden.',
     'en-US':
@@ -2869,6 +2913,8 @@ const translations: Translations = {
     'pt-BR': 'Existem cinco personagens diferentes no baralho de influência.',
   },
   rulesInquisitor: {
+    'ar-EG':
+      'يمكنه فحص بطاقة نفوذ لاعب آخر وفرض تبديل. يمكنه تبديل بطاقة نفوذ واحدة (اسحب واحدة، واحتفظ بواحدة). يمكنه منع محاولات السرقة. يحل محل السفير عند التفعيل.',
     'de-DE':
       'Kann die Einflusskarte eines anderen Spielers untersuchen und einen Tausch erzwingen. Kann eine Einflusskarte austauschen (ziehe eine, behalte eine). Kann Diebstahlversuche blockieren. Ersetzt den Botschafter, wenn aktiviert.',
     'en-US':
@@ -2885,6 +2931,8 @@ const translations: Translations = {
       'Pode examinar a carta de influência de outro jogador e forçar uma troca. Pode trocar uma carta de influência (comprar uma, manter uma). Pode bloquear tentativas de roubo. Substitui o Embaixador quando habilitado.',
   },
   rulesLosingAChallenge: {
+    'ar-EG':
+      'أي لاعب يخسر الطعن يجب أن يكشف إحدى بطاقات النفوذ الخاصة به ليراها الجميع. إذا كانت هذه آخر بطاقة نفوذ لديه، يخرج من اللعبة.',
     'de-DE':
       'Jeder Spieler, der eine Herausforderung verliert, muss eine ihrer Einflusskarten aufdecken, damit alle sie sehen können. Wenn das ihre letzte Einflusskarte ist, scheiden sie aus dem Spiel aus.',
     'en-US':
@@ -2901,6 +2949,8 @@ const translations: Translations = {
       'Qualquer jogador que perder um desafio deve virar uma de suas cartas de influência virada para cima para que todos vejam. Se essa for sua última carta de influência, ele está fora do jogo.',
   },
   rulesLosingInfluence: {
+    'ar-EG':
+      'في أي وقت يفقد فيه اللاعب بطاقة نفوذ، يختار أي من بطاقاته سيكشف.',
     'de-DE':
       'Jedes Mal, wenn ein Spieler eine Einflusskarte verliert, wählt er aus, welche seiner Karten aufgedeckt wird.',
     'en-US':
@@ -2917,6 +2967,8 @@ const translations: Translations = {
       'Sempre que um jogador perder uma carta de influência, ele escolhe qual de suas cartas revelar.',
   },
   rulesReformation: {
+    'ar-EG':
+      'تضيف توسعة الإصلاح فصائل (الموالون والإصلاحيون)، وخزينة، وإجراءات جديدة. يمكن للاعبين استهداف لاعبي الفصيل المعارض فقط ما لم يكن جميع اللاعبين في نفس الفصيل. التحويل يغير الفصائل، والاختلاس يأخذ عملات من الخزينة، والفحص يكشف بطاقات الخصوم.',
     'de-DE':
       'Die Reformations-Erweiterung fügt Fraktionen (Loyalisten und Reformisten), eine Staatskasse und neue Aktionen hinzu. Spieler können nur Spieler der gegnerischen Fraktion angreifen, es sei denn alle Spieler gehören derselben Fraktion an. Konvertieren ändert Fraktionen, Unterschlagen nimmt Münzen aus der Staatskasse und Untersuchen enthüllt Karten von Gegnern.',
     'en-US':
@@ -2933,6 +2985,8 @@ const translations: Translations = {
       'A expansão Reforma adiciona facções (Lealistas e Reformistas), um tesouro e novas ações. Os jogadores só podem atacar jogadores da facção oposta, a menos que todos compartilhem a mesma facção. Converter muda facções, Desviar pega moedas do tesouro e Examinar revela as cartas dos oponentes.',
   },
   rulesRevive: {
+    'ar-EG':
+      'غير متاح في اللعبة القياسية ولكن يمكن تفعيله عند إنشاء لعبة جديدة. يكلف عشر عملات. إحياء بطاقة نفوذ من كومة النفايات. لا يمكن الطعن فيه أو منعه.',
     'de-DE':
       'Nicht im Standardspiel verfügbar, kann aber beim Erstellen eines neuen Spiels aktiviert werden. Kostet zehn Münzen. Belebt eine Einflusskarte aus dem Ablagestapel wieder. Kann nicht herausgefordert oder blockiert werden.',
     'en-US':
@@ -2949,6 +3003,8 @@ const translations: Translations = {
       'Não disponível no jogo padrão, mas pode ser ativado ao criar um novo jogo. Custa dez moedas. Revive uma carta de influência da pilha de descarte. Não pode ser desafiado ou bloqueado.',
   },
   rulesSetup: {
+    'ar-EG':
+      'اخلط البطاقات ووزع اثنتين لكل لاعب. يجب على اللاعبين النظر إلى بطاقاتهم ولكن إبقائها مخفية عن الآخرين. يأخذ كل لاعب عملتين من البنك كثروة بداية. في لعبة بها لاعبان فقط، يبدأ اللاعب الأول اللعبة بعملة واحدة بدلاً من اثنتين.',
     'de-DE':
       'Mische die Karten und verteile zwei an jeden Spieler. Die Spieler sollten ihre Karten ansehen, aber sie vor allen anderen verstecken. Jeder Spieler nimmt zwei Münzen aus der Bank als Startvermögen. In einem Spiel mit nur zwei Spielern beginnt der Startspieler mit einer Münze anstelle von zwei.',
     'en-US':
@@ -2965,6 +3021,8 @@ const translations: Translations = {
       'Embaralhe as cartas e distribua duas para cada jogador. Os jogadores devem olhar suas cartas, mas mantê-las escondidas dos outros. Cada jogador pega duas moedas do banco como sua riqueza inicial. Em um jogo com apenas dois jogadores, o jogador inicial começa o jogo com uma moeda em vez de duas.',
   },
   rulesSteal: {
+    'ar-EG':
+      'خذ عملتين من لاعب آخر. يمكن الطعن فيه. يمكن منعه من قبل القبطان أو السفير.',
     'de-DE':
       'Nimm zwei Münzen von einem anderen Spieler. Kann herausgefordert werden. Kann von Kapitän oder Botschafter blockiert werden.',
     'en-US':
@@ -2981,6 +3039,8 @@ const translations: Translations = {
       'Pegue duas moedas de outro jogador. Pode ser desafiado. Pode ser bloqueado pelo Capitão ou pelo Embaixador.',
   },
   rulesTax: {
+    'ar-EG':
+      'خذ ثلاث عملات من البنك. يمكن الطعن فيه. لا يمكن منعه.',
     'de-DE':
       'Nimm drei Münzen aus der Bank. Kann herausgefordert werden. Kann nicht blockiert werden.',
     'en-US':
@@ -4071,6 +4131,26 @@ const translations: Translations = {
 
 export const snarkyDeadComments: { [key in AvailableLanguageCode]: string[] } =
 {
+  'ar-EG': [
+    `كل خسارة هي فرصة للتعلم.`,
+    `لقد بذلت قصارى جهدك.`,
+    `لا تدع هذا يهزمك.`,
+    `لا تقلق، إنه ليس خطأك.`,
+    `أنت موهوب بالفطرة في الخسارة.`,
+    `ربما يجب أن تجرب لعبة مختلفة.`,
+    `لقد بدأت أعتقد أنك تحاول الخسارة بالفعل.`,
+    `لقد أتقنت مهارة القدوم في المركز الأخير.`,
+    `أنت بطل حقيقي في الفشل.`,
+    `لقد تمكنت من جعل الخسارة تبدو سهلة.`,
+    `أنت سيء جدًا لدرجة أنك تكاد تكون جيدًا.`,
+    `أعتقد أنه سيتعين عليك لعب السوليتير من الآن فصاعدًا.`,
+    `أنت خاسر بالفطرة.`,
+    `أنت جيد جدًا في الخسارة، يجب أن تحصل على كأس.`,
+    `أنت الأفضل في كونك الأسوأ.`,
+    `لقد أتقنت فن الخسارة.`,
+    `أنت آلة خسارة تمشي وتتكلم.`,
+    `أنت أسوأ لاعب رأيته في حياتي.`,
+  ],
   'de-DE': [
     `Jede Niederlage ist eine Lernmöglichkeit.`,
     `Du hast dein Bestes gegeben.`,
