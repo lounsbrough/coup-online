@@ -1388,7 +1388,7 @@ const translations: Translations = {
       'it-IT':
         '{{primaryPlayer}} ha {{action[[Assassinato]]}} {{secondaryPlayer}}',
       'pt-BR': '{{primaryPlayer}} {{action[[Assassinou]]}} {{secondaryPlayer}}',
-        'ar-EG': '{{primaryPlayer}} يحاول جمع {{action[[ضرائب]]}}',
+        'ar-EG': '{{primaryPlayer}} {{action[[اغتال]]}} {{secondaryPlayer}}',
     },
     [Actions.Coup]: {
       'de-DE':
@@ -1657,7 +1657,7 @@ const translations: Translations = {
       '{{primaryPlayer}} ने अपना {{primaryInfluence}} प्रकट और प्रतिस्थापित किया',
     'it-IT':
       '{{primaryPlayer}} ha rivelato e sostituito il suo {{primaryInfluence}}',
-    'ar-EG': '{{primaryPlayer}} خسر {{primaryInfluence}}',
+    'ar-EG': '{{primaryPlayer}} كشف {{primaryInfluence}} واستبدله',
     'pt-BR': '{{primaryPlayer}} revelou e substituiu sua {{primaryInfluence}}',
   },
   [EventMessages.PlayerReplacedWithAi]: {
@@ -3494,7 +3494,7 @@ const translations: Translations = {
     'fr-FR': 'En utilisant Coup Online, vous acceptez ces conditions.\n\nLa connexion est facultative, mais certaines fonctions de compte peuvent etre necessaires pour les statistiques persistantes et l\'identite du classement.\n\nVous etes responsable de la securite de votre compte et de l\'activite effectuee avec celui-ci.\n\nLa triche, les abus, le harcelement, l\'usage de bots et l\'acces non autorise sont interdits et peuvent entrainer suspension ou cloture de compte.\n\nLe service peut etre mis a jour, limite ou interrompu a tout moment. Il est fourni en l\'etat dans la mesure permise par la loi.\n\nSi des annonces sont affichees, les politiques et technologies Google AdSense s\'appliquent egalement.\n\nContact juridique : {{contactEmail}}',
     'hi-IN': 'Coup Online का उपयोग करके, आप इन शर्तों से सहमत होते हैं।\n\nसाइन-इन वैकल्पिक है, लेकिन स्थायी आँकड़ों और लीडरबोर्ड पहचान के लिए खाता सुविधाएं आवश्यक हो सकती हैं।\n\nआप अपने खाते की सुरक्षा और अपने खाते के अंतर्गत होने वाली गतिविधियों के लिए जिम्मेदार हैं।\n\nचीटिंग, दुरुपयोग, उत्पीड़न, बॉट का उपयोग और अनधिकृत पहुंच निषिद्ध है और निलंबन या खाता समाप्ति का कारण बन सकता है।\n\nसेवा को किसी भी समय अपडेट, सीमित या बंद किया जा सकता है। कानून द्वारा अनुमत सीमा तक सेवा जैसी है वैसी प्रदान की जाती है।\n\nयदि विज्ञापन दिखाए जाते हैं, तो Google AdSense की नीतियां और तकनीकें भी लागू होती हैं।\n\nकानूनी संपर्क: {{contactEmail}}',
     'it-IT': 'Usando Coup Online, accetti questi termini.\n\nL\'accesso e facoltativo, ma alcune funzioni account possono essere necessarie per statistiche persistenti e identita in classifica.\n\nSei responsabile della sicurezza dell\'account e delle attivita svolte tramite il tuo account.\n\nCheat, abusi, molestie, uso di bot e accessi non autorizzati sono vietati e possono causare sospensione o chiusura dell\'account.\n\nIl servizio puo essere aggiornato, limitato o interrotto in qualsiasi momento. Il servizio e fornito cosi com\'e nei limiti consentiti dalla legge.\n\nSe vengono mostrati annunci, si applicano anche politiche e tecnologie Google AdSense.\n\nContatto legale: {{contactEmail}}',
-    'ar-EG': 'باستخدام Coup Online، أنت توافق على هذه الشروط.\\n\\nتسجيل الدخول اختياري، لكن ميزات الحساب قد تكون مطلوبة للإحصائيات المستمرة وهوية لوحة المتصدرين.\\n\\nأنت مسؤول عن الحفاظ على أمان الحساب والنشاط تحت حسابك.\\n\\nالغش والإساءة والتحرش والبرمجات الآلية والوصول غير المصرح به ممنوعة وقد تؤدي إلى تعليق أو إنهاء الحساب.\\n\\nقد يتم تحديث الخدمة أو تقييدها أو إيقافها في أي وقت. تُقدم الخدمة كما هي إلى الحد الذي يسمح به القانون.\\n\\nإذا تم عرض الإعلانات، تنطبق سياسات وتقنيات Google AdSense أيضًا.\\n\\nجهة اتصال قانونية: {{contactEmail}}',
+    'ar-EG': 'باستخدام Coup Online، أنت توافق على هذه الشروط.\n\nتسجيل الدخول اختياري، لكن ميزات الحساب قد تكون مطلوبة للإحصائيات المستمرة وهوية لوحة المتصدرين.\n\nأنت مسؤول عن الحفاظ على أمان الحساب والنشاط تحت حسابك.\n\nالغش والإساءة والتحرش والبرمجات الآلية والوصول غير المصرح به ممنوعة وقد تؤدي إلى تعليق أو إنهاء الحساب.\n\nقد يتم تحديث الخدمة أو تقييدها أو إيقافها في أي وقت. تُقدم الخدمة كما هي إلى الحد الذي يسمح به القانون.\n\nإذا تم عرض الإعلانات، تنطبق سياسات وتقنيات Google AdSense أيضًا.\n\nجهة اتصال قانونية: {{contactEmail}}',
     'pt-BR': 'Ao usar o Coup Online, voce concorda com estes termos.\n\nO login e opcional, mas recursos de conta podem ser necessarios para estatisticas persistentes e identidade no ranking.\n\nVoce e responsavel por manter a seguranca da conta e pela atividade realizada nela.\n\nTrapaca, abuso, assedio, uso de bots e acesso nao autorizado sao proibidos e podem resultar em suspensao ou encerramento da conta.\n\nO servico pode ser atualizado, limitado ou descontinuado a qualquer momento. Ele e fornecido no estado em que se encontra, na medida permitida por lei.\n\nSe anuncios forem exibidos, politicas e tecnologias do Google AdSense tambem se aplicam.\n\nContato legal: {{contactEmail}}',
   },
   title: {
