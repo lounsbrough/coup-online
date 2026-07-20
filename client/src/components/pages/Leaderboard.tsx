@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 import { EmojiEvents, Google, Info, Person } from '@mui/icons-material'
 import { LeaderboardEntry, LeaderboardResponse, RankedLeaderboardEntry } from '@shared'
-import { getBaseUrl } from '../../helpers/api'
+import { apiFetch } from '../../helpers/api'
 import { COUP_GOLD } from '../../helpers/styles'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import { useAuthContext } from '../../contexts/AuthContext'
@@ -46,7 +46,7 @@ function Leaderboard() {
     setError(false)
     const params = new URLSearchParams({ minGames: '1', limit: '50' })
     if (user?.uid) params.set('uid', user.uid)
-    fetch(`${getBaseUrl()}/api/leaderboard?${params}`)
+    apiFetch(`/api/leaderboard?${params}`)
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText)
         return res.json()

@@ -50,7 +50,8 @@ Deployments are automated. To deploy a new version of the game, simply create a 
 
 | Variable                            | Description                  | Default                 |
 | ----------------------------------- | ---------------------------- | ----------------------- |
-| `VITE_API_BASE_URL`                 | Server API URL               | `http://localhost:8008` |
+| `VITE_PRIMARY_API_URL`              | Primary server API URL       | `http://localhost:8008` |
+| `VITE_SECONDARY_API_URL`            | Fallback server API URL      | `http://localhost:8008` |
 | `VITE_SOCKET_SERVER_URL`            | WebSocket server URL         | `http://localhost:8008` |
 | `VITE_SOCKET_SERVER_PATH`           | WebSocket path               | `""`                    |
 | `VITE_FIREBASE_API_KEY`             | Firebase API key             | —                       |

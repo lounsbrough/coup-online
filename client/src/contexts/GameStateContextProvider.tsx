@@ -4,7 +4,7 @@ import { PlayerActions, DehydratedPublicGameState, ServerEvents, isSameState, re
 import { getPlayerId } from '../helpers/players'
 import { useSearchParams } from 'react-router'
 import { useWebSocketContext } from './WebSocketContext'
-import { getBaseUrl } from '../helpers/api'
+import { apiFetch } from '../helpers/api'
 import { useTranslationContext } from './TranslationsContext'
 import { GameStateContext } from './GameStateContext'
 import { useGameSettingsContext } from './GameSettingsContext'
@@ -52,11 +52,11 @@ function GameStateContextProvider({ children }: Readonly<{ children: ReactNode }
 
   useSWR<void, Error>(
     roomId
-      ? `${getBaseUrl()}/${PlayerActions.gameState}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}&language=${encodeURIComponent(language)}`
+      ? `/${PlayerActions.gameState}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}&language=${encodeURIComponent(language)}`
       : null,
-    async function (input: RequestInfo, init?: RequestInit) {
+    async function (path: string) {
       try {
-        const response = await fetch(input, init)
+        const response = await apiFetch(path)
         handleGameStateResponse(response)
       } catch (error) {
         console.error(error)
@@ -107,7 +107,7 @@ function GameStateContextProvider({ children }: Readonly<{ children: ReactNode }
           }
         })
       } else {
-        fetch(`${getBaseUrl()}/${PlayerActions.checkAutoMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}&language=${encodeURIComponent(language)}`)
+        apiFetch(`/${PlayerActions.checkAutoMove}?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(getPlayerId())}&language=${encodeURIComponent(language)}`)
           .then(handleGameStateResponse)
           .catch((error) => {
             console.error(error)

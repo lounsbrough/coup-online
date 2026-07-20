@@ -13,7 +13,7 @@ import {
   deleteUser,
 } from 'firebase/auth'
 import { auth, googleProvider } from '../firebase'
-import { getBaseUrl } from '../helpers/api'
+import { apiFetch } from '../helpers/api'
 import { AuthContext } from './AuthContext'
 
 function AuthContextProvider({ children }: Readonly<{ children: ReactNode }>) {
@@ -47,7 +47,7 @@ function AuthContextProvider({ children }: Readonly<{ children: ReactNode }>) {
     if (!currentUser) return
 
     const token = await currentUser.getIdToken()
-    const response = await fetch(`${getBaseUrl()}/api/users/account`, {
+    const response = await apiFetch(`/api/users/account`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     })
