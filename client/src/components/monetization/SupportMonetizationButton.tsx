@@ -18,7 +18,7 @@ import { MonetizationHistoryEntry } from '@shared'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useNotificationsContext } from '../../contexts/NotificationsContext'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
-import { getBaseUrl } from '../../helpers/api'
+import { apiFetch } from '../../helpers/api'
 import { usePremiumStatus } from '../../hooks/usePremiumStatus'
 
 type SupportMonetizationButtonProps = {
@@ -68,7 +68,7 @@ export default function SupportMonetizationButton({
       setHistoryLoading(true)
       try {
         const token = await user.getIdToken()
-        const response = await fetch(`${getBaseUrl()}/api/user/monetization-history`, {
+        const response = await apiFetch(`/api/user/monetization-history`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -111,7 +111,7 @@ export default function SupportMonetizationButton({
     setIsSubmitting(true)
 
     try {
-      const response = await fetch(`${getBaseUrl()}/api/payments/checkout`, {
+      const response = await apiFetch(`/api/payments/checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
