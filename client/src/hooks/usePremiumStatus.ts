@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuthContext } from '../contexts/AuthContext'
-import { getBaseUrl } from '../helpers/api'
+import { apiFetch } from '../helpers/api'
 
 export function usePremiumStatus() {
     const [isPremium, setIsPremium] = useState<boolean | null>(null)
@@ -15,7 +15,7 @@ export function usePremiumStatus() {
 
             try {
                 const token = await user.getIdToken()
-                const response = await fetch(`${getBaseUrl()}/api/user/premium`, {
+                const response = await apiFetch(`/api/user/premium`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

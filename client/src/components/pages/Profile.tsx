@@ -40,7 +40,7 @@ import {
   SportsKabaddi,
 } from '@mui/icons-material'
 import { UserStats } from '@shared'
-import { getBaseUrl } from '../../helpers/api'
+import { apiFetch } from '../../helpers/api'
 import { COUP_GOLD } from '../../helpers/styles'
 import { useTranslationContext } from '../../contexts/TranslationsContext'
 import { useAuthContext } from '../../contexts/AuthContext'
@@ -217,7 +217,7 @@ function Profile() {
     setLoading(true)
     setError(null)
     setNotFound(false)
-    fetch(`${getBaseUrl()}/api/users/${uid}/stats`)
+    apiFetch(`/api/users/${uid}/stats`)
       .then((res) => {
         if (res.status === 404) {
           setNotFound(true)

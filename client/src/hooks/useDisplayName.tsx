@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuthContext } from '../contexts/AuthContext'
-import { getBaseUrl } from '../helpers/api'
+import { apiFetch } from '../helpers/api'
 
 export function useDisplayName() {
   const { user } = useAuthContext()
@@ -14,7 +14,7 @@ export function useDisplayName() {
     }
 
     setLoading(true)
-    fetch(`${getBaseUrl()}/api/users/${user.uid}/displayName`)
+    apiFetch(`/api/users/${user.uid}/displayName`)
       .then((res) => res.json())
       .then((data) => {
         setDisplayName(data.displayName ?? null)
@@ -32,7 +32,7 @@ export function useDisplayName() {
 
     try {
       const token = await user.getIdToken()
-      const res = await fetch(`${getBaseUrl()}/api/users/displayName`, {
+      const res = await apiFetch(`/api/users/displayName`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
