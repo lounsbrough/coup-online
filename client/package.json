@@ -60,7 +60,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@shared": "link:../shared",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.0",
     "@types/chance": "^1.1.8",
     "@vitejs/plugin-react": "^6.0.3",
     "chance": "^1.1.13",
