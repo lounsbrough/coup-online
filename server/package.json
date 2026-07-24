@@ -29,13 +29,13 @@
     "body-parser": "^2.3.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.5.2",
-    "firebase-admin": "^14.1.0",
+    "express-rate-limit": "^8.6.0",
+    "firebase-admin": "^14.2.0",
     "glin-profanity": "^3.3.0",
     "iovalkey": "^0.3.3",
     "joi": "^18.2.3",
     "socket.io": "^4.8.3",
-    "stripe": "^22.3.1"
+    "stripe": "^22.3.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -53,7 +53,7 @@
     "socket.io-client": "^4.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.64.0",
+    "typescript-eslint": "^8.65.0",
     "vitest": "^4.1.10"
   }
 }
