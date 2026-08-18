@@ -31,7 +31,7 @@
     "socket.io-client": "^4.8.3",
     "swr": "^2.5.0",
     "typescript": "^6.0.3",
-    "web-vitals": "^5.3.0"
+    "web-vitals": "^6.1.0"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
