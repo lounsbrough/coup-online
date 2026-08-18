@@ -93,6 +93,6 @@ pnpm test
 ```sh
 cd client
 pnpm test
-pnpm cypress install  # one-time; downloads the Cypress binary
+pnpm cypress install
 pnpm cypress open
 ```
