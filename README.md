@@ -93,5 +93,6 @@ pnpm test
 ```sh
 cd client
 pnpm test
+pnpm cypress install
 pnpm cypress open
 ```
