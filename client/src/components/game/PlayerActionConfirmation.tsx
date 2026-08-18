@@ -22,11 +22,23 @@ function PlayerActionConfirmation({
 }) {
   const [autoSubmitProgress, setAutoSubmitProgress] = useState(0)
   const autoSubmitInterval = useRef<ReturnType<typeof setInterval>>(undefined)
+  const hasSubmitted = useRef(false)
+  const variablesRef = useRef(variables)
+  const triggerRef = useRef<(params: object) => void>(() => { })
   const { gameState } = useGameStateContext()
   const { t } = useTranslationContext()
   const theme = useTheme()
   const { trigger, isMutating } = useGameMutation<object>({ action })
   const { confirmActions } = useUserSettingsContext()
+
+  variablesRef.current = variables
+  triggerRef.current = trigger
+
+  const submit = () => {
+    if (hasSubmitted.current) return
+    hasSubmitted.current = true
+    triggerRef.current(variablesRef.current)
+  }
 
   useEffect(() => {
     if (confirmActions) {
@@ -34,22 +46,22 @@ function PlayerActionConfirmation({
         setAutoSubmitProgress((prev) => Math.min(100, prev + 1))
       }, 50)
     } else {
-      trigger(variables)
+      submit()
     }
 
     return () => {
       clearInterval(autoSubmitInterval.current)
       autoSubmitInterval.current = undefined
     }
-  }, [confirmActions, trigger, variables])
+  }, [confirmActions])
 
   useEffect(() => {
     if (autoSubmitInterval.current && autoSubmitProgress === 100) {
       clearInterval(autoSubmitInterval.current)
       autoSubmitInterval.current = undefined
-      trigger(variables)
+      submit()
     }
-  }, [autoSubmitProgress, trigger, variables])
+  }, [autoSubmitProgress])
 
   if (!gameState || !confirmActions) {
     return null
@@ -97,7 +109,7 @@ function PlayerActionConfirmation({
               clearInterval(autoSubmitInterval.current)
               autoSubmitInterval.current = undefined
               setAutoSubmitProgress(100)
-              trigger(variables)
+              submit()
             }}
             loading={isMutating}
           >
