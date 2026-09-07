@@ -1,5 +1,4 @@
 import { useCallback, useState, useRef } from "react"
-import { Analytics } from '@vercel/analytics/react'
 import { Box, Button, Grid, TextField } from "@mui/material"
 import { Person, Group, GroupAdd, Visibility } from "@mui/icons-material"
 import { useNavigate, useSearchParams } from "react-router"
@@ -37,7 +36,6 @@ function JoinGame() {
 
   return (
     <>
-      <Analytics />
       <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('joinExistingGame')}
       </CoupTypography>
