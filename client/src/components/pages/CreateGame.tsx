@@ -9,7 +9,6 @@ import {
 import { AddCircle, Person } from '@mui/icons-material'
 import { useNavigate } from 'react-router'
 import { getPlayerId } from '../../helpers/players'
-import { Analytics } from '@vercel/analytics/react'
 import {
   GameSettings,
   PlayerActions,
@@ -61,7 +60,6 @@ function CreateGame() {
 
   return (
     <>
-      <Analytics />
       <CoupTypography variant="h5" sx={{ m: 5 }} addTextShadow>
         {t('createNewGame')}
       </CoupTypography>
