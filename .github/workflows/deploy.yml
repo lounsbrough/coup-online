@@ -64,7 +64,8 @@ jobs:
             cd /var/www/html/coup-online/server
             git fetch origin
             git checkout ${{ github.sha }}
-            npm i -g pnpm
+            corepack enable pnpm
+            corepack prepare pnpm@latest --activate
             pnpm i
             pnpm build
             /home/pi/.local/share/pnpm/pm2 restart coup-online
