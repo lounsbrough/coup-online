@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/((?!_vercel/).*)",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/manifest.json",
