@@ -3,6 +3,7 @@ import { UserStats, LeaderboardResponse, RankedLeaderboardEntry } from '../../..
 import { GameState } from '../../../shared/types/game'
 import { GAME_STATE_TTL_MS } from '../../../shared/helpers/constants'
 import { TTLCache } from './cache'
+import { logger } from './logger'
 
 const USERS_COLLECTION = 'users'
 const MIN_LOGGED_IN_PLAYERS = 2
@@ -168,13 +169,13 @@ export const recordGameStats = async (gameState: GameState) => {
 
         // Defensive integrity clamp: successes should never exceed attempts.
         if (existing.successfulBluffsMade > existing.totalBluffsMade) {
-          console.warn(
+          logger.warn(
             `Clamping bluff stats for user ${player.uid} in game ${gameId}: ${existing.successfulBluffsMade}/${existing.totalBluffsMade}`
           )
           existing.successfulBluffsMade = existing.totalBluffsMade
         }
         if (existing.successfulChallengesMade > existing.totalChallengesMade) {
-          console.warn(
+          logger.warn(
             `Clamping challenge stats for user ${player.uid} in game ${gameId}: ${existing.successfulChallengesMade}/${existing.totalChallengesMade}`
           )
           existing.successfulChallengesMade = existing.totalChallengesMade
@@ -251,7 +252,7 @@ export const recordGameStats = async (gameState: GameState) => {
         break
       } catch (error) {
         if (attempt === 3) {
-          console.error(`Failed to record stats for user ${player.uid} after 3 attempts:`, error)
+          logger.error(error, `Failed to record stats for user ${player.uid} after 3 attempts`)
         } else {
           await new Promise((resolve) => setTimeout(resolve, 500 * attempt))
         }

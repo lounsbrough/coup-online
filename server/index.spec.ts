@@ -9,7 +9,7 @@ import {
   Responses,
   ServerEvents,
 } from '../shared/types/game'
-import { DehydratedPublicGameStateOrError } from './index'
+import type { DehydratedPublicGameStateOrError } from './index'
 import { MAX_PLAYER_COUNT } from '../shared/helpers/playerCount'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
 

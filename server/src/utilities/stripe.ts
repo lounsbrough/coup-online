@@ -1,4 +1,5 @@
 import Stripe from 'stripe'
+import { logger } from './logger'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_not_configured')
 
@@ -114,18 +115,18 @@ export async function handleCheckoutSessionCompleted(session: CheckoutSession): 
   const { userId, productType, productId, donationAmountCents } = session.metadata || {}
 
   if (!userId || !productType || !productId) {
-    console.error('Invalid metadata in checkout session:', session.id)
+    logger.error({ sessionId: session.id }, 'Invalid metadata in checkout session')
     return
   }
 
   if (productType === 'premium') {
-    console.log(`Granting premium access for ${productId} to ${userId}`)
+    logger.info(`Granting premium access for ${productId} to ${userId}`)
     return
   }
 
   if (productType === 'donation') {
     const amountLog = donationAmountCents ? ` (${donationAmountCents} cents)` : ''
-    console.log(`Recording donation ${productId}${amountLog} from ${userId}`)
+    logger.info(`Recording donation ${productId}${amountLog} from ${userId}`)
   }
 }
 

@@ -3,13 +3,17 @@ name: Run Lint
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-    - uses: ./.github/actions/setup-node
-    - run: |
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Setup Node and dependencies
+      uses: ./.github/actions/setup-node
+    - name: Run server lint
+      run: |
         cd server
         pnpm lint
       shell: bash
-    - run: |
+    - name: Run client lint
+      run: |
         cd client
         pnpm lint
       shell: bash

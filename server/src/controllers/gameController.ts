@@ -41,6 +41,7 @@ import {
 import { translate } from '../i18n/translations'
 import { GameMutationInputError, WrongPlayerIdOnSocketError } from '../utilities/errors'
 import { getPublicGameState } from '../utilities/gameState'
+import { logger } from '../utilities/logger'
 import { getObjectEntries } from '../utilities/object'
 import { containsProfanity } from '../utilities/profanity'
 
@@ -601,7 +602,7 @@ export const registerGameControllers = ({
               pushToSocket.emit(ServerEvents.gameStateChanged, { gameState: publicGameState, serverTime })
               if (isCallerSocket) callback?.({ gameState: publicGameState, serverTime })
             } catch (error) {
-              console.error(error, { event, params })
+              logger.error({ err: error, event, params }, 'Failed to emit game state update')
               if (event === PlayerActions.checkAutoMove) return
 
               if (error instanceof GameMutationInputError) {
@@ -627,7 +628,7 @@ export const registerGameControllers = ({
             }
           }
         } catch (error) {
-          console.error(error, { event, params })
+          logger.error({ err: error, event, params }, 'Game mutation handler failed')
           if (event === PlayerActions.checkAutoMove) return
 
           if (error instanceof GameMutationInputError) {
@@ -656,7 +657,7 @@ export const registerGameControllers = ({
         const serverTime = new Date().toISOString()
         res.status(200).json({ gameState: publicGameState, serverTime })
       } catch (error) {
-        console.error(error, { event, props })
+        logger.error({ err: error, event, props }, 'Game HTTP response handler failed')
         if (event === PlayerActions.checkAutoMove) return
 
         if (error instanceof GameMutationInputError) {

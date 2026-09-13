@@ -1,6 +1,7 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { Chance } from 'chance'
 import { wilsonScoreRating, recordGameStats, getLeaderboard } from './stats'
+import { logger } from './logger'
 import { GameState, Influences } from '../../../shared/types/game'
 import { emptyPlayerActionStats, UserStats } from '../../../shared/types/user'
 
@@ -267,7 +268,7 @@ describe('stats', () => {
         data: () => createEmptyStats(),
       })
 
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { })
+      const warnSpy = vi.spyOn(logger, 'warn').mockImplementation(() => logger)
 
       await recordGameStats(gameState)
 
@@ -288,7 +289,7 @@ describe('stats', () => {
 
       mockRunTransaction.mockRejectedValue(new Error('Firestore unavailable'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+      const errorSpy = vi.spyOn(logger, 'error').mockImplementation(() => logger)
 
       const promise = recordGameStats(gameState)
 
@@ -302,10 +303,10 @@ describe('stats', () => {
 
       // 2 players × 3 attempts = 6 transaction calls
       expect(mockRunTransaction).toHaveBeenCalledTimes(6)
-      expect(consoleSpy).toHaveBeenCalledTimes(2)
-      expect(consoleSpy.mock.calls[0][0]).toContain('after 3 attempts')
+      expect(errorSpy).toHaveBeenCalledTimes(2)
+      expect(errorSpy.mock.calls[0][1]).toContain('after 3 attempts')
 
-      consoleSpy.mockRestore()
+      errorSpy.mockRestore()
       vi.useRealTimers()
     })
 

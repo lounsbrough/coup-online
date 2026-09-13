@@ -4,6 +4,7 @@ import { json } from 'body-parser'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import { Server as ioServer } from 'socket.io'
+import { logger } from './src/utilities/logger'
 import { AvailableLanguageCode } from '../shared/i18n/availableLanguages'
 import { GameMutationInputError } from './src/utilities/errors'
 import {
@@ -25,10 +26,10 @@ const genericErrorMessage = 'Unexpected error processing request'
 const port = process.env.EXPRESS_PORT || 8008
 
 process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error)
+  logger.error(error, 'Uncaught Exception')
 })
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+  logger.error({ promise, reason }, 'Unhandled Rejection')
 })
 
 const app = express()
@@ -62,7 +63,7 @@ registerMonetizationControllers({ app, apiLimiter, genericErrorMessage })
 
 app.use((error: unknown, req: Request, res: Response, _next: NextFunction) => {
   void _next
-  console.error('Unhandled Express error:', error)
+  logger.error(error, 'Unhandled Express error')
 
   if (error instanceof GameMutationInputError) {
     const language = req.body?.language || req.query?.language || AvailableLanguageCode['en-US']
@@ -75,5 +76,5 @@ app.use((error: unknown, req: Request, res: Response, _next: NextFunction) => {
 })
 
 server.listen(port, () => {
-  console.log(`listening on ${port}`)
+  logger.info(`listening on ${port}`)
 })
