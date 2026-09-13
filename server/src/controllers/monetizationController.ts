@@ -15,6 +15,7 @@ import {
   grantPremiumAccess,
   recordMonetizationHistory,
 } from '../utilities/monetization'
+import { logger } from '../utilities/logger'
 
 type RequestWithRawBody = Request & { rawBody?: Buffer }
 
@@ -96,7 +97,7 @@ export const registerMonetizationControllers = ({
 
       res.json({ sessionId: session.id, url: session.url })
     } catch (error) {
-      console.error('Error creating checkout session:', error)
+      logger.error(error, 'Error creating checkout session')
       res.status(500).json({ error: genericErrorMessage })
     }
   })
@@ -141,7 +142,7 @@ export const registerMonetizationControllers = ({
 
       res.json({ received: true })
     } catch (error) {
-      console.error('Error processing webhook:', error)
+      logger.error(error, 'Error processing webhook')
       res.status(400).json({ error: 'webhook error' })
     }
   })
@@ -164,7 +165,7 @@ export const registerMonetizationControllers = ({
       const premiumStatus = await getUserPremiumStatus(decoded.uid)
       res.json(premiumStatus)
     } catch (error) {
-      console.error('Error fetching premium status:', error)
+      logger.error(error, 'Error fetching premium status')
       res.status(500).json({ error: genericErrorMessage })
     }
   })
@@ -187,7 +188,7 @@ export const registerMonetizationControllers = ({
       const history = await getUserMonetizationHistory(decoded.uid)
       res.json(history)
     } catch (error) {
-      console.error('Error fetching monetization history:', error)
+      logger.error(error, 'Error fetching monetization history')
       res.status(500).json({ error: genericErrorMessage })
     }
   })

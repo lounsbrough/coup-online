@@ -10,6 +10,7 @@ import {
   getUserStats,
   setDisplayName,
 } from '../utilities/stats'
+import { logger } from '../utilities/logger'
 
 export const registerUserControllers = ({
   app,
@@ -29,7 +30,7 @@ export const registerUserControllers = ({
       }
       res.json(stats)
     } catch (error) {
-      console.error('Error fetching user stats:', error)
+      logger.error(error, 'Error fetching user stats')
       res.status(500).json({ error: genericErrorMessage })
     }
   })
@@ -39,7 +40,7 @@ export const registerUserControllers = ({
       const displayName = await getDisplayName(req.params.uid as string)
       res.json({ displayName })
     } catch (error) {
-      console.error('Error fetching display name:', error)
+      logger.error(error, 'Error fetching display name')
       res.status(500).json({ error: genericErrorMessage })
     }
   })
@@ -83,7 +84,7 @@ export const registerUserControllers = ({
       }
       res.json({ displayName: trimmed })
     } catch (error) {
-      console.error('Error setting display name:', error)
+      logger.error(error, 'Error setting display name')
       res.status(500).json({ error: genericErrorMessage })
     }
   })
@@ -107,7 +108,7 @@ export const registerUserControllers = ({
       await adminAuth.deleteUser(decoded.uid)
       res.json({ success: true })
     } catch (error) {
-      console.error('Error deleting user account:', error)
+      logger.error(error, 'Error deleting user account')
       res.status(500).json({ error: genericErrorMessage })
     }
   })
@@ -120,7 +121,7 @@ export const registerUserControllers = ({
       const leaderboard = await getLeaderboard(minGames, limit, uid)
       res.json(leaderboard)
     } catch (error) {
-      console.error('Error fetching leaderboard:', error)
+      logger.error(error, 'Error fetching leaderboard')
       res.status(500).json({ error: genericErrorMessage })
     }
   })

@@ -3,14 +3,19 @@ name: Run Vitest Server Tests
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-    - uses: ./.github/actions/setup-node
-    - uses: ./.github/actions/setup-valkey
-    - run: |
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Setup Node and dependencies
+      uses: ./.github/actions/setup-node
+    - name: Setup Valkey
+      uses: ./.github/actions/setup-valkey
+    - name: Run server typecheck
+      run: |
         cd server
         pnpm typecheck
       shell: bash
-    - run: |
+    - name: Run server dev and integration tests
+      run: |
         cd server
         pnpm add -g concurrently wait-on
         pnpm concurrently --kill-others --success first "pnpm dev" "pnpm wait-on tcp:8008 && pnpm test"
