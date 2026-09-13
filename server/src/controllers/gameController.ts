@@ -75,21 +75,33 @@ export const registerGameControllers = ({
   io: SocketIo
   genericErrorMessage: string
 }) => {
-  const playerNameRule = Joi.string().min(1).max(10).required().custom((value: string) => {
+  const inappropriateDisplayNameErrorType = 'string.inappropriateDisplayName' as const
+  const inappropriateDisplayNameKey = 'inappropriateDisplayName' as const
+
+  const playerNameRule = Joi.string().min(1).max(10).required().custom((value: string, helpers) => {
     if (containsProfanity(value)) {
-      throw new Error('inappropriateDisplayName')
+      return helpers.error(inappropriateDisplayNameErrorType)
     }
     return value
+  }).messages({
+    [inappropriateDisplayNameErrorType]: inappropriateDisplayNameKey,
   })
   const languageRule = Joi.string().valid(...Object.values(AvailableLanguageCode)).required()
+
+  const getValidationTranslationKey = (error: Joi.ValidationError): 'invalidUserRequest' | 'inappropriateDisplayName' => {
+    return error.details.some(({ type }) => type === inappropriateDisplayNameErrorType)
+      ? inappropriateDisplayNameKey
+      : 'invalidUserRequest'
+  }
 
   const validateExpressRequest = (schema: ObjectSchema, requestProperty: 'body' | 'query') => {
     return (req: Request, res: Response, next: NextFunction) => {
       const result = schema.validate(req[requestProperty], { abortEarly: false })
       if (result.error) {
+        const key = getValidationTranslationKey(result.error)
         res.status(400).json({
           error: translate({
-            key: 'invalidUserRequest',
+            key,
             language: (req[requestProperty] as { language?: AvailableLanguageCode }).language ?? AvailableLanguageCode['en-US'],
           }),
         })
@@ -563,7 +575,8 @@ export const registerGameControllers = ({
         const result = joiSchema.validate(params, { abortEarly: false })
 
         if (result.error) {
-          const error = translate({ key: 'invalidUserRequest', language: params.language ?? AvailableLanguageCode['en-US'] })
+          const key = getValidationTranslationKey(result.error)
+          const error = translate({ key, language: params.language ?? AvailableLanguageCode['en-US'] })
           socket.emit(ServerEvents.error, error)
           callback?.({ error })
           return
