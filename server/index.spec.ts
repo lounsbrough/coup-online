@@ -194,6 +194,15 @@ describe('index', () => {
         {
           body: {
             playerId: randomId(),
+            playerName: 'shit',
+            settings: { eventLogRetentionTurns: 100, allowRevive: true },
+          },
+          error: 'This name is not allowed',
+          status: 400,
+        },
+        {
+          body: {
+            playerId: randomId(),
             playerName: randomName(),
             settings: { eventLogRetentionTurns: 0 },
           },
@@ -1157,6 +1166,17 @@ describe('index', () => {
         socket1.emit(PlayerActions.createGame, {})
         await expect(gameStatePromises[0]).rejects.toThrow(
           'Invalid user request',
+        )
+
+        gameStatePromises = getGameStatePromises([socket1])
+        socket1.emit(PlayerActions.createGame, {
+          playerId: randomId(),
+          playerName: 'shit',
+          settings: { eventLogRetentionTurns: 100, allowRevive: true },
+          language: AvailableLanguageCode['en-US'],
+        })
+        await expect(gameStatePromises[0]).rejects.toThrow(
+          'This name is not allowed',
         )
 
         gameStatePromises = getGameStatePromises([socket1])
