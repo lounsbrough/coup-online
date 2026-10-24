@@ -2,7 +2,7 @@ name: Deploy Preview
 
 on:
   push:
-    branches: [main]
+    branches: [ci/deploy-preview-server-before-client]
 
 jobs:
   call-deploy:
