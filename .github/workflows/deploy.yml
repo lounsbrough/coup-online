@@ -19,6 +19,8 @@ jobs:
     needs: verify
     runs-on: ubuntu-latest
     concurrency: deploy-server-${{ inputs.environment }}
+    outputs:
+      deployment-url: ${{ steps.deploy.outputs.url }}
 
     steps:
       - name: Checkout repository
@@ -27,6 +29,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Build and deploy server to Vercel
+        id: deploy
         run: |
           cd server
           vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
@@ -37,7 +40,8 @@ jobs:
           else
             vercel build --token=${{ secrets.VERCEL_TOKEN }}
           fi
-          vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
+          deployment_url="$(vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }})"
+          echo "url=${deployment_url}" >> "$GITHUB_OUTPUT"
 
   deploy-server-raspberry-pi:
     needs: verify
@@ -78,7 +82,7 @@ jobs:
             /home/pi/.local/share/pnpm/pm2 restart coup-online
 
   deploy-client-vercel:
-    needs: verify
+    needs: [verify, deploy-server-vercel]
     runs-on: ubuntu-latest
     concurrency: deploy-client-${{ inputs.environment }}
 
@@ -97,6 +101,13 @@ jobs:
           if [ "${{ inputs.environment }}" = "production" ]; then
             vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
           else
+            server_url="${{ needs.deploy-server-vercel.outputs.deployment-url }}"
+            if [ -z "$server_url" ]; then
+              echo "Preview server deployment did not return a URL" >&2
+              exit 1
+            fi
+            export VITE_PRIMARY_API_URL="$server_url"
+            export VITE_SECONDARY_API_URL="$server_url"
             vercel build --token=${{ secrets.VERCEL_TOKEN }}
           fi
           vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
