@@ -75,6 +75,10 @@ app.use((error: unknown, req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ error: genericErrorMessage })
 })
 
-server.listen(port, () => {
-  logger.info(`listening on ${port}`)
-})
+if (process.env.VERCEL !== '1') {
+  server.listen(port, () => {
+    logger.info(`listening on ${port}`)
+  })
+}
+
+export default app
