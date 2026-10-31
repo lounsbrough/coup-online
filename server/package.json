@@ -30,7 +30,7 @@
     "cors": "^2.8.6",
     "express": "^5.3.0",
     "express-rate-limit": "^8.7.1",
-    "firebase-admin": "^14.5.0",
+    "firebase-admin": "^13.10.0",
     "glin-profanity": "^4.0.1",
     "iovalkey": "^0.4.0",
     "joi": "^18.3.0",
