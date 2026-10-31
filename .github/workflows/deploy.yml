@@ -35,11 +35,29 @@ jobs:
           vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
           vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
           pnpm build
+          original_node_engine="$(node -p 'require("./package.json").engines.node')"
+          restore_node_engine() {
+            node -e '
+              const fs = require("node:fs")
+              const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"))
+              packageJson.engines.node = process.argv[1]
+              fs.writeFileSync("package.json", `${JSON.stringify(packageJson, null, 2)}\n`)
+            ' "$original_node_engine"
+          }
+          trap restore_node_engine EXIT
+          node -e '
+            const fs = require("node:fs")
+            const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"))
+            packageJson.engines.node = "24.x"
+            fs.writeFileSync("package.json", `${JSON.stringify(packageJson, null, 2)}\n`)
+          '
           if [ "${{ inputs.environment }}" = "production" ]; then
             vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
           else
             vercel build --token=${{ secrets.VERCEL_TOKEN }}
           fi
+          restore_node_engine
+          trap - EXIT
           deployment_url="$(vercel deploy --prebuilt --target=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }})"
           echo "url=${deployment_url}" >> "$GITHUB_OUTPUT"
 
