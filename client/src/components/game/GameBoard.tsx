@@ -65,14 +65,8 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
               href="https://www.buymeacoffee.com/davidlounsbrough"
               target="_blank"
               rel="noopener noreferrer"
-              variant="contained"
+              variant="outlined"
               startIcon={<Coffee />}
-              sx={{
-                backgroundColor: '#FFDD00',
-                color: '#000',
-                border: '1px solid #000',
-                '&:hover': { backgroundColor: '#f2d200' },
-              }}
             >
               {t('buyMeACoffee')}
             </Button>
