@@ -59,16 +59,6 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
             <Victory player={playersLeft[0]} />
           </Grid>
         )}
-        {gameIsOver && !!gameState.selfPlayer && (
-          <Grid sx={{ m: 5 }}>
-            <PlayAgain />
-          </Grid>
-        )}
-        {gameIsOver && (
-          <Grid sx={{ m: 5 }}>
-            <GameSummary />
-          </Grid>
-        )}
         {gameIsOver && (
           <Grid sx={{ m: 5 }}>
             <Button
@@ -86,6 +76,16 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
             >
               {t('buyMeACoffee')}
             </Button>
+          </Grid>
+        )}
+        {gameIsOver && !!gameState.selfPlayer && (
+          <Grid sx={{ m: 5 }}>
+            <PlayAgain />
+          </Grid>
+        )}
+        {gameIsOver && (
+          <Grid sx={{ m: 5 }}>
+            <GameSummary />
           </Grid>
         )}
         {gameState.selfPlayer?.influences.length === 0 && (
