@@ -65,7 +65,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
               href="https://www.buymeacoffee.com/davidlounsbrough"
               target="_blank"
               rel="noopener noreferrer"
-              variant="outlined"
+              variant="contained"
               startIcon={<Coffee />}
             >
               {t('buyMeACoffee')}
