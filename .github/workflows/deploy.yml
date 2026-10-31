@@ -35,8 +35,6 @@ jobs:
           vercel link --yes --project coup-server --token=${{ secrets.VERCEL_TOKEN }}
           vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
           pnpm build
-          # This runner is isolated from the Raspberry Pi job.
-          node -e 'const fs = require("node:fs"); const p = JSON.parse(fs.readFileSync("package.json", "utf8")); p.engines.node = "24.x"; fs.writeFileSync("package.json", `${JSON.stringify(p, null, 2)}\n`);'
           if [ "${{ inputs.environment }}" = "production" ]; then
             vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
           else
