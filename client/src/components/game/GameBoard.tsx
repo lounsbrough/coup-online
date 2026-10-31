@@ -1,4 +1,5 @@
-import { Box, Grid, useTheme } from "@mui/material"
+import { Box, Button, Grid, useTheme } from "@mui/material"
+import { Coffee } from "@mui/icons-material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
@@ -66,6 +67,25 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
         {gameIsOver && (
           <Grid sx={{ m: 5 }}>
             <GameSummary />
+          </Grid>
+        )}
+        {gameIsOver && (
+          <Grid sx={{ m: 5 }}>
+            <Button
+              href="https://www.buymeacoffee.com/davidlounsbrough"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="contained"
+              startIcon={<Coffee />}
+              sx={{
+                backgroundColor: '#FFDD00',
+                color: '#000',
+                border: '1px solid #000',
+                '&:hover': { backgroundColor: '#f2d200' },
+              }}
+            >
+              {t('buyMeACoffee')}
+            </Button>
           </Grid>
         )}
         {gameState.selfPlayer?.influences.length === 0 && (
