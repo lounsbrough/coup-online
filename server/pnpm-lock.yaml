@@ -31,8 +31,8 @@ importers:
         specifier: ^14.5.0
         version: 14.5.0
       glin-profanity:
-        specifier: ^3.3.0
-        version: 3.3.0
+        specifier: ^4.0.1
+        version: 4.0.1
       iovalkey:
         specifier: ^0.4.0
         version: 0.4.0
@@ -1095,8 +1095,8 @@ packages:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
 
-  glin-profanity@3.3.0:
-    resolution: {integrity: sha512-YhLhVjWaVjlWClm1DIJJdW1eGp8z6i65WscLV9fbrNpt9H1usoQwDtwmqVjGVtZvr3XP1yl7vQlIU7UfQW27HA==}
+  glin-profanity@4.0.1:
+    resolution: {integrity: sha512-SvabzeO5z3Lcdgoq30kaUrmwILVdwDpwKPvuVlyuL7dvkTLtVoiPUR23Rr9W4ZzWkqdvIFnXhxhCQ4sb6A6muA==}
     peerDependencies:
       '@langchain/core': '>=0.1.0'
       '@tensorflow-models/toxicity': '>=1.2.0'
@@ -3305,7 +3305,7 @@ snapshots:
       dunder-proto: 1.0.1
       es-object-atoms: 1.1.2
 
-  glin-profanity@3.3.0: {}
+  glin-profanity@4.0.1: {}
 
   glob-parent@6.0.2:
     dependencies:
