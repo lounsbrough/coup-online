@@ -10,7 +10,7 @@
     "add-build"
   ],
   "engines": {
-    "node": ">=22"
+    "node": "24.x"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
