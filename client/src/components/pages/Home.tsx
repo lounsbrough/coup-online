@@ -6,6 +6,7 @@ import { useTranslationContext } from "../../contexts/TranslationsContext"
 import { AddCircle, EmojiEvents, School, GroupAdd } from "@mui/icons-material"
 import CoupTypography from '../utilities/CoupTypography'
 import SupportMonetizationButton from '../monetization/SupportMonetizationButton'
+import BuyMeACoffeeButton from '../monetization/BuyMeACoffeeButton'
 
 function Home() {
   const { t } = useTranslationContext()
@@ -43,7 +44,9 @@ function Home() {
           to="/leaderboard"
           startIcon={<EmojiEvents />}
         >{t('viewLeaderboard')}</Button>
-
+        <Box>
+          <BuyMeACoffeeButton />
+        </Box>
         <Box>
           <SupportMonetizationButton size="medium" />
         </Box>

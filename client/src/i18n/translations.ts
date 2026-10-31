@@ -39,6 +39,7 @@ export type Translations = ActionMessages &
     block: TranslationsForString
     blockAsInfluence: TranslationsForString
     briefDescriptionOfCoup: TranslationsForString
+    buyMeACoffee: TranslationsForString
     cancel: TranslationsForString
     challenge: TranslationsForString
     changeAPlayersFaction: TranslationsForString
@@ -654,6 +655,16 @@ const translations: Translations = {
     'hi-IN': 'धोखे, अनुमान और भाग्य का खेल।',
     'it-IT': "Il gioco dell'inganno, della deduzione e della fortuna.",
     'pt-BR': 'O jogo de engano, dedução e sorte.',
+  },
+  buyMeACoffee: {
+    'ar-EG': 'اشترِ لي قهوة',
+    'de-DE': 'Spendier mir einen Kaffee',
+    'en-US': 'Buy me a coffee',
+    'es-MX': 'Cómprame un café',
+    'fr-FR': 'Offrez-moi un café',
+    'hi-IN': 'मेरे लिए एक कॉफ़ी खरीदें',
+    'it-IT': 'Offrimi un caffè',
+    'pt-BR': 'Pague um café para mim',
   },
   cancel: {
     'ar-EG': 'إلغاء',

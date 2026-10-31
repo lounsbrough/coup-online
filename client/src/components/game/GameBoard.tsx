@@ -14,6 +14,7 @@ import { useTranslationContext } from "../../contexts/TranslationsContext"
 import Forfeit from "./Forfeit"
 import CoupTypography from '../utilities/CoupTypography'
 import Treasury from "../icons/Treasury"
+import BuyMeACoffeeButton from "../monetization/BuyMeACoffeeButton"
 
 interface GameBoardProps {
   leftDrawerOpen: boolean
@@ -56,6 +57,11 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
         {gameIsOver && (
           <Grid sx={{ m: 5 }}>
             <Victory player={playersLeft[0]} />
+          </Grid>
+        )}
+        {gameIsOver && (
+          <Grid sx={{ m: 5 }}>
+            <BuyMeACoffeeButton />
           </Grid>
         )}
         {gameIsOver && !!gameState.selfPlayer && (
