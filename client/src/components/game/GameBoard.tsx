@@ -1,5 +1,4 @@
-import { Box, Button, Grid, useTheme } from "@mui/material"
-import { Coffee } from "@mui/icons-material"
+import { Box, Grid, useTheme } from "@mui/material"
 import PlayerInfluences from "../game/PlayerInfluences"
 import Players from "../game/Players"
 import EventLog from "./EventLog"
@@ -15,6 +14,7 @@ import { useTranslationContext } from "../../contexts/TranslationsContext"
 import Forfeit from "./Forfeit"
 import CoupTypography from '../utilities/CoupTypography'
 import Treasury from "../icons/Treasury"
+import BuyMeACoffeeButton from "../monetization/BuyMeACoffeeButton"
 
 interface GameBoardProps {
   leftDrawerOpen: boolean
@@ -61,15 +61,7 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
         )}
         {gameIsOver && (
           <Grid sx={{ m: 5 }}>
-            <Button
-              href="https://www.buymeacoffee.com/davidlounsbrough"
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="contained"
-              startIcon={<Coffee />}
-            >
-              {t('buyMeACoffee')}
-            </Button>
+            <BuyMeACoffeeButton />
           </Grid>
         )}
         {gameIsOver && !!gameState.selfPlayer && (
