@@ -2,7 +2,7 @@ name: Deploy Preview
 
 on:
   push:
-    branches: [fix/vercel-node24-runtime]
+    branches: [main]
 
 jobs:
   call-deploy:
