@@ -59,14 +59,14 @@ function GameBoard({ leftDrawerOpen, rightDrawerOpen }: Readonly<GameBoardProps>
             <Victory player={playersLeft[0]} />
           </Grid>
         )}
-        {gameIsOver && (
-          <Grid sx={{ m: 5 }}>
-            <BuyMeACoffeeButton />
-          </Grid>
-        )}
         {gameIsOver && !!gameState.selfPlayer && (
           <Grid sx={{ m: 5 }}>
             <PlayAgain />
+          </Grid>
+        )}
+        {gameIsOver && (
+          <Grid sx={{ m: 5 }}>
+            <BuyMeACoffeeButton />
           </Grid>
         )}
         {gameIsOver && (
